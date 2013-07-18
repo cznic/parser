@@ -1,0 +1,76 @@
+c_identifier	= /* identifier (but not literal) followed by a :. */ .
+identifier	= /* Includes identifiers and literals */ .
+number	= /* [0-9][0-9]* */ .
+
+/* Reserved words : %type=>tYpe %left=>left, and so on */
+
+left	= .
+nonassoc	= .
+prec	= .
+right	= .
+start	= .
+token	= .
+tYpe	= .
+union	= .
+
+
+mark	= /* The %% mark. */ .
+lcurl	= /* The %{ mark. */ .
+rcurl	= /* The %} mark. */ .
+
+
+/* 8-bit character literals stand for themselves; */
+/* tokens have to be defined for multi-byte characters. */
+
+// %start    Spec
+
+Empty = 
+      .
+Spec  = Defs mark Rules Tail .
+Tail  = mark /* In this action, set up the rest of the file. */
+      | Empty /* The second mark is optional. */
+      .
+Defs  = Empty
+      | Defs Def
+      .
+Def   = start identifier
+      | union /* Copy union definition to output. */
+      | lcurl /* Copy Go code to output file. */ rcurl
+      | Rword Tag Nlist
+      .
+Rword = token
+      | left
+      | right
+      | nonassoc
+      | tYpe
+      .
+Tag   = Empty /* union Tag ID optional. */
+      | "<" identifier ">"
+      .
+Nlist = Nmno
+      | Nlist Nmno
+      .
+Nmno  = identifier         /* Note: literal invalid with % type. */
+      | identifier number  /* Note: invalid with % type. */
+      .
+
+/* Rule section */
+
+Rules = c_identifier Rbody Prec
+      | Rules  Rule
+      .
+Rule  = c_identifier Rbody Prec
+      | "|" Rbody Prec
+      .
+Rbody = Empty
+      | Rbody identifier
+      | Rbody Act
+      .
+Act   = "{" /* Copy action, translate $$, and so on. */ "}"
+      .
+Prec  = Empty
+      | prec identifier
+      | prec identifier Act
+      | Prec ";"
+      .
+
