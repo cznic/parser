@@ -84,95 +84,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyMaxDepth = 200
 
-func str(v interface{}) string {
-	var buf bytes.Buffer
-	f := strutil.IndentFormatter(&buf, ". ")
-	g := func(interface{}) {}
-	g = func(v interface{}) {
-		switch x := v.(type) {
-		case nil:
-			f.Format("<nil>")
-		case int:
-			f.Format("'%c'\n", x)
-		case string:
-			f.Format("%q\n", x)
-		case *Act:
-			f.Format("%T {", x)
-			f.Format("Src: %q", x.Src)
-			f.Format("}\n")
-		case *Def:
-			f.Format("%T {%i\n", x)
-			f.Format("Rword: %s, ", x.Rword)
-			f.Format("Tag: %q, ", x.Tag)
-			f.Format("Nlist: %T:%d {%i\n", x.Nlist, len(x.Nlist))
-			for i, v := range x.Nlist {
-				f.Format("[%d] ", i)
-				g(v)
-			}
-			f.Format("%u}\n")
-			f.Format("%u}\n")
-		case *Nmno:
-			var s string
-			switch v := x.Identifier.(type) {
-			case string:
-				s = fmt.Sprintf("%q", v)
-			case int:
-				s = fmt.Sprintf("'%c'", v)
-			}
-			f.Format("%T{Identifier: %s, Number: %d}\n", x, s, x.Number)
-		case *Prec:
-			var s string
-			switch v := x.Identifier.(type) {
-			case string:
-				s = fmt.Sprintf("%q", v)
-			case int:
-				s = fmt.Sprintf("'%c'", v)
-			}
-			f.Format("%T{Identifier: %s, Act: ", x, s)
-			//TODO bypassing compiler bug? Should work w/o test for nil
-			if x.Act != nil {
-				g(x.Act)
-			}
-			f.Format("}\n")
-		case *Rule:
-			f.Format("%T {%i\n", x)
-			f.Format("Name: %q, ", x.Name)
-			f.Format("Body: %T: %d {%i\n", x.Body, len(x.Body))
-			for i, v := range x.Body {
-				f.Format("[%d] ", i)
-				g(v)
-			}
-			f.Format("%u}\n")
-			if x.Prec != nil {
-				f.Format("Prec: ")
-				g(x.Prec)
-			}
-			f.Format("%u}\n")
-		case *Spec:
-			f.Format("%T {%i\n", x)
-			f.Format("Defs: %T:%d {%i\n", x.Defs, len(x.Defs))
-			for i, v := range x.Defs {
-				f.Format("[%d] ", i)
-				g(v)
-			}
-			f.Format("}%u\n")
-			f.Format("Rules: %T:%d {%i\n", x.Rules, len(x.Rules))
-			for i, v := range x.Rules {
-				f.Format("[%d] ", i)
-				g(v)
-			}
-			f.Format("%u}\n")
-			f.Format("Tail: %q\n", x.Tail)
-			f.Format("%u}\n")
-		default:
-			f.Format("%s(str): %T(%#v)\n", todo, x, x)
-		}
-	}
-	g(v)
-	return buf.String()
-}
-
-// Spec is the AST root.
+// Spec is the AST root entity.
 type Spec struct {
 	Defs  []*Def  // Definitions
 	Rules []*Rule // Rules
@@ -243,18 +155,18 @@ const (
 	_ Rword = iota
 
 	// Values of Def.Rword
-	Copy
-	Left
-	Nonassoc
-	Right
-	Start
-	Token
-	Type
-	Union
+	Copy     // %{ ... %}
+	Left     // %left
+	Nonassoc // %nonassoc
+	Right    // %right
+	Start    // %start
+	Token    // %token
+	Type     // %type
+	Union    // %union
 )
 
 var rwords = map[Rword]string{
-	Copy:     "%{",
+	Copy:     "Copy",
 	Left:     "Left",
 	Nonassoc: "Nonassoc",
 	Right:    "Right",
@@ -378,6 +290,90 @@ func Parse(fname string, src []byte) (s *Spec, err error) {
 	}
 
 	return l.spec, nil
+}
+
+func str(v interface{}) string {
+	var buf bytes.Buffer
+	f := strutil.IndentFormatter(&buf, ". ")
+	g := func(interface{}) {}
+	g = func(v interface{}) {
+		switch x := v.(type) {
+		case nil:
+			f.Format("<nil>")
+		case int:
+			f.Format("'%c'\n", x)
+		case string:
+			f.Format("%q\n", x)
+		case *Act:
+			f.Format("%T{", x)
+			f.Format("Src: %q", x.Src)
+			f.Format("}\n")
+		case *Def:
+			f.Format("%T{%i\n", x)
+			f.Format("Rword: %s, ", x.Rword)
+			f.Format("Tag: %q, ", x.Tag)
+			f.Format("Nlist: %T{%i\n", x.Nlist)
+			for _, v := range x.Nlist {
+				g(v)
+			}
+			f.Format("%u}\n")
+			f.Format("%u}\n")
+		case *Nmno:
+			var s string
+			switch v := x.Identifier.(type) {
+			case string:
+				s = fmt.Sprintf("%q", v)
+			case int:
+				s = fmt.Sprintf("'%c'", v)
+			}
+			f.Format("%T{Identifier: %s, Number: %d}\n", x, s, x.Number)
+		case *Prec:
+			var s string
+			switch v := x.Identifier.(type) {
+			case string:
+				s = fmt.Sprintf("%q", v)
+			case int:
+				s = fmt.Sprintf("'%c'", v)
+			}
+			f.Format("%T{Identifier: %s, Act: ", x, s)
+			//TODO bypassing compiler bug? Should work w/o test for nil
+			if x.Act != nil {
+				g(x.Act)
+			}
+			f.Format("}\n")
+		case *Rule:
+			f.Format("%T{%i\n", x)
+			f.Format("Name: %q, ", x.Name)
+			f.Format("Body: %T{%i\n", x.Body)
+			for _, v := range x.Body {
+				g(v)
+			}
+			f.Format("%u}\n")
+			if x.Prec != nil {
+				f.Format("Prec: ")
+				g(x.Prec)
+			}
+			f.Format("%u}\n")
+		case *Spec:
+			f.Format("%T{%i\n", x)
+			f.Format("Defs: %T{%i\n", x.Defs)
+			for _, v := range x.Defs {
+				g(v)
+			}
+			f.Format("%u}\n")
+			f.Format("Rules: %T{%i\n", x.Rules)
+			for _, v := range x.Rules {
+				g(v)
+			}
+			f.Format("%u}\n")
+			f.Format("Tail: %q\n", x.Tail)
+			f.Format("%u}\n")
+		default:
+			f.Format("%s(str): %T(%#v)\n", todo, x, x)
+		}
+	}
+	g(v)
+	return buf.String()
 }
 
 var yyExca = []int{
@@ -827,6 +823,7 @@ yydefault:
 		}
 	case 21:
 		{
+			lx(yylex).rname = yyS[yypt-2].s
 			yyVAL.rules = []*Rule{&Rule{Name: yyS[yypt-2].s, Body: yyS[yypt-1].list, Prec: yyS[yypt-0].prec}}
 		}
 	case 22:
@@ -835,8 +832,8 @@ yydefault:
 		}
 	case 23:
 		{
-			yyVAL.rule = &Rule{Name: yyS[yypt-2].s, Body: yyS[yypt-1].list, Prec: yyS[yypt-0].prec}
 			lx(yylex).rname = yyS[yypt-2].s
+			yyVAL.rule = &Rule{Name: yyS[yypt-2].s, Body: yyS[yypt-1].list, Prec: yyS[yypt-0].prec}
 		}
 	case 24:
 		{
