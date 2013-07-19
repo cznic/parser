@@ -12,7 +12,7 @@ Grammar for the input to yacc.
 
 */
 
-// (WIP:TODO)
+// Package parser (WIP:TODO) implements a parser for yacc source files.
 package parser
 
 import __yyfmt__ "fmt"
@@ -45,7 +45,7 @@ type yySymType struct {
 	s      string
 }
 
-const ILLEGAL = 57346
+const _ILLEGAL = 57346
 const _IDENTIFIER = 57347
 const _C_IDENTIFIER = 57348
 const _NUMBER = 57349
@@ -62,7 +62,7 @@ const _LCURL = 57359
 const _RCURL = 57360
 
 var yyToknames = []string{
-	"ILLEGAL",
+	"_ILLEGAL",
 	"_IDENTIFIER",
 	"_C_IDENTIFIER",
 	"_NUMBER",
@@ -90,8 +90,16 @@ func str(v interface{}) string {
 	g := func(interface{}) {}
 	g = func(v interface{}) {
 		switch x := v.(type) {
+		case nil:
+			f.Format("<nil>")
+		case int:
+			f.Format("'%c'\n", x)
 		case string:
 			f.Format("%q\n", x)
+		case *Act:
+			f.Format("%T {", x)
+			f.Format("Src: %q", x.Src)
+			f.Format("}\n")
 		case *Def:
 			f.Format("%T {%i\n", x)
 			f.Format("Rword: %s, ", x.Rword)
@@ -104,7 +112,28 @@ func str(v interface{}) string {
 			f.Format("%u}\n")
 			f.Format("%u}\n")
 		case *Nmno:
-			f.Format("%T{Identifier: %T(%v), Number: %d}\n", x, x.Identifier, x.Identifier, x.Number)
+			var s string
+			switch v := x.Identifier.(type) {
+			case string:
+				s = fmt.Sprintf("%q", v)
+			case int:
+				s = fmt.Sprintf("'%c'", v)
+			}
+			f.Format("%T{Identifier: %s, Number: %d}\n", x, s, x.Number)
+		case *Prec:
+			var s string
+			switch v := x.Identifier.(type) {
+			case string:
+				s = fmt.Sprintf("%q", v)
+			case int:
+				s = fmt.Sprintf("'%c'", v)
+			}
+			f.Format("%T{Identifier: %s, Act: ", x, s)
+			//TODO bypassing compiler bug? Should work w/o test for nil
+			if x.Act != nil {
+				g(x.Act)
+			}
+			f.Format("}\n")
 		case *Rule:
 			f.Format("%T {%i\n", x)
 			f.Format("Name: %q, ", x.Name)
@@ -114,6 +143,10 @@ func str(v interface{}) string {
 				g(v)
 			}
 			f.Format("%u}\n")
+			if x.Prec != nil {
+				f.Format("Prec: ")
+				g(x.Prec)
+			}
 			f.Format("%u}\n")
 		case *Spec:
 			f.Format("%T {%i\n", x)
@@ -132,18 +165,18 @@ func str(v interface{}) string {
 			f.Format("Tail: %q\n", x.Tail)
 			f.Format("%u}\n")
 		default:
-			f.Format("TODO(str): %T(%#v)\n", x, x)
+			f.Format("%s(str): %T(%#v)\n", todo, x, x)
 		}
 	}
 	g(v)
 	return buf.String()
 }
 
-//TODO
+// Spec is the AST root.
 type Spec struct {
-	Defs  []*Def
-	Rules []*Rule
-	Tail  string
+	Defs  []*Def  // Definitions
+	Rules []*Rule // Rules
+	Tail  string  // Optional rest of the file
 }
 
 // String implements fmt.Stringer.
@@ -151,8 +184,7 @@ func (s *Spec) String() string {
 	return str(s)
 }
 
-//TODO
-type Def struct {
+type Def struct { //TODO docs
 	Rword Rword
 	Tag   string
 	Nlist []*Nmno
@@ -163,20 +195,18 @@ func (s *Def) String() string {
 	return str(s)
 }
 
-//TODO
-type Rule struct {
+type Rule struct { //TODO docs
 	Name string
 	Body []interface{}
 	Prec *Prec
-} //TODO
+}
 
 // String implements fmt.Stringer.
 func (s *Rule) String() string {
 	return str(s)
 }
 
-//TODO
-type Nmno struct {
+type Nmno struct { //TODO docs
 	Identifier interface{}
 	Number     int
 }
@@ -186,8 +216,7 @@ func (s *Nmno) String() string {
 	return str(s)
 }
 
-//TODO
-type Prec struct {
+type Prec struct { //TODO docs
 	Identifier interface{}
 	Act        *Act
 }
@@ -197,20 +226,23 @@ func (s *Prec) String() string {
 	return str(s)
 }
 
-//TODO
-type Act struct{} //TODO
+type Act struct { //TODO docs
+	Src string
+	//TODO process $$
+}
 
 // String implements fmt.Stringer.
 func (s *Act) String() string {
 	return str(s)
 }
 
+// Rword is a definition tag (Def.Rword).
 type Rword int
 
 const (
 	_ Rword = iota
 
-	// Def.Rword
+	// Values of Def.Rword
 	Copy
 	Left
 	Nonassoc
@@ -267,6 +299,8 @@ var xlat = map[scanner.Token]int{
 	scanner.OR:  '|',
 }
 
+var todo = strings.ToUpper("todo")
+
 func (l *lexer) Lex(lval *yySymType) (y int) {
 	if l.closed {
 		return 0
@@ -275,7 +309,7 @@ func (l *lexer) Lex(lval *yySymType) (y int) {
 	for {
 		tok, val := l.Scan()
 		lval.line, lval.col = l.Line, l.Col
-		dbg("%s %T(%#v) %s:%d:%d", tok, val, val, l.fname, l.Line, l.Col)
+		//dbg("%s %T(%#v) %s:%d:%d", tok, val, val, l.fname, l.Line, l.Col)
 		switch tok {
 		case scanner.COMMENT:
 			continue
@@ -303,7 +337,7 @@ func (l *lexer) Lex(lval *yySymType) (y int) {
 			if s, ok := val.(string); ok && s != "" {
 				return int([]rune(s)[0])
 			}
-			return ILLEGAL
+			return _ILLEGAL
 		default:
 			return xlat[tok]
 		}
@@ -329,7 +363,6 @@ func Parse(fname string, src []byte) (s *Spec, err error) {
 	l := lexer{
 		Scanner: scanner.New(src),
 		fname:   fname,
-		spec:    &Spec{},
 		src:     src,
 	}
 	l.Fname = fname
@@ -341,7 +374,7 @@ func Parse(fname string, src []byte) (s *Spec, err error) {
 		}
 	}()
 	if yyParse(&l) != 0 {
-		return nil, errList(l.Errors) //TODO
+		return nil, errList(l.Errors)
 	}
 
 	return l.spec, nil
@@ -751,11 +784,11 @@ yydefault:
 		}
 	case 12:
 		{
-			panic(".y:115")
+			yyVAL.rword = Right
 		}
 	case 13:
 		{
-			panic(".y:119")
+			yyVAL.rword = Nonassoc
 		}
 	case 14:
 		{
@@ -789,7 +822,8 @@ yydefault:
 		}
 	case 20:
 		{
-			panic(".y:155")
+			/*TODO Note: invalid with % type. */
+			yyVAL.nmno = &Nmno{yyS[yypt-1].item, yyS[yypt-0].number}
 		}
 	case 21:
 		{
@@ -825,11 +859,11 @@ yydefault:
 			/* Copy action, translate $$, and so on. */
 			lx := lx(yylex)
 			lx.Mode(false)
+			off0 := lx.Pos()
 			n := 0
 		act_loop:
 			for {
-				tok, val := lx.Scan()
-				dbg("act: %s %v", tok, val)
+				tok, _ := lx.Scan()
 				switch tok {
 				case scanner.LBRACE:
 					n++
@@ -842,7 +876,7 @@ yydefault:
 					n--
 				}
 			}
-			yyVAL.act = &Act{} //TODO
+			yyVAL.act = &Act{Src: string(lx.src[off0 : lx.Pos()-1])}
 		}
 	case 29:
 		{
@@ -850,7 +884,7 @@ yydefault:
 		}
 	case 30:
 		{
-			panic(".y:209")
+			yyVAL.prec = &Prec{Identifier: yyS[yypt-0].item}
 		}
 	case 31:
 		{

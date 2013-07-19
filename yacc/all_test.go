@@ -56,7 +56,11 @@ func test0(t *testing.T, root string) {
 			t.Fatal(err)
 		}
 
-		t.Logf("\n%s", spec)
+		if spec == nil {
+			t.Fatal(spec)
+		}
+
+		t.Logf("%s\n%s", pth, spec)
 		return nil
 
 	}); err != nil {
@@ -65,5 +69,5 @@ func test0(t *testing.T, root string) {
 }
 
 func Test0(t *testing.T) {
-	test0(t, "testdata")
+	test0(t, ".")
 }
