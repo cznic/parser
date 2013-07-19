@@ -1,5 +1,3 @@
-//line parser.y:2
-
 /*
 
 Copyright © 2001-2004 The IEEE and The Open Group, All Rights reserved.
@@ -19,33 +17,52 @@ package parser
 
 import __yyfmt__ "fmt"
 
-//line parser.y:18
 import (
+	"bytes"
+	"fmt"
+	"strings"
+
 	"github.com/cznic/scanner/yacc"
+	"github.com/cznic/strutil"
 )
 
-//line parser.y:26
 type yySymType struct {
 	yys    int
+	act    *Act
+	col    int
+	def    *Def
+	defs   []*Def
+	item   interface{}
+	line   int
+	list   []interface{}
+	nlist  []*Nmno
+	nmno   *Nmno
 	number int
+	prec   *Prec
+	rule   *Rule
+	rules  []*Rule
+	rword  Rword
+	s      string
 }
 
-const _IDENTIFIER = 57346
-const _C_IDENTIFIER = 57347
-const _NUMBER = 57348
-const _LEFT = 57349
-const _RIGHT = 57350
-const _NONASSOC = 57351
-const _TOKEN = 57352
-const _PREC = 57353
-const _TYPE = 57354
-const _START = 57355
-const _UNION = 57356
-const _MARK = 57357
-const _LCURL = 57358
-const _RCURL = 57359
+const ILLEGAL = 57346
+const _IDENTIFIER = 57347
+const _C_IDENTIFIER = 57348
+const _NUMBER = 57349
+const _LEFT = 57350
+const _RIGHT = 57351
+const _NONASSOC = 57352
+const _TOKEN = 57353
+const _PREC = 57354
+const _TYPE = 57355
+const _START = 57356
+const _UNION = 57357
+const _MARK = 57358
+const _LCURL = 57359
+const _RCURL = 57360
 
 var yyToknames = []string{
+	"ILLEGAL",
 	"_IDENTIFIER",
 	"_C_IDENTIFIER",
 	"_NUMBER",
@@ -67,120 +84,333 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyMaxDepth = 200
 
-//line parser.y:215
+func str(v interface{}) string {
+	var buf bytes.Buffer
+	f := strutil.IndentFormatter(&buf, ". ")
+	g := func(interface{}) {}
+	g = func(v interface{}) {
+		switch x := v.(type) {
+		case string:
+			f.Format("%q\n", x)
+		case *Def:
+			f.Format("%T {%i\n", x)
+			f.Format("Rword: %s, ", x.Rword)
+			f.Format("Tag: %q, ", x.Tag)
+			f.Format("Nlist: %T:%d {%i\n", x.Nlist, len(x.Nlist))
+			for i, v := range x.Nlist {
+				f.Format("[%d] ", i)
+				g(v)
+			}
+			f.Format("%u}\n")
+			f.Format("%u}\n")
+		case *Nmno:
+			f.Format("%T{Identifier: %T(%v), Number: %d}\n", x, x.Identifier, x.Identifier, x.Number)
+		case *Rule:
+			f.Format("%T {%i\n", x)
+			f.Format("Name: %q, ", x.Name)
+			f.Format("Body: %T: %d {%i\n", x.Body, len(x.Body))
+			for i, v := range x.Body {
+				f.Format("[%d] ", i)
+				g(v)
+			}
+			f.Format("%u}\n")
+			f.Format("%u}\n")
+		case *Spec:
+			f.Format("%T {%i\n", x)
+			f.Format("Defs: %T:%d {%i\n", x.Defs, len(x.Defs))
+			for i, v := range x.Defs {
+				f.Format("[%d] ", i)
+				g(v)
+			}
+			f.Format("}%u\n")
+			f.Format("Rules: %T:%d {%i\n", x.Rules, len(x.Rules))
+			for i, v := range x.Rules {
+				f.Format("[%d] ", i)
+				g(v)
+			}
+			f.Format("%u}\n")
+			f.Format("Tail: %q\n", x.Tail)
+			f.Format("%u}\n")
+		default:
+			f.Format("TODO(str): %T(%#v)\n", x, x)
+		}
+	}
+	g(v)
+	return buf.String()
+}
 
-var xlat = map[scanner.Token]int{
-	scanner.C_IDENTIFIER: _C_IDENTIFIER,
-	scanner.IDENTIFIER:   _IDENTIFIER,
-	scanner.INT:          _NUMBER,
-	scanner.LCURL:        _LCURL,
-	scanner.LEFT:         _LEFT,
-	scanner.MARK:         _MARK,
-	scanner.NONASSOC:     _NONASSOC,
-	scanner.PREC:         _PREC,
-	scanner.RCURL:        _RCURL,
-	scanner.RIGHT:        _RIGHT,
-	scanner.START:        _START,
-	scanner.TOKEN:        _TOKEN,
-	scanner.TYPE:         _TYPE,
-	scanner.UNION:        _UNION,
+//TODO
+type Spec struct {
+	Defs  []*Def
+	Rules []*Rule
+	Tail  string
+}
+
+// String implements fmt.Stringer.
+func (s *Spec) String() string {
+	return str(s)
+}
+
+//TODO
+type Def struct {
+	Rword Rword
+	Tag   string
+	Nlist []*Nmno
+}
+
+// String implements fmt.Stringer.
+func (s *Def) String() string {
+	return str(s)
+}
+
+//TODO
+type Rule struct {
+	Name string
+	Body []interface{}
+	Prec *Prec
+} //TODO
+
+// String implements fmt.Stringer.
+func (s *Rule) String() string {
+	return str(s)
+}
+
+//TODO
+type Nmno struct {
+	Identifier interface{}
+	Number     int
+}
+
+// String implements fmt.Stringer.
+func (s *Nmno) String() string {
+	return str(s)
+}
+
+//TODO
+type Prec struct {
+	Identifier interface{}
+	Act        *Act
+}
+
+// String implements fmt.Stringer.
+func (s *Prec) String() string {
+	return str(s)
+}
+
+//TODO
+type Act struct{} //TODO
+
+// String implements fmt.Stringer.
+func (s *Act) String() string {
+	return str(s)
+}
+
+type Rword int
+
+const (
+	_ Rword = iota
+
+	// Def.Rword
+	Copy
+	Left
+	Nonassoc
+	Right
+	Start
+	Token
+	Type
+	Union
+)
+
+var rwords = map[Rword]string{
+	Copy:     "%{",
+	Left:     "Left",
+	Nonassoc: "Nonassoc",
+	Right:    "Right",
+	Start:    "Start",
+	Token:    "Token",
+	Type:     "Type",
+	Union:    "Union",
+}
+
+// String implements fmt.Stringer.
+func (r Rword) String() string {
+	if s := rwords[r]; s != "" {
+		return s
+	}
+
+	return fmt.Sprintf("%T(%d)", r, r)
 }
 
 type lexer struct {
 	*scanner.Scanner
+	fname  string
+	rname  string // last rule name for '|' rules
+	spec   *Spec
+	src    []byte
+	closed bool
+}
+
+var xlat = map[scanner.Token]int{
+	scanner.LCURL:    _LCURL,
+	scanner.LEFT:     _LEFT,
+	scanner.MARK:     _MARK,
+	scanner.NONASSOC: _NONASSOC,
+	scanner.PREC:     _PREC,
+	scanner.RCURL:    _RCURL,
+	scanner.RIGHT:    _RIGHT,
+	scanner.START:    _START,
+	scanner.TOKEN:    _TOKEN,
+	scanner.TYPE:     _TYPE,
+	scanner.UNION:    _UNION,
+
+	scanner.EOF: 0,
+	scanner.OR:  '|',
 }
 
 func (l *lexer) Lex(lval *yySymType) (y int) {
-	tok, val := l.Scan()
-	switch tok {
-	case scanner.INT:
-		if n, ok := val.(uint64); ok {
-			lval.number = int(n)
-		}
-		return _NUMBER
-	default:
-		y = xlat[tok]
+	if l.closed {
+		return 0
 	}
 
-	panic(".156")
+	for {
+		tok, val := l.Scan()
+		lval.line, lval.col = l.Line, l.Col
+		dbg("%s %T(%#v) %s:%d:%d", tok, val, val, l.fname, l.Line, l.Col)
+		switch tok {
+		case scanner.COMMENT:
+			continue
+		case scanner.C_IDENTIFIER:
+			if s, ok := val.(string); ok {
+				lval.s = s
+			}
+			return _C_IDENTIFIER
+		case scanner.IDENTIFIER:
+			if s, ok := val.(string); ok {
+				lval.item = s
+			}
+			return _IDENTIFIER
+		case scanner.INT:
+			if n, ok := val.(uint64); ok {
+				lval.number = int(n)
+			}
+			return _NUMBER
+		case scanner.CHAR:
+			if n, ok := val.(int32); ok {
+				lval.item = int(n)
+			}
+			return _IDENTIFIER
+		case scanner.ILLEGAL:
+			if s, ok := val.(string); ok && s != "" {
+				return int([]rune(s)[0])
+			}
+			return ILLEGAL
+		default:
+			return xlat[tok]
+		}
+	}
+}
+
+type errList []error
+
+func (e errList) Error() string {
+	a := []string{}
+	for _, v := range e {
+		a = append(a, v.Error())
+	}
+	return strings.Join(a, "\n")
+}
+
+func lx(yylex yyLexer) *lexer {
+	return yylex.(*lexer)
 }
 
 //TODO docs
-func Parse(fname string, src []byte) (y []interface{}, err error) {
-	l := lexer{scanner.New(src)}
+func Parse(fname string, src []byte) (s *Spec, err error) {
+	l := lexer{
+		Scanner: scanner.New(src),
+		fname:   fname,
+		spec:    &Spec{},
+		src:     src,
+	}
 	l.Fname = fname
+	defer func() {
+		if e := recover(); e != nil {
+			l.Error(fmt.Sprintf("%v", e))
+			err = errList(l.Errors)
+			return
+		}
+	}()
 	if yyParse(&l) != 0 {
-		return nil, l.Errors[0] //TODO
+		return nil, errList(l.Errors) //TODO
 	}
 
-	return
+	return l.spec, nil
 }
 
-//line yacctab:1
 var yyExca = []int{
 	-1, 1,
 	1, -1,
 	-2, 0,
 }
 
-const yyNprod = 35
+const yyNprod = 33
 const yyPrivate = 57344
 
 var yyTokenNames []string
 var yyStates []string
 
-const yyLast = 48
+const yyLast = 44
 
 var yyAct = []int{
 
-	35, 33, 28, 25, 10, 11, 12, 9, 43, 13,
-	5, 6, 3, 7, 34, 47, 37, 40, 19, 26,
-	39, 36, 23, 15, 44, 29, 30, 31, 32, 16,
-	38, 37, 22, 41, 42, 45, 21, 24, 27, 18,
-	8, 17, 4, 20, 14, 46, 2, 1,
+	33, 31, 26, 10, 11, 12, 9, 32, 13, 5,
+	6, 3, 7, 24, 34, 41, 35, 38, 18, 22,
+	42, 37, 15, 27, 35, 28, 16, 1, 36, 21,
+	19, 39, 40, 17, 23, 8, 29, 30, 14, 20,
+	25, 2, 4, 43,
 }
 var yyPact = []int{
 
-	-1000, -1000, -3, 18, -1000, 25, -1000, -1000, 0, -1000,
-	-1000, -1000, -1000, -1000, 17, -1000, -1000, 2, 21, 22,
-	-1000, -1000, -1000, -1000, -1000, 10, -1000, 21, -1000, 14,
-	-2, 10, 10, -15, -1000, -1000, 20, -1000, -1000, -1000,
-	-1000, -15, -15, -1000, -5, -7, -1000, -1000,
+	-1000, -1000, -5, 16, -1000, 21, -1000, -1000, -1, -1000,
+	-1000, -1000, -1000, -1000, 13, -1000, -1000, 18, 20, -1000,
+	-1000, -1000, -1000, -1000, 2, 18, -1000, 14, -3, 2,
+	2, -8, -1000, -1000, 15, -1000, -1000, -1000, -1000, -8,
+	-8, -1000, -6, -1000,
 }
 var yyPgo = []int{
 
-	0, 47, 46, 44, 43, 42, 41, 40, 39, 38,
-	2, 3, 1, 36, 0, 35,
+	0, 0, 42, 41, 13, 40, 2, 1, 39, 38,
+	35, 33, 30, 27,
 }
 var yyR1 = []int{
 
-	0, 1, 4, 4, 2, 2, 5, 5, 6, 5,
-	5, 7, 7, 7, 7, 7, 8, 8, 9, 9,
-	10, 10, 3, 3, 13, 13, 11, 11, 11, 15,
-	14, 12, 12, 12, 12,
+	0, 13, 12, 12, 3, 3, 2, 2, 2, 2,
+	10, 10, 10, 10, 10, 11, 11, 5, 5, 6,
+	6, 9, 9, 8, 8, 4, 4, 4, 1, 7,
+	7, 7, 7,
 }
 var yyR2 = []int{
 
-	0, 4, 0, 1, 0, 2, 2, 1, 0, 3,
-	3, 1, 1, 1, 1, 1, 0, 3, 1, 2,
-	1, 2, 3, 2, 3, 3, 0, 2, 2, 0,
-	3, 0, 2, 3, 2,
+	0, 4, 0, 1, 0, 2, 2, 1, 1, 3,
+	1, 1, 1, 1, 1, 0, 3, 1, 2, 1,
+	2, 3, 2, 3, 3, 0, 2, 2, 1, 0,
+	2, 3, 2,
 }
 var yyChk = []int{
 
-	-1000, -1, -2, 15, -5, 13, 14, 16, -7, 10,
-	7, 8, 9, 12, -3, 5, 4, -6, -8, 18,
-	-4, -13, 15, 5, 20, -11, 17, -9, -10, 4,
-	4, -11, -11, -12, 4, -14, 11, 21, -10, 6,
-	19, -12, -12, 23, 4, -15, -14, 22,
+	-1000, -13, -3, 16, -2, 14, 15, 17, -10, 11,
+	8, 9, 10, 13, -9, 6, 5, -11, 19, -12,
+	-8, 16, 6, 21, -4, -5, -6, 5, 5, -4,
+	-4, -7, 5, -1, 12, 22, -6, 7, 20, -7,
+	-7, 23, 5, -1,
 }
 var yyDef = []int{
 
-	4, -2, 0, 0, 5, 0, 7, 8, 16, 11,
-	12, 13, 14, 15, 2, 26, 6, 0, 0, 0,
-	1, 23, 3, 26, 26, 31, 9, 10, 18, 20,
-	0, 31, 31, 22, 27, 28, 0, 29, 19, 21,
-	17, 24, 25, 34, 32, 0, 33, 30,
+	4, -2, 0, 0, 5, 0, 7, 8, 15, 10,
+	11, 12, 13, 14, 2, 25, 6, 0, 0, 1,
+	22, 3, 25, 25, 29, 9, 17, 19, 0, 29,
+	29, 21, 26, 27, 0, 28, 18, 20, 16, 23,
+	24, 32, 30, 31,
 }
 var yyTok1 = []int{
 
@@ -190,24 +420,22 @@ var yyTok1 = []int{
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 23,
-	18, 3, 19, 3, 3, 3, 3, 3, 3, 3,
+	19, 3, 20, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 21, 20, 22,
+	3, 3, 3, 22, 21,
 }
 var yyTok2 = []int{
 
 	2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-	12, 13, 14, 15, 16, 17,
+	12, 13, 14, 15, 16, 17, 18,
 }
 var yyTok3 = []int{
 	0,
 }
-
-//line yaccpar:1
 
 /*	parser for yacc output	*/
 
@@ -433,175 +661,204 @@ yydefault:
 	switch yynt {
 
 	case 1:
-		//line parser.y:56
 		{
-			panic(".y:56")
+			lx(yylex).spec = &Spec{Defs: yyS[yypt-3].defs, Rules: yyS[yypt-1].rules, Tail: yyS[yypt-0].s}
 		}
 	case 2:
-		//line parser.y:62
 		{
-			panic(".y:62")
+			yyVAL.s = ""
 		}
 	case 3:
-		//line parser.y:66
 		{
 			/* In this action, set up the rest of the file. */
-			panic(".y:67")
+			lx := lx(yylex)
+			yyVAL.s = string(lx.src[lx.Pos()+1:])
+			lx.closed = true
 		}
 	case 4:
-		//line parser.y:72
 		{
-			panic(".y:73")
+			yyVAL.defs = []*Def(nil)
 		}
 	case 5:
-		//line parser.y:76
 		{
-			panic(".y:77")
+			yyVAL.defs = append(yyS[yypt-1].defs, yyS[yypt-0].def)
 		}
 	case 6:
-		//line parser.y:82
 		{
-			panic(".y:83")
+			s, ok := yyS[yypt-0].item.(string)
+			if !ok {
+				lx := lx(yylex)
+				lx.Error(fmt.Sprintf("%s:%d:%d expected name", lx.fname, yyS[yypt-0].line, yyS[yypt-0].col))
+			}
+			yyVAL.def = &Def{Rword: Start, Tag: s}
 		}
 	case 7:
-		//line parser.y:86
 		{
 			/* Copy union definition to output. */
-			panic(".y:88")
+			lx := lx(yylex)
+			lx.Mode(false)
+			off0 := lx.Pos() + 5
+			n := 0
+		union_loop:
+			for {
+				tok, _ := lx.Scan()
+				switch tok {
+				case scanner.LBRACE:
+					n++
+				case scanner.RBRACE:
+					n--
+					if n == 0 {
+						lx.Mode(true)
+						break union_loop
+					}
+				}
+			}
+			s := string(lx.src[off0:lx.Pos()])
+			yyVAL.def = &Def{Rword: Union, Tag: s}
 		}
 	case 8:
-		//line parser.y:90
 		{
 			/* Copy Go code to output file. */
-			panic(".y:93")
+			lx := lx(yylex)
+			off0, lpos := lx.Pos(), lx.Pos()
+			lx.Mode(false)
+			var last scanner.Token
+		lcurl_loop:
+			for {
+				tok, _ := lx.ScanRaw()
+				if tok == scanner.RBRACE && last == scanner.REM && lx.Pos() == lpos+1 {
+					lx.Mode(true)
+					s := string(lx.src[off0+1 : lpos-1])
+					//dbg("----\n%q\n----\n", s)
+					yyVAL.def = &Def{Rword: Copy, Tag: s}
+					break lcurl_loop
+				}
+
+				last, lpos = tok, lx.Pos()
+			}
 		}
 	case 9:
-		//line parser.y:94
 		{
-			panic(".y:97")
+			yyVAL.def = &Def{Rword: yyS[yypt-2].rword, Tag: yyS[yypt-1].s, Nlist: yyS[yypt-0].nlist}
 		}
 	case 10:
-		//line parser.y:98
 		{
-			panic(".y:101")
+			yyVAL.rword = Token
 		}
 	case 11:
-		//line parser.y:104
 		{
-			panic(".y:107")
+			yyVAL.rword = Left
 		}
 	case 12:
-		//line parser.y:108
-		{
-			panic(".y:111")
-		}
-	case 13:
-		//line parser.y:112
 		{
 			panic(".y:115")
 		}
-	case 14:
-		//line parser.y:116
+	case 13:
 		{
 			panic(".y:119")
 		}
-	case 15:
-		//line parser.y:120
+	case 14:
 		{
-			panic(".y:123")
+			yyVAL.rword = Type
+		}
+	case 15:
+		{
+			yyVAL.s = ""
 		}
 	case 16:
-		//line parser.y:126
 		{
-			panic(".y:129")
+			lx := lx(yylex)
+			s, ok := yyS[yypt-1].item.(string)
+			if !ok {
+				lx.Error(fmt.Sprintf("%s:%d:%d expected name", lx.fname, yyS[yypt-1].line, yyS[yypt-1].col))
+			}
+			yyVAL.s = s
 		}
 	case 17:
-		//line parser.y:130
 		{
-			panic(".y:133")
+			yyVAL.nlist = []*Nmno{yyS[yypt-0].nmno}
 		}
 	case 18:
-		//line parser.y:136
 		{
-			panic(".y:139")
+			yyVAL.nlist = append(yyS[yypt-1].nlist, yyS[yypt-0].nmno)
 		}
 	case 19:
-		//line parser.y:140
 		{
-			panic(".y:143")
+			/*TODO Note: literal invalid with % type. */
+			yyVAL.nmno = &Nmno{yyS[yypt-0].item, -1}
 		}
 	case 20:
-		//line parser.y:146
 		{
-			/* Note: literal invalid with % type. */
-			panic(".y:150")
-		}
-	case 21:
-		//line parser.y:150
-		{
-			/* Note: invalid with % type. */
 			panic(".y:155")
 		}
-	case 22:
-		//line parser.y:158
+	case 21:
 		{
-			panic(".y:163")
+			yyVAL.rules = []*Rule{&Rule{Name: yyS[yypt-2].s, Body: yyS[yypt-1].list, Prec: yyS[yypt-0].prec}}
+		}
+	case 22:
+		{
+			yyVAL.rules = append(yyS[yypt-1].rules, yyS[yypt-0].rule)
 		}
 	case 23:
-		//line parser.y:162
 		{
-			panic(".y:167")
+			yyVAL.rule = &Rule{Name: yyS[yypt-2].s, Body: yyS[yypt-1].list, Prec: yyS[yypt-0].prec}
+			lx(yylex).rname = yyS[yypt-2].s
 		}
 	case 24:
-		//line parser.y:168
 		{
-			panic(".y:173")
+			yyVAL.rule = &Rule{Name: lx(yylex).rname, Body: yyS[yypt-1].list, Prec: yyS[yypt-0].prec}
 		}
 	case 25:
-		//line parser.y:172
 		{
-			panic(".y:177")
+			yyVAL.list = []interface{}(nil)
 		}
 	case 26:
-		//line parser.y:178
 		{
-			panic(".y:183")
+			yyVAL.list = append(yyS[yypt-1].list, yyS[yypt-0].item)
 		}
 	case 27:
-		//line parser.y:182
 		{
-			panic(".y:187")
+			yyVAL.list = append(yyS[yypt-1].list, yyS[yypt-0].act)
 		}
 	case 28:
-		//line parser.y:186
-		{
-			panic(".y:191")
-		}
-	case 29:
-		//line parser.y:192
 		{
 			/* Copy action, translate $$, and so on. */
-			panic(".y:198")
+			lx := lx(yylex)
+			lx.Mode(false)
+			n := 0
+		act_loop:
+			for {
+				tok, val := lx.Scan()
+				dbg("act: %s %v", tok, val)
+				switch tok {
+				case scanner.LBRACE:
+					n++
+				case scanner.RBRACE:
+					if n == 0 {
+						lx.Mode(true)
+						break act_loop
+					}
+
+					n--
+				}
+			}
+			yyVAL.act = &Act{} //TODO
 		}
-	case 31:
-		//line parser.y:199
+	case 29:
 		{
-			panic(".y:205")
+			yyVAL.prec = nil
 		}
-	case 32:
-		//line parser.y:203
+	case 30:
 		{
 			panic(".y:209")
 		}
-	case 33:
-		//line parser.y:207
+	case 31:
 		{
-			panic(".y:213")
+			yyVAL.prec = &Prec{Identifier: yyS[yypt-1].item, Act: yyS[yypt-0].act}
 		}
-	case 34:
-		//line parser.y:211
+	case 32:
 		{
-			panic(".y:217")
+			yyVAL.prec = &Prec{}
 		}
 	}
 	goto yystack /* stack new state and value */

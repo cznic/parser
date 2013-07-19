@@ -12,7 +12,8 @@ editor: parser.go
 	go build
 
 parser.go: parser.y
-	go tool yacc -o $@ $<
+	go tool yacc -l -o $@ $<
+	sed -i 's|//line .*:.*||' $@
 
 todo:
 	@grep -n ^[[:space:]]*_[[:space:]]*=[[:space:]][[:alpha:]][[:alnum:]]* *.go *.l || true

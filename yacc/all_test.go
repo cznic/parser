@@ -5,11 +5,21 @@
 package parser
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
+	"path"
 	"path/filepath"
+	"runtime"
 	"testing"
 )
+
+func dbg(s string, va ...interface{}) {
+	_, fn, fl, _ := runtime.Caller(1)
+	fmt.Printf("%s:%d: ", path.Base(fn), fl)
+	fmt.Printf(s, va...)
+	fmt.Println()
+}
 
 func test0(t *testing.T, root string) {
 	if err := filepath.Walk(root, func(pth string, info os.FileInfo, err error) error {
@@ -41,10 +51,12 @@ func test0(t *testing.T, root string) {
 			t.Fatal(err)
 		}
 
-		if _, err := Parse(pth, src); err != nil {
+		spec, err := Parse(pth, src)
+		if err != nil {
 			t.Fatal(err)
 		}
 
+		t.Logf("\n%s", spec)
 		return nil
 
 	}); err != nil {
