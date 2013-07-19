@@ -121,8 +121,8 @@ func (s *Rule) String() string {
 }
 
 // Name-or-number is a definition section name list item. It's either a
-// production name (type string), or a [rune] literal (type rune). Optional
-// number associated with the name is in NUmber, if non-negative.
+// production name (type string), or a rune literal. Optional number associated
+// with the name is in number, if non-negative.
 type Nmno struct {
 	Identifier interface{}
 	Number     int
@@ -133,7 +133,7 @@ func (s *Nmno) String() string {
 	return str(s)
 }
 
-// Prec defines precedenc of a rule.
+// Prec defines the optional precedence of a rule.
 type Prec struct {
 	Identifier interface{}
 	Act        *Act
@@ -277,7 +277,7 @@ func lx(yylex yyLexer) *lexer {
 	return yylex.(*lexer)
 }
 
-// Parse parses src a single yacc source file fname and returns the
+// Parse parses src as a single yacc source file fname and returns the
 // corresponding Spec. If the source couldn't be read, the returned Spec is nil
 // and the error indicates all of the specific failures.
 func Parse(fname string, src []byte) (s *Spec, err error) {
