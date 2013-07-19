@@ -96,7 +96,8 @@ func (s *Spec) String() string {
 	return str(s)
 }
 
-type Def struct { //TODO docs
+// Def is the definition section definition entity
+type Def struct {
 	Rword Rword
 	Tag   string
 	Nlist []*Nmno
@@ -107,7 +108,8 @@ func (s *Def) String() string {
 	return str(s)
 }
 
-type Rule struct { //TODO docs
+// Rule is the rules section rule.
+type Rule struct {
 	Name string
 	Body []interface{}
 	Prec *Prec
@@ -118,7 +120,10 @@ func (s *Rule) String() string {
 	return str(s)
 }
 
-type Nmno struct { //TODO docs
+// Name-or-number is a definition section name list item. It's either a
+// production name (type string), or a [rune] literal (type rune). Optional
+// number associated with the name is in NUmber, if non-negative.
+type Nmno struct {
 	Identifier interface{}
 	Number     int
 }
@@ -128,7 +133,8 @@ func (s *Nmno) String() string {
 	return str(s)
 }
 
-type Prec struct { //TODO docs
+// Prec defines precedenc of a rule.
+type Prec struct {
 	Identifier interface{}
 	Act        *Act
 }
@@ -138,7 +144,8 @@ func (s *Prec) String() string {
 	return str(s)
 }
 
-type Act struct { //TODO docs
+// Act captures the action optionally associated with a rule.
+type Act struct {
 	Src string
 	//TODO process $$
 }
@@ -270,7 +277,9 @@ func lx(yylex yyLexer) *lexer {
 	return yylex.(*lexer)
 }
 
-//TODO docs
+// Parse parses src a single yacc source file fname and returns the
+// corresponding Spec. If the source couldn't be read, the returned Spec is nil
+// and the error indicates all of the specific failures.
 func Parse(fname string, src []byte) (s *Spec, err error) {
 	l := lexer{
 		Scanner: scanner.New(src),
@@ -339,6 +348,8 @@ func str(v interface{}) string {
 			//TODO bypassing compiler bug? Should work w/o test for nil
 			if x.Act != nil {
 				g(x.Act)
+			} else {
+				f.Format("<nil>")
 			}
 			f.Format("}\n")
 		case *Rule:

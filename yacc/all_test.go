@@ -311,7 +311,7 @@ Foo:
 }
 
 func ExampleDef_nonassoc() {
-	spec, err := Parse("right.y", []byte(`
+	spec, err := Parse("nonassoc.y", []byte(`
 
 %nonassoc foo '+' '-' 1234 'L'
 %nonassoc <typ> '?'
@@ -354,7 +354,7 @@ Foo:
 }
 
 func ExampleDef_type() {
-	spec, err := Parse("right.y", []byte(`
+	spec, err := Parse("type.y", []byte(`
 
 %type <typ> foo '+' '-' 1234 'L'
 %type <list> '?'
@@ -397,7 +397,7 @@ Foo:
 }
 
 func ExampleSpec_tail() {
-	spec, err := Parse("right.y", []byte(`
+	spec, err := Parse("tail.y", []byte(`
 
 %%
 
@@ -428,7 +428,7 @@ Foo:
 }
 
 func ExampleRule() {
-	spec, err := Parse("right.y", []byte(`
+	spec, err := Parse("rule.y", []byte(`
 
 %%
 
@@ -493,6 +493,129 @@ Bar:
 	// . . . Name: "Bar", Body: []interface {}{
 	// . . . . "Bar"
 	// . . . . "IDENT"
+	// . . . }
+	// . . }
+	// . }
+	// . Tail: ""
+	// }
+}
+
+func ExampleAct() {
+	spec, err := Parse("act.y", []byte(`
+
+%%
+
+StatementList:
+	/* Empty */
+	{
+		$$ = nil
+	}
+|	StatementList Statement
+	{
+		$$ = append($1, $2)
+	}
+
+%%
+
+`))
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(spec)
+	// Output:
+	// *parser.Spec{
+	// . Defs: []*parser.Def{
+	// . }
+	// . Rules: []*parser.Rule{
+	// . . *parser.Rule{
+	// . . . Name: "StatementList", Body: []interface {}{
+	// . . . . *parser.Act{Src: "\n\t\t$$ = nil\n\t"}
+	// . . . }
+	// . . }
+	// . . *parser.Rule{
+	// . . . Name: "StatementList", Body: []interface {}{
+	// . . . . "StatementList"
+	// . . . . "Statement"
+	// . . . . *parser.Act{Src: "\n\t\t$$ = append($1, $2)\n\t"}
+	// . . . }
+	// . . }
+	// . }
+	// . Tail: "\n\n"
+	// }
+}
+
+func ExampleNmno() {
+	spec, err := Parse("act.y", []byte(`
+
+%token abc '+' def 123 ghi
+
+%%
+
+Foo:
+
+`))
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(spec)
+	// Output:
+	// *parser.Spec{
+	// . Defs: []*parser.Def{
+	// . . *parser.Def{
+	// . . . Rword: Token, Tag: "", Nlist: []*parser.Nmno{
+	// . . . . *parser.Nmno{Identifier: "abc", Number: -1}
+	// . . . . *parser.Nmno{Identifier: '+', Number: -1}
+	// . . . . *parser.Nmno{Identifier: "def", Number: 123}
+	// . . . . *parser.Nmno{Identifier: "ghi", Number: -1}
+	// . . . }
+	// . . }
+	// . }
+	// . Rules: []*parser.Rule{
+	// . . *parser.Rule{
+	// . . . Name: "Foo", Body: []interface {}{
+	// . . . }
+	// . . }
+	// . }
+	// . Tail: ""
+	// }
+}
+
+func ExamplePrec() {
+	spec, err := Parse("act.y", []byte(`
+
+%%
+
+Foo:
+	bar %prec A
+|	foo %prec B
+	{
+		qux($1)
+	}
+
+`))
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(spec)
+	// Output:
+	// *parser.Spec{
+	// . Defs: []*parser.Def{
+	// . }
+	// . Rules: []*parser.Rule{
+	// . . *parser.Rule{
+	// . . . Name: "Foo", Body: []interface {}{
+	// . . . . "bar"
+	// . . . }
+	// . . . Prec: *parser.Prec{Identifier: "A", Act: <nil>}
+	// . . }
+	// . . *parser.Rule{
+	// . . . Name: "Foo", Body: []interface {}{
+	// . . . . "foo"
+	// . . . }
+	// . . . Prec: *parser.Prec{Identifier: "B", Act: *parser.Act{Src: "\n\t\tqux($1)\n\t"}
 	// . . . }
 	// . . }
 	// . }
