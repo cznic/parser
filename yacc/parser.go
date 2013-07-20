@@ -57,9 +57,10 @@ const _PREC = 57354
 const _TYPE = 57355
 const _START = 57356
 const _UNION = 57357
-const _MARK = 57358
-const _LCURL = 57359
-const _RCURL = 57360
+const _ERR_VERBOSE = 57358
+const _MARK = 57359
+const _LCURL = 57360
+const _RCURL = 57361
 
 var yyToknames = []string{
 	"_ILLEGAL",
@@ -74,6 +75,7 @@ var yyToknames = []string{
 	"_TYPE",
 	"_START",
 	"_UNION",
+	"_ERR_VERBOSE",
 	"_MARK",
 	"_LCURL",
 	"_RCURL",
@@ -162,25 +164,27 @@ const (
 	_ Rword = iota
 
 	// Values of Def.Rword
-	Copy     // %{ ... %}
-	Left     // %left
-	Nonassoc // %nonassoc
-	Right    // %right
-	Start    // %start
-	Token    // %token
-	Type     // %type
-	Union    // %union
+	Copy       // %{ ... %}
+	ErrVerbose // %error-verbose
+	Left       // %left
+	Nonassoc   // %nonassoc
+	Right      // %right
+	Start      // %start
+	Token      // %token
+	Type       // %type
+	Union      // %union
 )
 
 var rwords = map[Rword]string{
-	Copy:     "Copy",
-	Left:     "Left",
-	Nonassoc: "Nonassoc",
-	Right:    "Right",
-	Start:    "Start",
-	Token:    "Token",
-	Type:     "Type",
-	Union:    "Union",
+	Copy:       "Copy",
+	ErrVerbose: "ErrorVerbose",
+	Left:       "Left",
+	Nonassoc:   "Nonassoc",
+	Right:      "Right",
+	Start:      "Start",
+	Token:      "Token",
+	Type:       "Type",
+	Union:      "Union",
 }
 
 // String implements fmt.Stringer.
@@ -202,17 +206,18 @@ type lexer struct {
 }
 
 var xlat = map[scanner.Token]int{
-	scanner.LCURL:    _LCURL,
-	scanner.LEFT:     _LEFT,
-	scanner.MARK:     _MARK,
-	scanner.NONASSOC: _NONASSOC,
-	scanner.PREC:     _PREC,
-	scanner.RCURL:    _RCURL,
-	scanner.RIGHT:    _RIGHT,
-	scanner.START:    _START,
-	scanner.TOKEN:    _TOKEN,
-	scanner.TYPE:     _TYPE,
-	scanner.UNION:    _UNION,
+	scanner.LCURL:       _LCURL,
+	scanner.LEFT:        _LEFT,
+	scanner.MARK:        _MARK,
+	scanner.NONASSOC:    _NONASSOC,
+	scanner.PREC:        _PREC,
+	scanner.RCURL:       _RCURL,
+	scanner.RIGHT:       _RIGHT,
+	scanner.START:       _START,
+	scanner.TOKEN:       _TOKEN,
+	scanner.TYPE:        _TYPE,
+	scanner.UNION:       _UNION,
+	scanner.ERR_VERBOSE: _ERR_VERBOSE,
 
 	scanner.EOF: 0,
 	scanner.OR:  '|',
@@ -393,64 +398,64 @@ var yyExca = []int{
 	-2, 0,
 }
 
-const yyNprod = 33
+const yyNprod = 34
 const yyPrivate = 57344
 
 var yyTokenNames []string
 var yyStates []string
 
-const yyLast = 44
+const yyLast = 45
 
 var yyAct = []int{
 
-	33, 31, 26, 10, 11, 12, 9, 32, 13, 5,
-	6, 3, 7, 24, 34, 41, 35, 38, 18, 22,
-	42, 37, 15, 27, 35, 28, 16, 1, 36, 21,
-	19, 39, 40, 17, 23, 8, 29, 30, 14, 20,
-	25, 2, 4, 43,
+	34, 32, 11, 12, 13, 10, 25, 14, 5, 6,
+	8, 3, 7, 27, 42, 36, 33, 39, 19, 38,
+	16, 43, 28, 35, 1, 23, 29, 17, 20, 18,
+	30, 31, 40, 41, 36, 9, 22, 15, 21, 26,
+	37, 24, 2, 4, 44,
 }
 var yyPact = []int{
 
-	-1000, -1000, -5, 16, -1000, 21, -1000, -1000, -1, -1000,
-	-1000, -1000, -1000, -1000, 13, -1000, -1000, 18, 20, -1000,
-	-1000, -1000, -1000, -1000, 2, 18, -1000, 14, -3, 2,
-	2, -8, -1000, -1000, 15, -1000, -1000, -1000, -1000, -8,
-	-8, -1000, -6, -1000,
+	-1000, -1000, -6, 14, -1000, 22, -1000, -1000, -1000, -2,
+	-1000, -1000, -1000, -1000, -1000, 19, -1000, -1000, 17, 21,
+	-1000, -1000, -1000, -1000, -1000, 11, 17, -1000, 12, -4,
+	11, 11, -10, -1000, -1000, 16, -1000, -1000, -1000, -1000,
+	-10, -10, -1000, -8, -1000,
 }
 var yyPgo = []int{
 
-	0, 0, 42, 41, 13, 40, 2, 1, 39, 38,
-	35, 33, 30, 27,
+	0, 0, 43, 42, 6, 39, 13, 1, 38, 37,
+	35, 29, 28, 24,
 }
 var yyR1 = []int{
 
 	0, 13, 12, 12, 3, 3, 2, 2, 2, 2,
-	10, 10, 10, 10, 10, 11, 11, 5, 5, 6,
-	6, 9, 9, 8, 8, 4, 4, 4, 1, 7,
-	7, 7, 7,
+	2, 10, 10, 10, 10, 10, 11, 11, 5, 5,
+	6, 6, 9, 9, 8, 8, 4, 4, 4, 1,
+	7, 7, 7, 7,
 }
 var yyR2 = []int{
 
-	0, 4, 0, 1, 0, 2, 2, 1, 1, 3,
-	1, 1, 1, 1, 1, 0, 3, 1, 2, 1,
-	2, 3, 2, 3, 3, 0, 2, 2, 1, 0,
-	2, 3, 2,
+	0, 4, 0, 1, 0, 2, 2, 1, 1, 1,
+	3, 1, 1, 1, 1, 1, 0, 3, 1, 2,
+	1, 2, 3, 2, 3, 3, 0, 2, 2, 1,
+	0, 2, 3, 2,
 }
 var yyChk = []int{
 
-	-1000, -13, -3, 16, -2, 14, 15, 17, -10, 11,
-	8, 9, 10, 13, -9, 6, 5, -11, 19, -12,
-	-8, 16, 6, 21, -4, -5, -6, 5, 5, -4,
-	-4, -7, 5, -1, 12, 22, -6, 7, 20, -7,
-	-7, 23, 5, -1,
+	-1000, -13, -3, 17, -2, 14, 15, 18, 16, -10,
+	11, 8, 9, 10, 13, -9, 6, 5, -11, 20,
+	-12, -8, 17, 6, 22, -4, -5, -6, 5, 5,
+	-4, -4, -7, 5, -1, 12, 23, -6, 7, 21,
+	-7, -7, 24, 5, -1,
 }
 var yyDef = []int{
 
-	4, -2, 0, 0, 5, 0, 7, 8, 15, 10,
-	11, 12, 13, 14, 2, 25, 6, 0, 0, 1,
-	22, 3, 25, 25, 29, 9, 17, 19, 0, 29,
-	29, 21, 26, 27, 0, 28, 18, 20, 16, 23,
-	24, 32, 30, 31,
+	4, -2, 0, 0, 5, 0, 7, 8, 9, 16,
+	11, 12, 13, 14, 15, 2, 26, 6, 0, 0,
+	1, 23, 3, 26, 26, 30, 10, 18, 20, 0,
+	30, 30, 22, 27, 28, 0, 29, 19, 21, 17,
+	24, 25, 33, 31, 32,
 }
 var yyTok1 = []int{
 
@@ -459,19 +464,19 @@ var yyTok1 = []int{
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 23,
-	19, 3, 20, 3, 3, 3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 24,
+	20, 3, 21, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 22, 21,
+	3, 3, 3, 23, 22,
 }
 var yyTok2 = []int{
 
 	2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-	12, 13, 14, 15, 16, 17, 18,
+	12, 13, 14, 15, 16, 17, 18, 19,
 }
 var yyTok3 = []int{
 	0,
@@ -779,33 +784,37 @@ yydefault:
 		}
 	case 9:
 		{
-			yyVAL.def = &Def{Rword: yyS[yypt-2].rword, Tag: yyS[yypt-1].s, Nlist: yyS[yypt-0].nlist}
+			yyVAL.def = &Def{Rword: ErrVerbose}
 		}
 	case 10:
 		{
-			yyVAL.rword = Token
+			yyVAL.def = &Def{Rword: yyS[yypt-2].rword, Tag: yyS[yypt-1].s, Nlist: yyS[yypt-0].nlist}
 		}
 	case 11:
 		{
-			yyVAL.rword = Left
+			yyVAL.rword = Token
 		}
 	case 12:
 		{
-			yyVAL.rword = Right
+			yyVAL.rword = Left
 		}
 	case 13:
 		{
-			yyVAL.rword = Nonassoc
+			yyVAL.rword = Right
 		}
 	case 14:
 		{
-			yyVAL.rword = Type
+			yyVAL.rword = Nonassoc
 		}
 	case 15:
 		{
-			yyVAL.s = ""
+			yyVAL.rword = Type
 		}
 	case 16:
+		{
+			yyVAL.s = ""
+		}
+	case 17:
 		{
 			lx := lx(yylex)
 			s, ok := yyS[yypt-1].item.(string)
@@ -814,55 +823,55 @@ yydefault:
 			}
 			yyVAL.s = s
 		}
-	case 17:
+	case 18:
 		{
 			yyVAL.nlist = []*Nmno{yyS[yypt-0].nmno}
 		}
-	case 18:
+	case 19:
 		{
 			yyVAL.nlist = append(yyS[yypt-1].nlist, yyS[yypt-0].nmno)
 		}
-	case 19:
+	case 20:
 		{
 			/*TODO Note: literal invalid with % type. */
 			yyVAL.nmno = &Nmno{yyS[yypt-0].item, -1}
 		}
-	case 20:
+	case 21:
 		{
 			/*TODO Note: invalid with % type. */
 			yyVAL.nmno = &Nmno{yyS[yypt-1].item, yyS[yypt-0].number}
 		}
-	case 21:
+	case 22:
 		{
 			lx(yylex).rname = yyS[yypt-2].s
 			yyVAL.rules = []*Rule{&Rule{Name: yyS[yypt-2].s, Body: yyS[yypt-1].list, Prec: yyS[yypt-0].prec}}
 		}
-	case 22:
+	case 23:
 		{
 			yyVAL.rules = append(yyS[yypt-1].rules, yyS[yypt-0].rule)
 		}
-	case 23:
+	case 24:
 		{
 			lx(yylex).rname = yyS[yypt-2].s
 			yyVAL.rule = &Rule{Name: yyS[yypt-2].s, Body: yyS[yypt-1].list, Prec: yyS[yypt-0].prec}
 		}
-	case 24:
+	case 25:
 		{
 			yyVAL.rule = &Rule{Name: lx(yylex).rname, Body: yyS[yypt-1].list, Prec: yyS[yypt-0].prec}
 		}
-	case 25:
+	case 26:
 		{
 			yyVAL.list = []interface{}(nil)
 		}
-	case 26:
+	case 27:
 		{
 			yyVAL.list = append(yyS[yypt-1].list, yyS[yypt-0].item)
 		}
-	case 27:
+	case 28:
 		{
 			yyVAL.list = append(yyS[yypt-1].list, yyS[yypt-0].act)
 		}
-	case 28:
+	case 29:
 		{
 			/* Copy action, translate $$, and so on. */
 			lx := lx(yylex)
@@ -886,19 +895,19 @@ yydefault:
 			}
 			yyVAL.act = &Act{Src: string(lx.src[off0 : lx.Pos()-1])}
 		}
-	case 29:
+	case 30:
 		{
 			yyVAL.prec = nil
 		}
-	case 30:
+	case 31:
 		{
 			yyVAL.prec = &Prec{Identifier: yyS[yypt-0].item}
 		}
-	case 31:
+	case 32:
 		{
 			yyVAL.prec = &Prec{Identifier: yyS[yypt-1].item, Act: yyS[yypt-0].act}
 		}
-	case 32:
+	case 33:
 		{
 			yyVAL.prec = &Prec{}
 		}

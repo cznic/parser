@@ -70,6 +70,7 @@ func test0(t *testing.T, root string) {
 
 func Test0(t *testing.T) {
 	test0(t, ".")
+	test0(t, filepath.Join(runtime.GOROOT(), "src"))
 }
 
 func ExampleDef_start() {
@@ -340,6 +341,39 @@ Foo:
 	// . . *parser.Def{
 	// . . . Rword: Nonassoc, Tag: "typ", Nlist: []*parser.Nmno{
 	// . . . . *parser.Nmno{Identifier: '?', Number: -1}
+	// . . . }
+	// . . }
+	// . }
+	// . Rules: []*parser.Rule{
+	// . . *parser.Rule{
+	// . . . Name: "Foo", Body: []interface {}{
+	// . . . }
+	// . . }
+	// . }
+	// . Tail: ""
+	// }
+}
+
+func ExampleDef_errVerbose() {
+	spec, err := Parse("type.y", []byte(`
+
+%error-verbose
+
+%%
+
+Foo:
+
+`))
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(spec)
+	// Output:
+	// *parser.Spec{
+	// . Defs: []*parser.Def{
+	// . . *parser.Def{
+	// . . . Rword: ErrorVerbose, Tag: "", Nlist: []*parser.Nmno{
 	// . . . }
 	// . . }
 	// . }

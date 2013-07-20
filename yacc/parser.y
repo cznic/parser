@@ -57,7 +57,7 @@ import (
 
 /* Reserved words : %type=>_TYPE %left=>_LEFT, and so on */
 
-%token	_LEFT _RIGHT _NONASSOC _TOKEN _PREC _TYPE _START _UNION
+%token	_LEFT _RIGHT _NONASSOC _TOKEN _PREC _TYPE _START _UNION _ERR_VERBOSE
 
 %token	_MARK            /* The %% mark. */
 %token	_LCURL           /* The %{ mark. */
@@ -169,6 +169,10 @@ def:
 
 			last, lpos = tok, lx.Pos()
 		}
+	}
+|	_ERR_VERBOSE
+	{
+		$$ = &Def{Rword: ErrVerbose}
 	}
 |	rword tag nlist
 	{
@@ -397,25 +401,27 @@ const (
 	_ Rword = iota
 
 	// Values of Def.Rword
-	Copy     // %{ ... %}
-	Left     // %left
-	Nonassoc // %nonassoc
-	Right    // %right
-	Start    // %start
-	Token    // %token
-	Type     // %type
-	Union    // %union
+	Copy       // %{ ... %}
+	ErrVerbose // %error-verbose
+	Left       // %left
+	Nonassoc   // %nonassoc
+	Right      // %right
+	Start      // %start
+	Token      // %token
+	Type       // %type
+	Union      // %union
 )
 
 var rwords = map[Rword]string{
-	Copy:     "Copy",
-	Left:     "Left",
-	Nonassoc: "Nonassoc",
-	Right:    "Right",
-	Start:    "Start",
-	Token:    "Token",
-	Type:     "Type",
-	Union:    "Union",
+	Copy:       "Copy",
+	ErrVerbose: "ErrorVerbose",
+	Left:       "Left",
+	Nonassoc:   "Nonassoc",
+	Right:      "Right",
+	Start:      "Start",
+	Token:      "Token",
+	Type:       "Type",
+	Union:      "Union",
 }
 
 // String implements fmt.Stringer.
@@ -448,6 +454,7 @@ var xlat = map[scanner.Token]int{
 	scanner.TOKEN:        _TOKEN,
 	scanner.TYPE:         _TYPE,
 	scanner.UNION:        _UNION,
+	scanner.ERR_VERBOSE:  _ERR_VERBOSE,
 
 	scanner.EOF:          0,
 	scanner.OR:           '|',
