@@ -355,7 +355,7 @@ Foo:
 }
 
 func ExampleDef_errVerbose() {
-	spec, err := Parse("type.y", []byte(`
+	spec, err := Parse("errVerbose.y", []byte(`
 
 %error-verbose
 
@@ -580,7 +580,7 @@ StatementList:
 }
 
 func ExampleNmno() {
-	spec, err := Parse("act.y", []byte(`
+	spec, err := Parse("nmno.y", []byte(`
 
 %token abc '+' def 123 ghi
 
@@ -617,7 +617,7 @@ Foo:
 }
 
 func ExamplePrec() {
-	spec, err := Parse("act.y", []byte(`
+	spec, err := Parse("prec.y", []byte(`
 
 %%
 
