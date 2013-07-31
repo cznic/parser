@@ -108,29 +108,14 @@ Fix 'Receiver'
 
 // ----------------------------------------------------------------------------
 //
-// 24+4=28
-// chancomm commchan
-// Fix BuiltinCall
+//24+4=28
+//chancomm commchan
+//Fix BuiltinCall
 
 // ----------------------------------------------------------------------------
 // 
 // 8+4=12
 // ParameterDecl
-
-// ----------------------------------------------------------------------------
-//
-// 9+3=12
-// Fix ReceiverType
-
-// ----------------------------------------------------------------------------
-//
-// 6+3=9
-// Fix ForStmt
-
-// ----------------------------------------------------------------------------
-//
-// 5+3=8
-// Fix ForStmt
 
 
 // ============================================================================
@@ -198,7 +183,7 @@ ArrayLength = Expression .
 ArrayType = "[" ArrayLength "]" ElementType .
 Assignment = ExpressionList assign_op ExpressionList .
 BaseType = Type .
-//BaseTypeName = type_name .
+BaseTypeName = type_name .
 BasicLit = int_lit
 	| float_lit
 	| imaginary_lit
@@ -239,7 +224,7 @@ Element = [ Key ":" ] Value .
 ElementIndex = Expression .
 ElementList = Element { "," Element } .
 ElementType = Type .
-//EmptyStmt = .
+EmptyStmt = .
 ExprCaseClause = ExprSwitchCase ":" StatementList .
 ExprSwitchCase = "case" ExpressionList
 	| "default" .
@@ -330,11 +315,10 @@ RangeClause = (
 		  ExpressionList "="
 		| IdentifierList colas
 	  ) "range" Expression .
-//Receiver = "(" [ Dclname ] [ "*" ] BaseTypeName ")" .
-Receiver = "(" ParameterDecl ")" .
+Receiver = "(" [ Dclname ] [ "*" ] BaseTypeName ")" .
 ReceiverType = TypeName
 	| "(" "*" TypeName ")"
-	| "(" TypeName ")" .
+	| "(" ReceiverType ")" .
 RecvExpr = Expression .
 RecvStmt = [
 		  ExpressionList "="
@@ -347,7 +331,8 @@ Selector = "." Dclname .
 SendStmt = Channel comm Expression .
 ShortVarDecl = IdentifierList colas ExpressionList .
 Signature = Parameters [ Result ] .
-SimpleStmt = ExpressionStmt
+SimpleStmt = EmptyStmt
+	| ExpressionStmt
 	| SendStmt
 	| IncDecStmt
 	| Assignment
@@ -356,7 +341,6 @@ Slice = "[" [ Expression ] ":" [ Expression ] "]" .
 SliceType = "[" "]" ElementType .
 SourceFile = PackageClause ";" { ImportDecl ";" } { TopLevelDecl ";" } .
 Statement = Declaration
-//	| EmptyStmt
 	| LabeledStmt
 	| SimpleStmt
 	| GoStmt
@@ -371,7 +355,7 @@ Statement = Declaration
 	| SelectStmt
 	| ForStmt
 	| DeferStmt .
-StatementList = { [ Statement ] ";" } .
+StatementList = { Statement ";" } .
 StructType = "struct" "{" { FieldDecl ";" } "}" .
 SwitchStmt = ExprSwitchStmt | TypeSwitchStmt .
 Tag = string_lit .
