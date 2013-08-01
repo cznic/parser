@@ -20,7 +20,19 @@ ReceiverType
 58+0=58
 ...............................................................................
 chancomm, commchan
-47+0=47 (-wr 1: 24+3=27; -wr 2: 24+3=27)
+47+0=47 (-wr 1: 24+3=27; -wr 2: 24+3=27 -wr 5: 36+0=36)
+...............................................................................
+-LabeledStmt
+4:26+2=28 5:35+0
+...............................................................................
+Receiver
+4:25+2=27 5:34+0
+...............................................................................
+//ParameterDecl
+//1:7+5=12 4:9+4=13 5:18+2=20 6-8:28+1=30 9:37+0
+-Result, Signature
+1,2:11+3=14 3,3:13+2=15 5,10:22+0 1000:31+0
+//TODO AnonymousField = [ "*" ] Dclname [ "." Dclname ] . // etc. TypeName onle where it matters
 
 */
 
@@ -158,7 +170,7 @@ Assignment = ExpressionList assign_op ExpressionList .
 BaseType = Type .
 
 //BaseTypeName = identifier .
-BaseTypeName = type_name .
+//BaseTypeName = type_name .
 
 BasicLit = int_lit
 	| float_lit
@@ -272,7 +284,8 @@ KeyType = Type .
 //Label = identifier .
 Label = Dclname .
 
-LabeledStmt = Label ":" [ Statement ] .
+//LabeledStmt = Label ":" [ Statement ] .
+
 Literal = BasicLit
 	| CompositeLit
 	| FunctionLit .
@@ -327,7 +340,13 @@ RangeClause = (
 	  ) "range" Expression .
 
 //Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
-Receiver = "(" [ Dclname ] [ "*" ] BaseTypeName ")" .
+//Receiver = "(" [ Dclname ] [ "*" ] BaseTypeName ")" .
+//Receiver = "(" [ Dclname ] [ "*" ] Dclname ")" .
+Receiver = 
+	  "(" "*" Dclname ")"
+	| "(" Dclname ")"
+	| "(" Dclname "*" Dclname ")"
+	| "(" Dclname Dclname ")" .
 
 //ReceiverType = TypeName
 //	| "(" "*" TypeName ")"
@@ -340,7 +359,7 @@ RecvStmt = [
 		  ExpressionList "="
 		| IdentifierList colas
 	  ] RecvExpr .
-Result = Parameters | Type .
+//Result = Parameters | Type .
 ReturnStmt = "return" [ ExpressionList ] .
 SelectStmt = "select" "{" { CommClause } "}" .
 
@@ -349,7 +368,9 @@ Selector = "." Dclname .
 
 SendStmt = Channel comm Expression .
 ShortVarDecl = IdentifierList colas ExpressionList .
-Signature = Parameters [ Result ] .
+
+//Signature = Parameters [ Result ] .
+Signature = Parameters [ Parameters | TypeName | TypeLit ] .
 
 //SimpleStmt = EmptyStmt
 //	| ExpressionStmt
@@ -366,8 +387,24 @@ SimpleStmt = ExpressionStmt
 Slice = "[" [ Expression ] ":" [ Expression ] "]" .
 SliceType = "[" "]" ElementType .
 SourceFile = PackageClause ";" { ImportDecl ";" } { TopLevelDecl ";" } .
+
+//Statement = Declaration
+//	| LabeledStmt
+//	| SimpleStmt
+//	| GoStmt
+//	| ReturnStmt
+//	| BreakStmt
+//	| ContinueStmt
+//	| GotoStmt
+//	| FallthroughStmt
+//	| Block
+//	| IfStmt
+//	| SwitchStmt
+//	| SelectStmt
+//	| ForStmt
+//	| DeferStmt .
 Statement = Declaration
-	| LabeledStmt
+	| Label ":"
 	| SimpleStmt
 	| GoStmt
 	| ReturnStmt
@@ -381,6 +418,7 @@ Statement = Declaration
 	| SelectStmt
 	| ForStmt
 	| DeferStmt .
+
 StatementList = { [ Statement ] ";" } .
 StructType = "struct" "{" { FieldDecl ";" } "}" .
 SwitchStmt = ExprSwitchStmt | TypeSwitchStmt .
