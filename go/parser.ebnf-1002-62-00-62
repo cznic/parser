@@ -15,12 +15,6 @@ Split identifier
 ...............................................................................
 ReceiverType
 62+0=62
-...............................................................................
--EmptyStmt; m SimpleStmt, LabeledStmt, StatementList
-58+0=58
-...............................................................................
-chancomm, commchan
-47+0=47 (-wr 1: 24+3=27; -wr 2: 24+3=27)
 
 */
 
@@ -28,10 +22,8 @@ chancomm, commchan
 
 andand			= "&&" .
 andnot			= "&^" .
-chancomm		= "chan" "<-" .
 colas			= ":=" .
 comm			= "<-".
-commchan		= "<-" "chan" .
 ddd			= "..." .
 dec			= "--" .
 eq			= "==" .
@@ -175,17 +167,10 @@ BuiltinCall = built_in_name "(" [ BuiltinArgs [ "," ] ] ")" .
 
 Call = "(" [ ArgumentList [ "," ] ] ")" .
 Channel = Expression .
-
-//ChannelType = (
-//		  "chan" [ comm ]
-//		| comm "chan"
-//	  ) ElementType .
 ChannelType = (
-		  "chan"
-		| chancomm
-		| commchan
+		  "chan" [ comm ]
+		| comm "chan"
 	  ) ElementType .
-
 CommCase = "case" ( SendStmt | RecvStmt )
 	| "default" .
 CommClause = CommCase ":" StatementList .
@@ -208,9 +193,7 @@ Element = [ Key ":" ] Value .
 ElementIndex = Expression .
 ElementList = Element { "," Element } .
 ElementType = Type .
-
-//EmptyStmt = .
-
+EmptyStmt = .
 ExprCaseClause = ExprSwitchCase ":" StatementList .
 ExprSwitchCase = "case" ExpressionList
 	| "default" .
@@ -272,7 +255,7 @@ KeyType = Type .
 //Label = identifier .
 Label = Dclname .
 
-LabeledStmt = Label ":" [ Statement ] .
+LabeledStmt = Label ":" Statement .
 Literal = BasicLit
 	| CompositeLit
 	| FunctionLit .
@@ -350,19 +333,12 @@ Selector = "." Dclname .
 SendStmt = Channel comm Expression .
 ShortVarDecl = IdentifierList colas ExpressionList .
 Signature = Parameters [ Result ] .
-
-//SimpleStmt = EmptyStmt
-//	| ExpressionStmt
-//	| SendStmt
-//	| IncDecStmt
-//	| Assignment
-//	| ShortVarDecl .
-SimpleStmt = ExpressionStmt
+SimpleStmt = EmptyStmt
+	| ExpressionStmt
 	| SendStmt
 	| IncDecStmt
 	| Assignment
 	| ShortVarDecl .
-
 Slice = "[" [ Expression ] ":" [ Expression ] "]" .
 SliceType = "[" "]" ElementType .
 SourceFile = PackageClause ";" { ImportDecl ";" } { TopLevelDecl ";" } .
@@ -381,7 +357,7 @@ Statement = Declaration
 	| SelectStmt
 	| ForStmt
 	| DeferStmt .
-StatementList = { [ Statement ] ";" } .
+StatementList = { Statement ";" } .
 StructType = "struct" "{" { FieldDecl ";" } "}" .
 SwitchStmt = ExprSwitchStmt | TypeSwitchStmt .
 Tag = string_lit .

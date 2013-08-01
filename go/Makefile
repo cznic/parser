@@ -5,7 +5,7 @@ all: editor
 	go install
 	make todo
 
-editor: parser.go
+editor: clean parser.go
 	go fmt
 	go test -i
 	go test
@@ -23,4 +23,7 @@ todo:
 
 clean:
 	@go clean
+	rm -f y.go
+
+nuke: clean
 	rm -f y.output

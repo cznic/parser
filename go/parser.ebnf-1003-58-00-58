@@ -18,9 +18,6 @@ ReceiverType
 ...............................................................................
 -EmptyStmt; m SimpleStmt, LabeledStmt, StatementList
 58+0=58
-...............................................................................
-chancomm, commchan
-47+0=47 (-wr 1: 24+3=27; -wr 2: 24+3=27)
 
 */
 
@@ -28,10 +25,8 @@ chancomm, commchan
 
 andand			= "&&" .
 andnot			= "&^" .
-chancomm		= "chan" "<-" .
 colas			= ":=" .
 comm			= "<-".
-commchan		= "<-" "chan" .
 ddd			= "..." .
 dec			= "--" .
 eq			= "==" .
@@ -175,17 +170,10 @@ BuiltinCall = built_in_name "(" [ BuiltinArgs [ "," ] ] ")" .
 
 Call = "(" [ ArgumentList [ "," ] ] ")" .
 Channel = Expression .
-
-//ChannelType = (
-//		  "chan" [ comm ]
-//		| comm "chan"
-//	  ) ElementType .
 ChannelType = (
-		  "chan"
-		| chancomm
-		| commchan
+		  "chan" [ comm ]
+		| comm "chan"
 	  ) ElementType .
-
 CommCase = "case" ( SendStmt | RecvStmt )
 	| "default" .
 CommClause = CommCase ":" StatementList .
