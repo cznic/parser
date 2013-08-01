@@ -32,20 +32,7 @@ Receiver
 //1:7+5=12 4:9+4=13 5:18+2=20 6-8:28+1=30 9:37+0
 -Result, Signature
 1,2:11+3=14 3,3:13+2=15 5,10:22+0 1000:31+0
-...............................................................................
-AnonymousField //TODO- ?
-1:11+3=14 3,4:13+2=15 5:22+0 10:30+0 1000:30+0
-ParameterDecl
-
-1.0.0:7+3=10 4.0.0:9+2=11 5.0.0:18+0 10.0.0:26
-1.0.1:6+3=9 10.0.1: 8+2
-
-1000:
-	ie	iy
-	0	0	26+0
-	0	1	8+2=10
-	1	0	26+0
-	1	1	8+2=10
+//TODO AnonymousField = [ "*" ] Dclname [ "." Dclname ] . // etc. TypeName onle where it matters
 
 */
 
@@ -175,9 +162,7 @@ unicode_value = unicode_char
 	| big_u_value
 	| escaped_char .
 
-//AnonymousField = [ "*" ] TypeName .
-AnonymousField = [ "*" ] [ pack_name "." ] Dclname .
-
+AnonymousField = [ "*" ] TypeName .
 ArgumentList = ExpressionList [ ddd ] .
 ArrayLength = Expression .
 ArrayType = "[" ArrayLength "]" ElementType .
@@ -333,12 +318,7 @@ PackageClause = "package" Dclname .
 
 //PackageName = identifier .
 
-//ParameterDecl = [ IdentifierList ] [ ddd ] Type .
-ParameterDecl =
-	  Dclname [ ddd ] Type	// n T
-	| Dclname		// n or named T
-	| [ ddd ] TypeLit .	// T
-
+ParameterDecl = [ IdentifierList ] [ ddd ] Type .
 ParameterList = ParameterDecl { "," ParameterDecl } .
 Parameters = "(" [ ParameterList [ "," ] ] ")" .
 PointerType = "*" BaseType .
@@ -390,7 +370,7 @@ SendStmt = Channel comm Expression .
 ShortVarDecl = IdentifierList colas ExpressionList .
 
 //Signature = Parameters [ Result ] .
-Signature = Parameters /*TODO %prec NotParen */ [ Parameters | TypeName | TypeLit ] .
+Signature = Parameters [ Parameters | TypeName | TypeLit ] .
 
 //SimpleStmt = EmptyStmt
 //	| ExpressionStmt
