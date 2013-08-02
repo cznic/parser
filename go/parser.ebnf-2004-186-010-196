@@ -45,14 +45,6 @@ $ ebnf2y -o parser.y parser.ebnf && go tool yacc parser.y
 $ ebnf2y -M -wr 0 -o parser.y parser.ebnf #  conflicts: 35 shift/reduce, 20 reduce/reduce
 $ ebnf2y -M -ws 0 -o parser.y parser.ebnf # conflicts: 164 shift/reduce,  9 reduce/reduce
 
-...............................................................................
-operand_name_or_type_name
-$ ebnf2y -o parser.y parser.ebnf && go tool yacc parser.y
-                                          # conflicts: 182 shift/reduce,  7 reduce/reduce
-$ ebnf2y -M -wr 0 -o parser.y parser.ebnf #  conflicts: 21 shift/reduce, 16 reduce/reduce
-$ ebnf2y -M -ws 0 -o parser.y parser.ebnf # conflicts: 156 shift/reduce,  5 reduce/reduce
-
-
 */
 
 // ============================================================================
@@ -72,7 +64,6 @@ lbrace			= . // "{" following a type name .
 le			= "<=" .
 lsh			= "<<" .
 ne			= "!=" .
-operand_name_or_type_name	= .
 oror			= "||" .
 rsh			= ">>" .
 
@@ -201,8 +192,7 @@ unicode_value = unicode_char
 	| escaped_char .
 
 //AnonymousField = [ "*" ] TypeName .
-//AnonymousField = [ "*" ] OperandOrTypeName .
-AnonymousField = [ "*" ] operand_name_or_type_name .
+AnonymousField = [ "*" ] OperandOrTypeName .
 
 //ArgumentList = ExpressionList [ "..." ] .
 ArgumentList = ExpressionList [ ddd ] .
@@ -240,10 +230,8 @@ CommClause = CommCase ":" StatementList .
 
 //CompositeLit = LiteralTypeNoTypeName LiteralValue
 //	| TypeName lbrace [ ElementList [ "," ] ] "}" .
-//CompositeLit = LiteralTypeNoTypeName LiteralValue
-//	| OperandOrTypeName lbrace [ ElementList [ "," ] ] "}" .
 CompositeLit = LiteralTypeNoTypeName LiteralValue
-	| operand_name_or_type_name lbrace [ ElementList [ "," ] ] "}" .
+	| OperandOrTypeName lbrace [ ElementList [ "," ] ] "}" .
 
 Condition = Expression .
 ConstDecl = "const" (
@@ -320,8 +308,7 @@ Index = "[" Expression "]" .
 InterfaceType = "interface" "{" { MethodSpec ";" } "}" .
 
 //InterfaceTypeName = TypeName .
-//InterfaceTypeName = OperandOrTypeName .
-InterfaceTypeName = operand_name_or_type_name .
+InterfaceTypeName = OperandOrTypeName .
 
 Key = FieldName | ElementIndex .
 KeyType = Type .
@@ -358,18 +345,13 @@ MethodSpec = MethodName Signature
 //	| OperandName
 //	| MethodExpr
 //	| "(" Expression ")" .
-//Operand = Literal
-//	| OperandOrTypeName
-//	| MethodExpr
-//	| "(" Expression ")" .
 Operand = Literal
-	| operand_name_or_type_name
+	| OperandOrTypeName
 	| MethodExpr
 	| "(" Expression ")" .
 
 //OperandName = identifier | QualifiedIdent .
-//OperandOrTypeName = identifier | QualifiedIdent .
-//OperandOrTypeName = operand_name_or_type_name .
+OperandOrTypeName = identifier | QualifiedIdent .
 
 //PackageClause = "package" PackageName .
 PackageClause = "package" identifier .
@@ -395,7 +377,7 @@ PrimaryExpr = Operand
 	| PrimaryExpr Call .
 
 //QualifiedIdent = PackageName "." identifier .
-//QualifiedIdent = identifier "." identifier .
+QualifiedIdent = identifier "." identifier .
 
 //RangeClause = (
 //		  ExpressionList "="
@@ -411,11 +393,8 @@ Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
 //ReceiverType = TypeName
 //	| "(" "*" TypeName ")"
 //	| "(" ReceiverType ")" .
-//ReceiverType = OperandOrTypeName
-//	| "(" "*" OperandOrTypeName ")"
-//	| "(" ReceiverType ")" .
-ReceiverType = operand_name_or_type_name
-	| "(" "*" operand_name_or_type_name ")"
+ReceiverType = OperandOrTypeName
+	| "(" "*" OperandOrTypeName ")"
 	| "(" ReceiverType ")" .
 
 RecvExpr = Expression .
@@ -486,10 +465,7 @@ TopLevelDecl = Declaration
 //Type = TypeName
 //	| TypeLit
 //	| "(" Type ")" .
-//Type = OperandOrTypeName
-//	| TypeLit
-//	| "(" Type ")" .
-Type = operand_name_or_type_name
+Type = OperandOrTypeName
 	| TypeLit
 	| "(" Type ")" .
 
@@ -519,7 +495,6 @@ TypeSwitchCase = "case" TypeList
 TypeSwitchGuard = [ identifier colas ] PrimaryExpr "." "(" "type" ")" .
 
 TypeSwitchStmt = "switch" [ [ SimpleStmt ] ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
-
 UnaryExpr = PrimaryExpr
 	| Unary_op UnaryExpr .
 Value = Expression | LiteralValue .

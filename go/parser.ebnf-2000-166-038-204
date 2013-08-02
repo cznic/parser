@@ -2,77 +2,36 @@
 
 $ ebnf2y -o parser.y parser.ebnf && go tool yacc parser.y 
                                          # conflicts: 125 shift/reduce, 38 reduce/reduce
-$ ebnf2y -M -wr 0 -o parser.y parser.ebnf # conflicts: 34 shift/reduce, 28 reduce/reduce
 $ ebnf2y -M -ws 0 -o parser.y parser.ebnf # conflicts: 80 shift/reduce, 16 reduce/reduce
+$ ebnf2y -M -wr 0 -o parser.y parser.ebnf # conflicts: 34 shift/reduce, 28 reduce/reduce
 
 ...............................................................................
 named tokens, Binary_op, Unary_op
 
 $ ebnf2y -o parser.y parser.ebnf && go tool yacc parser.y
                                           # conflicts: 166 shift/reduce, 38 reduce/reduce
-$ ebnf2y -M -wr 0 -o parser.y parser.ebnf #  conflicts: 37 shift/reduce, 37 reduce/reduce
 $ ebnf2y -M -ws 0 -o parser.y parser.ebnf # conflicts: 109 shift/reduce, 16 reduce/reduce
-
-...............................................................................
-Attempt lbrace hack
-
-$ ebnf2y -o parser.y parser.ebnf && go tool yacc parser.y
-                                          # conflicts: 186 shift/reduce, 35 reduce/reduce
-$ ebnf2y -M -wr 0 -o parser.y parser.ebnf #  conflicts: 37 shift/reduce, 32 reduce/reduce
-$ ebnf2y -M -ws 0 -o parser.y parser.ebnf # conflicts: 129 shift/reduce, 11 reduce/reduce
-
-...............................................................................
-OperandOrTypeName ???
-
-$ ebnf2y -o parser.y parser.ebnf && go tool yacc parser.y
-                                          # conflicts: 182 shift/reduce, 29 reduce/reduce
-$ ebnf2y -M -wr 0 -o parser.y parser.ebnf #  conflicts: 32 shift/reduce, 26 reduce/reduce
-$ ebnf2y -M -ws 0 -o parser.y parser.ebnf # conflicts: 117 shift/reduce,  9 reduce/reduce
-
-...............................................................................
--EmptyStmt, SimpleStmt, LabeledStmt, StatementList
-
-$ ebnf2y -o parser.y parser.ebnf && go tool yacc parser.y
-                                          # conflicts: 182 shift/reduce, 14 reduce/reduce
-$ ebnf2y -M -wr 0 -o parser.y parser.ebnf #  conflicts: 29 shift/reduce, 26 reduce/reduce
-$ ebnf2y -M -ws 0 -o parser.y parser.ebnf # conflicts: 164 shift/reduce,  9 reduce/reduce
-
-...............................................................................
-PackageName
-
-$ ebnf2y -o parser.y parser.ebnf && go tool yacc parser.y
-                                          # conflicts: 186 shift/reduce, 10 reduce/reduce
-$ ebnf2y -M -wr 0 -o parser.y parser.ebnf #  conflicts: 35 shift/reduce, 20 reduce/reduce
-$ ebnf2y -M -ws 0 -o parser.y parser.ebnf # conflicts: 164 shift/reduce,  9 reduce/reduce
-
-...............................................................................
-operand_name_or_type_name
-$ ebnf2y -o parser.y parser.ebnf && go tool yacc parser.y
-                                          # conflicts: 182 shift/reduce,  7 reduce/reduce
-$ ebnf2y -M -wr 0 -o parser.y parser.ebnf #  conflicts: 21 shift/reduce, 16 reduce/reduce
-$ ebnf2y -M -ws 0 -o parser.y parser.ebnf # conflicts: 156 shift/reduce,  5 reduce/reduce
-
+$ ebnf2y -M -wr 0 -o parser.y parser.ebnf #  conflicts: 37 shift/reduce, 37 reduce/reduce
+(12:28) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ 
 
 */
 
 // ============================================================================
 
-//chancomm		= "chan" "<-" .
-//commchan		= "<-" "chan" .
 andand			= "&&" .
 andnot			= "&^" .
+//chancomm		= "chan" "<-" .
 colas			= ":=" .
 comm			= "<-".
+//commchan		= "<-" "chan" .
 ddd			= "..." .
 dec			= "--" .
 eq			= "==" .
 ge			= ">=" .
 inc			= "++" .
-lbrace			= . // "{" following a type name .
 le			= "<=" .
 lsh			= "<<" .
 ne			= "!=" .
-operand_name_or_type_name	= .
 oror			= "||" .
 rsh			= ">>" .
 
@@ -200,9 +159,7 @@ unicode_value = unicode_char
 	| big_u_value
 	| escaped_char .
 
-//AnonymousField = [ "*" ] TypeName .
-//AnonymousField = [ "*" ] OperandOrTypeName .
-AnonymousField = [ "*" ] operand_name_or_type_name .
+AnonymousField = [ "*" ] TypeName .
 
 //ArgumentList = ExpressionList [ "..." ] .
 ArgumentList = ExpressionList [ ddd ] .
@@ -237,14 +194,7 @@ ChannelType = (
 CommCase = "case" ( SendStmt | RecvStmt )
 	| "default" .
 CommClause = CommCase ":" StatementList .
-
-//CompositeLit = LiteralTypeNoTypeName LiteralValue
-//	| TypeName lbrace [ ElementList [ "," ] ] "}" .
-//CompositeLit = LiteralTypeNoTypeName LiteralValue
-//	| OperandOrTypeName lbrace [ ElementList [ "," ] ] "}" .
-CompositeLit = LiteralTypeNoTypeName LiteralValue
-	| operand_name_or_type_name lbrace [ ElementList [ "," ] ] "}" .
-
+CompositeLit = LiteralType LiteralValue .
 Condition = Expression .
 ConstDecl = "const" (
 		  ConstSpec
@@ -263,13 +213,11 @@ Element = [ Key ":" ] Value .
 ElementIndex = Expression .
 ElementList = Element { "," Element } .
 ElementType = Type .
-
-//EmptyStmt = .
-
+EmptyStmt = .
 ExprCaseClause = ExprSwitchCase ":" StatementList .
 ExprSwitchCase = "case" ExpressionList
 	| "default" .
-ExprSwitchStmt = "switch" [ [ SimpleStmt ] ";" ] [ Expression ] "{" { ExprCaseClause } "}" .
+ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] "{" { ExprCaseClause } "}" .
 Expression = UnaryExpr
 	| Expression Binary_op UnaryExpr .
 ExpressionList = Expression { "," Expression } .
@@ -280,10 +228,7 @@ FieldDecl = (
 		| AnonymousField
 	  ) [ Tag ] .
 FieldName = identifier .
-
-//ForClause = [ InitStmt ] ";" [ Condition ] ";" [ PostStmt ] .
-ForClause = [ SimpleStmt ] ";" [ Condition ] ";" [ SimpleStmt ] .
-
+ForClause = [ InitStmt ] ";" [ Condition ] ";" [ PostStmt ] .
 ForStmt = "for" [
 		  Condition
 		| ForClause
@@ -298,7 +243,7 @@ FunctionType = "func" Signature .
 GoStmt = "go" Expression .
 GotoStmt = "goto" Label .
 IdentifierList = identifier { "," identifier } .
-IfStmt = "if" [ [ SimpleStmt ] ";" ] Expression Block [
+IfStmt = "if" [ SimpleStmt ";" ] Expression Block [
 		 "else" ( IfStmt | Block )
 	  ] .
 ImportDecl = "import" (
@@ -306,30 +251,19 @@ ImportDecl = "import" (
 		| "(" { ImportSpec ";" } ")"
 	  ) .
 ImportPath = string_lit .
-
-//ImportSpec = [ "." | PackageName ] ImportPath .
-ImportSpec = [ "." | identifier ] ImportPath .
+ImportSpec = [ "." | PackageName ] ImportPath .
 
 //IncDecStmt = Expression ( "++" | "--" ) .
 IncDecStmt = Expression ( inc | dec ) .
 
 Index = "[" Expression "]" .
-
-//InitStmt = SimpleStmt .
-
+InitStmt = SimpleStmt .
 InterfaceType = "interface" "{" { MethodSpec ";" } "}" .
-
-//InterfaceTypeName = TypeName .
-//InterfaceTypeName = OperandOrTypeName .
-InterfaceTypeName = operand_name_or_type_name .
-
+InterfaceTypeName = TypeName .
 Key = FieldName | ElementIndex .
 KeyType = Type .
 Label = identifier .
-
-//LabeledStmt = Label ":" Statement .
-LabeledStmt = Label ":" .
-
+LabeledStmt = Label ":" Statement .
 Literal = BasicLit
 	| CompositeLit
 	| FunctionLit .
@@ -340,11 +274,12 @@ Literal = BasicLit
 //	| SliceType
 //	| MapType
 //	| TypeName .
-LiteralTypeNoTypeName = StructType
+LiteralType = StructType
 	| ArrayType
 	| "[" ddd "]" ElementType
 	| SliceType
-	| MapType .
+	| MapType
+	| TypeName .
 
 LiteralValue = "{" [ ElementList [ "," ] ] "}" .
 MapType = "map" "[" KeyType "]" ElementType .
@@ -353,28 +288,13 @@ MethodExpr = ReceiverType "." MethodName .
 MethodName = identifier .
 MethodSpec = MethodName Signature
 	| InterfaceTypeName .
-
-//Operand = Literal
-//	| OperandName
-//	| MethodExpr
-//	| "(" Expression ")" .
-//Operand = Literal
-//	| OperandOrTypeName
-//	| MethodExpr
-//	| "(" Expression ")" .
 Operand = Literal
-	| operand_name_or_type_name
+	| OperandName
 	| MethodExpr
 	| "(" Expression ")" .
-
-//OperandName = identifier | QualifiedIdent .
-//OperandOrTypeName = identifier | QualifiedIdent .
-//OperandOrTypeName = operand_name_or_type_name .
-
-//PackageClause = "package" PackageName .
-PackageClause = "package" identifier .
-
-//PackageName = identifier .
+OperandName = identifier | QualifiedIdent .
+PackageClause = "package" PackageName .
+PackageName = identifier .
 
 //ParameterDecl = [ IdentifierList ] [ "..." ] Type .
 ParameterDecl = [ IdentifierList ] [ ddd ] Type .
@@ -382,9 +302,7 @@ ParameterDecl = [ IdentifierList ] [ ddd ] Type .
 ParameterList = ParameterDecl { "," ParameterDecl } .
 Parameters = "(" [ ParameterList [ "," ] ] ")" .
 PointerType = "*" BaseType .
-
-//PostStmt = SimpleStmt .
-
+PostStmt = SimpleStmt .
 PrimaryExpr = Operand
 	| Conversion
 	| BuiltinCall
@@ -393,9 +311,7 @@ PrimaryExpr = Operand
 	| PrimaryExpr Slice
 	| PrimaryExpr TypeAssertion
 	| PrimaryExpr Call .
-
-//QualifiedIdent = PackageName "." identifier .
-//QualifiedIdent = identifier "." identifier .
+QualifiedIdent = PackageName "." identifier .
 
 //RangeClause = (
 //		  ExpressionList "="
@@ -407,17 +323,9 @@ RangeClause = (
 	  ) "range" Expression .
 
 Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
-
-//ReceiverType = TypeName
-//	| "(" "*" TypeName ")"
-//	| "(" ReceiverType ")" .
-//ReceiverType = OperandOrTypeName
-//	| "(" "*" OperandOrTypeName ")"
-//	| "(" ReceiverType ")" .
-ReceiverType = operand_name_or_type_name
-	| "(" "*" operand_name_or_type_name ")"
+ReceiverType = TypeName
+	| "(" "*" TypeName ")"
 	| "(" ReceiverType ")" .
-
 RecvExpr = Expression .
 
 //RecvStmt = [
@@ -441,19 +349,12 @@ SendStmt = Channel comm Expression .
 ShortVarDecl = IdentifierList colas ExpressionList .
 
 Signature = Parameters [ Result ] .
-
-//SimpleStmt = EmptyStmt
-//	| ExpressionStmt
-//	| SendStmt
-//	| IncDecStmt
-//	| Assignment
-//	| ShortVarDecl .
-SimpleStmt = ExpressionStmt
+SimpleStmt = EmptyStmt
+	| ExpressionStmt
 	| SendStmt
 	| IncDecStmt
 	| Assignment
 	| ShortVarDecl .
-
 Slice = "[" [ Expression ] ":" [ Expression ] "]" .
 SliceType = "[" "]" ElementType .
 SourceFile = PackageClause ";" { ImportDecl ";" } { TopLevelDecl ";" } .
@@ -472,27 +373,16 @@ Statement = Declaration
 	| SelectStmt
 	| ForStmt
 	| DeferStmt .
-
-//StatementList = { Statement ";" } .
-StatementList = { [ Statement ] ";" } .
-
+StatementList = { Statement ";" } .
 StructType = "struct" "{" { FieldDecl ";" } "}" .
 SwitchStmt = ExprSwitchStmt | TypeSwitchStmt .
 Tag = string_lit .
 TopLevelDecl = Declaration
 	| FunctionDecl
 	| MethodDecl .
-
-//Type = TypeName
-//	| TypeLit
-//	| "(" Type ")" .
-//Type = OperandOrTypeName
-//	| TypeLit
-//	| "(" Type ")" .
-Type = operand_name_or_type_name
+Type = TypeName
 	| TypeLit
 	| "(" Type ")" .
-
 TypeAssertion = "." "(" Type ")" .
 TypeCaseClause = TypeSwitchCase ":" StatementList .
 TypeDecl = "type" (
@@ -508,9 +398,7 @@ TypeLit = ArrayType
 	| SliceType
 	| MapType
 	| ChannelType .
-
-//TypeName = identifier | QualifiedIdent .
-
+TypeName = identifier | QualifiedIdent .
 TypeSpec = identifier Type .
 TypeSwitchCase = "case" TypeList
 	| "default" .
@@ -518,8 +406,7 @@ TypeSwitchCase = "case" TypeList
 //TypeSwitchGuard = [ identifier ":=" ] PrimaryExpr "." "(" "type" ")" .
 TypeSwitchGuard = [ identifier colas ] PrimaryExpr "." "(" "type" ")" .
 
-TypeSwitchStmt = "switch" [ [ SimpleStmt ] ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
-
+TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
 UnaryExpr = PrimaryExpr
 	| Unary_op UnaryExpr .
 Value = Expression | LiteralValue .
