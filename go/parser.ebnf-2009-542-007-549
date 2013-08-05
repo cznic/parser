@@ -119,7 +119,9 @@ $ ebnf2y -M -wr 0 -o parser.y parser.ebnf #  conflicts:  5 shift/reduce, 9 reduc
 $ ebnf2y -M -ws 0 -o parser.y parser.ebnf # conflicts: 532 shift/reduce, 5 reduce/reduce
 
 1000:384+5=389
-1000 -iy 1:7+5=12
+
+-iy 1
+0:3+10=13 1,2,10,15-17:6+6=12 18-20,1000:7+5=12
 
 */
 

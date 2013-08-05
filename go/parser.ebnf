@@ -119,18 +119,44 @@ $ ebnf2y -M -wr 0 -o parser.y parser.ebnf #  conflicts:  5 shift/reduce, 9 reduc
 $ ebnf2y -M -ws 0 -o parser.y parser.ebnf # conflicts: 532 shift/reduce, 5 reduce/reduce
 
 1000:384+5=389
-1000 -iy 1:7+5=12
+
+-iy 1
+0:3+10=13 1,2,10,15-17:6+6=12 18-20,1000:7+5=12
+
+...............................................................................
+opt_comma_rparen, built_in
+
+%left		NotPackage
+%left		LPACKAGE
+
+%left		NotParen
+%left		'('
+
+%left		')'
+%left		PreferToRightParen
+
+Signature: Parameters %prec NotParen
+$ ebnf2y -o parser.y parser.ebnf && go tool yacc parser.y
+                                          # conflicts: 568 shift/reduce,  9 reduce/reduce
+$ ebnf2y -M -wr 0 -o parser.y parser.ebnf #  conflicts: 17 shift/reduce, 11 reduce/reduce
+$ ebnf2y -M -ws 0 -o parser.y parser.ebnf # conflicts: 579 shift/reduce,  7 reduce/reduce
+
+1000:423+7=430
+
+-iy 1
+1000:39+8=47
 
 */
 
 // ============================================================================
 
-chancomm		= "chan" "<-" .
-commchan		= "<-" "chan" .
 andand			= "&&" .
 andnot			= "&^" .
+built_in		= . // len, cap, ...
+chancomm		= "chan" "<-" .
 colas			= ":=" .
 comm			= "<-".
+commchan		= "<-" "chan" .
 ddd			= "..." .
 dec			= "--" .
 eq			= "==" .
@@ -142,6 +168,7 @@ lsh			= "<<" .
 ne			= "!=" .
 operand_name_or_type_name	= .
 opt_comma_rbrace	= [ "," ] "}" .
+opt_comma_rparen	= [ "," ] ")" .
 oror			= "||" .
 rsh			= ">>" .
 
@@ -290,8 +317,13 @@ Block = "{" StatementList "}" .
 BreakStmt = "break" [ Label ] .
 BuiltinArgs = Type [ "," ArgumentList ]
 	| ArgumentList .
-BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
-Call = "(" [ ArgumentList [ "," ] ] ")" .
+
+BuiltinCall = built_in "(" BuiltinArgs opt_comma_rparen .
+
+//Call = "(" [ ArgumentList [ "," ] ] ")" .
+Call = "(" ")" 
+	| ArgumentList opt_comma_rparen .
+
 Channel = Expression .
 
 //ChannelType = (
@@ -331,7 +363,7 @@ ConstSpec = IdentifierList [
 		 [ Type ] "=" ExpressionList
 	  ] .
 ContinueStmt = "continue" [ Label ] .
-Conversion = Type "(" Expression [ "," ] ")" .
+Conversion = Type "(" Expression opt_comma_rparen .
 Declaration = ConstDecl
 	| TypeDecl
 	| VarDecl .
@@ -464,7 +496,11 @@ ParameterDecl =
 	| [ ddd ] TypeLit .		// T
 
 ParameterList = ParameterDecl { "," ParameterDecl } .
-Parameters = "(" [ ParameterList [ "," ] ] ")" .
+
+//Parameters = "(" [ ParameterList [ "," ] ] ")" .
+Parameters = "(" ")"
+	| ParameterList opt_comma_rparen .
+
 PointerType = "*" BaseType .
 
 //PostStmt = SimpleStmt .
