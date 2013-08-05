@@ -86,41 +86,6 @@ $ ebnf2y -M -ws 0 -o parser.y parser.ebnf # conflicts: 168 shift/reduce, 5 reduc
 1000:41+5:46
 1000 -iy 1:11+7=18
 
-...............................................................................
-ReceiverType
-
-$ ebnf2y -o parser.y parser.ebnf && go tool yacc parser.y
-                                          # conflicts: 543 shift/reduce, 7 reduce/reduce
-$ ebnf2y -M -wr 0 -o parser.y parser.ebnf #  conflicts:  6 shift/reduce, 9 reduce/reduce
-$ ebnf2y -M -ws 0 -o parser.y parser.ebnf # conflicts: 533 shift/reduce, 5 reduce/reduce
-
-1000:385+5=390
-1000 -iy 1:8+5=13
-
-...............................................................................
-1000 -iy 1 +
-
-%left		NotPackage
-%left		LPACKAGE
-
-%left		NotParen
-%left		'('
-
-%left		')'
-%left		PreferToRightParen
-
-Signature: Parameters %prec NotParen
-
-7+5=12
-
-$ ebnf2y -o parser.y parser.ebnf && go tool yacc parser.y
-                                          # conflicts: 542 shift/reduce, 7 reduce/reduce
-$ ebnf2y -M -wr 0 -o parser.y parser.ebnf #  conflicts:  5 shift/reduce, 9 reduce/reduce
-$ ebnf2y -M -ws 0 -o parser.y parser.ebnf # conflicts: 532 shift/reduce, 5 reduce/reduce
-
-1000:384+5=389
-1000 -iy 1:7+5=12
-
 */
 
 // ============================================================================
@@ -498,10 +463,9 @@ Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
 //ReceiverType = OperandOrTypeName
 //	| "(" "*" OperandOrTypeName ")"
 //	| "(" ReceiverType ")" .
-//ReceiverType = operand_name_or_type_name
-//	| "(" "*" operand_name_or_type_name ")"
-//	| "(" operand_name_or_type_name ")" .
-ReceiverType = ParameterDecl .
+ReceiverType = operand_name_or_type_name
+	| "(" "*" operand_name_or_type_name ")"
+	| "(" operand_name_or_type_name ")" .
 
 RecvExpr = Expression .
 
