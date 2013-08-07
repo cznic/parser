@@ -1,0 +1,7465 @@
+
+state 0
+	$accept: .Start $end 
+
+	PACKAGE  shift 3
+	.  error
+
+	SourceFile  goto 2
+	Start  goto 1
+
+state 1
+	$accept:  Start.$end 
+
+	$end  accept
+	.  error
+
+
+state 2
+	Start:  SourceFile.    (165)
+
+	.  reduce 165 (src line 922)
+
+
+state 3
+	SourceFile:  PACKAGE.IDENTIFIER ; SourceFile1 SourceFile2 
+
+	IDENTIFIER  shift 4
+	.  error
+
+
+state 4
+	SourceFile:  PACKAGE IDENTIFIER.; SourceFile1 SourceFile2 
+
+	;  shift 5
+	.  error
+
+
+state 5
+	SourceFile:  PACKAGE IDENTIFIER ;.SourceFile1 SourceFile2 
+	SourceFile1: .    (154)
+
+	.  reduce 154 (src line 874)
+
+	SourceFile1  goto 6
+
+state 6
+	SourceFile:  PACKAGE IDENTIFIER ; SourceFile1.SourceFile2 
+	SourceFile1:  SourceFile1.IMPORT ImportSpec ; 
+	SourceFile1:  SourceFile1.IMPORT ( ImportDecl11 ) ; 
+	SourceFile2: .    (157)
+
+	IMPORT  shift 8
+	.  reduce 157 (src line 888)
+
+	SourceFile2  goto 7
+
+state 7
+	SourceFile:  PACKAGE IDENTIFIER ; SourceFile1 SourceFile2.    (153)
+	SourceFile2:  SourceFile2.Declaration ; 
+	SourceFile2:  SourceFile2.FUNC IDENTIFIER Function ; 
+	SourceFile2:  SourceFile2.FUNC IDENTIFIER Signature ; 
+	SourceFile2:  SourceFile2.FUNC ( BaseTypeName ) MethodName MethodDecl1 ; 
+	SourceFile2:  SourceFile2.FUNC ( IDENTIFIER BaseTypeName ) MethodName MethodDecl1 ; 
+	SourceFile2:  SourceFile2.FUNC ( * BaseTypeName ) MethodName MethodDecl1 ; 
+	SourceFile2:  SourceFile2.FUNC ( IDENTIFIER * BaseTypeName ) MethodName MethodDecl1 ; 
+
+	CONST  shift 11
+	FUNC  shift 10
+	TYPE  shift 12
+	VAR  shift 13
+	.  reduce 153 (src line 868)
+
+	Declaration  goto 9
+
+state 8
+	SourceFile1:  SourceFile1 IMPORT.ImportSpec ; 
+	SourceFile1:  SourceFile1 IMPORT.( ImportDecl11 ) ; 
+
+	IDENTIFIER  shift 18
+	STRING_LIT  shift 16
+	(  shift 15
+	.  shift 17
+	.  error
+
+	ImportSpec  goto 14
+
+state 9
+	SourceFile2:  SourceFile2 Declaration.; 
+
+	;  shift 19
+	.  error
+
+
+state 10
+	SourceFile2:  SourceFile2 FUNC.IDENTIFIER Function ; 
+	SourceFile2:  SourceFile2 FUNC.IDENTIFIER Signature ; 
+	SourceFile2:  SourceFile2 FUNC.( BaseTypeName ) MethodName MethodDecl1 ; 
+	SourceFile2:  SourceFile2 FUNC.( IDENTIFIER BaseTypeName ) MethodName MethodDecl1 ; 
+	SourceFile2:  SourceFile2 FUNC.( * BaseTypeName ) MethodName MethodDecl1 ; 
+	SourceFile2:  SourceFile2 FUNC.( IDENTIFIER * BaseTypeName ) MethodName MethodDecl1 ; 
+
+	IDENTIFIER  shift 20
+	(  shift 21
+	.  error
+
+
+state 11
+	Declaration:  CONST.ConstSpec 
+	Declaration:  CONST.( ConstDecl11 ) 
+
+	IDENTIFIER  shift 25
+	(  shift 23
+	.  error
+
+	ConstSpec  goto 22
+	IdentifierList  goto 24
+
+state 12
+	Declaration:  TYPE.TypeSpec 
+	Declaration:  TYPE.( TypeDecl11 ) 
+
+	IDENTIFIER  shift 28
+	(  shift 27
+	.  error
+
+	TypeSpec  goto 26
+
+state 13
+	Declaration:  VAR.VarSpec 
+	Declaration:  VAR.( VarDecl11 ) 
+
+	IDENTIFIER  shift 25
+	(  shift 30
+	.  error
+
+	IdentifierList  goto 31
+	VarSpec  goto 29
+
+state 14
+	SourceFile1:  SourceFile1 IMPORT ImportSpec.; 
+
+	;  shift 32
+	.  error
+
+
+state 15
+	SourceFile1:  SourceFile1 IMPORT (.ImportDecl11 ) ; 
+	ImportDecl11: .    (70)
+
+	.  reduce 70 (src line 492)
+
+	ImportDecl11  goto 33
+
+state 16
+	ImportSpec:  STRING_LIT.    (72)
+
+	.  reduce 72 (src line 502)
+
+
+state 17
+	ImportSpec:  ..STRING_LIT 
+
+	STRING_LIT  shift 34
+	.  error
+
+
+state 18
+	ImportSpec:  IDENTIFIER.STRING_LIT 
+
+	STRING_LIT  shift 35
+	.  error
+
+
+state 19
+	SourceFile2:  SourceFile2 Declaration ;.    (158)
+
+	.  reduce 158 (src line 893)
+
+
+state 20
+	SourceFile2:  SourceFile2 FUNC IDENTIFIER.Function ; 
+	SourceFile2:  SourceFile2 FUNC IDENTIFIER.Signature ; 
+
+	(  shift 39
+	.  error
+
+	Function  goto 36
+	Parameters  goto 38
+	Signature  goto 37
+
+state 21
+	SourceFile2:  SourceFile2 FUNC (.BaseTypeName ) MethodName MethodDecl1 ; 
+	SourceFile2:  SourceFile2 FUNC (.IDENTIFIER BaseTypeName ) MethodName MethodDecl1 ; 
+	SourceFile2:  SourceFile2 FUNC (.* BaseTypeName ) MethodName MethodDecl1 ; 
+	SourceFile2:  SourceFile2 FUNC (.IDENTIFIER * BaseTypeName ) MethodName MethodDecl1 ; 
+
+	IDENTIFIER  shift 41
+	*  shift 42
+	.  error
+
+	BaseTypeName  goto 40
+
+state 22
+	Declaration:  CONST ConstSpec.    (12)
+
+	.  reduce 12 (src line 230)
+
+
+state 23
+	Declaration:  CONST (.ConstDecl11 ) 
+	ConstDecl11: .    (7)
+
+	.  reduce 7 (src line 206)
+
+	ConstDecl11  goto 43
+
+state 24
+	ConstSpec:  IdentifierList.    (9)
+	ConstSpec:  IdentifierList.= ExpressionList 
+	ConstSpec:  IdentifierList.Type = ExpressionList 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	=  shift 44
+	(  shift 56
+	*  shift 49
+	.  reduce 9 (src line 216)
+
+	ArrayType  goto 47
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 45
+	TypeName  goto 46
+
+state 25
+	IdentifierList:  IDENTIFIER.IdentifierList1 
+	IdentifierList1: .    (62)
+
+	.  reduce 62 (src line 456)
+
+	IdentifierList1  goto 62
+
+state 26
+	Declaration:  TYPE TypeSpec.    (14)
+
+	.  reduce 14 (src line 239)
+
+
+state 27
+	Declaration:  TYPE (.TypeDecl11 ) 
+	TypeDecl11: .    (213)
+
+	.  reduce 213 (src line 1128)
+
+	TypeDecl11  goto 63
+
+state 28
+	TypeSpec:  IDENTIFIER.Type 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 64
+	TypeName  goto 46
+
+state 29
+	Declaration:  VAR VarSpec.    (16)
+
+	.  reduce 16 (src line 247)
+
+
+state 30
+	Declaration:  VAR (.VarDecl11 ) 
+	VarDecl11: .    (233)
+
+	.  reduce 233 (src line 1222)
+
+	VarDecl11  goto 65
+
+state 31
+	VarSpec:  IdentifierList.Type 
+	VarSpec:  IdentifierList.Type = ExpressionList 
+	VarSpec:  IdentifierList.= ExpressionList 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	=  shift 67
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 66
+	TypeName  goto 46
+
+state 32
+	SourceFile1:  SourceFile1 IMPORT ImportSpec ;.    (155)
+
+	.  reduce 155 (src line 879)
+
+
+state 33
+	ImportDecl11:  ImportDecl11.ImportSpec ; 
+	SourceFile1:  SourceFile1 IMPORT ( ImportDecl11.) ; 
+
+	IDENTIFIER  shift 18
+	STRING_LIT  shift 16
+	)  shift 69
+	.  shift 17
+	.  error
+
+	ImportSpec  goto 68
+
+state 34
+	ImportSpec:  . STRING_LIT.    (73)
+
+	.  reduce 73 (src line 507)
+
+
+state 35
+	ImportSpec:  IDENTIFIER STRING_LIT.    (74)
+
+	.  reduce 74 (src line 511)
+
+
+state 36
+	SourceFile2:  SourceFile2 FUNC IDENTIFIER Function.; 
+
+	;  shift 70
+	.  error
+
+
+state 37
+	Function:  Signature.Block 
+	SourceFile2:  SourceFile2 FUNC IDENTIFIER Signature.; 
+
+	{  shift 73
+	;  shift 72
+	.  error
+
+	Block  goto 71
+
+38: shift/reduce conflict (shift 76(0), red'n 140(0)) on (
+state 38
+	Signature:  Parameters.    (140)
+	Signature:  Parameters.Parameters 
+	Signature:  Parameters.Type 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 76
+	*  shift 49
+	.  reduce 140 (src line 808)
+
+	ArrayType  goto 47
+	MapType  goto 53
+	Parameters  goto 74
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 75
+	TypeName  goto 46
+
+39: shift/reduce conflict (shift 25(0), red'n 88(0)) on IDENTIFIER
+state 39
+	Parameters:  (.) 
+	Parameters:  (.ParameterDecl ParameterList1 ) 
+	Parameters:  (.ParameterDecl ParameterList1 , ) 
+	ParameterDecl2: .    (88)
+
+	DDD  shift 81
+	IDENTIFIER  shift 25
+	)  shift 77
+	.  reduce 88 (src line 582)
+
+	IdentifierList  goto 80
+	ParameterDecl  goto 78
+	ParameterDecl2  goto 79
+
+state 40
+	SourceFile2:  SourceFile2 FUNC ( BaseTypeName.) MethodName MethodDecl1 ; 
+
+	)  shift 82
+	.  error
+
+
+state 41
+	BaseTypeName:  IDENTIFIER.    (4)
+	SourceFile2:  SourceFile2 FUNC ( IDENTIFIER.BaseTypeName ) MethodName MethodDecl1 ; 
+	SourceFile2:  SourceFile2 FUNC ( IDENTIFIER.* BaseTypeName ) MethodName MethodDecl1 ; 
+
+	IDENTIFIER  shift 85
+	*  shift 84
+	.  reduce 4 (src line 188)
+
+	BaseTypeName  goto 83
+
+state 42
+	SourceFile2:  SourceFile2 FUNC ( *.BaseTypeName ) MethodName MethodDecl1 ; 
+
+	IDENTIFIER  shift 85
+	.  error
+
+	BaseTypeName  goto 86
+
+state 43
+	ConstDecl11:  ConstDecl11.ConstSpec ; 
+	Declaration:  CONST ( ConstDecl11.) 
+
+	IDENTIFIER  shift 25
+	)  shift 88
+	.  error
+
+	ConstSpec  goto 87
+	IdentifierList  goto 24
+
+state 44
+	ConstSpec:  IdentifierList =.ExpressionList 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 90
+	ExpressionList  goto 89
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 45
+	ConstSpec:  IdentifierList Type.= ExpressionList 
+
+	=  shift 117
+	.  error
+
+
+state 46
+	Type:  TypeName.    (201)
+
+	.  reduce 201 (src line 1078)
+
+
+state 47
+	Type:  ArrayType.    (202)
+
+	.  reduce 202 (src line 1083)
+
+
+state 48
+	Type:  StructType.    (203)
+
+	.  reduce 203 (src line 1087)
+
+
+state 49
+	Type:  *.Type 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 118
+	TypeName  goto 46
+
+state 50
+	Type:  FUNC.Signature 
+
+	(  shift 39
+	.  error
+
+	Parameters  goto 38
+	Signature  goto 119
+
+state 51
+	Type:  INTERFACE.{ InterfaceType1 } 
+
+	{  shift 120
+	.  error
+
+
+state 52
+	Type:  SliceType.    (207)
+
+	.  reduce 207 (src line 1103)
+
+
+state 53
+	Type:  MapType.    (208)
+
+	.  reduce 208 (src line 1107)
+
+
+state 54
+	Type:  CHAN.ElementType 
+	Type:  CHAN.COMM ElementType 
+
+	COMM  shift 122
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	ElementType  goto 121
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 123
+	TypeName  goto 46
+
+state 55
+	Type:  COMM.CHAN ElementType 
+
+	CHAN  shift 124
+	.  error
+
+
+state 56
+	Type:  (.Type ) 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 125
+	TypeName  goto 46
+
+state 57
+	QualifiedIdent:  IDENTIFIER.. IDENTIFIER 
+	TypeName:  IDENTIFIER.    (217)
+
+	.  shift 126
+	.  reduce 217 (src line 1148)
+
+
+state 58
+	TypeName:  QualifiedIdent.    (218)
+
+	.  reduce 218 (src line 1153)
+
+
+state 59
+	ArrayType:  [.Expression ] ElementType 
+	SliceType:  [.] ElementType 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	]  shift 128
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 127
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 60
+	StructType:  STRUCT.{ StructType1 } 
+
+	{  shift 129
+	.  error
+
+
+state 61
+	MapType:  MAP.[ Type ] ElementType 
+
+	[  shift 130
+	.  error
+
+
+state 62
+	IdentifierList:  IDENTIFIER IdentifierList1.    (61)
+	IdentifierList1:  IdentifierList1., IDENTIFIER 
+
+	,  shift 131
+	.  reduce 61 (src line 450)
+
+
+state 63
+	Declaration:  TYPE ( TypeDecl11.) 
+	TypeDecl11:  TypeDecl11.TypeSpec ; 
+
+	IDENTIFIER  shift 28
+	)  shift 132
+	.  error
+
+	TypeSpec  goto 133
+
+state 64
+	TypeSpec:  IDENTIFIER Type.    (219)
+
+	.  reduce 219 (src line 1158)
+
+
+state 65
+	Declaration:  VAR ( VarDecl11.) 
+	VarDecl11:  VarDecl11.VarSpec ; 
+
+	IDENTIFIER  shift 25
+	)  shift 134
+	.  error
+
+	IdentifierList  goto 31
+	VarSpec  goto 135
+
+state 66
+	VarSpec:  IdentifierList Type.    (235)
+	VarSpec:  IdentifierList Type.= ExpressionList 
+
+	=  shift 136
+	.  reduce 235 (src line 1232)
+
+
+state 67
+	VarSpec:  IdentifierList =.ExpressionList 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 90
+	ExpressionList  goto 137
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 68
+	ImportDecl11:  ImportDecl11 ImportSpec.; 
+
+	;  shift 138
+	.  error
+
+
+state 69
+	SourceFile1:  SourceFile1 IMPORT ( ImportDecl11 ).; 
+
+	;  shift 139
+	.  error
+
+
+state 70
+	SourceFile2:  SourceFile2 FUNC IDENTIFIER Function ;.    (159)
+
+	.  reduce 159 (src line 897)
+
+
+state 71
+	Function:  Signature Block.    (60)
+
+	.  reduce 60 (src line 444)
+
+
+state 72
+	SourceFile2:  SourceFile2 FUNC IDENTIFIER Signature ;.    (160)
+
+	.  reduce 160 (src line 901)
+
+
+state 73
+	Block:  {.StatementList } 
+	StatementList1: .    (195)
+
+	.  reduce 195 (src line 1048)
+
+	StatementList  goto 140
+	StatementList1  goto 141
+
+state 74
+	Signature:  Parameters Parameters.    (141)
+
+	.  reduce 141 (src line 813)
+
+
+state 75
+	Signature:  Parameters Type.    (142)
+
+	.  reduce 142 (src line 817)
+
+
+76: shift/reduce conflict (shift 55(0), red'n 88(0)) on COMM
+76: shift/reduce conflict (shift 142(0), red'n 88(0)) on IDENTIFIER
+76: shift/reduce conflict (shift 54(0), red'n 88(0)) on CHAN
+76: shift/reduce conflict (shift 50(0), red'n 88(0)) on FUNC
+76: shift/reduce conflict (shift 51(0), red'n 88(0)) on INTERFACE
+76: shift/reduce conflict (shift 61(0), red'n 88(0)) on MAP
+76: shift/reduce conflict (shift 60(0), red'n 88(0)) on STRUCT
+76: shift/reduce conflict (shift 59(0), red'n 88(0)) on [
+76: shift/reduce conflict (shift 56(0), red'n 88(0)) on (
+76: shift/reduce conflict (shift 49(0), red'n 88(0)) on *
+state 76
+	Parameters:  (.) 
+	Parameters:  (.ParameterDecl ParameterList1 ) 
+	Parameters:  (.ParameterDecl ParameterList1 , ) 
+	Type:  (.Type ) 
+	ParameterDecl2: .    (88)
+
+	COMM  shift 55
+	DDD  shift 81
+	IDENTIFIER  shift 142
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	)  shift 77
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	IdentifierList  goto 80
+	MapType  goto 53
+	ParameterDecl  goto 78
+	ParameterDecl2  goto 79
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 125
+	TypeName  goto 46
+
+state 77
+	Parameters:  ( ).    (92)
+
+	.  reduce 92 (src line 602)
+
+
+state 78
+	Parameters:  ( ParameterDecl.ParameterList1 ) 
+	Parameters:  ( ParameterDecl.ParameterList1 , ) 
+	ParameterList1: .    (90)
+
+	.  reduce 90 (src line 592)
+
+	ParameterList1  goto 143
+
+state 79
+	ParameterDecl:  ParameterDecl2.Type 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 144
+	TypeName  goto 46
+
+state 80
+	ParameterDecl:  IdentifierList.ParameterDecl2 Type 
+	ParameterDecl2: .    (88)
+
+	DDD  shift 81
+	.  reduce 88 (src line 582)
+
+	ParameterDecl2  goto 145
+
+state 81
+	ParameterDecl2:  DDD.    (89)
+
+	.  reduce 89 (src line 587)
+
+
+state 82
+	SourceFile2:  SourceFile2 FUNC ( BaseTypeName ).MethodName MethodDecl1 ; 
+
+	IDENTIFIER  shift 147
+	.  error
+
+	MethodName  goto 146
+
+state 83
+	SourceFile2:  SourceFile2 FUNC ( IDENTIFIER BaseTypeName.) MethodName MethodDecl1 ; 
+
+	)  shift 148
+	.  error
+
+
+state 84
+	SourceFile2:  SourceFile2 FUNC ( IDENTIFIER *.BaseTypeName ) MethodName MethodDecl1 ; 
+
+	IDENTIFIER  shift 85
+	.  error
+
+	BaseTypeName  goto 149
+
+state 85
+	BaseTypeName:  IDENTIFIER.    (4)
+
+	.  reduce 4 (src line 188)
+
+
+state 86
+	SourceFile2:  SourceFile2 FUNC ( * BaseTypeName.) MethodName MethodDecl1 ; 
+
+	)  shift 150
+	.  error
+
+
+state 87
+	ConstDecl11:  ConstDecl11 ConstSpec.; 
+
+	;  shift 151
+	.  error
+
+
+state 88
+	Declaration:  CONST ( ConstDecl11 ).    (13)
+
+	.  reduce 13 (src line 235)
+
+
+state 89
+	ConstSpec:  IdentifierList = ExpressionList.    (10)
+
+	.  reduce 10 (src line 221)
+
+
+state 90
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	ExpressionList:  Expression.ExpressionList1 
+	ExpressionList1: .    (53)
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  reduce 53 (src line 410)
+
+	ExpressionList1  goto 171
+
+state 91
+	Expression:  UnaryExpr.    (32)
+
+	.  reduce 32 (src line 322)
+
+
+state 92
+	PrimaryExpr:  PrimaryExpr.. IDENTIFIER 
+	PrimaryExpr:  PrimaryExpr.[ Expression ] 
+	PrimaryExpr:  PrimaryExpr.[ : Slice2 ] 
+	PrimaryExpr:  PrimaryExpr.[ Expression : Slice2 ] 
+	PrimaryExpr:  PrimaryExpr.. ( Type ) 
+	PrimaryExpr:  PrimaryExpr.( ) 
+	PrimaryExpr:  PrimaryExpr.( ArgumentList ) 
+	PrimaryExpr:  PrimaryExpr.( ArgumentList , ) 
+	UnaryExpr:  PrimaryExpr.    (225)
+
+	[  shift 173
+	(  shift 174
+	.  shift 172
+	.  reduce 225 (src line 1188)
+
+
+state 93
+	UnaryExpr:  +.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 175
+
+state 94
+	UnaryExpr:  -.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 176
+
+state 95
+	UnaryExpr:  !.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 177
+
+state 96
+	UnaryExpr:  ^.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 178
+
+state 97
+	Type:  *.Type 
+	UnaryExpr:  *.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 179
+	TypeName  goto 110
+	UnaryExpr  goto 180
+
+state 98
+	UnaryExpr:  &.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 181
+
+state 99
+	Type:  COMM.CHAN ElementType 
+	UnaryExpr:  COMM.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 182
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 183
+
+state 100
+	PrimaryExpr:  INT_LIT.    (95)
+
+	.  reduce 95 (src line 616)
+
+
+state 101
+	PrimaryExpr:  FLOAT_LIT.    (96)
+
+	.  reduce 96 (src line 621)
+
+
+state 102
+	PrimaryExpr:  IMAGINARY_LIT.    (97)
+
+	.  reduce 97 (src line 625)
+
+
+state 103
+	PrimaryExpr:  RUNE_LIT.    (98)
+
+	.  reduce 98 (src line 629)
+
+
+state 104
+	PrimaryExpr:  STRING_LIT.    (99)
+
+	.  reduce 99 (src line 633)
+
+
+state 105
+	PrimaryExpr:  StructType.LiteralValue 
+	Type:  StructType.    (203)
+
+	{  shift 185
+	.  reduce 203 (src line 1087)
+
+	LiteralValue  goto 184
+
+state 106
+	PrimaryExpr:  ArrayType.LiteralValue 
+	Type:  ArrayType.    (202)
+
+	{  shift 185
+	.  reduce 202 (src line 1083)
+
+	LiteralValue  goto 186
+
+state 107
+	ArrayType:  [.Expression ] ElementType 
+	PrimaryExpr:  [.DDD ] ElementType LiteralValue 
+	SliceType:  [.] ElementType 
+
+	COMM  shift 99
+	DDD  shift 187
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	]  shift 128
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 127
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 108
+	PrimaryExpr:  SliceType.LiteralValue 
+	Type:  SliceType.    (207)
+
+	{  shift 185
+	.  reduce 207 (src line 1103)
+
+	LiteralValue  goto 188
+
+state 109
+	PrimaryExpr:  MapType.LiteralValue 
+	Type:  MapType.    (208)
+
+	{  shift 185
+	.  reduce 208 (src line 1107)
+
+	LiteralValue  goto 189
+
+ 110: reduce/reduce conflict  (red'ns 129 and 201) on )
+state 110
+	PrimaryExpr:  TypeName.LiteralValue 
+	ReceiverType:  TypeName.    (129)
+	Type:  TypeName.    (201)
+
+	{  shift 185
+	)  reduce 129 (src line 756)
+	.  reduce 129 (src line 756)
+	.  reduce 201 (src line 1078)
+
+	LiteralValue  goto 190
+
+state 111
+	PrimaryExpr:  FUNC.Function 
+	Type:  FUNC.Signature 
+
+	(  shift 39
+	.  error
+
+	Function  goto 191
+	Parameters  goto 38
+	Signature  goto 192
+
+112: shift/reduce conflict (shift 193(0), red'n 107(0)) on (
+112: shift/reduce conflict (shift 126(0), red'n 107(0)) on .
+ 112: reduce/reduce conflict  (red'ns 107 and 217) on {
+112: shift/reduce conflict (shift 193(0), red'n 217(0)) on (
+ 112: reduce/reduce conflict  (red'ns 107 and 217) on )
+ 112: reduce/reduce conflict  (red'ns 107 and 217) on ,
+112: shift/reduce conflict (shift 126(0), red'n 217(0)) on .
+state 112
+	PrimaryExpr:  IDENTIFIER.    (107)
+	PrimaryExpr:  IDENTIFIER.( ) 
+	PrimaryExpr:  IDENTIFIER.( Type ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ArgumentList ) 
+	PrimaryExpr:  IDENTIFIER.( ArgumentList ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ArgumentList , ) 
+	PrimaryExpr:  IDENTIFIER.( ArgumentList , ) 
+	QualifiedIdent:  IDENTIFIER.. IDENTIFIER 
+	TypeName:  IDENTIFIER.    (217)
+
+	(  shift 193
+	.  shift 126
+	.  reduce 107 (src line 665)
+
+
+ 113: reduce/reduce conflict  (red'ns 108 and 218) on {
+ 113: reduce/reduce conflict  (red'ns 108 and 218) on (
+ 113: reduce/reduce conflict  (red'ns 108 and 218) on )
+ 113: reduce/reduce conflict  (red'ns 108 and 218) on ,
+ 113: reduce/reduce conflict  (red'ns 108 and 218) on .
+state 113
+	PrimaryExpr:  QualifiedIdent.    (108)
+	TypeName:  QualifiedIdent.    (218)
+
+	.  reduce 108 (src line 669)
+
+
+state 114
+	PrimaryExpr:  ReceiverType.. MethodName 
+
+	.  shift 194
+	.  error
+
+
+state 115
+	PrimaryExpr:  (.Expression ) 
+	ReceiverType:  (.* TypeName ) 
+	ReceiverType:  (.ReceiverType ) 
+	Type:  (.Type ) 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 196
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 195
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 197
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 198
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 116
+	PrimaryExpr:  Type.( Expression ) 
+	PrimaryExpr:  Type.( Expression , ) 
+
+	(  shift 199
+	.  error
+
+
+state 117
+	ConstSpec:  IdentifierList Type =.ExpressionList 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 90
+	ExpressionList  goto 200
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 118
+	Type:  * Type.    (204)
+
+	.  reduce 204 (src line 1091)
+
+
+state 119
+	Type:  FUNC Signature.    (205)
+
+	.  reduce 205 (src line 1095)
+
+
+state 120
+	Type:  INTERFACE {.InterfaceType1 } 
+	InterfaceType1: .    (75)
+
+	.  reduce 75 (src line 516)
+
+	InterfaceType1  goto 201
+
+state 121
+	Type:  CHAN ElementType.    (209)
+
+	.  reduce 209 (src line 1111)
+
+
+state 122
+	Type:  CHAN COMM.ElementType 
+	Type:  COMM.CHAN ElementType 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 182
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	ElementType  goto 202
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 123
+	TypeName  goto 46
+
+state 123
+	ElementType:  Type.    (26)
+
+	.  reduce 26 (src line 292)
+
+
+state 124
+	Type:  COMM CHAN.ElementType 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	ElementType  goto 203
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 123
+	TypeName  goto 46
+
+state 125
+	Type:  ( Type.) 
+
+	)  shift 204
+	.  error
+
+
+state 126
+	QualifiedIdent:  IDENTIFIER ..IDENTIFIER 
+
+	IDENTIFIER  shift 205
+	.  error
+
+
+state 127
+	ArrayType:  [ Expression.] ElementType 
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	]  shift 206
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  error
+
+
+state 128
+	SliceType:  [ ].ElementType 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	ElementType  goto 207
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 123
+	TypeName  goto 46
+
+state 129
+	StructType:  STRUCT {.StructType1 } 
+	StructType1: .    (198)
+
+	.  reduce 198 (src line 1064)
+
+	StructType1  goto 208
+
+state 130
+	MapType:  MAP [.Type ] ElementType 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 209
+	TypeName  goto 46
+
+state 131
+	IdentifierList1:  IdentifierList1 ,.IDENTIFIER 
+
+	IDENTIFIER  shift 210
+	.  error
+
+
+state 132
+	Declaration:  TYPE ( TypeDecl11 ).    (15)
+
+	.  reduce 15 (src line 243)
+
+
+state 133
+	TypeDecl11:  TypeDecl11 TypeSpec.; 
+
+	;  shift 211
+	.  error
+
+
+state 134
+	Declaration:  VAR ( VarDecl11 ).    (17)
+
+	.  reduce 17 (src line 251)
+
+
+state 135
+	VarDecl11:  VarDecl11 VarSpec.; 
+
+	;  shift 212
+	.  error
+
+
+state 136
+	VarSpec:  IdentifierList Type =.ExpressionList 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 90
+	ExpressionList  goto 213
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 137
+	VarSpec:  IdentifierList = ExpressionList.    (237)
+
+	.  reduce 237 (src line 1241)
+
+
+state 138
+	ImportDecl11:  ImportDecl11 ImportSpec ;.    (71)
+
+	.  reduce 71 (src line 497)
+
+
+state 139
+	SourceFile1:  SourceFile1 IMPORT ( ImportDecl11 ) ;.    (156)
+
+	.  reduce 156 (src line 883)
+
+
+state 140
+	Block:  { StatementList.} 
+
+	}  shift 214
+	.  error
+
+
+state 141
+	StatementList:  StatementList1.    (194)
+	StatementList1:  StatementList1.Statement ; 
+	SimpleStmt: .    (143)
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 231
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	BREAK  shift 221
+	CHAN  shift 54
+	CONST  shift 11
+	CONTINUE  shift 222
+	DEFER  shift 230
+	FALLTHROUGH  shift 224
+	FOR  shift 229
+	FUNC  shift 111
+	GO  shift 219
+	GOTO  shift 223
+	IF  shift 236
+	INTERFACE  shift 51
+	MAP  shift 61
+	RETURN  shift 220
+	SELECT  shift 228
+	STRUCT  shift 60
+	SWITCH  shift 227
+	TYPE  shift 12
+	VAR  shift 13
+	[  shift 107
+	{  shift 73
+	;  reduce 143 (src line 822)
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  reduce 194 (src line 1042)
+
+	ArrayType  goto 106
+	Block  goto 225
+	Declaration  goto 216
+	Expression  goto 232
+	ExpressionList  goto 234
+	IdentifierList  goto 235
+	IfStmt  goto 226
+	Label  goto 217
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SendStmt  goto 233
+	SimpleStmt  goto 218
+	SliceType  goto 108
+	Statement  goto 215
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 142
+	IdentifierList:  IDENTIFIER.IdentifierList1 
+	QualifiedIdent:  IDENTIFIER.. IDENTIFIER 
+	TypeName:  IDENTIFIER.    (217)
+	IdentifierList1: .    (62)
+
+	STRING_LIT  reduce 217 (src line 1148)
+	;  reduce 217 (src line 1148)
+	)  reduce 217 (src line 1148)
+	.  shift 126
+	.  reduce 62 (src line 456)
+
+	IdentifierList1  goto 62
+
+state 143
+	ParameterList1:  ParameterList1., ParameterDecl 
+	Parameters:  ( ParameterDecl ParameterList1.) 
+	Parameters:  ( ParameterDecl ParameterList1., ) 
+
+	)  shift 238
+	,  shift 237
+	.  error
+
+
+state 144
+	ParameterDecl:  ParameterDecl2 Type.    (86)
+
+	.  reduce 86 (src line 572)
+
+
+state 145
+	ParameterDecl:  IdentifierList ParameterDecl2.Type 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 239
+	TypeName  goto 46
+
+state 146
+	SourceFile2:  SourceFile2 FUNC ( BaseTypeName ) MethodName.MethodDecl1 ; 
+
+	(  shift 39
+	.  error
+
+	Function  goto 241
+	MethodDecl1  goto 240
+	Parameters  goto 38
+	Signature  goto 242
+
+state 147
+	MethodName:  IDENTIFIER.    (85)
+
+	.  reduce 85 (src line 566)
+
+
+state 148
+	SourceFile2:  SourceFile2 FUNC ( IDENTIFIER BaseTypeName ).MethodName MethodDecl1 ; 
+
+	IDENTIFIER  shift 147
+	.  error
+
+	MethodName  goto 243
+
+state 149
+	SourceFile2:  SourceFile2 FUNC ( IDENTIFIER * BaseTypeName.) MethodName MethodDecl1 ; 
+
+	)  shift 244
+	.  error
+
+
+state 150
+	SourceFile2:  SourceFile2 FUNC ( * BaseTypeName ).MethodName MethodDecl1 ; 
+
+	IDENTIFIER  shift 147
+	.  error
+
+	MethodName  goto 245
+
+state 151
+	ConstDecl11:  ConstDecl11 ConstSpec ;.    (8)
+
+	.  reduce 8 (src line 211)
+
+
+state 152
+	Expression:  Expression OROR.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 246
+
+state 153
+	Expression:  Expression ANDAND.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 247
+
+state 154
+	Expression:  Expression EQ.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 248
+
+state 155
+	Expression:  Expression NE.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 249
+
+state 156
+	Expression:  Expression <.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 250
+
+state 157
+	Expression:  Expression LE.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 251
+
+state 158
+	Expression:  Expression >.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 252
+
+state 159
+	Expression:  Expression GE.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 253
+
+state 160
+	Expression:  Expression +.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 254
+
+state 161
+	Expression:  Expression -.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 255
+
+state 162
+	Expression:  Expression |.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 256
+
+state 163
+	Expression:  Expression ^.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 257
+
+state 164
+	Expression:  Expression *.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 258
+
+state 165
+	Expression:  Expression /.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 259
+
+state 166
+	Expression:  Expression %.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 260
+
+state 167
+	Expression:  Expression LSH.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 261
+
+state 168
+	Expression:  Expression RSH.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 262
+
+state 169
+	Expression:  Expression &.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 263
+
+state 170
+	Expression:  Expression ANDNOT.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 264
+
+171: shift/reduce conflict (shift 265(0), red'n 52(0)) on ,
+state 171
+	ExpressionList:  Expression ExpressionList1.    (52)
+	ExpressionList1:  ExpressionList1., Expression 
+
+	,  shift 265
+	.  reduce 52 (src line 404)
+
+
+state 172
+	PrimaryExpr:  PrimaryExpr ..IDENTIFIER 
+	PrimaryExpr:  PrimaryExpr ..( Type ) 
+
+	IDENTIFIER  shift 266
+	(  shift 267
+	.  error
+
+
+state 173
+	PrimaryExpr:  PrimaryExpr [.Expression ] 
+	PrimaryExpr:  PrimaryExpr [.: Slice2 ] 
+	PrimaryExpr:  PrimaryExpr [.Expression : Slice2 ] 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	:  shift 269
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 268
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 174
+	PrimaryExpr:  PrimaryExpr (.) 
+	PrimaryExpr:  PrimaryExpr (.ArgumentList ) 
+	PrimaryExpr:  PrimaryExpr (.ArgumentList , ) 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	)  shift 270
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArgumentList  goto 271
+	ArrayType  goto 106
+	Expression  goto 90
+	ExpressionList  goto 272
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 175
+	UnaryExpr:  + UnaryExpr.    (226)
+
+	.  reduce 226 (src line 1193)
+
+
+state 176
+	UnaryExpr:  - UnaryExpr.    (227)
+
+	.  reduce 227 (src line 1197)
+
+
+state 177
+	UnaryExpr:  ! UnaryExpr.    (228)
+
+	.  reduce 228 (src line 1201)
+
+
+state 178
+	UnaryExpr:  ^ UnaryExpr.    (229)
+
+	.  reduce 229 (src line 1205)
+
+
+179: shift/reduce conflict (shift 199(0), red'n 204(0)) on (
+state 179
+	PrimaryExpr:  Type.( Expression ) 
+	PrimaryExpr:  Type.( Expression , ) 
+	Type:  * Type.    (204)
+
+	(  shift 199
+	.  reduce 204 (src line 1091)
+
+
+state 180
+	UnaryExpr:  * UnaryExpr.    (230)
+
+	.  reduce 230 (src line 1209)
+
+
+state 181
+	UnaryExpr:  & UnaryExpr.    (231)
+
+	.  reduce 231 (src line 1213)
+
+
+state 182
+	Type:  CHAN.ElementType 
+	Type:  CHAN.COMM ElementType 
+	Type:  COMM CHAN.ElementType 
+
+	COMM  shift 122
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	ElementType  goto 273
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 123
+	TypeName  goto 46
+
+state 183
+	UnaryExpr:  COMM UnaryExpr.    (232)
+
+	.  reduce 232 (src line 1217)
+
+
+state 184
+	PrimaryExpr:  StructType LiteralValue.    (100)
+
+	.  reduce 100 (src line 637)
+
+
+state 185
+	LiteralValue:  {.} 
+	LiteralValue:  {.Element ElementList1 } 
+	LiteralValue:  {.Element ElementList1 , } 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 277
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	{  shift 185
+	}  shift 274
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Element  goto 275
+	Expression  goto 276
+	LiteralValue  goto 278
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 186
+	PrimaryExpr:  ArrayType LiteralValue.    (101)
+
+	.  reduce 101 (src line 641)
+
+
+state 187
+	PrimaryExpr:  [ DDD.] ElementType LiteralValue 
+
+	]  shift 279
+	.  error
+
+
+state 188
+	PrimaryExpr:  SliceType LiteralValue.    (103)
+
+	.  reduce 103 (src line 649)
+
+
+state 189
+	PrimaryExpr:  MapType LiteralValue.    (104)
+
+	.  reduce 104 (src line 653)
+
+
+state 190
+	PrimaryExpr:  TypeName LiteralValue.    (105)
+
+	.  reduce 105 (src line 657)
+
+
+state 191
+	PrimaryExpr:  FUNC Function.    (106)
+
+	.  reduce 106 (src line 661)
+
+
+state 192
+	Function:  Signature.Block 
+	Type:  FUNC Signature.    (205)
+
+	{  shift 73
+	.  reduce 205 (src line 1095)
+
+	Block  goto 71
+
+state 193
+	PrimaryExpr:  IDENTIFIER (.) 
+	PrimaryExpr:  IDENTIFIER (.Type ) 
+	PrimaryExpr:  IDENTIFIER (.Type , ArgumentList ) 
+	PrimaryExpr:  IDENTIFIER (.ArgumentList ) 
+	PrimaryExpr:  IDENTIFIER (.Type , ) 
+	PrimaryExpr:  IDENTIFIER (.Type , ArgumentList , ) 
+	PrimaryExpr:  IDENTIFIER (.ArgumentList , ) 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	)  shift 280
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArgumentList  goto 282
+	ArrayType  goto 106
+	Expression  goto 90
+	ExpressionList  goto 272
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 281
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 194
+	PrimaryExpr:  ReceiverType ..MethodName 
+
+	IDENTIFIER  shift 147
+	.  error
+
+	MethodName  goto 283
+
+state 195
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	PrimaryExpr:  ( Expression.) 
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	)  shift 284
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  error
+
+
+state 196
+	ReceiverType:  ( *.TypeName ) 
+	Type:  *.Type 
+	UnaryExpr:  *.UnaryExpr 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 179
+	TypeName  goto 285
+	UnaryExpr  goto 180
+
+state 197
+	PrimaryExpr:  ReceiverType.. MethodName 
+	ReceiverType:  ( ReceiverType.) 
+
+	)  shift 286
+	.  shift 194
+	.  error
+
+
+state 198
+	PrimaryExpr:  Type.( Expression ) 
+	PrimaryExpr:  Type.( Expression , ) 
+	Type:  ( Type.) 
+
+	(  shift 199
+	)  shift 204
+	.  error
+
+
+state 199
+	PrimaryExpr:  Type (.Expression ) 
+	PrimaryExpr:  Type (.Expression , ) 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 287
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 200
+	ConstSpec:  IdentifierList Type = ExpressionList.    (11)
+
+	.  reduce 11 (src line 225)
+
+
+state 201
+	InterfaceType1:  InterfaceType1.MethodName Signature ; 
+	InterfaceType1:  InterfaceType1.TypeName ; 
+	Type:  INTERFACE { InterfaceType1.} 
+
+	IDENTIFIER  shift 291
+	}  shift 290
+	.  error
+
+	MethodName  goto 288
+	QualifiedIdent  goto 58
+	TypeName  goto 289
+
+state 202
+	Type:  CHAN COMM ElementType.    (210)
+
+	.  reduce 210 (src line 1115)
+
+
+state 203
+	Type:  COMM CHAN ElementType.    (211)
+
+	.  reduce 211 (src line 1119)
+
+
+state 204
+	Type:  ( Type ).    (212)
+
+	.  reduce 212 (src line 1123)
+
+
+state 205
+	QualifiedIdent:  IDENTIFIER . IDENTIFIER.    (128)
+
+	.  reduce 128 (src line 750)
+
+
+state 206
+	ArrayType:  [ Expression ].ElementType 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	ElementType  goto 292
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 123
+	TypeName  goto 46
+
+state 207
+	SliceType:  [ ] ElementType.    (152)
+
+	.  reduce 152 (src line 862)
+
+
+state 208
+	StructType:  STRUCT { StructType1.} 
+	StructType1:  StructType1.FieldDecl1 ; 
+	StructType1:  StructType1.FieldDecl1 STRING_LIT ; 
+
+	IDENTIFIER  shift 142
+	}  shift 293
+	*  shift 297
+	.  error
+
+	FieldDecl1  goto 294
+	IdentifierList  goto 295
+	QualifiedIdent  goto 58
+	TypeName  goto 296
+
+state 209
+	MapType:  MAP [ Type.] ElementType 
+
+	]  shift 298
+	.  error
+
+
+state 210
+	IdentifierList1:  IdentifierList1 , IDENTIFIER.    (63)
+
+	.  reduce 63 (src line 461)
+
+
+state 211
+	TypeDecl11:  TypeDecl11 TypeSpec ;.    (214)
+
+	.  reduce 214 (src line 1133)
+
+
+state 212
+	VarDecl11:  VarDecl11 VarSpec ;.    (234)
+
+	.  reduce 234 (src line 1227)
+
+
+state 213
+	VarSpec:  IdentifierList Type = ExpressionList.    (236)
+
+	.  reduce 236 (src line 1237)
+
+
+state 214
+	Block:  { StatementList }.    (5)
+
+	.  reduce 5 (src line 194)
+
+
+state 215
+	StatementList1:  StatementList1 Statement.; 
+
+	;  shift 299
+	.  error
+
+
+state 216
+	Statement:  Declaration.    (166)
+
+	.  reduce 166 (src line 928)
+
+
+state 217
+	Statement:  Label.: Statement 
+
+	:  shift 300
+	.  error
+
+
+state 218
+	Statement:  SimpleStmt.    (168)
+
+	.  reduce 168 (src line 937)
+
+
+state 219
+	Statement:  GO.Expression 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 301
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 220
+	Statement:  RETURN.    (170)
+	Statement:  RETURN.ExpressionList 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  reduce 170 (src line 945)
+
+	ArrayType  goto 106
+	Expression  goto 90
+	ExpressionList  goto 302
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 221
+	Statement:  BREAK.    (172)
+	Statement:  BREAK.Label 
+
+	IDENTIFIER  shift 304
+	.  reduce 172 (src line 953)
+
+	Label  goto 303
+
+state 222
+	Statement:  CONTINUE.    (174)
+	Statement:  CONTINUE.Label 
+
+	IDENTIFIER  shift 304
+	.  reduce 174 (src line 961)
+
+	Label  goto 305
+
+state 223
+	Statement:  GOTO.Label 
+
+	IDENTIFIER  shift 304
+	.  error
+
+	Label  goto 306
+
+state 224
+	Statement:  FALLTHROUGH.    (177)
+
+	.  reduce 177 (src line 973)
+
+
+state 225
+	Statement:  Block.    (178)
+
+	.  reduce 178 (src line 977)
+
+
+state 226
+	Statement:  IfStmt.    (179)
+
+	.  reduce 179 (src line 981)
+
+
+227: shift/reduce conflict (shift 99(0), red'n 27(0)) on COMM
+227: shift/reduce conflict (shift 101(0), red'n 27(0)) on FLOAT_LIT
+227: shift/reduce conflict (shift 311(0), red'n 27(0)) on IDENTIFIER
+227: shift/reduce conflict (shift 102(0), red'n 27(0)) on IMAGINARY_LIT
+227: shift/reduce conflict (shift 100(0), red'n 27(0)) on INT_LIT
+227: shift/reduce conflict (shift 103(0), red'n 27(0)) on RUNE_LIT
+227: shift/reduce conflict (shift 104(0), red'n 27(0)) on STRING_LIT
+227: shift/reduce conflict (shift 54(0), red'n 27(0)) on CHAN
+227: shift/reduce conflict (shift 111(0), red'n 27(0)) on FUNC
+227: shift/reduce conflict (shift 51(0), red'n 27(0)) on INTERFACE
+227: shift/reduce conflict (shift 61(0), red'n 27(0)) on MAP
+227: shift/reduce conflict (shift 60(0), red'n 27(0)) on STRUCT
+227: shift/reduce conflict (shift 107(0), red'n 27(0)) on [
+227: shift/reduce conflict (shift 115(0), red'n 27(0)) on (
+227: shift/reduce conflict (shift 93(0), red'n 27(0)) on +
+227: shift/reduce conflict (shift 94(0), red'n 27(0)) on -
+227: shift/reduce conflict (shift 96(0), red'n 27(0)) on ^
+227: shift/reduce conflict (shift 97(0), red'n 27(0)) on *
+227: shift/reduce conflict (shift 98(0), red'n 27(0)) on &
+227: shift/reduce conflict (shift 95(0), red'n 27(0)) on !
+state 227
+	Statement:  SWITCH.ExprSwitchStmt1 { ExprSwitchStmt3 } 
+	Statement:  SWITCH.ExprSwitchStmt1 Expression { ExprSwitchStmt3 } 
+	Statement:  SWITCH.TypeSwitchGuard { TypeSwitchStmt2 } 
+	Statement:  SWITCH.SimpleStmt ; TypeSwitchGuard { TypeSwitchStmt2 } 
+	ExprSwitchStmt1: .    (27)
+	SimpleStmt: .    (143)
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 311
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	;  reduce 143 (src line 822)
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  reduce 27 (src line 298)
+
+	ArrayType  goto 106
+	ExprSwitchStmt1  goto 307
+	Expression  goto 232
+	ExpressionList  goto 234
+	IdentifierList  goto 235
+	MapType  goto 109
+	PrimaryExpr  goto 310
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SendStmt  goto 233
+	SimpleStmt  goto 309
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	TypeSwitchGuard  goto 308
+	UnaryExpr  goto 91
+
+state 228
+	Statement:  SELECT.{ SelectStmt1 } 
+
+	{  shift 312
+	.  error
+
+
+229: shift/reduce conflict (shift 315(0), red'n 143(0)) on ;
+state 229
+	Statement:  FOR.Block 
+	Statement:  FOR.Condition Block 
+	Statement:  FOR.; ForClause2 ; Block 
+	Statement:  FOR.; ForClause2 ; SimpleStmt Block 
+	Statement:  FOR.SimpleStmt ; ForClause2 ; Block 
+	Statement:  FOR.SimpleStmt ; ForClause2 ; SimpleStmt Block 
+	Statement:  FOR.ExpressionList = RANGE Expression Block 
+	Statement:  FOR.IdentifierList COLAS RANGE Expression Block 
+	SimpleStmt: .    (143)
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 320
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	{  shift 73
+	;  shift 315
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Block  goto 313
+	Condition  goto 314
+	Expression  goto 319
+	ExpressionList  goto 317
+	IdentifierList  goto 318
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SendStmt  goto 233
+	SimpleStmt  goto 316
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 230
+	Statement:  DEFER.Expression 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 321
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+231: shift/reduce conflict (shift 193(0), red'n 107(0)) on (
+231: shift/reduce conflict (shift 126(0), red'n 107(0)) on .
+231: shift/reduce conflict (shift 193(0), red'n 217(0)) on (
+231: shift/reduce conflict (shift 126(0), red'n 217(0)) on .
+ 231: reduce/reduce conflict  (red'ns 107 and 62) on ,
+state 231
+	IdentifierList:  IDENTIFIER.IdentifierList1 
+	Label:  IDENTIFIER.    (78)
+	PrimaryExpr:  IDENTIFIER.    (107)
+	PrimaryExpr:  IDENTIFIER.( ) 
+	PrimaryExpr:  IDENTIFIER.( Type ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ArgumentList ) 
+	PrimaryExpr:  IDENTIFIER.( ArgumentList ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ArgumentList , ) 
+	PrimaryExpr:  IDENTIFIER.( ArgumentList , ) 
+	QualifiedIdent:  IDENTIFIER.. IDENTIFIER 
+	TypeName:  IDENTIFIER.    (217)
+	IdentifierList1: .    (62)
+
+	COLAS  reduce 62 (src line 456)
+	{  reduce 217 (src line 1148)
+	(  shift 193
+	:  reduce 78 (src line 530)
+	,  reduce 62 (src line 456)
+	.  shift 126
+	.  reduce 107 (src line 665)
+
+	IdentifierList1  goto 62
+
+state 232
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	ExpressionList:  Expression.ExpressionList1 
+	SendStmt:  Expression.COMM Expression 
+	SimpleStmt:  Expression.    (144)
+	SimpleStmt:  Expression.INC 
+	SimpleStmt:  Expression.DEC 
+	ExpressionList1: .    (53)
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	COMM  shift 322
+	DEC  shift 324
+	EQ  shift 154
+	GE  shift 159
+	INC  shift 323
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	{  reduce 144 (src line 827)
+	;  reduce 144 (src line 827)
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  reduce 53 (src line 410)
+
+	ExpressionList1  goto 171
+
+state 233
+	SimpleStmt:  SendStmt.    (145)
+
+	.  reduce 145 (src line 831)
+
+
+state 234
+	SimpleStmt:  ExpressionList.ASSIGN_OP ExpressionList 
+
+	ASSIGN_OP  shift 325
+	.  error
+
+
+state 235
+	SimpleStmt:  IdentifierList.COLAS ExpressionList 
+
+	COLAS  shift 326
+	.  error
+
+
+state 236
+	IfStmt:  IF.Expression Block 
+	IfStmt:  IF.SimpleStmt ; Expression Block 
+	IfStmt:  IF.Expression Block ELSE IfStmt 
+	IfStmt:  IF.SimpleStmt ; Expression Block ELSE IfStmt 
+	IfStmt:  IF.Expression Block ELSE Block 
+	IfStmt:  IF.SimpleStmt ; Expression Block ELSE Block 
+	SimpleStmt: .    (143)
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 320
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  reduce 143 (src line 822)
+
+	ArrayType  goto 106
+	Expression  goto 327
+	ExpressionList  goto 234
+	IdentifierList  goto 235
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SendStmt  goto 233
+	SimpleStmt  goto 328
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+237: shift/reduce conflict (shift 25(0), red'n 88(0)) on IDENTIFIER
+state 237
+	ParameterList1:  ParameterList1 ,.ParameterDecl 
+	Parameters:  ( ParameterDecl ParameterList1 ,.) 
+	ParameterDecl2: .    (88)
+
+	DDD  shift 81
+	IDENTIFIER  shift 25
+	)  shift 330
+	.  reduce 88 (src line 582)
+
+	IdentifierList  goto 80
+	ParameterDecl  goto 329
+	ParameterDecl2  goto 79
+
+state 238
+	Parameters:  ( ParameterDecl ParameterList1 ).    (93)
+
+	.  reduce 93 (src line 607)
+
+
+state 239
+	ParameterDecl:  IdentifierList ParameterDecl2 Type.    (87)
+
+	.  reduce 87 (src line 577)
+
+
+state 240
+	SourceFile2:  SourceFile2 FUNC ( BaseTypeName ) MethodName MethodDecl1.; 
+
+	;  shift 331
+	.  error
+
+
+state 241
+	MethodDecl1:  Function.    (83)
+
+	.  reduce 83 (src line 556)
+
+
+state 242
+	Function:  Signature.Block 
+	MethodDecl1:  Signature.    (84)
+
+	{  shift 73
+	.  reduce 84 (src line 561)
+
+	Block  goto 71
+
+state 243
+	SourceFile2:  SourceFile2 FUNC ( IDENTIFIER BaseTypeName ) MethodName.MethodDecl1 ; 
+
+	(  shift 39
+	.  error
+
+	Function  goto 241
+	MethodDecl1  goto 332
+	Parameters  goto 38
+	Signature  goto 242
+
+state 244
+	SourceFile2:  SourceFile2 FUNC ( IDENTIFIER * BaseTypeName ).MethodName MethodDecl1 ; 
+
+	IDENTIFIER  shift 147
+	.  error
+
+	MethodName  goto 333
+
+state 245
+	SourceFile2:  SourceFile2 FUNC ( * BaseTypeName ) MethodName.MethodDecl1 ; 
+
+	(  shift 39
+	.  error
+
+	Function  goto 241
+	MethodDecl1  goto 334
+	Parameters  goto 38
+	Signature  goto 242
+
+state 246
+	Expression:  Expression OROR UnaryExpr.    (33)
+
+	.  reduce 33 (src line 327)
+
+
+state 247
+	Expression:  Expression ANDAND UnaryExpr.    (34)
+
+	.  reduce 34 (src line 331)
+
+
+state 248
+	Expression:  Expression EQ UnaryExpr.    (35)
+
+	.  reduce 35 (src line 335)
+
+
+state 249
+	Expression:  Expression NE UnaryExpr.    (36)
+
+	.  reduce 36 (src line 339)
+
+
+state 250
+	Expression:  Expression < UnaryExpr.    (37)
+
+	.  reduce 37 (src line 343)
+
+
+state 251
+	Expression:  Expression LE UnaryExpr.    (38)
+
+	.  reduce 38 (src line 347)
+
+
+state 252
+	Expression:  Expression > UnaryExpr.    (39)
+
+	.  reduce 39 (src line 351)
+
+
+state 253
+	Expression:  Expression GE UnaryExpr.    (40)
+
+	.  reduce 40 (src line 355)
+
+
+state 254
+	Expression:  Expression + UnaryExpr.    (41)
+
+	.  reduce 41 (src line 359)
+
+
+state 255
+	Expression:  Expression - UnaryExpr.    (42)
+
+	.  reduce 42 (src line 363)
+
+
+state 256
+	Expression:  Expression | UnaryExpr.    (43)
+
+	.  reduce 43 (src line 367)
+
+
+state 257
+	Expression:  Expression ^ UnaryExpr.    (44)
+
+	.  reduce 44 (src line 371)
+
+
+state 258
+	Expression:  Expression * UnaryExpr.    (45)
+
+	.  reduce 45 (src line 375)
+
+
+state 259
+	Expression:  Expression / UnaryExpr.    (46)
+
+	.  reduce 46 (src line 379)
+
+
+state 260
+	Expression:  Expression % UnaryExpr.    (47)
+
+	.  reduce 47 (src line 383)
+
+
+state 261
+	Expression:  Expression LSH UnaryExpr.    (48)
+
+	.  reduce 48 (src line 387)
+
+
+state 262
+	Expression:  Expression RSH UnaryExpr.    (49)
+
+	.  reduce 49 (src line 391)
+
+
+state 263
+	Expression:  Expression & UnaryExpr.    (50)
+
+	.  reduce 50 (src line 395)
+
+
+state 264
+	Expression:  Expression ANDNOT UnaryExpr.    (51)
+
+	.  reduce 51 (src line 399)
+
+
+state 265
+	ExpressionList1:  ExpressionList1 ,.Expression 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 335
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 266
+	PrimaryExpr:  PrimaryExpr . IDENTIFIER.    (120)
+
+	.  reduce 120 (src line 717)
+
+
+state 267
+	PrimaryExpr:  PrimaryExpr . (.Type ) 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 336
+	TypeName  goto 46
+
+state 268
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	PrimaryExpr:  PrimaryExpr [ Expression.] 
+	PrimaryExpr:  PrimaryExpr [ Expression.: Slice2 ] 
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	]  shift 337
+	:  shift 338
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  error
+
+
+state 269
+	PrimaryExpr:  PrimaryExpr [ :.Slice2 ] 
+	Slice2: .    (150)
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  reduce 150 (src line 852)
+
+	ArrayType  goto 106
+	Expression  goto 340
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	Slice2  goto 339
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 270
+	PrimaryExpr:  PrimaryExpr ( ).    (125)
+
+	.  reduce 125 (src line 737)
+
+
+state 271
+	PrimaryExpr:  PrimaryExpr ( ArgumentList.) 
+	PrimaryExpr:  PrimaryExpr ( ArgumentList., ) 
+
+	)  shift 341
+	,  shift 342
+	.  error
+
+
+state 272
+	ArgumentList:  ExpressionList.    (1)
+	ArgumentList:  ExpressionList.DDD 
+
+	DDD  shift 343
+	.  reduce 1 (src line 172)
+
+
+ 273: reduce/reduce conflict  (red'ns 209 and 211) on STRING_LIT
+ 273: reduce/reduce conflict  (red'ns 209 and 211) on ]
+ 273: reduce/reduce conflict  (red'ns 209 and 211) on {
+ 273: reduce/reduce conflict  (red'ns 209 and 211) on ;
+ 273: reduce/reduce conflict  (red'ns 209 and 211) on =
+ 273: reduce/reduce conflict  (red'ns 209 and 211) on (
+ 273: reduce/reduce conflict  (red'ns 209 and 211) on )
+ 273: reduce/reduce conflict  (red'ns 209 and 211) on :
+ 273: reduce/reduce conflict  (red'ns 209 and 211) on ,
+state 273
+	Type:  CHAN ElementType.    (209)
+	Type:  COMM CHAN ElementType.    (211)
+
+	.  reduce 209 (src line 1111)
+
+
+state 274
+	LiteralValue:  { }.    (79)
+
+	.  reduce 79 (src line 536)
+
+
+state 275
+	LiteralValue:  { Element.ElementList1 } 
+	LiteralValue:  { Element.ElementList1 , } 
+	ElementList1: .    (24)
+
+	.  reduce 24 (src line 282)
+
+	ElementList1  goto 344
+
+state 276
+	Element:  Expression.    (18)
+	Element:  Expression.: Expression 
+	Element:  Expression.: LiteralValue 
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	:  shift 345
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  reduce 18 (src line 256)
+
+
+277: shift/reduce conflict (shift 193(0), red'n 107(0)) on (
+277: shift/reduce conflict (shift 346(0), red'n 107(0)) on :
+277: shift/reduce conflict (shift 126(0), red'n 107(0)) on .
+277: shift/reduce conflict (shift 193(0), red'n 217(0)) on (
+277: shift/reduce conflict (shift 126(0), red'n 217(0)) on .
+state 277
+	Element:  IDENTIFIER.: Expression 
+	Element:  IDENTIFIER.: LiteralValue 
+	PrimaryExpr:  IDENTIFIER.    (107)
+	PrimaryExpr:  IDENTIFIER.( ) 
+	PrimaryExpr:  IDENTIFIER.( Type ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ArgumentList ) 
+	PrimaryExpr:  IDENTIFIER.( ArgumentList ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ArgumentList , ) 
+	PrimaryExpr:  IDENTIFIER.( ArgumentList , ) 
+	QualifiedIdent:  IDENTIFIER.. IDENTIFIER 
+	TypeName:  IDENTIFIER.    (217)
+
+	{  reduce 217 (src line 1148)
+	(  shift 193
+	:  shift 346
+	.  shift 126
+	.  reduce 107 (src line 665)
+
+
+state 278
+	Element:  LiteralValue.    (21)
+
+	.  reduce 21 (src line 269)
+
+
+state 279
+	PrimaryExpr:  [ DDD ].ElementType LiteralValue 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	ElementType  goto 347
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 123
+	TypeName  goto 46
+
+state 280
+	PrimaryExpr:  IDENTIFIER ( ).    (113)
+
+	.  reduce 113 (src line 689)
+
+
+state 281
+	PrimaryExpr:  Type.( Expression ) 
+	PrimaryExpr:  Type.( Expression , ) 
+	PrimaryExpr:  IDENTIFIER ( Type.) 
+	PrimaryExpr:  IDENTIFIER ( Type., ArgumentList ) 
+	PrimaryExpr:  IDENTIFIER ( Type., ) 
+	PrimaryExpr:  IDENTIFIER ( Type., ArgumentList , ) 
+
+	(  shift 199
+	)  shift 348
+	,  shift 349
+	.  error
+
+
+state 282
+	PrimaryExpr:  IDENTIFIER ( ArgumentList.) 
+	PrimaryExpr:  IDENTIFIER ( ArgumentList., ) 
+
+	)  shift 350
+	,  shift 351
+	.  error
+
+
+state 283
+	PrimaryExpr:  ReceiverType . MethodName.    (109)
+
+	.  reduce 109 (src line 673)
+
+
+state 284
+	PrimaryExpr:  ( Expression ).    (110)
+
+	.  reduce 110 (src line 677)
+
+
+285: shift/reduce conflict (shift 352(0), red'n 201(0)) on )
+state 285
+	PrimaryExpr:  TypeName.LiteralValue 
+	ReceiverType:  TypeName.    (129)
+	ReceiverType:  ( * TypeName.) 
+	Type:  TypeName.    (201)
+
+	{  shift 185
+	)  shift 352
+	.  reduce 129 (src line 756)
+	.  reduce 201 (src line 1078)
+
+	LiteralValue  goto 190
+
+state 286
+	ReceiverType:  ( ReceiverType ).    (131)
+
+	.  reduce 131 (src line 765)
+
+
+state 287
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	PrimaryExpr:  Type ( Expression.) 
+	PrimaryExpr:  Type ( Expression., ) 
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	)  shift 353
+	,  shift 354
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  error
+
+
+state 288
+	InterfaceType1:  InterfaceType1 MethodName.Signature ; 
+
+	(  shift 39
+	.  error
+
+	Parameters  goto 38
+	Signature  goto 355
+
+state 289
+	InterfaceType1:  InterfaceType1 TypeName.; 
+
+	;  shift 356
+	.  error
+
+
+state 290
+	Type:  INTERFACE { InterfaceType1 }.    (206)
+
+	.  reduce 206 (src line 1099)
+
+
+state 291
+	MethodName:  IDENTIFIER.    (85)
+	QualifiedIdent:  IDENTIFIER.. IDENTIFIER 
+	TypeName:  IDENTIFIER.    (217)
+
+	(  reduce 85 (src line 566)
+	.  shift 126
+	.  reduce 217 (src line 1148)
+
+
+state 292
+	ArrayType:  [ Expression ] ElementType.    (3)
+
+	.  reduce 3 (src line 182)
+
+
+state 293
+	StructType:  STRUCT { StructType1 }.    (197)
+
+	.  reduce 197 (src line 1058)
+
+
+state 294
+	StructType1:  StructType1 FieldDecl1.; 
+	StructType1:  StructType1 FieldDecl1.STRING_LIT ; 
+
+	STRING_LIT  shift 358
+	;  shift 357
+	.  error
+
+
+state 295
+	FieldDecl1:  IdentifierList.Type 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 359
+	TypeName  goto 46
+
+state 296
+	FieldDecl1:  TypeName.    (56)
+
+	.  reduce 56 (src line 425)
+
+
+state 297
+	FieldDecl1:  *.TypeName 
+
+	IDENTIFIER  shift 57
+	.  error
+
+	QualifiedIdent  goto 58
+	TypeName  goto 360
+
+state 298
+	MapType:  MAP [ Type ].ElementType 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	ElementType  goto 361
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 123
+	TypeName  goto 46
+
+state 299
+	StatementList1:  StatementList1 Statement ;.    (196)
+
+	.  reduce 196 (src line 1053)
+
+
+state 300
+	Statement:  Label :.Statement 
+	SimpleStmt: .    (143)
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 231
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	BREAK  shift 221
+	CHAN  shift 54
+	CONST  shift 11
+	CONTINUE  shift 222
+	DEFER  shift 230
+	FALLTHROUGH  shift 224
+	FOR  shift 229
+	FUNC  shift 111
+	GO  shift 219
+	GOTO  shift 223
+	IF  shift 236
+	INTERFACE  shift 51
+	MAP  shift 61
+	RETURN  shift 220
+	SELECT  shift 228
+	STRUCT  shift 60
+	SWITCH  shift 227
+	TYPE  shift 12
+	VAR  shift 13
+	[  shift 107
+	{  shift 73
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  reduce 143 (src line 822)
+
+	ArrayType  goto 106
+	Block  goto 225
+	Declaration  goto 216
+	Expression  goto 232
+	ExpressionList  goto 234
+	IdentifierList  goto 235
+	IfStmt  goto 226
+	Label  goto 217
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SendStmt  goto 233
+	SimpleStmt  goto 218
+	SliceType  goto 108
+	Statement  goto 362
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 301
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	Statement:  GO Expression.    (169)
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  reduce 169 (src line 941)
+
+
+state 302
+	Statement:  RETURN ExpressionList.    (171)
+
+	.  reduce 171 (src line 949)
+
+
+state 303
+	Statement:  BREAK Label.    (173)
+
+	.  reduce 173 (src line 957)
+
+
+state 304
+	Label:  IDENTIFIER.    (78)
+
+	.  reduce 78 (src line 530)
+
+
+state 305
+	Statement:  CONTINUE Label.    (175)
+
+	.  reduce 175 (src line 965)
+
+
+state 306
+	Statement:  GOTO Label.    (176)
+
+	.  reduce 176 (src line 969)
+
+
+state 307
+	Statement:  SWITCH ExprSwitchStmt1.{ ExprSwitchStmt3 } 
+	Statement:  SWITCH ExprSwitchStmt1.Expression { ExprSwitchStmt3 } 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	{  shift 363
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 364
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 308
+	Statement:  SWITCH TypeSwitchGuard.{ TypeSwitchStmt2 } 
+
+	{  shift 365
+	.  error
+
+
+state 309
+	ExprSwitchStmt1:  SimpleStmt.; 
+	Statement:  SWITCH SimpleStmt.; TypeSwitchGuard { TypeSwitchStmt2 } 
+
+	;  shift 366
+	.  error
+
+
+state 310
+	PrimaryExpr:  PrimaryExpr.. IDENTIFIER 
+	PrimaryExpr:  PrimaryExpr.[ Expression ] 
+	PrimaryExpr:  PrimaryExpr.[ : Slice2 ] 
+	PrimaryExpr:  PrimaryExpr.[ Expression : Slice2 ] 
+	PrimaryExpr:  PrimaryExpr.. ( Type ) 
+	PrimaryExpr:  PrimaryExpr.( ) 
+	PrimaryExpr:  PrimaryExpr.( ArgumentList ) 
+	PrimaryExpr:  PrimaryExpr.( ArgumentList , ) 
+	TypeSwitchGuard:  PrimaryExpr.. ( TYPE ) 
+	UnaryExpr:  PrimaryExpr.    (225)
+
+	[  shift 173
+	(  shift 174
+	.  shift 367
+	.  reduce 225 (src line 1188)
+
+
+311: shift/reduce conflict (shift 193(0), red'n 107(0)) on (
+311: shift/reduce conflict (shift 126(0), red'n 107(0)) on .
+311: shift/reduce conflict (shift 193(0), red'n 217(0)) on (
+311: shift/reduce conflict (shift 126(0), red'n 217(0)) on .
+311: shift/reduce conflict (shift 368(0), red'n 62(0)) on COLAS
+ 311: reduce/reduce conflict  (red'ns 107 and 62) on ,
+state 311
+	IdentifierList:  IDENTIFIER.IdentifierList1 
+	PrimaryExpr:  IDENTIFIER.    (107)
+	PrimaryExpr:  IDENTIFIER.( ) 
+	PrimaryExpr:  IDENTIFIER.( Type ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ArgumentList ) 
+	PrimaryExpr:  IDENTIFIER.( ArgumentList ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ArgumentList , ) 
+	PrimaryExpr:  IDENTIFIER.( ArgumentList , ) 
+	QualifiedIdent:  IDENTIFIER.. IDENTIFIER 
+	TypeName:  IDENTIFIER.    (217)
+	TypeSwitchGuard:  IDENTIFIER.COLAS PrimaryExpr . ( TYPE ) 
+	IdentifierList1: .    (62)
+
+	COLAS  shift 368
+	{  reduce 217 (src line 1148)
+	(  shift 193
+	,  reduce 62 (src line 456)
+	.  shift 126
+	.  reduce 107 (src line 665)
+
+	IdentifierList1  goto 62
+
+state 312
+	Statement:  SELECT {.SelectStmt1 } 
+	SelectStmt1: .    (133)
+
+	.  reduce 133 (src line 776)
+
+	SelectStmt1  goto 369
+
+state 313
+	Statement:  FOR Block.    (185)
+
+	.  reduce 185 (src line 1005)
+
+
+state 314
+	Statement:  FOR Condition.Block 
+
+	{  shift 73
+	.  error
+
+	Block  goto 370
+
+state 315
+	Statement:  FOR ;.ForClause2 ; Block 
+	Statement:  FOR ;.ForClause2 ; SimpleStmt Block 
+	ForClause2: .    (58)
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  reduce 58 (src line 434)
+
+	ArrayType  goto 106
+	Condition  goto 372
+	Expression  goto 373
+	ForClause2  goto 371
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 316
+	Statement:  FOR SimpleStmt.; ForClause2 ; Block 
+	Statement:  FOR SimpleStmt.; ForClause2 ; SimpleStmt Block 
+
+	;  shift 374
+	.  error
+
+
+state 317
+	SimpleStmt:  ExpressionList.ASSIGN_OP ExpressionList 
+	Statement:  FOR ExpressionList.= RANGE Expression Block 
+
+	ASSIGN_OP  shift 325
+	=  shift 375
+	.  error
+
+
+state 318
+	SimpleStmt:  IdentifierList.COLAS ExpressionList 
+	Statement:  FOR IdentifierList.COLAS RANGE Expression Block 
+
+	COLAS  shift 376
+	.  error
+
+
+state 319
+	Condition:  Expression.    (6)
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	ExpressionList:  Expression.ExpressionList1 
+	SendStmt:  Expression.COMM Expression 
+	SimpleStmt:  Expression.    (144)
+	SimpleStmt:  Expression.INC 
+	SimpleStmt:  Expression.DEC 
+	ExpressionList1: .    (53)
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	COMM  shift 322
+	DEC  shift 324
+	EQ  shift 154
+	GE  shift 159
+	INC  shift 323
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	{  reduce 6 (src line 200)
+	;  reduce 144 (src line 827)
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  reduce 53 (src line 410)
+
+	ExpressionList1  goto 171
+
+320: shift/reduce conflict (shift 193(0), red'n 107(0)) on (
+320: shift/reduce conflict (shift 126(0), red'n 107(0)) on .
+ 320: reduce/reduce conflict  (red'ns 107 and 217) on {
+320: shift/reduce conflict (shift 193(0), red'n 217(0)) on (
+320: shift/reduce conflict (shift 126(0), red'n 217(0)) on .
+ 320: reduce/reduce conflict  (red'ns 107 and 62) on ,
+state 320
+	IdentifierList:  IDENTIFIER.IdentifierList1 
+	PrimaryExpr:  IDENTIFIER.    (107)
+	PrimaryExpr:  IDENTIFIER.( ) 
+	PrimaryExpr:  IDENTIFIER.( Type ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ArgumentList ) 
+	PrimaryExpr:  IDENTIFIER.( ArgumentList ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ArgumentList , ) 
+	PrimaryExpr:  IDENTIFIER.( ArgumentList , ) 
+	QualifiedIdent:  IDENTIFIER.. IDENTIFIER 
+	TypeName:  IDENTIFIER.    (217)
+	IdentifierList1: .    (62)
+
+	COLAS  reduce 62 (src line 456)
+	(  shift 193
+	,  reduce 62 (src line 456)
+	.  shift 126
+	.  reduce 107 (src line 665)
+
+	IdentifierList1  goto 62
+
+state 321
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	Statement:  DEFER Expression.    (193)
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  reduce 193 (src line 1037)
+
+
+state 322
+	SendStmt:  Expression COMM.Expression 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 377
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 323
+	SimpleStmt:  Expression INC.    (146)
+
+	.  reduce 146 (src line 835)
+
+
+state 324
+	SimpleStmt:  Expression DEC.    (147)
+
+	.  reduce 147 (src line 839)
+
+
+state 325
+	SimpleStmt:  ExpressionList ASSIGN_OP.ExpressionList 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 90
+	ExpressionList  goto 378
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 326
+	SimpleStmt:  IdentifierList COLAS.ExpressionList 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 90
+	ExpressionList  goto 379
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 327
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	ExpressionList:  Expression.ExpressionList1 
+	IfStmt:  IF Expression.Block 
+	IfStmt:  IF Expression.Block ELSE IfStmt 
+	IfStmt:  IF Expression.Block ELSE Block 
+	SendStmt:  Expression.COMM Expression 
+	SimpleStmt:  Expression.    (144)
+	SimpleStmt:  Expression.INC 
+	SimpleStmt:  Expression.DEC 
+	ExpressionList1: .    (53)
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	COMM  shift 322
+	DEC  shift 324
+	EQ  shift 154
+	GE  shift 159
+	INC  shift 323
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	{  shift 73
+	;  reduce 144 (src line 827)
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  reduce 53 (src line 410)
+
+	Block  goto 380
+	ExpressionList1  goto 171
+
+state 328
+	IfStmt:  IF SimpleStmt.; Expression Block 
+	IfStmt:  IF SimpleStmt.; Expression Block ELSE IfStmt 
+	IfStmt:  IF SimpleStmt.; Expression Block ELSE Block 
+
+	;  shift 381
+	.  error
+
+
+state 329
+	ParameterList1:  ParameterList1 , ParameterDecl.    (91)
+
+	.  reduce 91 (src line 597)
+
+
+state 330
+	Parameters:  ( ParameterDecl ParameterList1 , ).    (94)
+
+	.  reduce 94 (src line 611)
+
+
+state 331
+	SourceFile2:  SourceFile2 FUNC ( BaseTypeName ) MethodName MethodDecl1 ;.    (161)
+
+	.  reduce 161 (src line 905)
+
+
+state 332
+	SourceFile2:  SourceFile2 FUNC ( IDENTIFIER BaseTypeName ) MethodName MethodDecl1.; 
+
+	;  shift 382
+	.  error
+
+
+state 333
+	SourceFile2:  SourceFile2 FUNC ( IDENTIFIER * BaseTypeName ) MethodName.MethodDecl1 ; 
+
+	(  shift 39
+	.  error
+
+	Function  goto 241
+	MethodDecl1  goto 383
+	Parameters  goto 38
+	Signature  goto 242
+
+state 334
+	SourceFile2:  SourceFile2 FUNC ( * BaseTypeName ) MethodName MethodDecl1.; 
+
+	;  shift 384
+	.  error
+
+
+state 335
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	ExpressionList1:  ExpressionList1 , Expression.    (54)
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  reduce 54 (src line 415)
+
+
+state 336
+	PrimaryExpr:  PrimaryExpr . ( Type.) 
+
+	)  shift 385
+	.  error
+
+
+state 337
+	PrimaryExpr:  PrimaryExpr [ Expression ].    (121)
+
+	.  reduce 121 (src line 721)
+
+
+state 338
+	PrimaryExpr:  PrimaryExpr [ Expression :.Slice2 ] 
+	Slice2: .    (150)
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  reduce 150 (src line 852)
+
+	ArrayType  goto 106
+	Expression  goto 340
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	Slice2  goto 386
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 339
+	PrimaryExpr:  PrimaryExpr [ : Slice2.] 
+
+	]  shift 387
+	.  error
+
+
+state 340
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	Slice2:  Expression.    (151)
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  reduce 151 (src line 857)
+
+
+state 341
+	PrimaryExpr:  PrimaryExpr ( ArgumentList ).    (126)
+
+	.  reduce 126 (src line 741)
+
+
+state 342
+	PrimaryExpr:  PrimaryExpr ( ArgumentList ,.) 
+
+	)  shift 388
+	.  error
+
+
+state 343
+	ArgumentList:  ExpressionList DDD.    (2)
+
+	.  reduce 2 (src line 177)
+
+
+state 344
+	ElementList1:  ElementList1., Element 
+	LiteralValue:  { Element ElementList1.} 
+	LiteralValue:  { Element ElementList1., } 
+
+	}  shift 390
+	,  shift 389
+	.  error
+
+
+state 345
+	Element:  Expression :.Expression 
+	Element:  Expression :.LiteralValue 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	{  shift 185
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 391
+	LiteralValue  goto 392
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 346
+	Element:  IDENTIFIER :.Expression 
+	Element:  IDENTIFIER :.LiteralValue 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	{  shift 185
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 393
+	LiteralValue  goto 394
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 347
+	PrimaryExpr:  [ DDD ] ElementType.LiteralValue 
+
+	{  shift 185
+	.  error
+
+	LiteralValue  goto 395
+
+state 348
+	PrimaryExpr:  IDENTIFIER ( Type ).    (114)
+
+	.  reduce 114 (src line 693)
+
+
+state 349
+	PrimaryExpr:  IDENTIFIER ( Type ,.ArgumentList ) 
+	PrimaryExpr:  IDENTIFIER ( Type ,.) 
+	PrimaryExpr:  IDENTIFIER ( Type ,.ArgumentList , ) 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	)  shift 397
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArgumentList  goto 396
+	ArrayType  goto 106
+	Expression  goto 90
+	ExpressionList  goto 272
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 350
+	PrimaryExpr:  IDENTIFIER ( ArgumentList ).    (116)
+
+	.  reduce 116 (src line 701)
+
+
+state 351
+	PrimaryExpr:  IDENTIFIER ( ArgumentList ,.) 
+
+	)  shift 398
+	.  error
+
+
+state 352
+	ReceiverType:  ( * TypeName ).    (130)
+
+	.  reduce 130 (src line 761)
+
+
+state 353
+	PrimaryExpr:  Type ( Expression ).    (111)
+
+	.  reduce 111 (src line 681)
+
+
+state 354
+	PrimaryExpr:  Type ( Expression ,.) 
+
+	)  shift 399
+	.  error
+
+
+state 355
+	InterfaceType1:  InterfaceType1 MethodName Signature.; 
+
+	;  shift 400
+	.  error
+
+
+state 356
+	InterfaceType1:  InterfaceType1 TypeName ;.    (77)
+
+	.  reduce 77 (src line 525)
+
+
+state 357
+	StructType1:  StructType1 FieldDecl1 ;.    (199)
+
+	.  reduce 199 (src line 1069)
+
+
+state 358
+	StructType1:  StructType1 FieldDecl1 STRING_LIT.; 
+
+	;  shift 401
+	.  error
+
+
+state 359
+	FieldDecl1:  IdentifierList Type.    (55)
+
+	.  reduce 55 (src line 420)
+
+
+state 360
+	FieldDecl1:  * TypeName.    (57)
+
+	.  reduce 57 (src line 429)
+
+
+state 361
+	MapType:  MAP [ Type ] ElementType.    (82)
+
+	.  reduce 82 (src line 550)
+
+
+state 362
+	Statement:  Label : Statement.    (167)
+
+	.  reduce 167 (src line 933)
+
+
+state 363
+	Statement:  SWITCH ExprSwitchStmt1 {.ExprSwitchStmt3 } 
+	ExprSwitchStmt3: .    (29)
+
+	.  reduce 29 (src line 308)
+
+	ExprSwitchStmt3  goto 402
+
+state 364
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	Statement:  SWITCH ExprSwitchStmt1 Expression.{ ExprSwitchStmt3 } 
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	{  shift 403
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  error
+
+
+state 365
+	Statement:  SWITCH TypeSwitchGuard {.TypeSwitchStmt2 } 
+	TypeSwitchStmt2: .    (222)
+
+	.  reduce 222 (src line 1174)
+
+	TypeSwitchStmt2  goto 404
+
+366: shift/reduce conflict (shift 55(0), red'n 28(0)) on COMM
+366: shift/reduce conflict (shift 101(0), red'n 28(0)) on FLOAT_LIT
+366: shift/reduce conflict (shift 407(0), red'n 28(0)) on IDENTIFIER
+366: shift/reduce conflict (shift 102(0), red'n 28(0)) on IMAGINARY_LIT
+366: shift/reduce conflict (shift 100(0), red'n 28(0)) on INT_LIT
+366: shift/reduce conflict (shift 103(0), red'n 28(0)) on RUNE_LIT
+366: shift/reduce conflict (shift 104(0), red'n 28(0)) on STRING_LIT
+366: shift/reduce conflict (shift 54(0), red'n 28(0)) on CHAN
+366: shift/reduce conflict (shift 111(0), red'n 28(0)) on FUNC
+366: shift/reduce conflict (shift 51(0), red'n 28(0)) on INTERFACE
+366: shift/reduce conflict (shift 61(0), red'n 28(0)) on MAP
+366: shift/reduce conflict (shift 60(0), red'n 28(0)) on STRUCT
+366: shift/reduce conflict (shift 107(0), red'n 28(0)) on [
+366: shift/reduce conflict (shift 115(0), red'n 28(0)) on (
+366: shift/reduce conflict (shift 49(0), red'n 28(0)) on *
+state 366
+	ExprSwitchStmt1:  SimpleStmt ;.    (28)
+	Statement:  SWITCH SimpleStmt ;.TypeSwitchGuard { TypeSwitchStmt2 } 
+
+	COMM  shift 55
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 407
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	*  shift 49
+	.  reduce 28 (src line 303)
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 406
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	TypeSwitchGuard  goto 405
+
+state 367
+	PrimaryExpr:  PrimaryExpr ..IDENTIFIER 
+	PrimaryExpr:  PrimaryExpr ..( Type ) 
+	TypeSwitchGuard:  PrimaryExpr ..( TYPE ) 
+
+	IDENTIFIER  shift 266
+	(  shift 408
+	.  error
+
+
+state 368
+	TypeSwitchGuard:  IDENTIFIER COLAS.PrimaryExpr . ( TYPE ) 
+
+	COMM  shift 55
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	*  shift 49
+	.  error
+
+	ArrayType  goto 106
+	MapType  goto 109
+	PrimaryExpr  goto 409
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+
+state 369
+	SelectStmt1:  SelectStmt1.CASE SendStmt : StatementList 
+	SelectStmt1:  SelectStmt1.CASE RecvExpr : StatementList 
+	SelectStmt1:  SelectStmt1.CASE ExpressionList = RecvExpr : StatementList 
+	SelectStmt1:  SelectStmt1.CASE IdentifierList COLAS RecvExpr : StatementList 
+	SelectStmt1:  SelectStmt1.DEFAULT : StatementList 
+	Statement:  SELECT { SelectStmt1.} 
+
+	CASE  shift 410
+	DEFAULT  shift 411
+	}  shift 412
+	.  error
+
+
+state 370
+	Statement:  FOR Condition Block.    (186)
+
+	.  reduce 186 (src line 1009)
+
+
+state 371
+	Statement:  FOR ; ForClause2.; Block 
+	Statement:  FOR ; ForClause2.; SimpleStmt Block 
+
+	;  shift 413
+	.  error
+
+
+state 372
+	ForClause2:  Condition.    (59)
+
+	.  reduce 59 (src line 439)
+
+
+state 373
+	Condition:  Expression.    (6)
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  reduce 6 (src line 200)
+
+
+state 374
+	Statement:  FOR SimpleStmt ;.ForClause2 ; Block 
+	Statement:  FOR SimpleStmt ;.ForClause2 ; SimpleStmt Block 
+	ForClause2: .    (58)
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  reduce 58 (src line 434)
+
+	ArrayType  goto 106
+	Condition  goto 372
+	Expression  goto 373
+	ForClause2  goto 414
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 375
+	Statement:  FOR ExpressionList =.RANGE Expression Block 
+
+	RANGE  shift 415
+	.  error
+
+
+state 376
+	SimpleStmt:  IdentifierList COLAS.ExpressionList 
+	Statement:  FOR IdentifierList COLAS.RANGE Expression Block 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	RANGE  shift 416
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 90
+	ExpressionList  goto 379
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 377
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	SendStmt:  Expression COMM Expression.    (139)
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  reduce 139 (src line 802)
+
+
+state 378
+	SimpleStmt:  ExpressionList ASSIGN_OP ExpressionList.    (148)
+
+	.  reduce 148 (src line 843)
+
+
+state 379
+	SimpleStmt:  IdentifierList COLAS ExpressionList.    (149)
+
+	.  reduce 149 (src line 847)
+
+
+state 380
+	IfStmt:  IF Expression Block.    (64)
+	IfStmt:  IF Expression Block.ELSE IfStmt 
+	IfStmt:  IF Expression Block.ELSE Block 
+
+	ELSE  shift 417
+	.  reduce 64 (src line 466)
+
+
+state 381
+	IfStmt:  IF SimpleStmt ;.Expression Block 
+	IfStmt:  IF SimpleStmt ;.Expression Block ELSE IfStmt 
+	IfStmt:  IF SimpleStmt ;.Expression Block ELSE Block 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 418
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 382
+	SourceFile2:  SourceFile2 FUNC ( IDENTIFIER BaseTypeName ) MethodName MethodDecl1 ;.    (162)
+
+	.  reduce 162 (src line 909)
+
+
+state 383
+	SourceFile2:  SourceFile2 FUNC ( IDENTIFIER * BaseTypeName ) MethodName MethodDecl1.; 
+
+	;  shift 419
+	.  error
+
+
+state 384
+	SourceFile2:  SourceFile2 FUNC ( * BaseTypeName ) MethodName MethodDecl1 ;.    (163)
+
+	.  reduce 163 (src line 913)
+
+
+state 385
+	PrimaryExpr:  PrimaryExpr . ( Type ).    (124)
+
+	.  reduce 124 (src line 733)
+
+
+state 386
+	PrimaryExpr:  PrimaryExpr [ Expression : Slice2.] 
+
+	]  shift 420
+	.  error
+
+
+state 387
+	PrimaryExpr:  PrimaryExpr [ : Slice2 ].    (122)
+
+	.  reduce 122 (src line 725)
+
+
+state 388
+	PrimaryExpr:  PrimaryExpr ( ArgumentList , ).    (127)
+
+	.  reduce 127 (src line 745)
+
+
+state 389
+	ElementList1:  ElementList1 ,.Element 
+	LiteralValue:  { Element ElementList1 ,.} 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 277
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	{  shift 185
+	}  shift 422
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Element  goto 421
+	Expression  goto 276
+	LiteralValue  goto 278
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 390
+	LiteralValue:  { Element ElementList1 }.    (80)
+
+	.  reduce 80 (src line 541)
+
+
+state 391
+	Element:  Expression : Expression.    (20)
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  reduce 20 (src line 265)
+
+
+state 392
+	Element:  Expression : LiteralValue.    (23)
+
+	.  reduce 23 (src line 277)
+
+
+state 393
+	Element:  IDENTIFIER : Expression.    (19)
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  reduce 19 (src line 261)
+
+
+state 394
+	Element:  IDENTIFIER : LiteralValue.    (22)
+
+	.  reduce 22 (src line 273)
+
+
+state 395
+	PrimaryExpr:  [ DDD ] ElementType LiteralValue.    (102)
+
+	.  reduce 102 (src line 645)
+
+
+state 396
+	PrimaryExpr:  IDENTIFIER ( Type , ArgumentList.) 
+	PrimaryExpr:  IDENTIFIER ( Type , ArgumentList., ) 
+
+	)  shift 423
+	,  shift 424
+	.  error
+
+
+state 397
+	PrimaryExpr:  IDENTIFIER ( Type , ).    (117)
+
+	.  reduce 117 (src line 705)
+
+
+state 398
+	PrimaryExpr:  IDENTIFIER ( ArgumentList , ).    (119)
+
+	.  reduce 119 (src line 713)
+
+
+state 399
+	PrimaryExpr:  Type ( Expression , ).    (112)
+
+	.  reduce 112 (src line 685)
+
+
+state 400
+	InterfaceType1:  InterfaceType1 MethodName Signature ;.    (76)
+
+	.  reduce 76 (src line 521)
+
+
+state 401
+	StructType1:  StructType1 FieldDecl1 STRING_LIT ;.    (200)
+
+	.  reduce 200 (src line 1073)
+
+
+state 402
+	ExprSwitchStmt3:  ExprSwitchStmt3.CASE ExpressionList : StatementList 
+	ExprSwitchStmt3:  ExprSwitchStmt3.DEFAULT : StatementList 
+	Statement:  SWITCH ExprSwitchStmt1 { ExprSwitchStmt3.} 
+
+	CASE  shift 425
+	DEFAULT  shift 426
+	}  shift 427
+	.  error
+
+
+state 403
+	Statement:  SWITCH ExprSwitchStmt1 Expression {.ExprSwitchStmt3 } 
+	ExprSwitchStmt3: .    (29)
+
+	.  reduce 29 (src line 308)
+
+	ExprSwitchStmt3  goto 428
+
+state 404
+	Statement:  SWITCH TypeSwitchGuard { TypeSwitchStmt2.} 
+	TypeSwitchStmt2:  TypeSwitchStmt2.CASE Type TypeList1 : StatementList 
+	TypeSwitchStmt2:  TypeSwitchStmt2.DEFAULT : StatementList 
+
+	CASE  shift 430
+	DEFAULT  shift 431
+	}  shift 429
+	.  error
+
+
+state 405
+	Statement:  SWITCH SimpleStmt ; TypeSwitchGuard.{ TypeSwitchStmt2 } 
+
+	{  shift 432
+	.  error
+
+
+state 406
+	PrimaryExpr:  PrimaryExpr.. IDENTIFIER 
+	PrimaryExpr:  PrimaryExpr.[ Expression ] 
+	PrimaryExpr:  PrimaryExpr.[ : Slice2 ] 
+	PrimaryExpr:  PrimaryExpr.[ Expression : Slice2 ] 
+	PrimaryExpr:  PrimaryExpr.. ( Type ) 
+	PrimaryExpr:  PrimaryExpr.( ) 
+	PrimaryExpr:  PrimaryExpr.( ArgumentList ) 
+	PrimaryExpr:  PrimaryExpr.( ArgumentList , ) 
+	TypeSwitchGuard:  PrimaryExpr.. ( TYPE ) 
+
+	[  shift 173
+	(  shift 174
+	.  shift 367
+	.  error
+
+
+407: shift/reduce conflict (shift 193(0), red'n 107(0)) on (
+407: shift/reduce conflict (shift 126(0), red'n 107(0)) on .
+407: shift/reduce conflict (shift 193(0), red'n 217(0)) on (
+407: shift/reduce conflict (shift 126(0), red'n 217(0)) on .
+state 407
+	PrimaryExpr:  IDENTIFIER.    (107)
+	PrimaryExpr:  IDENTIFIER.( ) 
+	PrimaryExpr:  IDENTIFIER.( Type ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ArgumentList ) 
+	PrimaryExpr:  IDENTIFIER.( ArgumentList ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ) 
+	PrimaryExpr:  IDENTIFIER.( Type , ArgumentList , ) 
+	PrimaryExpr:  IDENTIFIER.( ArgumentList , ) 
+	QualifiedIdent:  IDENTIFIER.. IDENTIFIER 
+	TypeName:  IDENTIFIER.    (217)
+	TypeSwitchGuard:  IDENTIFIER.COLAS PrimaryExpr . ( TYPE ) 
+
+	COLAS  shift 368
+	{  reduce 217 (src line 1148)
+	(  shift 193
+	.  shift 126
+	.  reduce 107 (src line 665)
+
+
+state 408
+	PrimaryExpr:  PrimaryExpr . (.Type ) 
+	TypeSwitchGuard:  PrimaryExpr . (.TYPE ) 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	TYPE  shift 433
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 336
+	TypeName  goto 46
+
+state 409
+	PrimaryExpr:  PrimaryExpr.. IDENTIFIER 
+	PrimaryExpr:  PrimaryExpr.[ Expression ] 
+	PrimaryExpr:  PrimaryExpr.[ : Slice2 ] 
+	PrimaryExpr:  PrimaryExpr.[ Expression : Slice2 ] 
+	PrimaryExpr:  PrimaryExpr.. ( Type ) 
+	PrimaryExpr:  PrimaryExpr.( ) 
+	PrimaryExpr:  PrimaryExpr.( ArgumentList ) 
+	PrimaryExpr:  PrimaryExpr.( ArgumentList , ) 
+	TypeSwitchGuard:  IDENTIFIER COLAS PrimaryExpr.. ( TYPE ) 
+
+	[  shift 173
+	(  shift 174
+	.  shift 434
+	.  error
+
+
+state 410
+	SelectStmt1:  SelectStmt1 CASE.SendStmt : StatementList 
+	SelectStmt1:  SelectStmt1 CASE.RecvExpr : StatementList 
+	SelectStmt1:  SelectStmt1 CASE.ExpressionList = RecvExpr : StatementList 
+	SelectStmt1:  SelectStmt1 CASE.IdentifierList COLAS RecvExpr : StatementList 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 320
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 439
+	ExpressionList  goto 437
+	IdentifierList  goto 438
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	RecvExpr  goto 436
+	SendStmt  goto 435
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 411
+	SelectStmt1:  SelectStmt1 DEFAULT.: StatementList 
+
+	:  shift 440
+	.  error
+
+
+state 412
+	Statement:  SELECT { SelectStmt1 }.    (184)
+
+	.  reduce 184 (src line 1001)
+
+
+413: shift/reduce conflict (shift 73(0), red'n 143(0)) on {
+state 413
+	Statement:  FOR ; ForClause2 ;.Block 
+	Statement:  FOR ; ForClause2 ;.SimpleStmt Block 
+	SimpleStmt: .    (143)
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 320
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	{  shift 73
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Block  goto 441
+	Expression  goto 232
+	ExpressionList  goto 234
+	IdentifierList  goto 235
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SendStmt  goto 233
+	SimpleStmt  goto 442
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 414
+	Statement:  FOR SimpleStmt ; ForClause2.; Block 
+	Statement:  FOR SimpleStmt ; ForClause2.; SimpleStmt Block 
+
+	;  shift 443
+	.  error
+
+
+state 415
+	Statement:  FOR ExpressionList = RANGE.Expression Block 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 444
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 416
+	Statement:  FOR IdentifierList COLAS RANGE.Expression Block 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 445
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 417
+	IfStmt:  IF Expression Block ELSE.IfStmt 
+	IfStmt:  IF Expression Block ELSE.Block 
+
+	IF  shift 236
+	{  shift 73
+	.  error
+
+	Block  goto 447
+	IfStmt  goto 446
+
+state 418
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	IfStmt:  IF SimpleStmt ; Expression.Block 
+	IfStmt:  IF SimpleStmt ; Expression.Block ELSE IfStmt 
+	IfStmt:  IF SimpleStmt ; Expression.Block ELSE Block 
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	{  shift 73
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  error
+
+	Block  goto 448
+
+state 419
+	SourceFile2:  SourceFile2 FUNC ( IDENTIFIER * BaseTypeName ) MethodName MethodDecl1 ;.    (164)
+
+	.  reduce 164 (src line 917)
+
+
+state 420
+	PrimaryExpr:  PrimaryExpr [ Expression : Slice2 ].    (123)
+
+	.  reduce 123 (src line 729)
+
+
+state 421
+	ElementList1:  ElementList1 , Element.    (25)
+
+	.  reduce 25 (src line 287)
+
+
+state 422
+	LiteralValue:  { Element ElementList1 , }.    (81)
+
+	.  reduce 81 (src line 545)
+
+
+state 423
+	PrimaryExpr:  IDENTIFIER ( Type , ArgumentList ).    (115)
+
+	.  reduce 115 (src line 697)
+
+
+state 424
+	PrimaryExpr:  IDENTIFIER ( Type , ArgumentList ,.) 
+
+	)  shift 449
+	.  error
+
+
+state 425
+	ExprSwitchStmt3:  ExprSwitchStmt3 CASE.ExpressionList : StatementList 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 90
+	ExpressionList  goto 450
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 426
+	ExprSwitchStmt3:  ExprSwitchStmt3 DEFAULT.: StatementList 
+
+	:  shift 451
+	.  error
+
+
+state 427
+	Statement:  SWITCH ExprSwitchStmt1 { ExprSwitchStmt3 }.    (180)
+
+	.  reduce 180 (src line 985)
+
+
+state 428
+	ExprSwitchStmt3:  ExprSwitchStmt3.CASE ExpressionList : StatementList 
+	ExprSwitchStmt3:  ExprSwitchStmt3.DEFAULT : StatementList 
+	Statement:  SWITCH ExprSwitchStmt1 Expression { ExprSwitchStmt3.} 
+
+	CASE  shift 425
+	DEFAULT  shift 426
+	}  shift 452
+	.  error
+
+
+state 429
+	Statement:  SWITCH TypeSwitchGuard { TypeSwitchStmt2 }.    (182)
+
+	.  reduce 182 (src line 993)
+
+
+state 430
+	TypeSwitchStmt2:  TypeSwitchStmt2 CASE.Type TypeList1 : StatementList 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 453
+	TypeName  goto 46
+
+state 431
+	TypeSwitchStmt2:  TypeSwitchStmt2 DEFAULT.: StatementList 
+
+	:  shift 454
+	.  error
+
+
+state 432
+	Statement:  SWITCH SimpleStmt ; TypeSwitchGuard {.TypeSwitchStmt2 } 
+	TypeSwitchStmt2: .    (222)
+
+	.  reduce 222 (src line 1174)
+
+	TypeSwitchStmt2  goto 455
+
+state 433
+	TypeSwitchGuard:  PrimaryExpr . ( TYPE.) 
+
+	)  shift 456
+	.  error
+
+
+state 434
+	PrimaryExpr:  PrimaryExpr ..IDENTIFIER 
+	PrimaryExpr:  PrimaryExpr ..( Type ) 
+	TypeSwitchGuard:  IDENTIFIER COLAS PrimaryExpr ..( TYPE ) 
+
+	IDENTIFIER  shift 266
+	(  shift 457
+	.  error
+
+
+state 435
+	SelectStmt1:  SelectStmt1 CASE SendStmt.: StatementList 
+
+	:  shift 458
+	.  error
+
+
+state 436
+	SelectStmt1:  SelectStmt1 CASE RecvExpr.: StatementList 
+
+	:  shift 459
+	.  error
+
+
+state 437
+	SelectStmt1:  SelectStmt1 CASE ExpressionList.= RecvExpr : StatementList 
+
+	=  shift 460
+	.  error
+
+
+state 438
+	SelectStmt1:  SelectStmt1 CASE IdentifierList.COLAS RecvExpr : StatementList 
+
+	COLAS  shift 461
+	.  error
+
+
+state 439
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	ExpressionList:  Expression.ExpressionList1 
+	RecvExpr:  Expression.    (132)
+	SendStmt:  Expression.COMM Expression 
+	ExpressionList1: .    (53)
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	COMM  shift 322
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	:  reduce 132 (src line 770)
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  reduce 53 (src line 410)
+
+	ExpressionList1  goto 171
+
+state 440
+	SelectStmt1:  SelectStmt1 DEFAULT :.StatementList 
+	StatementList1: .    (195)
+
+	.  reduce 195 (src line 1048)
+
+	StatementList  goto 462
+	StatementList1  goto 141
+
+state 441
+	Statement:  FOR ; ForClause2 ; Block.    (187)
+
+	.  reduce 187 (src line 1013)
+
+
+state 442
+	Statement:  FOR ; ForClause2 ; SimpleStmt.Block 
+
+	{  shift 73
+	.  error
+
+	Block  goto 463
+
+443: shift/reduce conflict (shift 73(0), red'n 143(0)) on {
+state 443
+	Statement:  FOR SimpleStmt ; ForClause2 ;.Block 
+	Statement:  FOR SimpleStmt ; ForClause2 ;.SimpleStmt Block 
+	SimpleStmt: .    (143)
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 320
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	{  shift 73
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Block  goto 464
+	Expression  goto 232
+	ExpressionList  goto 234
+	IdentifierList  goto 235
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	SendStmt  goto 233
+	SimpleStmt  goto 465
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 444
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	Statement:  FOR ExpressionList = RANGE Expression.Block 
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	{  shift 73
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  error
+
+	Block  goto 466
+
+state 445
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	Statement:  FOR IdentifierList COLAS RANGE Expression.Block 
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	{  shift 73
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  error
+
+	Block  goto 467
+
+state 446
+	IfStmt:  IF Expression Block ELSE IfStmt.    (66)
+
+	.  reduce 66 (src line 475)
+
+
+state 447
+	IfStmt:  IF Expression Block ELSE Block.    (68)
+
+	.  reduce 68 (src line 483)
+
+
+state 448
+	IfStmt:  IF SimpleStmt ; Expression Block.    (65)
+	IfStmt:  IF SimpleStmt ; Expression Block.ELSE IfStmt 
+	IfStmt:  IF SimpleStmt ; Expression Block.ELSE Block 
+
+	ELSE  shift 468
+	.  reduce 65 (src line 471)
+
+
+state 449
+	PrimaryExpr:  IDENTIFIER ( Type , ArgumentList , ).    (118)
+
+	.  reduce 118 (src line 709)
+
+
+state 450
+	ExprSwitchStmt3:  ExprSwitchStmt3 CASE ExpressionList.: StatementList 
+
+	:  shift 469
+	.  error
+
+
+state 451
+	ExprSwitchStmt3:  ExprSwitchStmt3 DEFAULT :.StatementList 
+	StatementList1: .    (195)
+
+	.  reduce 195 (src line 1048)
+
+	StatementList  goto 470
+	StatementList1  goto 141
+
+state 452
+	Statement:  SWITCH ExprSwitchStmt1 Expression { ExprSwitchStmt3 }.    (181)
+
+	.  reduce 181 (src line 989)
+
+
+state 453
+	TypeSwitchStmt2:  TypeSwitchStmt2 CASE Type.TypeList1 : StatementList 
+	TypeList1: .    (215)
+
+	.  reduce 215 (src line 1138)
+
+	TypeList1  goto 471
+
+state 454
+	TypeSwitchStmt2:  TypeSwitchStmt2 DEFAULT :.StatementList 
+	StatementList1: .    (195)
+
+	.  reduce 195 (src line 1048)
+
+	StatementList  goto 472
+	StatementList1  goto 141
+
+state 455
+	Statement:  SWITCH SimpleStmt ; TypeSwitchGuard { TypeSwitchStmt2.} 
+	TypeSwitchStmt2:  TypeSwitchStmt2.CASE Type TypeList1 : StatementList 
+	TypeSwitchStmt2:  TypeSwitchStmt2.DEFAULT : StatementList 
+
+	CASE  shift 430
+	DEFAULT  shift 431
+	}  shift 473
+	.  error
+
+
+state 456
+	TypeSwitchGuard:  PrimaryExpr . ( TYPE ).    (220)
+
+	.  reduce 220 (src line 1164)
+
+
+state 457
+	PrimaryExpr:  PrimaryExpr . (.Type ) 
+	TypeSwitchGuard:  IDENTIFIER COLAS PrimaryExpr . (.TYPE ) 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	TYPE  shift 474
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 336
+	TypeName  goto 46
+
+state 458
+	SelectStmt1:  SelectStmt1 CASE SendStmt :.StatementList 
+	StatementList1: .    (195)
+
+	.  reduce 195 (src line 1048)
+
+	StatementList  goto 475
+	StatementList1  goto 141
+
+state 459
+	SelectStmt1:  SelectStmt1 CASE RecvExpr :.StatementList 
+	StatementList1: .    (195)
+
+	.  reduce 195 (src line 1048)
+
+	StatementList  goto 476
+	StatementList1  goto 141
+
+state 460
+	SelectStmt1:  SelectStmt1 CASE ExpressionList =.RecvExpr : StatementList 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 478
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	RecvExpr  goto 477
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 461
+	SelectStmt1:  SelectStmt1 CASE IdentifierList COLAS.RecvExpr : StatementList 
+
+	COMM  shift 99
+	FLOAT_LIT  shift 101
+	IDENTIFIER  shift 112
+	IMAGINARY_LIT  shift 102
+	INT_LIT  shift 100
+	RUNE_LIT  shift 103
+	STRING_LIT  shift 104
+	CHAN  shift 54
+	FUNC  shift 111
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 107
+	(  shift 115
+	+  shift 93
+	-  shift 94
+	^  shift 96
+	*  shift 97
+	&  shift 98
+	!  shift 95
+	.  error
+
+	ArrayType  goto 106
+	Expression  goto 478
+	MapType  goto 109
+	PrimaryExpr  goto 92
+	QualifiedIdent  goto 113
+	ReceiverType  goto 114
+	RecvExpr  goto 479
+	SliceType  goto 108
+	StructType  goto 105
+	Type  goto 116
+	TypeName  goto 110
+	UnaryExpr  goto 91
+
+state 462
+	SelectStmt1:  SelectStmt1 DEFAULT : StatementList.    (138)
+
+	.  reduce 138 (src line 797)
+
+
+state 463
+	Statement:  FOR ; ForClause2 ; SimpleStmt Block.    (188)
+
+	.  reduce 188 (src line 1017)
+
+
+state 464
+	Statement:  FOR SimpleStmt ; ForClause2 ; Block.    (189)
+
+	.  reduce 189 (src line 1021)
+
+
+state 465
+	Statement:  FOR SimpleStmt ; ForClause2 ; SimpleStmt.Block 
+
+	{  shift 73
+	.  error
+
+	Block  goto 480
+
+state 466
+	Statement:  FOR ExpressionList = RANGE Expression Block.    (191)
+
+	.  reduce 191 (src line 1029)
+
+
+state 467
+	Statement:  FOR IdentifierList COLAS RANGE Expression Block.    (192)
+
+	.  reduce 192 (src line 1033)
+
+
+state 468
+	IfStmt:  IF SimpleStmt ; Expression Block ELSE.IfStmt 
+	IfStmt:  IF SimpleStmt ; Expression Block ELSE.Block 
+
+	IF  shift 236
+	{  shift 73
+	.  error
+
+	Block  goto 482
+	IfStmt  goto 481
+
+state 469
+	ExprSwitchStmt3:  ExprSwitchStmt3 CASE ExpressionList :.StatementList 
+	StatementList1: .    (195)
+
+	.  reduce 195 (src line 1048)
+
+	StatementList  goto 483
+	StatementList1  goto 141
+
+state 470
+	ExprSwitchStmt3:  ExprSwitchStmt3 DEFAULT : StatementList.    (31)
+
+	.  reduce 31 (src line 317)
+
+
+state 471
+	TypeList1:  TypeList1., Type 
+	TypeSwitchStmt2:  TypeSwitchStmt2 CASE Type TypeList1.: StatementList 
+
+	:  shift 485
+	,  shift 484
+	.  error
+
+
+state 472
+	TypeSwitchStmt2:  TypeSwitchStmt2 DEFAULT : StatementList.    (224)
+
+	.  reduce 224 (src line 1183)
+
+
+state 473
+	Statement:  SWITCH SimpleStmt ; TypeSwitchGuard { TypeSwitchStmt2 }.    (183)
+
+	.  reduce 183 (src line 997)
+
+
+state 474
+	TypeSwitchGuard:  IDENTIFIER COLAS PrimaryExpr . ( TYPE.) 
+
+	)  shift 486
+	.  error
+
+
+state 475
+	SelectStmt1:  SelectStmt1 CASE SendStmt : StatementList.    (134)
+
+	.  reduce 134 (src line 781)
+
+
+state 476
+	SelectStmt1:  SelectStmt1 CASE RecvExpr : StatementList.    (135)
+
+	.  reduce 135 (src line 785)
+
+
+state 477
+	SelectStmt1:  SelectStmt1 CASE ExpressionList = RecvExpr.: StatementList 
+
+	:  shift 487
+	.  error
+
+
+state 478
+	Expression:  Expression.OROR UnaryExpr 
+	Expression:  Expression.ANDAND UnaryExpr 
+	Expression:  Expression.EQ UnaryExpr 
+	Expression:  Expression.NE UnaryExpr 
+	Expression:  Expression.< UnaryExpr 
+	Expression:  Expression.LE UnaryExpr 
+	Expression:  Expression.> UnaryExpr 
+	Expression:  Expression.GE UnaryExpr 
+	Expression:  Expression.+ UnaryExpr 
+	Expression:  Expression.- UnaryExpr 
+	Expression:  Expression.| UnaryExpr 
+	Expression:  Expression.^ UnaryExpr 
+	Expression:  Expression.* UnaryExpr 
+	Expression:  Expression./ UnaryExpr 
+	Expression:  Expression.% UnaryExpr 
+	Expression:  Expression.LSH UnaryExpr 
+	Expression:  Expression.RSH UnaryExpr 
+	Expression:  Expression.& UnaryExpr 
+	Expression:  Expression.ANDNOT UnaryExpr 
+	RecvExpr:  Expression.    (132)
+
+	ANDAND  shift 153
+	ANDNOT  shift 170
+	EQ  shift 154
+	GE  shift 159
+	LE  shift 157
+	LSH  shift 167
+	NE  shift 155
+	OROR  shift 152
+	RSH  shift 168
+	<  shift 156
+	>  shift 158
+	+  shift 160
+	-  shift 161
+	|  shift 162
+	^  shift 163
+	*  shift 164
+	/  shift 165
+	%  shift 166
+	&  shift 169
+	.  reduce 132 (src line 770)
+
+
+state 479
+	SelectStmt1:  SelectStmt1 CASE IdentifierList COLAS RecvExpr.: StatementList 
+
+	:  shift 488
+	.  error
+
+
+state 480
+	Statement:  FOR SimpleStmt ; ForClause2 ; SimpleStmt Block.    (190)
+
+	.  reduce 190 (src line 1025)
+
+
+state 481
+	IfStmt:  IF SimpleStmt ; Expression Block ELSE IfStmt.    (67)
+
+	.  reduce 67 (src line 479)
+
+
+state 482
+	IfStmt:  IF SimpleStmt ; Expression Block ELSE Block.    (69)
+
+	.  reduce 69 (src line 487)
+
+
+state 483
+	ExprSwitchStmt3:  ExprSwitchStmt3 CASE ExpressionList : StatementList.    (30)
+
+	.  reduce 30 (src line 313)
+
+
+state 484
+	TypeList1:  TypeList1 ,.Type 
+
+	COMM  shift 55
+	IDENTIFIER  shift 57
+	CHAN  shift 54
+	FUNC  shift 50
+	INTERFACE  shift 51
+	MAP  shift 61
+	STRUCT  shift 60
+	[  shift 59
+	(  shift 56
+	*  shift 49
+	.  error
+
+	ArrayType  goto 47
+	MapType  goto 53
+	QualifiedIdent  goto 58
+	SliceType  goto 52
+	StructType  goto 48
+	Type  goto 489
+	TypeName  goto 46
+
+state 485
+	TypeSwitchStmt2:  TypeSwitchStmt2 CASE Type TypeList1 :.StatementList 
+	StatementList1: .    (195)
+
+	.  reduce 195 (src line 1048)
+
+	StatementList  goto 490
+	StatementList1  goto 141
+
+state 486
+	TypeSwitchGuard:  IDENTIFIER COLAS PrimaryExpr . ( TYPE ).    (221)
+
+	.  reduce 221 (src line 1169)
+
+
+state 487
+	SelectStmt1:  SelectStmt1 CASE ExpressionList = RecvExpr :.StatementList 
+	StatementList1: .    (195)
+
+	.  reduce 195 (src line 1048)
+
+	StatementList  goto 491
+	StatementList1  goto 141
+
+state 488
+	SelectStmt1:  SelectStmt1 CASE IdentifierList COLAS RecvExpr :.StatementList 
+	StatementList1: .    (195)
+
+	.  reduce 195 (src line 1048)
+
+	StatementList  goto 492
+	StatementList1  goto 141
+
+state 489
+	TypeList1:  TypeList1 , Type.    (216)
+
+	.  reduce 216 (src line 1143)
+
+
+state 490
+	TypeSwitchStmt2:  TypeSwitchStmt2 CASE Type TypeList1 : StatementList.    (223)
+
+	.  reduce 223 (src line 1179)
+
+
+state 491
+	SelectStmt1:  SelectStmt1 CASE ExpressionList = RecvExpr : StatementList.    (136)
+
+	.  reduce 136 (src line 789)
+
+
+state 492
+	SelectStmt1:  SelectStmt1 CASE IdentifierList COLAS RecvExpr : StatementList.    (137)
+
+	.  reduce 137 (src line 793)
+
+
+71 terminals, 64 nonterminals
+238 grammar rules, 493/20000 states
+80 shift/reduce, 22 reduce/reduce conflicts reported
+163 working sets used
+memory: parser 1909/30000
+245 extra closures
+2416 shift entries, 26 exceptions
+415 goto entries
+740 entries saved by goto default
+Optimizer space used: output 2334/30000
+2334 table entries, 961 zero
+maximum spread: 71, maximum offset: 488

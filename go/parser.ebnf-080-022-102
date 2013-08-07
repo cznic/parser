@@ -1,32 +1,11 @@
 /*
 
-ebnf2y -M -wr $N -o parser-$N.y parser.ebnf
--------------------------------------------
-N: 1	34	28	62	
-N: 2	46	16	62
-N: 4	46	16	62
+ebnf2y -M -iy 1 -wr 1000 -o parser.y go1.1.1.ebnf:50+20=70
 
 ...............................................................................
-Binary_op, Unary_op
-67+16=83
-...............................................................................
-Split identifier
-59+2=61
-...............................................................................
-ReceiverType
-62+0=62
-...............................................................................
--EmptyStmt; m SimpleStmt, LabeledStmt, StatementList
-58+0=58
-...............................................................................
-chancomm, commchan
-47+0=47 (-wr 1: 24+3=27; -wr 2: 24+3=27 -wr 5: 36+0=36)
-...............................................................................
--LabeledStmt
-4:26+2=28 5:35+0
-...............................................................................
-Receiver
-4:25+2 5:34+0
+named tokens, Binary_op, Unary_op
+
+ebnf2y -M -iy 1 -wr 1000 -o parser.y parser.ebnf:80+22=102
 
 */
 
@@ -34,10 +13,10 @@ Receiver
 
 andand			= "&&" .
 andnot			= "&^" .
-chancomm		= "chan" "<-" .
+//chancomm		= "chan" "<-" .
 colas			= ":=" .
 comm			= "<-".
-commchan		= "<-" "chan" .
+//commchan		= "<-" "chan" .
 ddd			= "..." .
 dec			= "--" .
 eq			= "==" .
@@ -77,16 +56,6 @@ Unary_op = "+"
 	| "&"
 	| comm .
 
-// ............................................................................
-
-built_in_name	= .	// new, len, cap, ...
-pack_name	= .	// known to be a package qualifier
-type_name	= . 	// known to be a type name
-name		= .	// none of the above
-
-// New name being declared or context is "any name" (eg. FieldName)
-Dclname 	 = built_in_name | pack_name | type_name | name . 
-
 // ----------------------------------------------------------------------------
 
 add_op = "+"
@@ -95,6 +64,13 @@ add_op = "+"
 	| "^" .
 assign_op = [ add_op | mul_op ] "=" .
 big_u_value = "\\" "U" hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit .
+
+//binary_op = "||"
+//	| "&&"
+//	| rel_op
+//	| add_op
+//	| mul_op .
+
 byte_value = octal_byte_value | hex_byte_value .
 decimal_digit = "0" … "9" .
 decimal_lit = ( "1" … "9" ) { decimal_digit } .
@@ -120,18 +96,22 @@ hex_digit = "0" … "9"
 	| "A" … "F"
 	| "a" … "f" .
 hex_lit = "0" ( "x" | "X" ) hex_digit { hex_digit } .
-
-//identifier = letter { letter | unicode_digit } .
-
+identifier = letter { letter | unicode_digit } .
 imaginary_lit = ( decimals | float_lit ) "i" .
 int_lit = decimal_lit
 	| octal_lit
 	| hex_lit .
 interpreted_string_lit = "\"" { unicode_value | byte_value } "\"" .
-
-//letter = unicode_letter | "_" .
-
+letter = unicode_letter | "_" .
 little_u_value = "\\" "u" hex_digit hex_digit hex_digit hex_digit .
+
+//mul_op = "*"
+//	| "/"
+//	| "%"
+//	| "<<"
+//	| ">>"
+//	| "&"
+//	| "&^" .
 mul_op = "*"
 	| "/"
 	| "%"
@@ -139,33 +119,49 @@ mul_op = "*"
 	| rsh
 	| "&"
 	| andnot .
+
 newline = .
 octal_byte_value = "\\" octal_digit octal_digit octal_digit .
 octal_digit = "0" … "7" .
 octal_lit = "0" { octal_digit } .
 raw_string_lit = "`" { unicode_char | newline } "`" .
+
+//rel_op = "=="
+//	| "!="
+//	| "<"
+//	| "<="
+//	| ">"
+//	| ">=" .
+
 rune_lit = "'" ( unicode_value | byte_value ) "'" .
 string_lit = raw_string_lit | interpreted_string_lit .
+
+//unary_op = "+"
+//	| "-"
+//	| "!"
+//	| "^"
+//	| "*"
+//	| "&"
+//	| "<-" .
+
 unicode_char = .
-
-//unicode_digit = .
-//unicode_letter = .
-
+unicode_digit = .
+unicode_letter = .
 unicode_value = unicode_char
 	| little_u_value
 	| big_u_value
 	| escaped_char .
 
 AnonymousField = [ "*" ] TypeName .
+
+//ArgumentList = ExpressionList [ "..." ] .
 ArgumentList = ExpressionList [ ddd ] .
+
 ArrayLength = Expression .
 ArrayType = "[" ArrayLength "]" ElementType .
 Assignment = ExpressionList assign_op ExpressionList .
 BaseType = Type .
-
-//BaseTypeName = identifier .
-//BaseTypeName = type_name .
-
+BaseTypeName = identifier .
 BasicLit = int_lit
 	| float_lit
 	| imaginary_lit
@@ -175,21 +171,17 @@ Block = "{" StatementList "}" .
 BreakStmt = "break" [ Label ] .
 BuiltinArgs = Type [ "," ArgumentList ]
 	| ArgumentList .
-
-//BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
-BuiltinCall = built_in_name "(" [ BuiltinArgs [ "," ] ] ")" .
-
+BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
 Call = "(" [ ArgumentList [ "," ] ] ")" .
 Channel = Expression .
 
 //ChannelType = (
-//		  "chan" [ comm ]
-//		| comm "chan"
+//		  "chan" [ "<-" ]
+//		| "<-" "chan"
 //	  ) ElementType .
 ChannelType = (
-		  "chan"
-		| chancomm
-		| commchan
+		  "chan" [ comm ]
+		| comm "chan"
 	  ) ElementType .
 
 CommCase = "case" ( SendStmt | RecvStmt )
@@ -214,9 +206,7 @@ Element = [ Key ":" ] Value .
 ElementIndex = Expression .
 ElementList = Element { "," Element } .
 ElementType = Type .
-
-//EmptyStmt = .
-
+EmptyStmt = .
 ExprCaseClause = ExprSwitchCase ":" StatementList .
 ExprSwitchCase = "case" ExpressionList
 	| "default" .
@@ -230,10 +220,7 @@ FieldDecl = (
 		  IdentifierList Type
 		| AnonymousField
 	  ) [ Tag ] .
-
-//FieldName = identifier .
-FieldName = Dclname .
-
+FieldName = identifier .
 ForClause = [ InitStmt ] ";" [ Condition ] ";" [ PostStmt ] .
 ForStmt = "for" [
 		  Condition
@@ -244,17 +231,11 @@ Function = Signature FunctionBody .
 FunctionBody = Block .
 FunctionDecl = "func" FunctionName ( Function | Signature ) .
 FunctionLit = "func" Function .
-
-//FunctionName = identifier .
-FunctionName = Dclname .
-
+FunctionName = identifier .
 FunctionType = "func" Signature .
 GoStmt = "go" Expression .
 GotoStmt = "goto" Label .
-
-//IdentifierList = identifier { "," identifier } .
-IdentifierList = Dclname { "," Dclname } .
-
+IdentifierList = identifier { "," identifier } .
 IfStmt = "if" [ SimpleStmt ";" ] Expression Block [
 		 "else" ( IfStmt | Block )
 	  ] .
@@ -263,56 +244,54 @@ ImportDecl = "import" (
 		| "(" { ImportSpec ";" } ")"
 	  ) .
 ImportPath = string_lit .
+ImportSpec = [ "." | PackageName ] ImportPath .
 
-//ImportSpec = [ "." | PackageName ] ImportPath .
-ImportSpec = [ "." | Dclname ] ImportPath .
-
+//IncDecStmt = Expression ( "++" | "--" ) .
 IncDecStmt = Expression ( inc | dec ) .
+
 Index = "[" Expression "]" .
 InitStmt = SimpleStmt .
 InterfaceType = "interface" "{" { MethodSpec ";" } "}" .
 InterfaceTypeName = TypeName .
 Key = FieldName | ElementIndex .
 KeyType = Type .
-
-//Label = identifier .
-Label = Dclname .
-
-//LabeledStmt = Label ":" [ Statement ] .
-
+Label = identifier .
+LabeledStmt = Label ":" Statement .
 Literal = BasicLit
 	| CompositeLit
 	| FunctionLit .
+
+//LiteralType = StructType
+//	| ArrayType
+//	| "[" "..." "]" ElementType
+//	| SliceType
+//	| MapType
+//	| TypeName .
 LiteralType = StructType
 	| ArrayType
 	| "[" ddd "]" ElementType
 	| SliceType
 	| MapType
 	| TypeName .
+
 LiteralValue = "{" [ ElementList [ "," ] ] "}" .
 MapType = "map" "[" KeyType "]" ElementType .
 MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
 MethodExpr = ReceiverType "." MethodName .
-
-//MethodName = identifier .
-MethodName = Dclname .
-
+MethodName = identifier .
 MethodSpec = MethodName Signature
 	| InterfaceTypeName .
 Operand = Literal
 	| OperandName
 	| MethodExpr
 	| "(" Expression ")" .
+OperandName = identifier | QualifiedIdent .
+PackageClause = "package" PackageName .
+PackageName = identifier .
 
-//OperandName = identifier | QualifiedIdent .
-OperandName = [ pack_name "." ] name .
-
-//PackageClause = "package" PackageName .
-PackageClause = "package" Dclname .
-
-//PackageName = identifier .
-
+//ParameterDecl = [ IdentifierList ] [ "..." ] Type .
 ParameterDecl = [ IdentifierList ] [ ddd ] Type .
+
 ParameterList = ParameterDecl { "," ParameterDecl } .
 Parameters = "(" [ ParameterList [ "," ] ] ")" .
 PointerType = "*" BaseType .
@@ -325,78 +304,55 @@ PrimaryExpr = Operand
 	| PrimaryExpr Slice
 	| PrimaryExpr TypeAssertion
 	| PrimaryExpr Call .
+QualifiedIdent = PackageName "." identifier .
 
-//QualifiedIdent = PackageName "." identifier .
-
+//RangeClause = (
+//		  ExpressionList "="
+//		| IdentifierList ":="
+//	  ) "range" Expression .
 RangeClause = (
 		  ExpressionList "="
 		| IdentifierList colas
 	  ) "range" Expression .
 
-//Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
-//Receiver = "(" [ Dclname ] [ "*" ] BaseTypeName ")" .
-//Receiver = "(" [ Dclname ] [ "*" ] Dclname ")" .
-Receiver = 
-	  "(" "*" Dclname ")"
-	| "(" Dclname ")"
-	| "(" Dclname "*" Dclname ")"
-	| "(" Dclname Dclname ")" .
-
-//ReceiverType = TypeName
-//	| "(" "*" TypeName ")"
-//	| "(" ReceiverType ")" .
+Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
 ReceiverType = TypeName
 	| "(" "*" TypeName ")"
-	| "(" TypeName ")" .
+	| "(" ReceiverType ")" .
 RecvExpr = Expression .
+
+//RecvStmt = [
+//		  ExpressionList "="
+//		| IdentifierList ":="
+//	  ] RecvExpr .
 RecvStmt = [
 		  ExpressionList "="
 		| IdentifierList colas
 	  ] RecvExpr .
+
 Result = Parameters | Type .
 ReturnStmt = "return" [ ExpressionList ] .
 SelectStmt = "select" "{" { CommClause } "}" .
+Selector = "." identifier .
 
-//Selector = "." identifier .
-Selector = "." Dclname .
-
+//SendStmt = Channel "<-" Expression .
 SendStmt = Channel comm Expression .
-ShortVarDecl = IdentifierList colas ExpressionList .
-Signature = Parameters [ Result ] .
 
-//SimpleStmt = EmptyStmt
-//	| ExpressionStmt
-//	| SendStmt
-//	| IncDecStmt
-//	| Assignment
-//	| ShortVarDecl .
-SimpleStmt = ExpressionStmt
+//ShortVarDecl = IdentifierList ":=" ExpressionList .
+ShortVarDecl = IdentifierList colas ExpressionList .
+
+Signature = Parameters [ Result ] .
+SimpleStmt = EmptyStmt
+	| ExpressionStmt
 	| SendStmt
 	| IncDecStmt
 	| Assignment
 	| ShortVarDecl .
-
 Slice = "[" [ Expression ] ":" [ Expression ] "]" .
 SliceType = "[" "]" ElementType .
 SourceFile = PackageClause ";" { ImportDecl ";" } { TopLevelDecl ";" } .
-
-//Statement = Declaration
-//	| LabeledStmt
-//	| SimpleStmt
-//	| GoStmt
-//	| ReturnStmt
-//	| BreakStmt
-//	| ContinueStmt
-//	| GotoStmt
-//	| FallthroughStmt
-//	| Block
-//	| IfStmt
-//	| SwitchStmt
-//	| SelectStmt
-//	| ForStmt
-//	| DeferStmt .
 Statement = Declaration
-	| Label ":"
+	| LabeledStmt
 	| SimpleStmt
 	| GoStmt
 	| ReturnStmt
@@ -410,8 +366,7 @@ Statement = Declaration
 	| SelectStmt
 	| ForStmt
 	| DeferStmt .
-
-StatementList = { [ Statement ] ";" } .
+StatementList = { Statement ";" } .
 StructType = "struct" "{" { FieldDecl ";" } "}" .
 SwitchStmt = ExprSwitchStmt | TypeSwitchStmt .
 Tag = string_lit .
@@ -436,18 +391,13 @@ TypeLit = ArrayType
 	| SliceType
 	| MapType
 	| ChannelType .
-
-//TypeName = identifier | QualifiedIdent .
-TypeName = [ pack_name "." ] type_name . // Reference to an already declared type by name.
-
-//TypeSpec = identifier Type .
-TypeSpec = Dclname Type .
-
+TypeName = identifier | QualifiedIdent .
+TypeSpec = identifier Type .
 TypeSwitchCase = "case" TypeList
 	| "default" .
 
-//TypeSwitchGuard = [ identifier colas ] PrimaryExpr "." "(" "type" ")" .
-TypeSwitchGuard = [ Dclname colas ] PrimaryExpr "." "(" "type" ")" .
+//TypeSwitchGuard = [ identifier ":=" ] PrimaryExpr "." "(" "type" ")" .
+TypeSwitchGuard = [ identifier colas ] PrimaryExpr "." "(" "type" ")" .
 
 TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
 UnaryExpr = PrimaryExpr
