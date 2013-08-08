@@ -30,21 +30,12 @@ ebnf2y -M -o parser.y parser.ebnf:			18+1	= 19
 MethodDecl
 
 ebnf2y -M -iy 1 -wr 1000 -o parser.y parser.ebnf:	8+1	= 9
-
 ...............................................................................
+
 MethodSpec
 
 ebnf2y -M -iy 1 -wr 1000 -o parser.y parser.ebnf:	 8+1	=  9
 ebnf2y -M -wr 1 -o parser.y parser.ebnf:		18+1	= 19
-
-...............................................................................
-ReceiverType
-
-ebnf2y -M -iy 1 -wr 1000 -o parser.y parser.ebnf:	15+0	= 15
-ebnf2y -M -wr 1 -o parser.y parser.ebnf: 		19+0	= 19
-ebnf2y -M -wr 1000 -o parser.y parser.ebnf:	 	19+0	= 19
-ebnf2y -M -iy 1 -wr 0 -ws 1000 -o parser.y parser.ebnf	15+1	= 16
--M -wr 0 -ws 1000 -o parser.y parser.ebnf:		19+0	= 19
 
 */
 
@@ -446,13 +437,9 @@ RangeClause = (
 //Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
 Receiver = "(" [ name ] [ "*" ] BaseTypeName ")" .
 
-//ReceiverType = TypeName
-//	| "(" "*" TypeName ")"
-//	| "(" ReceiverType ")" .
 ReceiverType = TypeName
 	| "(" "*" TypeName ")"
-	| "(" TypeName ")" .
-
+	| "(" ReceiverType ")" .
 RecvExpr = Expression .
 
 //RecvStmt = [
