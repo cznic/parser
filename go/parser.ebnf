@@ -26,6 +26,11 @@ ebnf2y -M -wr 0 -o parser.y parser.ebnf:		18+1	= 19
 ebnf2y -M -ws 0 -o parser.y parser.ebnf:		86+1	= 87
 ebnf2y -M -o parser.y parser.ebnf:			18+1	= 19
 
+...............................................................................
+MethodDecl
+
+ebnf2y -M -iy 1 -wr 1000 -o parser.y parser.ebnf:	8+1	= 9
+
 */
 
 // ============================================================================
@@ -90,6 +95,7 @@ name			= . // name being declared from context
 	// PackageClause - left ctx "package"
 	// Receiver - left ctx "func" "("
 	// TypeSpec - in TypeDecl
+	// MethodDecl - left ctx "func" Receiver
 
 // ----------------------------------------------------------------------------
 
@@ -347,7 +353,10 @@ LiteralType = StructType
 
 LiteralValue = "{" [ ElementList [ "," ] ] "}" .
 MapType = "map" "[" KeyType "]" ElementType .
-MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
+
+//MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
+MethodDecl = "func" Receiver name ( Function | Signature ) .
+
 MethodExpr = ReceiverType "." MethodName .
 MethodName = identifier_method .
 MethodSpec = MethodName Signature
