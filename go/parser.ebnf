@@ -30,6 +30,12 @@ ebnf2y -M -o parser.y parser.ebnf:			18+1	= 19
 MethodDecl
 
 ebnf2y -M -iy 1 -wr 1000 -o parser.y parser.ebnf:	8+1	= 9
+...............................................................................
+
+MethodSpec
+
+ebnf2y -M -iy 1 -wr 1000 -o parser.y parser.ebnf:	 8+1	=  9
+ebnf2y -M -wr 1 -o parser.y parser.ebnf:		18+1	= 19
 
 */
 
@@ -96,6 +102,7 @@ name			= . // name being declared from context
 	// Receiver - left ctx "func" "("
 	// TypeSpec - in TypeDecl
 	// MethodDecl - left ctx "func" Receiver
+	// MethodSpec - left ctx "interface"
 
 // ----------------------------------------------------------------------------
 
@@ -324,7 +331,9 @@ IncDecStmt = Expression ( inc | dec ) .
 Index = "[" Expression "]" .
 InitStmt = SimpleStmt .
 InterfaceType = "interface" "{" { MethodSpec ";" } "}" .
-InterfaceTypeName = TypeName .
+
+//InterfaceTypeName = TypeName .
+
 Key = FieldName | ElementIndex .
 KeyType = Type .
 
@@ -359,8 +368,11 @@ MethodDecl = "func" Receiver name ( Function | Signature ) .
 
 MethodExpr = ReceiverType "." MethodName .
 MethodName = identifier_method .
-MethodSpec = MethodName Signature
-	| InterfaceTypeName .
+
+//MethodSpec = MethodName Signature
+//	| InterfaceTypeName .
+MethodSpec = name Signature
+	| name [ "." name ] .
 
 //Operand = Literal
 //	| OperandName
