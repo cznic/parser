@@ -59,18 +59,6 @@ BuiltinCall/II., ocomma_rparen
 ebnf2y -M -o parser.y parser.ebnf:		4	+0	=4
 ebnf2y -M -iy 1 -o parser.y parser.ebnf:	4	+0	=4
 
-...............................................................................
-Type
-
-ebnf2y -M -o parser.y parser.ebnf:		3	+0	=3
-ebnf2y -M -iy 1 -o parser.y parser.ebnf:	3	+0	=3
-
-...............................................................................
-ReceiverType,MethodExpr
-
-ebnf2y -M -o parser.y parser.ebnf:		2	+0	=2
-ebnf2y -M -iy 1 -o parser.y parser.ebnf:	2	+0	=2
-
 */
 
 
@@ -125,7 +113,6 @@ pack_name	= .
 type_name	= .
 built_in_name	= .
 ocomma_rparen	= [ "," ] ")" .
-rparen_dot_method_name = .
 
 //-----------------------------------------------------------------------------
 
@@ -388,11 +375,7 @@ LiteralType = StructType
 LiteralValue = "{" [ ElementList [ "," ] ] "}" .
 MapType = "map" "[" KeyType "]" ElementType .
 MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
-
-//MethodExpr = ReceiverType "." MethodName .
-MethodExpr = TypeName "." MethodName 
-	| "(" [ "*" ] TypeName rparen_dot_method_name .
-
+MethodExpr = ReceiverType "." MethodName .
 MethodName = identifier .
 MethodSpec = MethodName Signature
 	| InterfaceTypeName .
@@ -448,9 +431,9 @@ Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
 //ReceiverType = TypeName
 //	| "(" "*" TypeName ")"
 //	| "(" ReceiverType ")" .
-//ReceiverType = TypeName
-//	| "(" "*" TypeName ")"
-//	| "(" TypeName ")" .
+ReceiverType = TypeName
+	| "(" "*" TypeName ")"
+	| "(" TypeName ")" .
 
 RecvExpr = Expression .
 
@@ -513,15 +496,9 @@ Tag = string_lit .
 TopLevelDecl = Declaration
 	| FunctionDecl
 	| MethodDecl .
-
-//Type = TypeName
-//	| TypeLit
-//	| "(" Type ")" .
 Type = TypeName
 	| TypeLit
-	| "(" TypeName ")" 
-	| "(" TypeLit ")" .
-
+	| "(" Type ")" .
 TypeAssertion = "." "(" Type ")" .
 TypeCaseClause = TypeSwitchCase ":" StatementList .
 TypeDecl = "type" (

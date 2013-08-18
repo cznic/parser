@@ -1,85 +1,26 @@
-/* "C"
+/*
 
-go1.1.1.ebnf
-
-ebnf2y -M -o parser.y parser.ebnf:		34	+28	=62
-ebnf2y -M -iy 1 -o parser.y parser.ebnf:	19	+38	=57
+ebnf2y -M -o parser.y go1.1.1.ebnf:34+28=62
 
 ...............................................................................
 named tokens, Binary_op, Unary_op
 
-ebnf2y -M -o parser.y parser.ebnf:		37	+37	=74
-ebnf2y -M -iy 1 -o parser.y parser.ebnf:	20	+39	=59
+ebnf2y -M -o parser.y parser.ebnf:37+37=74
 
 ...............................................................................
-ForClause,commchan,chancomm,idlist_colas
+ForClause
 
-ebnf2y -M -o parser.y parser.ebnf:		25	+16	=41
-ebnf2y -M -iy 1 -o parser.y parser.ebnf:	12	+16	=28
-
-...............................................................................
--IdentifierList,+identifier_list
-
-ebnf2y -M -o parser.y parser.ebnf:		23	+16	=39
-ebnf2y -M -iy 1 -o parser.y parser.ebnf:	12	+15	=27
-
-...............................................................................
-pack_name,type_name
-
-ebnf2y -M -o parser.y parser.ebnf:		20	+3	=23
-ebnf2y -M -iy 1 -o parser.y parser.ebnf:	 9	+1	=10
-
-...............................................................................
-Key
-
-ebnf2y -M -o parser.y parser.ebnf:		19	+2	=21
-ebnf2y -M -iy 1 -o parser.y parser.ebnf:	 7	+1	= 8
-
-...............................................................................
-BaseTypeName,ReceiverType
-
-ebnf2y -M -o parser.y parser.ebnf:		18	+2	=20
-ebnf2y -M -iy 1 -o parser.y parser.ebnf:	 8	+0	= 8
-
-...............................................................................
-Result
-
-ebnf2y -M -o parser.y parser.ebnf:		8	+0	=8
-ebnf2y -M -iy 1 -o parser.y parser.ebnf:	7	+0	=7
-
-...............................................................................
-BuiltinCall
-
-ebnf2y -M -o parser.y parser.ebnf:		6	+0	=6
-ebnf2y -M -iy 1 -o parser.y parser.ebnf:	5	+0	=5
-
-...............................................................................
-BuiltinCall/II., ocomma_rparen
-
-ebnf2y -M -o parser.y parser.ebnf:		4	+0	=4
-ebnf2y -M -iy 1 -o parser.y parser.ebnf:	4	+0	=4
-
-...............................................................................
-Type
-
-ebnf2y -M -o parser.y parser.ebnf:		3	+0	=3
-ebnf2y -M -iy 1 -o parser.y parser.ebnf:	3	+0	=3
-
-...............................................................................
-ReceiverType,MethodExpr
-
-ebnf2y -M -o parser.y parser.ebnf:		2	+0	=2
-ebnf2y -M -iy 1 -o parser.y parser.ebnf:	2	+0	=2
-
+ebnf2y -M -o parser.y parser.ebnf:34+37=71
 */
 
+// ============================================================================
 
 andand			= "&&" .
 andnot			= "&^" .
-chancomm		= "chan" "<-" .
-//colas			= ":=" .
+//chancomm		= "chan" "<-" .
+colas			= ":=" .
 comm			= "<-".
-commchan		= "<-" "chan" .
+//commchan		= "<-" "chan" .
 ddd			= "..." .
 dec			= "--" .
 eq			= "==" .
@@ -119,15 +60,7 @@ Unary_op = "+"
 	| "&"
 	| comm .
 
-idlist_colas	= . // identifier { "," identifier } colas .
-identifier_list = . // Manually enabled in proper contexts.
-pack_name	= .
-type_name	= .
-built_in_name	= .
-ocomma_rparen	= [ "," ] ")" .
-rparen_dot_method_name = .
-
-//-----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
 add_op = "+"
 	| "-"
@@ -232,10 +165,7 @@ ArrayLength = Expression .
 ArrayType = "[" ArrayLength "]" ElementType .
 Assignment = ExpressionList assign_op ExpressionList .
 BaseType = Type .
-
-//BaseTypeName = identifier .
-BaseTypeName = type_name .
-
+BaseTypeName = identifier .
 BasicLit = int_lit
 	| float_lit
 	| imaginary_lit
@@ -245,30 +175,17 @@ Block = "{" StatementList "}" .
 BreakStmt = "break" [ Label ] .
 BuiltinArgs = Type [ "," ArgumentList ]
 	| ArgumentList .
-
-//BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
-//BuiltinCall = built_in_name "(" [ BuiltinArgs [ "," ] ] ")" .
-//BuiltinCall = built_in_name "(" BuiltinArgs [ "," ] ")" .
-BuiltinCall = built_in_name "(" BuiltinArgs ocomma_rparen .
-
-//Call = "(" [ ArgumentList [ "," ] ] ")" .
-Call = "(" ")"
-	| "(" ArgumentList ocomma_rparen .
-
+BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
+Call = "(" [ ArgumentList [ "," ] ] ")" .
 Channel = Expression .
 
 //ChannelType = (
 //		  "chan" [ "<-" ]
 //		| "<-" "chan"
 //	  ) ElementType .
-//ChannelType = (
-//		  "chan" [ comm ]
-//		| comm "chan"
-//	  ) ElementType .
 ChannelType = (
-		  "chan"
-		| chancomm
-		| commchan
+		  "chan" [ comm ]
+		| comm "chan"
 	  ) ElementType .
 
 CommCase = "case" ( SendStmt | RecvStmt )
@@ -280,27 +197,17 @@ ConstDecl = "const" (
 		  ConstSpec
 		| "(" { ConstSpec ";" } ")"
 	  ) .
-
-//ConstSpec = IdentifierList [
-//		 [ Type ] "=" ExpressionList
-//	  ] .
-ConstSpec = identifier_list [
+ConstSpec = IdentifierList [
 		 [ Type ] "=" ExpressionList
 	  ] .
-
 ContinueStmt = "continue" [ Label ] .
-
-//Conversion = Type "(" Expression [ "," ] ")" .
-Conversion = Type "(" Expression ocomma_rparen .
-
+Conversion = Type "(" Expression [ "," ] ")" .
 Declaration = ConstDecl
 	| TypeDecl
 	| VarDecl .
 DeferStmt = "defer" Expression .
 Element = [ Key ":" ] Value .
-
-//ElementIndex = Expression .
-
+ElementIndex = Expression .
 ElementList = Element { "," Element } .
 ElementType = Type .
 EmptyStmt = .
@@ -313,17 +220,11 @@ Expression = UnaryExpr
 ExpressionList = Expression { "," Expression } .
 ExpressionStmt = Expression .
 FallthroughStmt = "fallthrough" .
-
-//FieldDecl = (
-//		  IdentifierList Type
-//		| AnonymousField
-//	  ) [ Tag ] .
 FieldDecl = (
-		  identifier_list Type
+		  IdentifierList Type
 		| AnonymousField
 	  ) [ Tag ] .
-
-//FieldName = identifier .
+FieldName = identifier .
 
 //ForClause = [ InitStmt ] ";" [ Condition ] ";" [ PostStmt ] .
 ForClause = InitStmt ";" [ Condition ] ";" PostStmt .
@@ -341,9 +242,7 @@ FunctionName = identifier .
 FunctionType = "func" Signature .
 GoStmt = "go" Expression .
 GotoStmt = "goto" Label .
-
-//IdentifierList = identifier { "," identifier } .
-
+IdentifierList = identifier { "," identifier } .
 IfStmt = "if" [ SimpleStmt ";" ] Expression Block [
 		 "else" ( IfStmt | Block )
 	  ] .
@@ -361,10 +260,7 @@ Index = "[" Expression "]" .
 InitStmt = SimpleStmt .
 InterfaceType = "interface" "{" { MethodSpec ";" } "}" .
 InterfaceTypeName = TypeName .
-
-//Key = FieldName | ElementIndex .
-Key = Expression .
-
+Key = FieldName | ElementIndex .
 KeyType = Type .
 Label = identifier .
 LabeledStmt = Label ":" Statement .
@@ -388,11 +284,7 @@ LiteralType = StructType
 LiteralValue = "{" [ ElementList [ "," ] ] "}" .
 MapType = "map" "[" KeyType "]" ElementType .
 MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
-
-//MethodExpr = ReceiverType "." MethodName .
-MethodExpr = TypeName "." MethodName 
-	| "(" [ "*" ] TypeName rparen_dot_method_name .
-
+MethodExpr = ReceiverType "." MethodName .
 MethodName = identifier .
 MethodSpec = MethodName Signature
 	| InterfaceTypeName .
@@ -400,23 +292,15 @@ Operand = Literal
 	| OperandName
 	| MethodExpr
 	| "(" Expression ")" .
-
-//OperandName = identifier | QualifiedIdent .
-OperandName = [ pack_name ] identifier .
-
+OperandName = identifier | QualifiedIdent .
 PackageClause = "package" PackageName .
 PackageName = identifier .
 
 //ParameterDecl = [ IdentifierList ] [ "..." ] Type .
-//ParameterDecl = [ IdentifierList ] [ ddd ] Type .
-ParameterDecl = [ identifier_list ] [ ddd ] Type . //TODO
+ParameterDecl = [ IdentifierList ] [ ddd ] Type .
 
 ParameterList = ParameterDecl { "," ParameterDecl } .
-
-//Parameters = "(" [ ParameterList [ "," ] ] ")" .
-Parameters = "(" ")"
-	| "(" ParameterList ocomma_rparen .
-
+Parameters = "(" [ ParameterList [ "," ] ] ")" .
 PointerType = "*" BaseType .
 PostStmt = SimpleStmt .
 PrimaryExpr = Operand
@@ -427,49 +311,33 @@ PrimaryExpr = Operand
 	| PrimaryExpr Slice
 	| PrimaryExpr TypeAssertion
 	| PrimaryExpr Call .
-
-//QualifiedIdent = PackageName "." identifier .
+QualifiedIdent = PackageName "." identifier .
 
 //RangeClause = (
 //		  ExpressionList "="
 //		| IdentifierList ":="
 //	  ) "range" Expression .
-//RangeClause = (
-//		  ExpressionList "="
-//		| IdentifierList colas
-//	  ) "range" Expression .
 RangeClause = (
 		  ExpressionList "="
-		| idlist_colas
+		| IdentifierList colas
 	  ) "range" Expression .
 
 Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
-
-//ReceiverType = TypeName
-//	| "(" "*" TypeName ")"
-//	| "(" ReceiverType ")" .
-//ReceiverType = TypeName
-//	| "(" "*" TypeName ")"
-//	| "(" TypeName ")" .
-
+ReceiverType = TypeName
+	| "(" "*" TypeName ")"
+	| "(" ReceiverType ")" .
 RecvExpr = Expression .
 
 //RecvStmt = [
 //		  ExpressionList "="
 //		| IdentifierList ":="
 //	  ] RecvExpr .
-//RecvStmt = [
-//		  ExpressionList "="
-//		| IdentifierList colas
-//	  ] RecvExpr .
 RecvStmt = [
 		  ExpressionList "="
-		| idlist_colas
+		| IdentifierList colas
 	  ] RecvExpr .
 
-//Result = Parameters | Type .
-Result = Parameters | TypeName | TypeLit .
-
+Result = Parameters | Type .
 ReturnStmt = "return" [ ExpressionList ] .
 SelectStmt = "select" "{" { CommClause } "}" .
 Selector = "." identifier .
@@ -478,8 +346,7 @@ Selector = "." identifier .
 SendStmt = Channel comm Expression .
 
 //ShortVarDecl = IdentifierList ":=" ExpressionList .
-//ShortVarDecl = IdentifierList colas ExpressionList .
-ShortVarDecl = idlist_colas ExpressionList .
+ShortVarDecl = IdentifierList colas ExpressionList .
 
 Signature = Parameters [ Result ] .
 SimpleStmt = EmptyStmt
@@ -513,15 +380,9 @@ Tag = string_lit .
 TopLevelDecl = Declaration
 	| FunctionDecl
 	| MethodDecl .
-
-//Type = TypeName
-//	| TypeLit
-//	| "(" Type ")" .
 Type = TypeName
 	| TypeLit
-	| "(" TypeName ")" 
-	| "(" TypeLit ")" .
-
+	| "(" Type ")" .
 TypeAssertion = "." "(" Type ")" .
 TypeCaseClause = TypeSwitchCase ":" StatementList .
 TypeDecl = "type" (
@@ -537,17 +398,13 @@ TypeLit = ArrayType
 	| SliceType
 	| MapType
 	| ChannelType .
-
-//TypeName = identifier | QualifiedIdent .
-TypeName = [ pack_name ] type_name .
-
+TypeName = identifier | QualifiedIdent .
 TypeSpec = identifier Type .
 TypeSwitchCase = "case" TypeList
 	| "default" .
 
 //TypeSwitchGuard = [ identifier ":=" ] PrimaryExpr "." "(" "type" ")" .
-//TypeSwitchGuard = [ identifier colas ] PrimaryExpr "." "(" "type" ")" .
-TypeSwitchGuard = [ idlist_colas ] PrimaryExpr "." "(" "type" ")" .
+TypeSwitchGuard = [ identifier colas ] PrimaryExpr "." "(" "type" ")" .
 
 TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
 UnaryExpr = PrimaryExpr
@@ -557,12 +414,7 @@ VarDecl = "var" (
 		  VarSpec
 		| "(" { VarSpec ";" } ")"
 	  ) .
-
-//VarSpec = IdentifierList (
-//		  Type [ "=" ExpressionList ]
-//		| "=" ExpressionList
-//	  ) .
-VarSpec = identifier_list (
+VarSpec = IdentifierList (
 		  Type [ "=" ExpressionList ]
 		| "=" ExpressionList
 	  ) .
