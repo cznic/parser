@@ -90,6 +90,73 @@ binary op precedence,-PackageName
 %left	notParen // in Signature
 %left	'('
 
+...............................................................................
+trigger to enable identifier
+
+FunctionDecl = "func" FunctionName ( Function | Signature ) .
+FunctionName = identifier . /// name
+
+ImportDecl = "import" (
+		  ImportSpec
+		| "(" { ImportSpec ";" } ")"
+	  ) .
+ImportSpec = [ "." | identifier ] ImportPath . /// name
+
+GotoStmt = "goto" Label .
+ContinueStmt = "continue" [ Label ] .
+BreakStmt = "break" [ Label ] .
+LabeledStmt = Label ":" Statement .
+Label = identifier . /// name
+
+MethodSpec = MethodName Signature
+	| InterfaceTypeName .
+MethodExpr = ReceiverType "." MethodName .
+MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
+MethodName = identifier . /// name
+
+Operand = Literal
+	| OperandName
+	| MethodExpr
+	| "(" Expression ")" .
+OperandName = [ pack_name ] identifier . /// ONLY not type_name
+
+PackageClause = "package" identifier . // name
+
+MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
+Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" . /// name
+
+Selector = "." identifier . // name
+
+TypeDecl = "type" (
+		  TypeSpec
+		| "(" { TypeSpec ";" } ")"
+	  ) .
+TypeSpec = identifier Type . /// name
+
+...............................................................................
+trigger to enable type_name
+
+MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
+Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
+BaseTypeName = type_name .
+
+
+MethodSpec = MethodName Signature
+	| InterfaceTypeName .
+InterfaceTypeName = TypeName .
+----
+FieldDecl = (
+		  identifier_list Type
+		| AnonymousField
+	  ) [ Tag ] .
+AnonymousField = [ "*" ] TypeName .
+----
+TypeName = [ pack_name ] type_name .
+
+... non feasible probably
+
+...............................................................................
+name = identifier | type_name . // ?
 */
 
 
