@@ -73,7 +73,7 @@ ebnf2y -M -iy 1 -o parser.y parser.ebnf:	3	+0	=3
 
 "D"
 ...............................................................................
-ReceiverType,MethodExpr
+//ReceiverType,MethodExpr
 
 ebnf2y -M -o parser.y parser.ebnf:		2	+0	=2
 ebnf2y -M -iy 1 -o parser.y parser.ebnf:	2	+0	=2
