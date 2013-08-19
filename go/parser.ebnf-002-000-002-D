@@ -75,21 +75,6 @@ ebnf2y -M -iy 1 -o parser.y parser.ebnf:	3	+0	=3
 ...............................................................................
 //ReceiverType,MethodExpr
 
-ebnf2y -M -o parser.y parser.ebnf:		2	+0	=2
-ebnf2y -M -iy 1 -o parser.y parser.ebnf:	2	+0	=2
-
-...............................................................................
-binary op precedence,-PackageName
-
-%left		OROR
-%left		ANDAND
-%left		EQ NE LE GE '<' '>'
-%left		'+' '-' '|' '^'
-%left		'*' '/' '%' '&' LSH RSH ANDNOT
-
-%left	notParen // in Signature
-%left	'('
-
 */
 
 
@@ -144,7 +129,7 @@ pack_name	= .
 type_name	= .
 built_in_name	= .
 ocomma_rparen	= [ "," ] ")" .
-//rparen_dot	= ")" "." . // left ctx TypeName, rctx method name of lctx's TypeName.
+rparen_dot	= ")" "." . // left ctx TypeName.
 
 //-----------------------------------------------------------------------------
 
@@ -327,12 +312,8 @@ ExprCaseClause = ExprSwitchCase ":" StatementList .
 ExprSwitchCase = "case" ExpressionList
 	| "default" .
 ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] "{" { ExprCaseClause } "}" .
-
-//Expression = UnaryExpr
-//	| Expression Binary_op UnaryExpr .
 Expression = UnaryExpr
-	| Expression Binary_op Expression .
-
+	| Expression Binary_op UnaryExpr .
 ExpressionList = Expression { "," Expression } .
 ExpressionStmt = Expression .
 FallthroughStmt = "fallthrough" .
@@ -375,9 +356,7 @@ ImportDecl = "import" (
 		| "(" { ImportSpec ";" } ")"
 	  ) .
 ImportPath = string_lit .
-
-//ImportSpec = [ "." | PackageName ] ImportPath .
-ImportSpec = [ "." | identifier ] ImportPath .
+ImportSpec = [ "." | PackageName ] ImportPath .
 
 //IncDecStmt = Expression ( "++" | "--" ) .
 IncDecStmt = Expression ( inc | dec ) .
@@ -413,7 +392,11 @@ LiteralType = StructType
 LiteralValue = "{" [ ElementList [ "," ] ] "}" .
 MapType = "map" "[" KeyType "]" ElementType .
 MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
-MethodExpr = ReceiverType "." MethodName .
+
+//MethodExpr = ReceiverType "." MethodName .
+MethodExpr = TypeName "." MethodName 
+	| "(" [ "*" ] TypeName rparen_dot MethodName.
+
 MethodName = identifier .
 MethodSpec = MethodName Signature
 	| InterfaceTypeName .
@@ -425,10 +408,8 @@ Operand = Literal
 //OperandName = identifier | QualifiedIdent .
 OperandName = [ pack_name ] identifier .
 
-//PackageClause = "package" PackageName .
-PackageClause = "package" identifier .
-
-//PackageName = identifier .
+PackageClause = "package" PackageName .
+PackageName = identifier .
 
 //ParameterDecl = [ IdentifierList ] [ "..." ] Type .
 //ParameterDecl = [ IdentifierList ] [ ddd ] Type .
@@ -471,9 +452,9 @@ Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
 //ReceiverType = TypeName
 //	| "(" "*" TypeName ")"
 //	| "(" ReceiverType ")" .
-ReceiverType = TypeName
-	| "(" "*" TypeName ")"
-	| "(" TypeName ")" .
+//ReceiverType = TypeName
+//	| "(" "*" TypeName ")"
+//	| "(" TypeName ")" .
 
 RecvExpr = Expression .
 
