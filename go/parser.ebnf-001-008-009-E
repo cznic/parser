@@ -13,17 +13,6 @@ lbr,Conversion,built_in_name
 ebnf2y -M -o parser.y parser.ebnf	2	+8	=10
 ebnf2y -M -iy 1 -o parser.y parser.ebnf	1	+8	= 9
 
-...............................................................................
--MethodExpr
-
-ebnf2y -M -o parser.y parser.ebnf	1	+4	=5
-ebnf2y -M -iy 1 -o parser.y parser.ebnf	0	+4	=4
-
-...............................................................................
-OperandOrTypeName
-
-ebnf2y -M -o parser.y parser.ebnf	1	+2	=3
-ebnf2y -M -iy 1 -o parser.y parser.ebnf	0	+2	=2
 */
 
 // ============================================================================
@@ -261,9 +250,6 @@ ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] lbr { ExprCaseClause
 
 Expression = UnaryExpr
 	| Expression Binary_op UnaryExpr .
-//Expression = UnaryExpr
-//	| Expression Binary_op Expression .
-
 ExpressionList = Expression { "," Expression } .
 ExpressionStmt = Expression .
 FallthroughStmt = "fallthrough" .
@@ -354,25 +340,15 @@ LiteralValue = "{" [ ElementList ] "}" .
 
 MapType = "map" "[" KeyType "]" ElementType .
 MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
-
-//MethodExpr = ReceiverType "." MethodName .
-
+MethodExpr = ReceiverType "." MethodName .
 MethodName = identifier .
 MethodSpec = MethodName Signature
 	| InterfaceTypeName .
-
-//Operand = Literal
-//	| OperandName
-//	| MethodExpr
-//	| "(" Expression ")" .
 Operand = Literal
 	| OperandName
+	| MethodExpr
 	| "(" Expression ")" .
-
-//OperandName = identifier | QualifiedIdent .
-OperandName = OperandOrTypeName .
-OperandOrTypeName = [ pack_name ] identifier .
-
+OperandName = identifier | QualifiedIdent .
 PackageClause = "package" PackageName .
 PackageName = identifier .
 
@@ -405,7 +381,7 @@ PrimaryExpr = Operand
 	| PrimaryExpr Call .
 
 //QualifiedIdent = PackageName "." identifier .
-//QualifiedIdent = pack_name identifier .
+QualifiedIdent = pack_name identifier .
 
 //RangeClause = (
 //		  ExpressionList "="
@@ -422,9 +398,9 @@ RangeClause = (
 
 Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
 
-//ReceiverType = TypeName
-//	| "(" "*" TypeName ")"
-//	| "(" ReceiverType ")" .
+ReceiverType = TypeName
+	| "(" "*" TypeName ")"
+	| "(" ReceiverType ")" .
 
 RecvExpr = Expression .
 
@@ -507,10 +483,7 @@ TypeLit = ArrayType
 	| SliceType
 	| MapType
 	| ChannelType .
-
-//TypeName = identifier | QualifiedIdent .
-TypeName = OperandOrTypeName .
-
+TypeName = identifier | QualifiedIdent .
 TypeSpec = identifier Type .
 TypeSwitchCase = "case" TypeList
 	| "default" .

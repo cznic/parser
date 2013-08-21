@@ -19,11 +19,6 @@ ebnf2y -M -iy 1 -o parser.y parser.ebnf	1	+8	= 9
 ebnf2y -M -o parser.y parser.ebnf	1	+4	=5
 ebnf2y -M -iy 1 -o parser.y parser.ebnf	0	+4	=4
 
-...............................................................................
-OperandOrTypeName
-
-ebnf2y -M -o parser.y parser.ebnf	1	+2	=3
-ebnf2y -M -iy 1 -o parser.y parser.ebnf	0	+2	=2
 */
 
 // ============================================================================
@@ -369,10 +364,7 @@ Operand = Literal
 	| OperandName
 	| "(" Expression ")" .
 
-//OperandName = identifier | QualifiedIdent .
-OperandName = OperandOrTypeName .
-OperandOrTypeName = [ pack_name ] identifier .
-
+OperandName = identifier | QualifiedIdent .
 PackageClause = "package" PackageName .
 PackageName = identifier .
 
@@ -405,7 +397,7 @@ PrimaryExpr = Operand
 	| PrimaryExpr Call .
 
 //QualifiedIdent = PackageName "." identifier .
-//QualifiedIdent = pack_name identifier .
+QualifiedIdent = pack_name identifier .
 
 //RangeClause = (
 //		  ExpressionList "="
@@ -507,10 +499,7 @@ TypeLit = ArrayType
 	| SliceType
 	| MapType
 	| ChannelType .
-
-//TypeName = identifier | QualifiedIdent .
-TypeName = OperandOrTypeName .
-
+TypeName = identifier | QualifiedIdent .
 TypeSpec = identifier Type .
 TypeSwitchCase = "case" TypeList
 	| "default" .
