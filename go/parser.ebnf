@@ -37,6 +37,125 @@ BuiltinArgs
 ebnf2y -M -o parser.y parser.ebnf	1	+2	=3
 ebnf2y -M -iy 1 -o parser.y parser.ebnf	0	+2	=2
 
+
+state 48
+	ConstSpec:  IDENTIFIER_LIST =.ExpressionList 
+	BUILT_IN_NAME  shift 119
+state 65
+	ArrayType:  [.Expression ] ElementType 
+	SliceType:  [.] ElementType 
+	BUILT_IN_NAME  shift 119
+state 72
+	VarSpec:  IDENTIFIER_LIST =.ExpressionList 
+	BUILT_IN_NAME  shift 119
+state 99
+	UnaryExpr:  +.UnaryExpr 
+	BUILT_IN_NAME  shift 119
+state 100
+	UnaryExpr:  -.UnaryExpr 
+	BUILT_IN_NAME  shift 119
+state 101
+	UnaryExpr:  !.UnaryExpr 
+	BUILT_IN_NAME  shift 119
+state 102
+	UnaryExpr:  ^.UnaryExpr 
+	BUILT_IN_NAME  shift 119
+state 103
+	UnaryExpr:  *.UnaryExpr 
+	BUILT_IN_NAME  shift 119
+state 104
+	UnaryExpr:  &.UnaryExpr 
+	BUILT_IN_NAME  shift 119
+state 105
+	UnaryExpr:  COMM.UnaryExpr 
+	BUILT_IN_NAME  shift 119
+state 113
+	ArrayType:  [.Expression ] ElementType 
+	PrimaryExpr:  [.DDD ] ElementType LiteralValue 
+	SliceType:  [.] ElementType 
+	BUILT_IN_NAME  shift 119
+state 118
+	PrimaryExpr:  (.Expression ) 
+	BUILT_IN_NAME  shift 119
+state 120
+	ConstSpec:  IDENTIFIER_LIST Type =.ExpressionList 
+	BUILT_IN_NAME  shift 119
+state 138
+	VarSpec:  IDENTIFIER_LIST Type =.ExpressionList 
+	BUILT_IN_NAME  shift 119
+state 143
+	StatementList:  StatementList1.    (171)
+	StatementList1:  StatementList1.Statement ; 
+	SimpleStmt: .    (124)
+	BUILT_IN_NAME  shift 119
+state 153
+	Expression:  Expression OROR.UnaryExpr 
+	BUILT_IN_NAME  shift 119
+...
+state 174
+	PrimaryExpr:  PrimaryExpr [.Expression ] 
+	PrimaryExpr:  PrimaryExpr [.: Slice2 ] 
+	PrimaryExpr:  PrimaryExpr [.Expression : Slice2 ] 
+	BUILT_IN_NAME  shift 119
+	state 119
+		PrimaryExpr:  BUILT_IN_NAME.( TypeNoName ) 
+		PrimaryExpr:  BUILT_IN_NAME.( TypeNoName , ArgumentList ) 
+		PrimaryExpr:  BUILT_IN_NAME.( ArgumentList ) 
+		(  shift 193
+		state 193
+			PrimaryExpr:  BUILT_IN_NAME (.TypeNoName ) 
+			PrimaryExpr:  BUILT_IN_NAME (.TypeNoName , ArgumentList ) 
+			PrimaryExpr:  BUILT_IN_NAME (.ArgumentList ) 
+			*  shift 271
+state 193
+	PrimaryExpr:  BUILT_IN_NAME (.TypeNoName ) 
+	PrimaryExpr:  BUILT_IN_NAME (.TypeNoName , ArgumentList ) 
+	PrimaryExpr:  BUILT_IN_NAME (.ArgumentList ) 
+	(  shift 268
+state 268
+	PrimaryExpr:  (.Expression ) 
+	TypeNoName:  (.TypeNoName ) 
+	(  shift 268
+	state 268
+		PrimaryExpr:  (.Expression ) 
+		TypeNoName:  (.TypeNoName ) 
+		*  shift 271
+	state 271
+		TypeLit:  *.Type 
+		UnaryExpr:  *.UnaryExpr 
+		*  shift 271
+state 271
+	TypeLit:  *.Type 
+	UnaryExpr:  *.UnaryExpr 
+	(  shift 332
+state 332
+	PrimaryExpr:  (.Expression ) 
+	Type:  (.Type ) 
+	(  shift 332
+	state 332
+		PrimaryExpr:  (.Expression ) 
+		Type:  (.Type ) 
+		*  shift 271
+		state 271
+			TypeLit:  *.Type 
+			UnaryExpr:  *.UnaryExpr 
+			Name  goto 331
+		state 332
+			PrimaryExpr:  (.Expression ) 
+			Type:  (.Type ) 
+			Name  goto 331
+----
+ 331: reduce/reduce conflict  (red'ns 96 and 178) on )
+ 331: reduce/reduce conflict  (red'ns 96 and 178) on ,
+state 331
+	PrimaryExpr:  Name.    (96)
+	PrimaryExpr:  Name.LiteralValue 
+	Type:  Name.    (178)
+
+	{  shift 184
+	.  reduce 96 (src line 633)
+
+	LiteralValue  goto 191
 */
 
 // ============================================================================
