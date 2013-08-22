@@ -10,7 +10,7 @@
 // 
 //   [1]: http://github.com/cznic/ebnf2y
 
-package main //TODO real package name
+package parser //TODO real package name
 
 //TODO required only be the demo _dump function
 import (
