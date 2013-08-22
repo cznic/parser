@@ -43,18 +43,6 @@ BaseType
 ebnf2y -M -o parser.y parser.ebnf	1	+0	=1
 ebnf2y -M -iy 1 -o parser.y parser.ebnf	0	+0	=0
 
-...............................................................................
-Expression
-
-%left	OROR
-%left	ANDAND
-%left	'<' '>' EQ GE LE NE
-%left	'+' '-' '^' '|'
-%left	'%' '&' '*' '/' ANDNOT LSH RSH
-
-ebnf2y -M -o parser.y parser.ebnf	20	+0	=20
-ebnf2y -M -iy 1 -o parser.y parser.ebnf	 0	+0	= 0
-
 */
 
 // ============================================================================
@@ -297,10 +285,10 @@ ExprSwitchCase = "case" ExpressionList
 //ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] "{" { ExprCaseClause } "}" .
 ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] lbr { ExprCaseClause } "}" .
 
-//Expression = UnaryExpr
-//	| Expression Binary_op UnaryExpr .
 Expression = UnaryExpr
-	| Expression Binary_op Expression .
+	| Expression Binary_op UnaryExpr .
+//Expression = UnaryExpr
+//	| Expression Binary_op Expression .
 
 ExpressionList = Expression { "," Expression } .
 ExpressionStmt = Expression .
