@@ -1,0 +1,10 @@
+const	C
+var	V
+ident	I
+colas	S
+
+%%
+
+({const}|{var}){ident}(,{ident})*
+{ident}(,{ident})*{colas}
+

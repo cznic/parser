@@ -61,6 +61,7 @@ func test(t *testing.T, root string) {
 				}
 			}
 
+			dbg("%s", pth)
 			_, eerr := parser.ParseFile(token.NewFileSet(), pth, nil, 0)
 			_, gerr := ParseFile(pth, nil)
 
@@ -78,12 +79,12 @@ func test(t *testing.T, root string) {
 	t.Logf("%d .go files, %d bytes\n", count, size)
 }
 
-func TestStdlib(t *testing.T) {
-	test(t, std)
-}
-
 func TestTestData(t *testing.T) {
 	test(t, "testdata")
+}
+
+func TestStdlib(t *testing.T) {
+	test(t, std)
 }
 
 func TestTests(t *testing.T) {
