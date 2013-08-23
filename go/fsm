@@ -5,6 +5,6 @@ colas	S
 
 %%
 
+[,;][)}]
 ({const}|{var}){ident}(,{ident})*
 {ident}(,{ident})*{colas}
-
