@@ -5,6 +5,5 @@ colas	S
 
 %%
 
-[,;][)}]
-({const}|{var}){ident}(,{ident})*
-{ident}(,{ident})*{colas}
+(({const}|{var})\(?){ident}(,{ident})*	// identifier_list
+{ident}(,{ident})*{colas}		// idlist_colas

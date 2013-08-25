@@ -10,7 +10,7 @@
 // 
 //   [1]: http://github.com/cznic/ebnf2y
 
-package main //TODO real package name
+package parser //TODO real package name
 
 //TODO required only be the demo _dump function
 import (
@@ -24,6 +24,8 @@ import (
 %}
 
 %union {
+	val  interface{}
+	pos  pos
 	item interface{} //TODO insert real field(s)
 }
 
@@ -181,6 +183,9 @@ import (
 %left	notDot // Name
 %left	'.'
 
+%left	notPackage
+%left	PACKAGE
+
 %start Start
 
 %%
@@ -224,9 +229,14 @@ ConstDecl111:
 	{
 		$$ = []ConstDecl111(nil) //TODO 7
 	}
-|	ConstDecl111 ';' ConstSpec
+|	ConstDecl111 ';'
 	{
-		$$ = append($1.([]ConstDecl111), ";", $3) //TODO 8
+		lx := yylex.(*lx)
+		lx.toks, lx.state = nil, st2 //TODO named state alias
+	}
+	ConstSpec
+	{
+		//TODO $$ = append($1.([]ConstDecl111), ";", $3) //TODO 8
 	}
 
 ConstSpec:
@@ -812,7 +822,12 @@ SliceType:
 	}
 
 SourceFile:
-	PACKAGE PackageName ';' SourceFile1 SourceFile2
+	%prec notPackage
+	{
+		yylex.(*lx).Error("package statement must be first")
+		goto ret1
+	}
+|	PACKAGE PackageName ';' SourceFile1 SourceFile2
 	{
 		$$ = []SourceFile{"package", $2, ";", $4, $5} //TODO 137
 	}
@@ -1186,9 +1201,14 @@ VarDecl111:
 	{
 		$$ = []VarDecl111(nil) //TODO 220
 	}
-|	VarDecl111 ';' VarSpec
+|	VarDecl111 ';'
 	{
-		$$ = append($1.([]VarDecl111), ";", $3) //TODO 221
+		lx := yylex.(*lx)
+		lx.toks, lx.state = nil, st2 //TODO named state alias
+	}
+	VarSpec
+	{
+		//TODO $$ = append($1.([]VarDecl111), ";", $3) //TODO 221
 	}
 
 VarSpec:

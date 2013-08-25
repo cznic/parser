@@ -1,29 +1,30 @@
 package main
 
-const (
-	a, b = 1, 2
-	c, d = 1, 2
-)
-/*TODO
-
 const a = 1
-const b, c = 1, 2
+const b, c = 2, 3
 const ()
 const (
-	d = 1
+	e = 4
 )
+const (	f = 5 )
 const (
-	e    = 1
-	f, g = 1, 2
+	g    = 6
+	h, i = 7, 8
 )
-var a = 1
-var b, c = 1, 2
+const (	j = 1; k, l = 9, 10 )
+
+var m = 11
+var n, o = 12, 13
 var ()
 var (
-	d = 1
+	p = 14
 )
+var ( q = 15 )
 var (
-	e    = 1
-	f, g = 1, 2
+	r    = 16
+	s, t = 17, 18
 )
-*/
+var ( u = 19; v, w = 19, 20 )
+
+//TODO FieldDecl
+//TODO ParameterDecl 

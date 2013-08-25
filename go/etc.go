@@ -9,6 +9,7 @@ package parser
 
 import (
 	"bytes"
+	"fmt"
 	"go/token"
 	"io"
 	"io/ioutil"
@@ -56,9 +57,12 @@ func ParseFile(filename string, src interface{}) (f interface{}, err error) {
 	lx.Scanner.Fname = filename
 	if yyParse(&lx) != 0 {
 		err = lx.Errors[0]
+		//dbg("%v", err)
 	}
 	return
 }
+
+const COLAS = -1
 
 var xlat = []int{
 	//token.ILLEGAL:        ILLEGAL,
@@ -105,7 +109,7 @@ var xlat = []int{
 	token.NEQ:            NE,
 	token.LEQ:            LE,
 	token.GEQ:            GE,
-	token.DEFINE:         int(token.DEFINE),
+	token.DEFINE:         COLAS,
 	token.ELLIPSIS:       DDD,
 	token.LPAREN:         '(',
 	token.LBRACK:         '[',
@@ -155,151 +159,177 @@ const (
 	st4
 	st5
 	st6
-	stDump
 )
 
-type tok struct {
-	tk        int
-	val       interface{}
+type pos struct {
 	line, col int
+}
+
+type tok struct {
+	tk  int
+	val interface{}
+	pos pos
 }
 
 type lx struct {
 	*scanner.Scanner
-	state int
-	toks  []tok
+	state     int
+	dump      []tok
+	toks      []tok
+	ids       []tok
+	preamble  int
+	prev      tok
+	prevValid bool
 }
 
 /*
-(13:25) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ cat fsm
+jnml@fsc-r630:~/src/github.com/cznic/parser/go$ cat fsm
 const	C
+var	V
 ident	I
 colas	S
 
 %%
 
-{const}{ident}(,{ident})*
-{ident}(,{ident})*{colas}
-
-(13:26) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ golex -DFA fsm
+(({const}|{var})\(?){ident}(,{ident})*	// identifier_list
+{ident}(,{ident})*{colas}		// idlist_colas
+jnml@fsc-r630:~/src/github.com/cznic/parser/go$ golex -DFA fsm
 StartConditions:
 	INITIAL, scId:0, stateId:1
 DFA:
 [1]
-	"C"--> 2
-	"I"--> 4
+	"C", "V", --> 2
+	"I"--> 5
 [2]
-	"I"--> 3
-[3]
-	","--> 2
-[4]
-	","--> 5
-	"S"--> 6
-[5]
+	"("--> 3
 	"I"--> 4
+[3]
+	"I"--> 4
+[4]
+	","--> 3
+[5]
+	","--> 6
+	"S"--> 7
 [6]
-state 3 accepts rule 1
-state 6 accepts rule 2
+	"I"--> 5
+[7]
+state 4 accepts rule 1
+state 7 accepts rule 2
 
-(13:26) jnml@fsc-r550:~/src/github.com/cznic/parser/go$
-
+jnml@fsc-r630:~/src/github.com/cznic/parser/go$
 */
 
 func (x *lx) Lex(lval *yySymType) (r int) {
-	dbg("Lex state st%d", x.state+1)
-	defer func() {
-		var s string
-		if r < 128 {
-			s = string(r)
-		} else {
-			s = yyToknames[r-ANDAND]
-		}
-		dbg("returning %q", s)
-	}()
-	var val interface{}
-	var tk token.Token
-	if x.state != stDump {
-		r = -1
-	}
-	for {
-		if r < 0 {
-			tk, val = x.ScanSemis()
-			if tk == token.COMMENT {
-				continue
-			}
+	//dbg("\n<<<< Lex state st%d", x.state+1)
+	//defer func() {
+	//	var s string
+	//	if r < 128 {
+	//		s = string(r)
+	//	} else {
+	//		s = yyToknames[r-ANDAND]
+	//	}
+	//	dbg(">>>> %d:%d: returning %q\n", lval.pos.line, lval.pos.col, s)
+	//}()
 
-			dbg("scanned:%d:%d %v", x.Line, x.Col, tk)
-			r = xlat[tk]
+dump:
+	if len(x.dump) != 0 {
+		tk := x.dump[0]
+		r, lval.pos, lval.val = tk.tk, tk.pos, tk.val
+		x.dump = x.dump[1:]
+		if len(x.dump) == 0 {
+			x.dump = nil
 		}
+		return
+	}
+
+	for {
+		//dbg("[state st%d]", x.state+1)
+		tk := x.lex()
 
 		switch x.state {
 		case st1:
-			switch r {
-			case CONST,VAR:
-				x.state = st2
+			switch tk.tk {
+			case CONST, VAR:
+				x.toks, x.state = []tok{tk}, st2
 			case IDENTIFIER:
-				x.state = st4
-				x.toks = append([]tok(nil), tok{tk: r, val: val, line: x.Line, col: x.Col})
-				r = -1
-				continue
-			}
-			return
-		case st2:
-			switch r {
-			case '(':
-				return
-			case IDENTIFIER:
-				x.toks = append([]tok(nil), tok{tk: r, val: val, line: x.Line, col: x.Col})
-				x.state = st3
-				r = -1
-				continue
+				x.toks, x.ids, x.state = []tok{tk}, []tok{tk}, st5
 			default:
-				x.toks = append(x.toks, tok{tk: r, val: val, line: x.Line, col: x.Col})
-				x.state = stDump
-				continue
+				r, lval.val, lval.pos = tk.tk, tk.val, tk.pos
+				return
+			}
+		case st2:
+			switch tk.tk {
+			case '(':
+				x.toks, x.state = append(x.toks, tk), st3
+				x.preamble = len(x.toks)
+			case IDENTIFIER:
+				x.preamble = len(x.toks)
+				x.toks, x.ids, x.state = append(x.toks, tk), []tok{tk}, st4
+			default:
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
 			}
 		case st3:
-			switch r {
-			case ',':
-				r = -1
-				x.state = st2
+			switch tk.tk {
+			case IDENTIFIER:
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st4
 			default:
-				x.toks = append([]tok(nil), tok{tk: r, val: val, line: x.Line, col: x.Col})
-				r = IDENTIFIER_LIST
-				x.state = stDump
-				return
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
 			}
 		case st4:
-			switch r {
+			switch tk.tk {
 			case ',':
-				r = -1
-				x.state = st2
-				continue
-			case int(token.DEFINE):
-				r = IDLIST_COLAS
-				//TODO pack tokens into lval
-				x.toks = nil
-				x.state = st1
+				x.toks, x.state = append(x.toks, tk), st3
+			default:
+				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
+				goto dump
+			}
+		case st5:
+			switch tk.tk {
+			case ',':
+				x.toks, x.state = append(x.toks, tk), st6
+			case COLAS:
+				r, lval.val, lval.pos, x.state = IDENTIFIER_LIST, x.ids, x.ids[0].pos, st1
 				return
 			default:
-				x.toks = append(x.toks, tok{tk: r, val: val, line: x.Line, col: x.Col})
-				x.state = stDump
-				continue
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
 			}
-		case stDump:
-			t := x.toks[0]
-			r = t.tk
-			//TODO lval.val = t.val
-			x.Line, x.Col = t.line, t.col
-			x.toks = x.toks[1:]
-			if len(x.toks) == 0 {
-				x.toks = nil
-				x.state = st1
-			}
-			return
+		case st6:
+			//dbg("TODO state st%d", x.state+1)
+			return '?'
 		default:
-			dbg("TODO st%d", x.state+1)
-			return
+			panic(fmt.Sprintf("internal error st%d", x.state+1))
 		}
+	}
+}
+
+func (x *lx) lex() (y tok) {
+	//defer func() {
+	//	var s string
+	//	if y.tk < 128 {
+	//		s = string(y.tk)
+	//	} else {
+	//		s = yyToknames[y.tk-ANDAND]
+	//	}
+	//	dbg("........ returning %q", s)
+	//}()
+	for {
+		token, val := x.ScanSemis()
+		tok := tok{xlat[token], val, pos{x.Line, x.Col}}
+		//dbg("ScanSemis %v", token)
+		if !x.prevValid {
+			x.prev, x.prevValid = tok, true
+			continue
+		}
+
+		if p, n := x.prev.tk, tok.tk; (p == ',' || p == ';') && (n == ')' || n == '}') {
+			x.prevValid = false
+			return tok
+		}
+
+		y, x.prev = x.prev, tok
+		return
 	}
 }

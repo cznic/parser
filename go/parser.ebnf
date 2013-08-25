@@ -140,7 +140,7 @@ Unary_op = "+"
 idlist_colas	= . // identifier { "," identifier } colas .
 identifier_list = . // Manually enabled in proper contexts.
 //built_in_name	= .
-//ocomma_rparen: xlat "," ")" -> ")" and "," "}" -> "}"; checj validity post hoc.
+//ocomma_rparen: xlat "," ")" -> ")" and "," "}" -> "}"; check validity post hoc.
 //osemi_rparen: xlat ";" ")" -> ")" and ";" "}" -> "}"; check validity post hoc.
 lbr = .
 
