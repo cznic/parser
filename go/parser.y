@@ -260,6 +260,9 @@ Declaration:
 	}
 |	CONST '(' ')'
 	{
+		if $<val>3 != nil {
+			yylex.(*lx).err($<val>3.(tok).pos, "unexpected %q before ')'", string($<val>3.(tok).tk))
+		}
 		$$ = []Declaration{"const", "(", ")"} //TODO 13
 	}
 |	CONST '(' ConstSpec ConstDecl111 ')'
@@ -284,6 +287,9 @@ Declaration:
 	}
 |	VAR '(' ')'
 	{
+		if $<val>3 != nil {
+			yylex.(*lx).err($<val>3.(tok).pos, "unexpected %q before ')'", string($<val>3.(tok).tk))
+		}
 		$$ = []Declaration{"var", "(", ")"} //TODO 19
 	}
 |	VAR '(' VarSpec VarDecl111 ')'
@@ -824,7 +830,7 @@ SliceType:
 SourceFile:
 	%prec notPackage
 	{
-		yylex.(*lx).Error("package statement must be first")
+		yylex.(*lx).error("package statement must be first")
 		goto ret1
 	}
 |	PACKAGE PackageName ';' SourceFile1 SourceFile2

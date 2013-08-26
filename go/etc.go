@@ -55,7 +55,7 @@ func ParseFile(filename string, src interface{}) (f interface{}, err error) {
 		Scanner: scanner.New(bsrc),
 	}
 	lx.Scanner.Fname = filename
-	if yyParse(&lx) != 0 {
+	if yyParse(&lx) != 0 || len(lx.Errors) != 0 {
 		err = lx.Errors[0]
 		//dbg("%v", err)
 	}
@@ -325,11 +325,19 @@ func (x *lx) lex() (y tok) {
 		}
 
 		if p, n := x.prev.tk, tok.tk; (p == ',' || p == ';') && (n == ')' || n == '}') {
-			x.prevValid = false
+			tok.val, x.prevValid = x.prev, false
 			return tok
 		}
 
 		y, x.prev = x.prev, tok
 		return
 	}
+}
+
+func (x *lx) err(pos pos, format string, arg ...interface{}) {
+	x.Error(fmt.Sprintf("%s:%d:%d: "+format, append([]interface{}{x.Fname, pos.line, pos.col}, arg...)...))
+}
+
+func (x *lx) error(format string, arg ...interface{}) {
+	x.err(pos{x.Line, x.Col}, format, arg...)
 }

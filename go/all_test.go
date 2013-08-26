@@ -5,6 +5,7 @@
 package parser
 
 import (
+	"flag"
 	"fmt"
 	"go/parser"
 	"go/token"
@@ -14,6 +15,8 @@ import (
 	"runtime"
 	"testing"
 )
+
+var optPE = flag.Bool("pe", false, "Show more parse errors")
 
 func dbg(s string, va ...interface{}) {
 	_, fn, fl, _ := runtime.Caller(1)
@@ -67,6 +70,10 @@ func test(t *testing.T, root string) {
 
 			if g, e := gerr == nil, eerr == nil; g != e {
 				t.Fatalf("%q\ng: %v\ne: %v", pth, gerr, eerr)
+			}
+
+			if *optPE && gerr != nil {
+				t.Log(gerr)
 			}
 
 			count++
