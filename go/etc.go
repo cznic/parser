@@ -229,15 +229,14 @@ DFA:
 	"A"--> 8
 [8]
 [9]
-	"I"--> 10
-	"{"--> 11
+	"{"--> 10
 [10]
-	","--> 11
+	"I"--> 11
 [11]
-	"I"--> 10
+	","--> 10
 state 4 accepts rule 1
 state 8 accepts rule 3
-state 10 accepts rule 2
+state 11 accepts rule 2
 
 _______________________________________________________________________________
 (15:41) jnml@fsc-r550:~/src/github.com/cznic/parser/go$
@@ -320,7 +319,7 @@ dump:
 			case COLAS:
 				panic("st5 :=")
 			case STRUCT:
-				panic("st5 struct")
+				x.toks, x.state = append(x.toks, tk), st9
 			default:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
@@ -332,14 +331,33 @@ dump:
 			dbg("TODO state st%d", x.state+1)
 			return '?'
 		case st9:
-			dbg("TODO state st%d", x.state+1)
-			return '?'
+			switch r {
+			case '{':
+				x.toks, x.ids, x.state = append(x.toks, tk), nil, st10
+				x.preamble = len(x.toks)
+			default:
+				panic("st9 default")
+			}
 		case st10:
-			dbg("TODO state st%d", x.state+1)
-			return '?'
+			switch r {
+			case IDENTIFIER:
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st11
+			default:
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
+			}
 		case st11:
-			dbg("TODO state st%d", x.state+1)
-			return '?'
+			switch r {
+			case ',':
+				x.toks, x.state = append(x.toks, tk), st10
+			case '}', '.', ';':
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
+			default:
+				dbg("x.preamble %d", x.preamble)
+				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
+				goto dump
+			}
 		default:
 			panic(fmt.Sprintf("internal error st%d", x.state+1))
 		}

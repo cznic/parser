@@ -569,7 +569,7 @@ Name:
 	}
 |	IDENTIFIER '.' IDENTIFIER
 	{
-		$$ = []Name{"<Name>", $1, ".", $3} //TODO 79
+		$$ = []Name{$1, ".", $3} //TODO 79
 	}
 
 PackageName:
@@ -1037,9 +1037,8 @@ StructType11:
 	}
 |	StructType11 ';'
 	{
-		panic(".y:1045")
-		//lx := yylex.(*lx)
-		//lx.toks, lx.state, lx.structType = nil, st2, true //TODO named state alias
+		lx := yylex.(*lx)
+		lx.toks, lx.preamble, lx.ids, lx.state = nil, 0, nil, st10 //TODO named state alias
 	}
 	FieldDecl
 	{

@@ -1,23 +1,5 @@
 package main
 
-//type ()
-//type (
-//	t struct{}
-//	t struct { *a }
-//	t struct { *a.b }
-//	t struct { a }
-//	t struct { a.b }
-//	t struct { a int }
-//	t struct { a, b int }
-//
-//	t struct { *a; *a }
-//	t struct { *a.b; *a.b }
-//	//t struct { a; a }
-//	t struct { a.b; a.b }
-//	t struct { a int; a int }
-//	t struct { a, b int; a, b int }
-//)
-
 const a = 1
 const b, c = 2, 3
 const ()
@@ -65,5 +47,41 @@ var (
 	s, t = 17, 18;
 )
 var ( u = 19; v, w = 19, 20; )
+
+type ()
+type (
+	t struct{}
+	t struct { *a }
+	t struct { *b.c }
+	t struct { d }
+	t struct { e.f }
+	t struct { g int }
+	t struct { h, i int }
+
+	t struct { *a; *b }
+	t struct { *c.d; *e.f }
+	t struct { g; h }
+	t struct { i.j; k.l }
+	t struct { m int; n int }
+	t struct { o, p int; q, r int }
+)
+
+type ()
+type (
+	t struct{}
+	t struct { *a; }
+	t struct { *b.c; }
+	t struct { d; }
+	t struct { e.f; }
+	t struct { g int; }
+	t struct { h, i int; }
+
+	t struct { *a; *b; }
+	t struct { *c.d; *e.f; }
+	t struct { g; h; }
+	t struct { i.j; k.l; }
+	t struct { m int; n int; }
+	t struct { o, p int; q, r int; }
+)
 
 //TODO ParameterDecl 
