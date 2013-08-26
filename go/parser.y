@@ -595,7 +595,8 @@ ParameterDecl2:
 	}
 |	DDD
 	{
-		$$ = $1 //TODO 84
+		//$$ = $1 //TODO 84
+		$$ = "..." //TODO 84
 	}
 
 ParameterList1:
@@ -613,9 +614,13 @@ Parameters:
 	{
 		$$ = []Parameters{"(", ")"} //TODO 87
 	}
-|	'(' ParameterDecl ParameterList1 ')'
+|	'('
 	{
-		$$ = []Parameters{"(", $2, $3, ")"} //TODO 88
+		dbg(".y:618")
+	}
+	ParameterDecl ParameterList1 ')'
+	{
+		$$ = []Parameters{"(", $3, $4, ")"} //TODO 88
 	}
 
 PrimaryExpr:
@@ -661,6 +666,7 @@ PrimaryExpr:
 	}
 |	FUNC Function
 	{
+		panic(".y:669 FUNC")
 		$$ = []PrimaryExpr{"func", $2} //TODO 99
 	}
 |	Name
@@ -866,18 +872,22 @@ SourceFile2:
 	}
 |	SourceFile2 FUNC IDENTIFIER Function ';'
 	{
+		panic(".y:875 FUNC")
 		$$ = append($1.([]SourceFile2), "func", $3, $4, ";") //TODO 144
 	}
 |	SourceFile2 FUNC IDENTIFIER Signature ';'
 	{
-		$$ = append($1.([]SourceFile2), "func", $3, $4, ";") //TODO 145
+		panic(".y:880 FUNC")
+		//TODO $$ = append($1.([]SourceFile2), "func", $3, $4, ";") //TODO 145
 	}
 |	SourceFile2 FUNC Receiver MethodName Function ';'
 	{
+		panic(".y:885 FUNC")
 		$$ = append($1.([]SourceFile2), "func", $3, $4, $5, ";") //TODO 146
 	}
 |	SourceFile2 FUNC Receiver MethodName Signature ';'
 	{
+		panic(".y:890 FUNC")
 		$$ = append($1.([]SourceFile2), "func", $3, $4, $5, ";") //TODO 147
 	}
 
@@ -1094,6 +1104,7 @@ TypeLit:
 	}
 |	FUNC Signature
 	{
+		panic(".y:1107 FUNC")
 		$$ = []TypeLit{"func", $2} //TODO 194
 	}
 |	INTERFACE '{' '}'

@@ -85,3 +85,12 @@ type (
 )
 
 //TODO ParameterDecl 
+//func a()
+//func idtA(T)
+//func idtB(...T)
+//func idtC(id T)
+//func idtD(id ...T)
+//func idtE(id, id2 T)
+//func idtF(id, id2 ...T)
+//func idtG(T1, T2)
+//func idtH(T1, T2)
