@@ -65,20 +65,15 @@ import (
 	DDD
 	DEC
 	EQ
-	FLOAT_LIT
 	GE
 	IDLIST_COLAS
-	IMAGINARY_LIT
 	INC
-	INT_LIT
 	LBR
 	LE
 	LSH
 	NE
 	OROR
 	RSH
-	RUNE_LIT
-	STRING_LIT
 
 %token BREAK
 %token CASE
@@ -106,7 +101,8 @@ import (
 %token TYPE
 %token VAR
 
-%type	<val>	IDENTIFIER IDENTIFIER_LIST
+%type	<val>	FLOAT_LIT IDENTIFIER IDENTIFIER_LIST IMAGINARY_LIT INT_LIT 
+		RUNE_LIT STRING_LIT
 
 %type	<item> 	/*TODO real type(s), if/where applicable */
 	ArgumentList
@@ -1041,9 +1037,9 @@ StructType11:
 	}
 |	StructType11 ';'
 	{
-		dbg(".y:1044")
-		lx := yylex.(*lx)
-		lx.toks, lx.state, lx.structType = nil, st2, true //TODO named state alias
+		panic(".y:1045")
+		//lx := yylex.(*lx)
+		//lx.toks, lx.state, lx.structType = nil, st2, true //TODO named state alias
 	}
 	FieldDecl
 	{
@@ -1221,6 +1217,7 @@ VarDecl111:
 	}
 |	VarDecl111 ';'
 	{
+		panic(".y:1225")
 		lx := yylex.(*lx)
 		lx.toks, lx.state = nil, st2 //TODO named state alias
 	}
@@ -1321,7 +1318,7 @@ func _dump() string {
 	s = strings.Replace(s, "}", "%u\n}", -1)
 	s = strings.Replace(s, ", ", ",\n", -1)
 	var buf bytes.Buffer
-	strutil.IndentFormatter(&buf, ". ").Format(s)
+	strutil.IndentFormatter(&buf, "| ").Format(s)
 	buf.WriteString("\n")
 	a := strings.Split(buf.String(), "\n")
 	var r bytes.Buffer

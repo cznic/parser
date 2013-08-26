@@ -159,6 +159,11 @@ const (
 	st4
 	st5
 	st6
+	st7
+	st8
+	st9
+	st10
+	st11
 )
 
 type pos struct {
@@ -173,18 +178,18 @@ type tok struct {
 
 type lx struct {
 	*scanner.Scanner
-	state      int
-	dump       []tok
-	toks       []tok
-	ids        []tok
-	preamble   int
-	prev       tok
-	prevValid  bool
-	structType bool
+	state     int
+	dump      []tok
+	toks      []tok
+	ids       []tok
+	preamble  int
+	prev      tok
+	prevValid bool
 }
 
 /*
-(11:53) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ cat fsm
+_______________________________________________________________________________
+(15:41) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ cat fsm
 const	C
 struct  S
 var	V
@@ -193,32 +198,49 @@ colas	A
 
 %%
 
-(({const}|{struct}|{var})[({]?){ident}(,{ident})*	// identifier_list
-{ident}(,{ident})*{colas}		// idlist_colas
-(11:53) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ golex -DFA fsm
+{ident}?({const}|{var})\(?{ident}(,{ident})*	// identifier_list
+{ident}?{struct}\{?{ident}(,{ident})*		// identifier_list
+{ident}(,{ident})*{colas}			// idlist_colas
+_______________________________________________________________________________
+(15:41) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ golex -DFA fsm
 StartConditions:
 	INITIAL, scId:0, stateId:1
 DFA:
 [1]
-	"C", "S", "V", --> 2
+	"C", "V", --> 2
 	"I"--> 5
+	"S"--> 9
 [2]
-	"(", "{", --> 3
+	"("--> 3
 	"I"--> 4
 [3]
 	"I"--> 4
 [4]
 	","--> 3
 [5]
+	"C", "V", --> 2
 	","--> 6
-	"A"--> 7
+	"A"--> 8
+	"S"--> 9
 [6]
-	"I"--> 5
+	"I"--> 7
 [7]
+	","--> 6
+	"A"--> 8
+[8]
+[9]
+	"I"--> 10
+	"{"--> 11
+[10]
+	","--> 11
+[11]
+	"I"--> 10
 state 4 accepts rule 1
-state 7 accepts rule 2
+state 8 accepts rule 3
+state 10 accepts rule 2
 
-(11:53) jnml@fsc-r550:~/src/github.com/cznic/parser/go$
+_______________________________________________________________________________
+(15:41) jnml@fsc-r550:~/src/github.com/cznic/parser/go$
 
 */
 
@@ -249,31 +271,32 @@ dump:
 		dbg("[state st%d]", x.state+1)
 		tk := x.lex()
 
-		switch x.state {
+		switch r = tk.tk; x.state {
 		case st1:
-			switch tk.tk {
-			case CONST, STRUCT, VAR:
-				x.toks, x.state, x.structType = []tok{tk}, st2, tk.tk == STRUCT
+			switch r {
+			case CONST, VAR:
+				x.toks, x.state = []tok{tk}, st2
 			case IDENTIFIER:
 				x.toks, x.ids, x.state = []tok{tk}, []tok{tk}, st5
+			case STRUCT:
+				panic("st1 STRUCT")
 			default:
-				r, lval.val, lval.pos = tk.tk, tk.val, tk.pos
+				lval.val, lval.pos = tk.val, tk.pos
 				return
 			}
 		case st2:
-			switch tk.tk {
-			case '(', '{':
-				x.toks, x.state = append(x.toks, tk), st3
+			switch r {
+			case '(':
+				x.toks, x.ids, x.state = append(x.toks, tk), nil, st3
 				x.preamble = len(x.toks)
 			case IDENTIFIER:
 				x.preamble = len(x.toks)
 				x.toks, x.ids, x.state = append(x.toks, tk), []tok{tk}, st4
 			default:
-				x.dump, x.state = append(x.toks, tk), st1
-				goto dump
+				panic("st2 default")
 			}
 		case st3:
-			switch tk.tk {
+			switch r {
 			case IDENTIFIER:
 				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st4
 			default:
@@ -281,35 +304,40 @@ dump:
 				goto dump
 			}
 		case st4:
-			switch tk.tk {
+			switch r {
 			case ',':
 				x.toks, x.state = append(x.toks, tk), st3
-			case '.', '}', ';': // Deconfuse Name vs identifier_list in FieldDecl
-				dbg("x.structType %v tk.tk %v", x.structType, tk.tk)
-				if !x.structType || tk.tk != ';' {
-					x.dump, x.state = append(x.toks, tk), st1
-					goto dump
-				}
-
-				fallthrough
 			default:
 				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
 				goto dump
 			}
 		case st5:
-			switch tk.tk {
+			switch r {
+			case CONST, VAR:
+				panic("st5 C V")
 			case ',':
-				x.toks, x.state = append(x.toks, tk), st6
-			case STRUCT:
-				x.toks, x.ids, x.state = append(x.toks, tk), nil, st2
+				panic("st5 ,")
 			case COLAS:
-				r, lval.val, lval.pos, x.state = IDENTIFIER_LIST, x.ids, x.ids[0].pos, st1
-				return
+				panic("st5 :=")
+			case STRUCT:
+				panic("st5 struct")
 			default:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
 			}
 		case st6:
+			dbg("TODO state st%d", x.state+1)
+			return '?'
+		case st7:
+			dbg("TODO state st%d", x.state+1)
+			return '?'
+		case st9:
+			dbg("TODO state st%d", x.state+1)
+			return '?'
+		case st10:
+			dbg("TODO state st%d", x.state+1)
+			return '?'
+		case st11:
 			dbg("TODO state st%d", x.state+1)
 			return '?'
 		default:
@@ -329,10 +357,9 @@ func (x *lx) lex() (y tok) {
 		dbg("........ returning %q", s)
 	}()
 	for {
-	again:
 		t, val := x.ScanSemis()
 		if t == token.COMMENT {
-			goto again
+			continue
 		}
 
 		tok := tok{xlat[t], val, pos{x.Line, x.Col}}

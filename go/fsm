@@ -6,6 +6,6 @@ colas	A
 
 %%
 
-({const}|{var})\(?{ident}(,{ident})*	// identifier_list
+{ident}?({const}|{var})\(?{ident}(,{ident})*	// identifier_list
 {ident}?{struct}\{?{ident}(,{ident})*		// identifier_list
-{ident}(,{ident})*{colas}		// idlist_colas
+{ident}(,{ident})*{colas}			// idlist_colas
