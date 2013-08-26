@@ -1217,7 +1217,6 @@ VarDecl111:
 	}
 |	VarDecl111 ';'
 	{
-		panic(".y:1225")
 		lx := yylex.(*lx)
 		lx.toks, lx.state = nil, st2 //TODO named state alias
 	}
