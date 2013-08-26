@@ -16,7 +16,10 @@ import (
 	"testing"
 )
 
-var optPE = flag.Bool("pe", false, "Show more parse errors")
+var (
+	optPE  = flag.Bool("pe", false, "Show more parse errors")
+	optAST = flag.Bool("ast", false, "Show AST")
+)
 
 func dbg(s string, va ...interface{}) {
 	_, fn, fl, _ := runtime.Caller(1)
@@ -74,6 +77,11 @@ func test(t *testing.T, root string) {
 
 			if *optPE && gerr != nil {
 				t.Log(gerr)
+				t.Log(eerr)
+			}
+
+			if *optAST {
+				t.Log(_dump())
 			}
 
 			count++

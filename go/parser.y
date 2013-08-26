@@ -67,8 +67,6 @@ import (
 	EQ
 	FLOAT_LIT
 	GE
-	IDENTIFIER
-	IDENTIFIER_LIST
 	IDLIST_COLAS
 	IMAGINARY_LIT
 	INC
@@ -107,6 +105,8 @@ import (
 %token SWITCH
 %token TYPE
 %token VAR
+
+%type	<val>	IDENTIFIER IDENTIFIER_LIST
 
 %type	<item> 	/*TODO real type(s), if/where applicable */
 	ArgumentList
@@ -236,7 +236,7 @@ ConstDecl111:
 	}
 	ConstSpec
 	{
-		//TODO $$ = append($1.([]ConstDecl111), ";", $3) //TODO 8
+		$$ = append($1.([]ConstDecl111), ";", $4) //TODO 8
 	}
 
 ConstSpec:
@@ -275,6 +275,9 @@ Declaration:
 	}
 |	TYPE '(' ')'
 	{
+		if $<val>3 != nil {
+			yylex.(*lx).err($<val>3.(tok).pos, "unexpected %q before ')'", string($<val>3.(tok).tk))
+		}
 		$$ = []Declaration{"type", "(", ")"} //TODO 16
 	}
 |	TYPE '(' TypeSpec TypeDecl111 ')'
@@ -570,7 +573,7 @@ Name:
 	}
 |	IDENTIFIER '.' IDENTIFIER
 	{
-		$$ = []Name{$1, ".", $3} //TODO 79
+		$$ = []Name{"<Name>", $1, ".", $3} //TODO 79
 	}
 
 PackageName:
@@ -1021,6 +1024,9 @@ StatementList1:
 StructType:
 	STRUCT '{' '}'
 	{
+		if $<val>3 != nil {
+			yylex.(*lx).err($<val>3.(tok).pos, "unexpected %q before ')'", string($<val>3.(tok).tk))
+		}
 		$$ = []StructType{"struct", "{", "}"} //TODO 180
 	}
 |	STRUCT '{' FieldDecl StructType11 '}'
@@ -1033,9 +1039,15 @@ StructType11:
 	{
 		$$ = []StructType11(nil) //TODO 182
 	}
-|	StructType11 ';' FieldDecl
+|	StructType11 ';'
 	{
-		$$ = append($1.([]StructType11), ";", $3) //TODO 183
+		dbg(".y:1044")
+		lx := yylex.(*lx)
+		lx.toks, lx.state, lx.structType = nil, st2, true //TODO named state alias
+	}
+	FieldDecl
+	{
+		$$ = append($1.([]StructType11), ";", $4) //TODO 183
 	}
 
 Type:
@@ -1214,7 +1226,7 @@ VarDecl111:
 	}
 	VarSpec
 	{
-		//TODO $$ = append($1.([]VarDecl111), ";", $3) //TODO 221
+		$$ = append($1.([]VarDecl111), ";", $4) //TODO 221
 	}
 
 VarSpec:
@@ -1302,7 +1314,7 @@ type (
 	VarSpec interface{}
 )
 	
-func _dump() {
+func _dump() string {
 	s := fmt.Sprintf("%#v", _parserResult)
 	s = strings.Replace(s, "%", "%%", -1)
 	s = strings.Replace(s, "{", "{%i\n", -1)
@@ -1312,13 +1324,15 @@ func _dump() {
 	strutil.IndentFormatter(&buf, ". ").Format(s)
 	buf.WriteString("\n")
 	a := strings.Split(buf.String(), "\n")
+	var r bytes.Buffer
 	for _, v := range a {
 		if strings.HasSuffix(v, "(nil)") || strings.HasSuffix(v, "(nil),") {
 			continue
 		}
 	
-		fmt.Println(v)
+		fmt.Fprintln(&r, v)
 	}
+	return r.String()
 }
 
 // End of demo stuff

@@ -173,35 +173,37 @@ type tok struct {
 
 type lx struct {
 	*scanner.Scanner
-	state     int
-	dump      []tok
-	toks      []tok
-	ids       []tok
-	preamble  int
-	prev      tok
-	prevValid bool
+	state      int
+	dump       []tok
+	toks       []tok
+	ids        []tok
+	preamble   int
+	prev       tok
+	prevValid  bool
+	structType bool
 }
 
 /*
-jnml@fsc-r630:~/src/github.com/cznic/parser/go$ cat fsm
+(11:53) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ cat fsm
 const	C
+struct  S
 var	V
 ident	I
-colas	S
+colas	A
 
 %%
 
-(({const}|{var})\(?){ident}(,{ident})*	// identifier_list
+(({const}|{struct}|{var})[({]?){ident}(,{ident})*	// identifier_list
 {ident}(,{ident})*{colas}		// idlist_colas
-jnml@fsc-r630:~/src/github.com/cznic/parser/go$ golex -DFA fsm
+(11:53) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ golex -DFA fsm
 StartConditions:
 	INITIAL, scId:0, stateId:1
 DFA:
 [1]
-	"C", "V", --> 2
+	"C", "S", "V", --> 2
 	"I"--> 5
 [2]
-	"("--> 3
+	"(", "{", --> 3
 	"I"--> 4
 [3]
 	"I"--> 4
@@ -209,27 +211,28 @@ DFA:
 	","--> 3
 [5]
 	","--> 6
-	"S"--> 7
+	"A"--> 7
 [6]
 	"I"--> 5
 [7]
 state 4 accepts rule 1
 state 7 accepts rule 2
 
-jnml@fsc-r630:~/src/github.com/cznic/parser/go$
+(11:53) jnml@fsc-r550:~/src/github.com/cznic/parser/go$
+
 */
 
 func (x *lx) Lex(lval *yySymType) (r int) {
-	//dbg("\n<<<< Lex state st%d", x.state+1)
-	//defer func() {
-	//	var s string
-	//	if r < 128 {
-	//		s = string(r)
-	//	} else {
-	//		s = yyToknames[r-ANDAND]
-	//	}
-	//	dbg(">>>> %d:%d: returning %q\n", lval.pos.line, lval.pos.col, s)
-	//}()
+	dbg("\n<<<< Lex state st%d", x.state+1)
+	defer func() {
+		var s string
+		if r < 128 {
+			s = string(r)
+		} else {
+			s = yyToknames[r-ANDAND]
+		}
+		dbg(">>>> %d:%d: returning %q, (%v)\n", lval.pos.line, lval.pos.col, s, lval.val)
+	}()
 
 dump:
 	if len(x.dump) != 0 {
@@ -243,14 +246,14 @@ dump:
 	}
 
 	for {
-		//dbg("[state st%d]", x.state+1)
+		dbg("[state st%d]", x.state+1)
 		tk := x.lex()
 
 		switch x.state {
 		case st1:
 			switch tk.tk {
-			case CONST, VAR:
-				x.toks, x.state = []tok{tk}, st2
+			case CONST, STRUCT, VAR:
+				x.toks, x.state, x.structType = []tok{tk}, st2, tk.tk == STRUCT
 			case IDENTIFIER:
 				x.toks, x.ids, x.state = []tok{tk}, []tok{tk}, st5
 			default:
@@ -259,7 +262,7 @@ dump:
 			}
 		case st2:
 			switch tk.tk {
-			case '(':
+			case '(', '{':
 				x.toks, x.state = append(x.toks, tk), st3
 				x.preamble = len(x.toks)
 			case IDENTIFIER:
@@ -281,6 +284,14 @@ dump:
 			switch tk.tk {
 			case ',':
 				x.toks, x.state = append(x.toks, tk), st3
+			case '.', '}', ';': // Deconfuse Name vs identifier_list in FieldDecl
+				dbg("x.structType %v tk.tk %v", x.structType, tk.tk)
+				if !x.structType || tk.tk != ';' {
+					x.dump, x.state = append(x.toks, tk), st1
+					goto dump
+				}
+
+				fallthrough
 			default:
 				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
 				goto dump
@@ -289,6 +300,8 @@ dump:
 			switch tk.tk {
 			case ',':
 				x.toks, x.state = append(x.toks, tk), st6
+			case STRUCT:
+				x.toks, x.ids, x.state = append(x.toks, tk), nil, st2
 			case COLAS:
 				r, lval.val, lval.pos, x.state = IDENTIFIER_LIST, x.ids, x.ids[0].pos, st1
 				return
@@ -297,7 +310,7 @@ dump:
 				goto dump
 			}
 		case st6:
-			//dbg("TODO state st%d", x.state+1)
+			dbg("TODO state st%d", x.state+1)
 			return '?'
 		default:
 			panic(fmt.Sprintf("internal error st%d", x.state+1))
@@ -306,19 +319,24 @@ dump:
 }
 
 func (x *lx) lex() (y tok) {
-	//defer func() {
-	//	var s string
-	//	if y.tk < 128 {
-	//		s = string(y.tk)
-	//	} else {
-	//		s = yyToknames[y.tk-ANDAND]
-	//	}
-	//	dbg("........ returning %q", s)
-	//}()
+	defer func() {
+		var s string
+		if y.tk < 128 {
+			s = string(y.tk)
+		} else {
+			s = yyToknames[y.tk-ANDAND]
+		}
+		dbg("........ returning %q", s)
+	}()
 	for {
-		token, val := x.ScanSemis()
-		tok := tok{xlat[token], val, pos{x.Line, x.Col}}
-		//dbg("ScanSemis %v", token)
+	again:
+		t, val := x.ScanSemis()
+		if t == token.COMMENT {
+			goto again
+		}
+
+		tok := tok{xlat[t], val, pos{x.Line, x.Col}}
+		//dbg("ScanSemis %v", t)
 		if !x.prevValid {
 			x.prev, x.prevValid = tok, true
 			continue

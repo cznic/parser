@@ -1,5 +1,23 @@
 package main
 
+type ()
+type (
+	t struct{}
+	t struct { *a }
+	t struct { *a.b }
+	t struct { a }
+	t struct { a.b }
+	t struct { a int }
+	t struct { a, b int }
+
+	t struct { *a; *a }
+	t struct { *a.b; *a.b }
+	//t struct { a; a }
+	t struct { a.b; a.b }
+	t struct { a int; a int }
+	t struct { a, b int; a, b int }
+)
+
 const a = 1
 const b, c = 2, 3
 const ()
@@ -49,5 +67,4 @@ var (
 )
 var ( u = 19; v, w = 19, 20; )
 
-//TODO FieldDecl
 //TODO ParameterDecl 
