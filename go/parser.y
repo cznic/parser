@@ -227,9 +227,8 @@ ConstDecl111:
 	}
 |	ConstDecl111 ';'
 	{
-		panic(".y:230")
-		//lx := yylex.(*lx)
-		//lx.toks, lx.state = nil, st2 //TODO named state alias
+		lx := yylex.(*lx)
+		lx.toks, lx.state = nil, st2 //TODO named state alias
 	}
 	ConstSpec
 	{
