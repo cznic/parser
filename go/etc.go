@@ -164,7 +164,7 @@ const (
 	st9
 	st10
 	st11
-	//st12
+	st12
 	st13
 	st14
 	st15
@@ -370,7 +370,7 @@ dump:
 			case COLAS:
 				panic("st9 :=")
 			case STRUCT:
-				panic("st9 struct")
+				x.toks, x.state = append(x.toks, tk), st13
 			default:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
@@ -379,11 +379,24 @@ dump:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st11:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
-		// case st12: // state 12 accepts rule 4: IDLIST_COLAS
+		case st12: // state 12 accepts rule 4: IDLIST_COLAS
+			panic(fmt.Sprintf("internal error st%d", x.state+1))
 		case st13:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case '{':
+				x.toks, x.ids, x.state = append(x.toks, tk), nil, st14
+				x.preamble = len(x.toks)
+			default:
+				panic("st13 default")
+			}
 		case st14:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				panic("st14 identifier")
+			default:
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
+			}
 		case st15: // state 15 accepts rule 2: IDENTIFIER_LIST after STRUCT
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		default:
