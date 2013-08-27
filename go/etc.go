@@ -392,13 +392,22 @@ dump:
 		case st14:
 			switch r {
 			case IDENTIFIER:
-				panic("st14 identifier")
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st15
 			default:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
 			}
 		case st15: // state 15 accepts rule 2: IDENTIFIER_LIST after STRUCT
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case ',':
+				panic("st15 ,")
+			case '}'/*TODO , '.', ';'*/:
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
+			default:
+				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
+				goto dump
+			}
 		default:
 			panic(fmt.Sprintf("internal error st%d", x.state+1))
 		}
