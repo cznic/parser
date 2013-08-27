@@ -327,7 +327,8 @@ dump:
 		case st2:
 			switch r {
 			case '(':
-				panic("st2 (")
+				x.toks, x.ids, x.state = append(x.toks, tk), nil, st3
+				x.preamble = len(x.toks)
 			case IDENTIFIER:
 				x.preamble = len(x.toks)
 				x.toks, x.ids, x.state = append(x.toks, tk), []tok{tk}, st4
@@ -339,7 +340,8 @@ dump:
 			case IDENTIFIER:
 				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st4
 			default:
-				panic("st3 default")
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
 			}
 		case st4: // state 4 accepts rule 1: IDENTIFIER_LIST after CONST, VAR
 			switch r {
