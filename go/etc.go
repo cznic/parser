@@ -400,7 +400,7 @@ dump:
 		case st15: // state 15 accepts rule 2: IDENTIFIER_LIST after STRUCT
 			switch r {
 			case ',':
-				panic("st15 ,")
+				x.toks, x.state = append(x.toks, tk), st14
 			case '}', '.' /*TODO , ';'*/:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
