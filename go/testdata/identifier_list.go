@@ -86,12 +86,19 @@ type (
 
 //TODO ParameterDecl 
 
-var _ = func() {}
-var _ = func(int) {}
-var _ = func(int, uint) {}
-var _ = func(int, uint, float64) {}
+var (
+	_ = func() {}
+	_ = func(int) {}
+	_ = func(int, uint) {}
+	_ = func(int, uint, float64) {}
+)
 
-//type _ func()
+type (
+	_ func()
+	_ func(int)
+	_ func(int, uint)
+	_ func(int, uint, float64)
+)
 
 //func a()
 //func idtA(T)
