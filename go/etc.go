@@ -401,7 +401,7 @@ dump:
 			switch r {
 			case ',':
 				panic("st15 ,")
-			case '}'/*TODO , '.', ';'*/:
+			case '}', '.' /*TODO , ';'*/:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
 			default:

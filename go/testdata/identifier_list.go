@@ -54,7 +54,7 @@ type (
 	t struct { *a }
 	t struct { *b.c }
 	t struct { d }
-	//t struct { e.f }
+	t struct { e.f }
 	//t struct { g int }
 	//t struct { h, i int }
 
