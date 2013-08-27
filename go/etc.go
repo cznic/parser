@@ -364,13 +364,22 @@ dump:
 		case st6:
 			switch r {
 			case IDENTIFIER:
-				panic("st6 identifier")
+				x.preamble = len(x.toks)
+				x.toks, x.ids, x.state = append(x.toks, tk), nil, st7
 			default:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
 			}
 		case st7: // state 7 accepts rule 3: IDENTIFIER_LIST after FUNC
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case ',':
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st6
+			case ')':
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
+			default:
+				panic("st7 default")
+			}
 		case st8:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st9:

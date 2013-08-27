@@ -581,11 +581,11 @@ PackageName:
 ParameterDecl:
 	ParameterDecl2 Type
 	{
-		$$ = []ParameterDecl{$1, $2} //TODO 81
+		$$ = []ParameterDecl{".y:584", $1, "T:", $2} //TODO 81
 	}
 |	IDENTIFIER_LIST ParameterDecl2 Type
 	{
-		$$ = []ParameterDecl{$1, $2, $3} //TODO 82
+		$$ = []ParameterDecl{".y:588", "IDS:", $1, $2, "T:", $3} //TODO 82
 	}
 
 ParameterDecl2:
