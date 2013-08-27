@@ -164,6 +164,10 @@ const (
 	st9
 	st10
 	st11
+	//st12
+	st13
+	st14
+	st15
 )
 
 type pos struct {
@@ -189,27 +193,51 @@ type lx struct {
 
 /*
 _______________________________________________________________________________
-(15:41) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ cat fsm
+(11:20) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ cat fsm
 const	C
 struct  S
 var	V
 ident	I
 colas	A
+func	F
 
 %%
 
 {ident}?({const}|{var})\(?{ident}(,{ident})*	// identifier_list
-{ident}?{struct}\{?{ident}(,{ident})*		// identifier_list
+{ident}?{struct}\{{ident}(,{ident})*		// identifier_list
+{ident}?{func}{ident}?\({ident}(,{ident})*	// identifier_list
 {ident}(,{ident})*{colas}			// idlist_colas
+
+%%
+
+PrimaryExpr:
+|	FUNC Function
+SourceFile2:
+|	SourceFile2 FUNC IDENTIFIER Function ';'
+|	SourceFile2 FUNC IDENTIFIER Signature ';'
+|	SourceFile2 FUNC Receiver MethodName Function ';'
+|	SourceFile2 FUNC Receiver MethodName Signature ';'
+TypeLit:
+|	FUNC Signature
+
+----
+
+FUNC '(' ... 
+FUNC IDENTIFIER '(' ...
+FUNC IDENTIFIER '(' ...
+//TODO FUNC Receiver IDENTIFIER '(' ...
+//TODO FUNC Receiver IDENTIFIER '(' ...
+FUNC '(' ...
 _______________________________________________________________________________
-(15:41) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ golex -DFA fsm
+(11:20) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ golex -DFA fsm
 StartConditions:
 	INITIAL, scId:0, stateId:1
 DFA:
 [1]
 	"C", "V", --> 2
-	"I"--> 5
-	"S"--> 9
+	"F"--> 5
+	"I"--> 9
+	"S"--> 13
 [2]
 	"("--> 3
 	"I"--> 4
@@ -218,28 +246,39 @@ DFA:
 [4]
 	","--> 3
 [5]
-	"C", "V", --> 2
-	","--> 6
-	"A"--> 8
-	"S"--> 9
+	"("--> 6
+	"I"--> 8
 [6]
 	"I"--> 7
 [7]
 	","--> 6
-	"A"--> 8
 [8]
+	"("--> 6
 [9]
-	"{"--> 10
+	"C", "V", --> 2
+	"F"--> 5
+	","--> 10
+	"A"--> 12
+	"S"--> 13
 [10]
 	"I"--> 11
 [11]
 	","--> 10
+	"A"--> 12
+[12]
+[13]
+	"{"--> 14
+[14]
+	"I"--> 15
+[15]
+	","--> 14
 state 4 accepts rule 1
-state 8 accepts rule 3
-state 11 accepts rule 2
+state 7 accepts rule 3
+state 12 accepts rule 4
+state 15 accepts rule 2
 
 _______________________________________________________________________________
-(15:41) jnml@fsc-r550:~/src/github.com/cznic/parser/go$
+(11:20) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ 
 
 */
 
@@ -275,10 +314,12 @@ dump:
 			switch r {
 			case CONST, VAR:
 				x.toks, x.state = []tok{tk}, st2
+			case FUNC:
+				panic("st1 func")
 			case IDENTIFIER:
-				x.toks, x.ids, x.state = []tok{tk}, []tok{tk}, st5
+				x.toks, x.ids, x.state = []tok{tk}, []tok{tk}, st9
 			case STRUCT:
-				panic("st1 STRUCT")
+				panic("st1 struct")
 			default:
 				lval.val, lval.pos = tk.val, tk.pos
 				return
@@ -286,8 +327,7 @@ dump:
 		case st2:
 			switch r {
 			case '(':
-				x.toks, x.ids, x.state = append(x.toks, tk), nil, st3
-				x.preamble = len(x.toks)
+				panic("st2 (")
 			case IDENTIFIER:
 				x.preamble = len(x.toks)
 				x.toks, x.ids, x.state = append(x.toks, tk), []tok{tk}, st4
@@ -295,69 +335,49 @@ dump:
 				panic("st2 default")
 			}
 		case st3:
-			switch r {
-			case IDENTIFIER:
-				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st4
-			default:
-				x.dump, x.state = append(x.toks, tk), st1
-				goto dump
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st4:
 			switch r {
 			case ',':
-				x.toks, x.state = append(x.toks, tk), st3
+				panic("st4 ,")
 			default:
 				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
 				goto dump
 			}
 		case st5:
-			switch r {
-			case CONST, VAR:
-				panic("st5 C V")
-			case ',':
-				panic("st5 ,")
-			case COLAS:
-				panic("st5 :=")
-			case STRUCT:
-				x.toks, x.state = append(x.toks, tk), st9
-			default:
-				x.dump, x.state = append(x.toks, tk), st1
-				goto dump
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st6:
-			dbg("TODO state st%d", x.state+1)
-			return '?'
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st7:
-			dbg("TODO state st%d", x.state+1)
-			return '?'
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st8:
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st9:
 			switch r {
-			case '{':
-				x.toks, x.ids, x.state = append(x.toks, tk), nil, st10
-				x.preamble = len(x.toks)
+			case CONST, VAR:
+				panic("st9 const var")
+			case FUNC:
+				panic("st9 func")
+			case ',':
+				panic("st9 ,")
+			case COLAS:
+				panic("st9 :=")
+			case STRUCT:
+				panic("st9 struct")
 			default:
-				panic("st9 default")
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
 			}
 		case st10:
-			switch r {
-			case IDENTIFIER:
-				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st11
-			default:
-				x.dump, x.state = append(x.toks, tk), st1
-				goto dump
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st11:
-			switch r {
-			case ',':
-				x.toks, x.state = append(x.toks, tk), st10
-			case '}', '.', ';':
-				x.dump, x.state = append(x.toks, tk), st1
-				goto dump
-			default:
-				dbg("x.preamble %d", x.preamble)
-				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
-				goto dump
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st13:
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st14:
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st15:
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		default:
 			panic(fmt.Sprintf("internal error st%d", x.state+1))
 		}

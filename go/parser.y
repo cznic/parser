@@ -227,8 +227,9 @@ ConstDecl111:
 	}
 |	ConstDecl111 ';'
 	{
-		lx := yylex.(*lx)
-		lx.toks, lx.state = nil, st2 //TODO named state alias
+		panic(".y:230")
+		//lx := yylex.(*lx)
+		//lx.toks, lx.state = nil, st2 //TODO named state alias
 	}
 	ConstSpec
 	{
@@ -1047,8 +1048,9 @@ StructType11:
 	}
 |	StructType11 ';'
 	{
-		lx := yylex.(*lx)
-		lx.toks, lx.preamble, lx.ids, lx.state = nil, 0, nil, st10 //TODO named state alias
+		panic(".y:1051")
+		//lx := yylex.(*lx)
+		//lx.toks, lx.preamble, lx.ids, lx.state = nil, 0, nil, st10 //TODO named state alias
 	}
 	FieldDecl
 	{
@@ -1227,8 +1229,9 @@ VarDecl111:
 	}
 |	VarDecl111 ';'
 	{
-		lx := yylex.(*lx)
-		lx.toks, lx.state = nil, st2 //TODO named state alias
+		panic(".y:1232")
+		//lx := yylex.(*lx)
+		//lx.toks, lx.state = nil, st2 //TODO named state alias
 	}
 	VarSpec
 	{
