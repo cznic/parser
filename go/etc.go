@@ -182,14 +182,14 @@ type tok struct {
 
 type lx struct {
 	*scanner.Scanner
-	state       int
-	dump        []tok
-	toks        []tok
-	ids         []tok
-	preamble    int
-	prev        tok
-	prevValid   bool
-	ddd, wasDDD bool
+	state     int
+	dump      []tok
+	toks      []tok
+	ids       []tok
+	preamble  int
+	prev      tok
+	prevValid bool
+	ddd       bool
 }
 
 /*
@@ -307,7 +307,6 @@ dump:
 	}
 
 	for {
-		x.wasDDD, x.ddd = x.ddd, false
 		dbg("[state st%d]", x.state+1)
 		tk := x.lex()
 
@@ -321,7 +320,7 @@ dump:
 			case STRUCT:
 				panic("st1 struct")
 			case IDENTIFIER:
-				if !x.wasDDD {
+				if !x.ddd {
 					x.toks, x.ids, x.state = []tok{tk}, []tok{tk}, st9
 					break
 				}
