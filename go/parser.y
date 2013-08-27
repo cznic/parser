@@ -1103,7 +1103,6 @@ TypeLit:
 	}
 |	FUNC Signature
 	{
-		panic(".y:1107 FUNC")
 		$$ = []TypeLit{"func", $2} //TODO 194
 	}
 |	INTERFACE '{' '}'

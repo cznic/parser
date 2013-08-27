@@ -378,7 +378,7 @@ dump:
 			case CONST, VAR:
 				panic("st9 const var")
 			case FUNC:
-				panic("st9 func")
+				x.toks, x.state = append(x.toks, tk), st5
 			case ',':
 				panic("st9 ,")
 			case COLAS:
