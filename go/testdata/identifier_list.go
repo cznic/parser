@@ -101,9 +101,17 @@ type (
 )
 
 var (
-	_104 = func(...int) {}
-	_105 = func(...T, U) {}
-	//_ = func(int, uint, float64) {}
+	_ = func(...int) {}
+	_ = func(...T, U) {}
+	_ = func(T, ...U) {}
+	_ = func(int, uint, float64) {}
+	_ = func(int, uint, ...float64) {}
+	_ = func(int, ...uint, float64) {}
+	_ = func(int, ...uint, ...float64) {}
+	//_ = func(...int, uint, float64) {}
+	//_ = func(...int, uint, ...float64) {}
+	//_ = func(...int, ...uint, float64) {}
+	//_ = func(...int, ...uint, ...float64) {}
 )
 
 //func a()
