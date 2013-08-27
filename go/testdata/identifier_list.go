@@ -128,6 +128,10 @@ type (
 	_ func(...int, ...uint, ...float64)
 )
 
+//var (
+//	_ = func(i int)
+//)
+
 //func a()
 //func idtA(T)
 //func idtB(...T)
