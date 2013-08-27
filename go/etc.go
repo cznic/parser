@@ -222,7 +222,7 @@ TypeLit:
 
 ----
 
-FUNC '(' ... 
+FUNC '(' ...
 FUNC IDENTIFIER '(' ...
 FUNC IDENTIFIER '(' ...
 //TODO FUNC Receiver IDENTIFIER '(' ...
@@ -278,7 +278,7 @@ state 12 accepts rule 4
 state 15 accepts rule 2
 
 _______________________________________________________________________________
-(11:20) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ 
+(11:20) jnml@fsc-r550:~/src/github.com/cznic/parser/go$
 
 */
 
@@ -335,11 +335,16 @@ dump:
 				panic("st2 default")
 			}
 		case st3:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
-		case st4:
+			switch r {
+			case IDENTIFIER:
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st4
+			default:
+				panic("st3 default")
+			}
+		case st4: // state 4 accepts rule 1: IDENTIFIER_LIST after CONST, VAR
 			switch r {
 			case ',':
-				panic("st4 ,")
+				x.toks, x.state = append(x.toks, tk), st3
 			default:
 				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
 				goto dump
@@ -348,7 +353,7 @@ dump:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st6:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
-		case st7:
+		case st7: // state 7 accepts rule 3: IDENTIFIER_LIST after FUNC
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st8:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
@@ -372,11 +377,12 @@ dump:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st11:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		// case st12: // state 12 accepts rule 4: IDLIST_COLAS
 		case st13:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st14:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
-		case st15:
+		case st15: // state 15 accepts rule 2: IDENTIFIER_LIST after STRUCT
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		default:
 			panic(fmt.Sprintf("internal error st%d", x.state+1))
