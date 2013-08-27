@@ -182,13 +182,14 @@ type tok struct {
 
 type lx struct {
 	*scanner.Scanner
-	state     int
-	dump      []tok
-	toks      []tok
-	ids       []tok
-	preamble  int
-	prev      tok
-	prevValid bool
+	state       int
+	dump        []tok
+	toks        []tok
+	ids         []tok
+	preamble    int
+	prev        tok
+	prevValid   bool
+	ddd, wasDDD bool
 }
 
 /*
@@ -306,6 +307,7 @@ dump:
 	}
 
 	for {
+		x.wasDDD, x.ddd = x.ddd, false
 		dbg("[state st%d]", x.state+1)
 		tk := x.lex()
 
@@ -316,10 +318,15 @@ dump:
 				x.toks, x.state = []tok{tk}, st2
 			case FUNC:
 				x.toks, x.state = []tok{tk}, st5
-			case IDENTIFIER:
-				x.toks, x.ids, x.state = []tok{tk}, []tok{tk}, st9
 			case STRUCT:
 				panic("st1 struct")
+			case IDENTIFIER:
+				if !x.wasDDD {
+					x.toks, x.ids, x.state = []tok{tk}, []tok{tk}, st9
+					break
+				}
+
+				fallthrough
 			default:
 				lval.val, lval.pos = tk.val, tk.pos
 				return
@@ -366,6 +373,9 @@ dump:
 			case IDENTIFIER:
 				x.preamble = len(x.toks)
 				x.toks, x.ids, x.state = append(x.toks, tk), nil, st7
+			case DDD:
+				x.ddd = true
+				fallthrough
 			default:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
@@ -389,7 +399,7 @@ dump:
 			case FUNC:
 				x.toks, x.state = append(x.toks, tk), st5
 			case ',':
-				panic("st9 ,")
+				x.toks, x.state = append(x.toks, tk), st10
 			case COLAS:
 				panic("st9 :=")
 			case STRUCT:
@@ -399,9 +409,27 @@ dump:
 				goto dump
 			}
 		case st10:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				x.preamble = len(x.toks)
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st11
+			default:
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
+			}
 		case st11:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case ',':
+				panic("st11 ,")
+			case COLAS:
+				panic("st11 :=")
+			default:
+				dbg("x.toks %#v", x.toks)
+				dbg("x.preamble %#v", x.preamble)
+				dbg("x.ids %#v", x.ids)
+				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
+				goto dump
+			}
 		case st12: // state 12 accepts rule 4: IDLIST_COLAS
 			panic(fmt.Sprintf("internal error st%d", x.state+1))
 		case st13:
@@ -424,7 +452,7 @@ dump:
 			switch r {
 			case ',':
 				x.toks, x.state = append(x.toks, tk), st14
-			case '}', '.' , ';':
+			case '}', '.', ';':
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
 			default:

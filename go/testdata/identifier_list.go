@@ -100,6 +100,12 @@ type (
 	_ func(int, uint, float64)
 )
 
+var (
+	_104 = func(...int) {}
+	_105 = func(...T, U) {}
+	//_ = func(int, uint, float64) {}
+)
+
 //func a()
 //func idtA(T)
 //func idtB(...T)

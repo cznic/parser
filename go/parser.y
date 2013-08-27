@@ -614,13 +614,9 @@ Parameters:
 	{
 		$$ = []Parameters{"(", ")"} //TODO 87
 	}
-|	'('
+|	'(' ParameterDecl ParameterList1 ')'
 	{
-		dbg(".y:618")
-	}
-	ParameterDecl ParameterList1 ')'
-	{
-		$$ = []Parameters{"(", $3, $4, ")"} //TODO 88
+		$$ = []Parameters{"(", $2, $3, ")"} //TODO 88
 	}
 
 PrimaryExpr:
