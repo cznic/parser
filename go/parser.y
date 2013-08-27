@@ -666,7 +666,6 @@ PrimaryExpr:
 	}
 |	FUNC Function
 	{
-		panic(".y:669 FUNC")
 		$$ = []PrimaryExpr{"func", $2} //TODO 99
 	}
 |	Name

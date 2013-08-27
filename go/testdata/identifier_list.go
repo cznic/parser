@@ -85,6 +85,9 @@ type (
 )
 
 //TODO ParameterDecl 
+
+var _ = func() {}
+
 //func a()
 //func idtA(T)
 //func idtB(...T)
