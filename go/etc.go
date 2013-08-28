@@ -324,14 +324,28 @@ dump:
 			case ')':
 				x.toks, x.state = append(x.toks, tk), st9
 			case ',':
-				panic("st13 ,")
+				x.toks, x.state = append(x.toks, tk), st14
 			default:
 				panic("st13 default")
 			}
 		case st14:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				x.toks, x.state = append(x.toks, tk), st15
+			default:
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
+			}
 		case st15: // state 15 accepts rule 4
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case ',':
+				panic("st15 ,")
+			case ')':
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
+			default:
+				panic("st15 default")
+			}
 		case st16:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st17:
