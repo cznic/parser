@@ -311,7 +311,7 @@ dump:
 			case IDENTIFIER:
 				panic("st9 identifier")
 			default:
-				n := len(x.toks)-1 // x.toks[n] is ')'
+				n := len(x.toks) - 1 // x.toks[n] is ')'
 				if t := x.toks[n-2]; t.tk == IDENTIFIER && x.toks[n-1].tk == IDENTIFIER {
 					// Fix pseudo Receiver (actually Parameters).
 					x.toks[n-2] = tok{IDENTIFIER_LIST, []tok{t}, t.pos}
@@ -335,8 +335,14 @@ dump:
 				x.toks, x.state = append(x.toks, tk), st9
 			case ',':
 				x.toks, x.state = append(x.toks, tk), st14
+			case DDD:
+				// Fix pseudo Receiver, actually Parameters.
+				n := len(x.toks) - 1 // x.toks[n] is IDENTIFIER
+				t := x.toks[n]
+				x.toks[n] = tok{IDENTIFIER_LIST, []tok{t}, t.pos}
 			default:
-				panic("st13 default")
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
 			}
 		case st14:
 			switch r {
