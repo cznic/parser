@@ -370,7 +370,6 @@ dump:
 		case st6:
 			switch r {
 			case IDENTIFIER:
-				x.preamble = len(x.toks)
 				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st7
 			case DDD:
 				x.ddd = true
