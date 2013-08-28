@@ -612,6 +612,9 @@ ParameterList1:
 Parameters:
 	'(' ')'
 	{
+		if $<val>2 != nil {
+			yylex.(*lx).err($<val>2.(tok).pos, "unexpected %q before ')'", string($<val>2.(tok).tk))
+		}
 		$$ = []Parameters{"(", ")"} //TODO 87
 	}
 |	'(' ParameterDecl ParameterList1 ')'

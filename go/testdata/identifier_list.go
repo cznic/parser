@@ -91,6 +91,11 @@ var (
 	_ = func(int) {}
 	_ = func(int, uint) {}
 	_ = func(int, uint, float64) {}
+
+	_ = func() {}
+	_ = func(int,) {}
+	_ = func(int, uint,) {}
+	_ = func(int, uint, float64,) {}
 )
 
 type (
@@ -98,6 +103,11 @@ type (
 	_ func(int)
 	_ func(int, uint)
 	_ func(int, uint, float64)
+
+	_ func()
+	_ func(int,)
+	_ func(int, uint,)
+	_ func(int, uint, float64,)
 )
 
 var (
@@ -128,16 +138,36 @@ type (
 	_ func(...int, ...uint, ...float64)
 )
 
-//var (
-//	_ = func(i int)
-//)
+type (
+	_ func()
+	_ func(T)
+	_ func(...T)
+	_ func(id T)
+	_ func(id ...T)
+	_ func(id, id2 T)
+	_ func(id, id2 ...T)
+	//_ func(id, id2 T, id3 U)
+	//_ func(id, id2 T, id3, id4 U)
+	_ func(T1, T2)
+)
 
-//func a()
+var (
+	_ = func() {}
+	_ = func(T) {}
+	_ = func(...T) {}
+	_ = func(id T) {}
+	_ = func(id ...T) {}
+	_ = func(id, id2 T) {}
+	_ = func(id, id2 ...T) {}
+	//_ = func(id, id2 T, id3 U) {}
+	//_ = func(id, id2 T, id3, id4 U) {}
+	_ = func(T1, T2) {}
+)
+
+//func idt0()
 //func idtA(T)
 //func idtB(...T)
 //func idtC(id T)
 //func idtD(id ...T)
 //func idtE(id, id2 T)
 //func idtF(id, id2 ...T)
-//func idtG(T1, T2)
-//func idtH(T1, T2)

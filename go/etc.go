@@ -371,7 +371,7 @@ dump:
 			switch r {
 			case IDENTIFIER:
 				x.preamble = len(x.toks)
-				x.toks, x.ids, x.state = append(x.toks, tk), nil, st7
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st7
 			case DDD:
 				x.ddd = true
 				fallthrough
@@ -382,12 +382,13 @@ dump:
 		case st7: // state 7 accepts rule 3: IDENTIFIER_LIST after FUNC
 			switch r {
 			case ',':
-				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st6
+				x.toks, x.state = append(x.toks, tk), st6
 			case ')':
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
 			default:
-				panic("st7 default")
+				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
+				goto dump
 			}
 		case st8:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
