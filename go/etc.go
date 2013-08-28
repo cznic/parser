@@ -233,7 +233,7 @@ dump:
 			case CONST, VAR:
 				x.toks, x.state = []tok{tk}, st2
 			case FUNC:
-				panic("st1 func")
+				x.toks, x.state = []tok{tk}, st5
 			case IDENTIFIER:
 				if !x.ddd {
 					x.toks, x.ids, x.state = []tok{tk}, []tok{tk}, st17
@@ -275,9 +275,25 @@ dump:
 				goto dump
 			}
 		case st5:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case '(':
+				x.toks, x.ids, x.state = append(x.toks, tk), nil, st6
+				x.preamble = len(x.toks)
+			case IDENTIFIER:
+				panic("st5 identifier")
+			default:
+				panic("st5 default")
+			}
 		case st6:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case '*':
+				panic("st6 *")
+			case IDENTIFIER:
+				panic("st6 identifier")
+			default:
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
+			}
 		case st7:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st8:
