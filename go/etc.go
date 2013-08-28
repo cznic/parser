@@ -231,7 +231,7 @@ dump:
 		case st1:
 			switch r {
 			case CONST, VAR:
-				panic("st1 const, var")
+				x.toks, x.state = []tok{tk}, st2
 			case FUNC:
 				panic("st1 func")
 			case IDENTIFIER:
@@ -248,11 +248,25 @@ dump:
 				return
 			}
 		case st2:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case '(':
+				panic("st2 (")
+			case IDENTIFIER:
+				x.preamble = len(x.toks)
+				x.toks, x.ids, x.state = append(x.toks, tk), []tok{tk}, st4
+			default:
+				panic("st2 default")
+			}
 		case st3:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st4: // state 4 accepts rule 1
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case ',':
+				panic("st4 ,")
+			default:
+				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
+				goto dump
+			}
 		case st5:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st6:
