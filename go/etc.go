@@ -309,7 +309,7 @@ dump:
 			case COLAS:
 				panic("st17 :=")
 			case STRUCT:
-				panic("st17 struct")
+				x.toks, x.state = append(x.toks, tk), st21
 			default:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
@@ -321,9 +321,21 @@ dump:
 		case st20: // state 20 accepts rule 5
 			panic(fmt.Sprintf("internal error st%d", x.state+1))
 		case st21:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case '{':
+				x.toks, x.ids, x.state = append(x.toks, tk), nil, st22
+				x.preamble = len(x.toks)
+			default:
+				panic("st21 default")
+			}
 		case st22:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				panic("st22 identifier")
+			default:
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
+			}
 		case st23: // state 23 accepts rule 2
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		default:
