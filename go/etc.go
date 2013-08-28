@@ -339,7 +339,7 @@ dump:
 		case st23: // state 23 accepts rule 2
 			switch r {
 			case ',':
-				panic("st23 ,")
+				x.toks, x.state = append(x.toks, tk), st22
 			case '}', '.', ';':
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
