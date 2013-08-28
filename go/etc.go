@@ -234,6 +234,8 @@ dump:
 				x.toks, x.state = []tok{tk}, st2
 			case FUNC:
 				x.toks, x.state = []tok{tk}, st5
+			case STRUCT:
+				panic("st1 struct")
 			case IDENTIFIER:
 				if !x.ddd {
 					x.toks, x.ids, x.state = []tok{tk}, []tok{tk}, st17
@@ -241,8 +243,6 @@ dump:
 				}
 
 				fallthrough
-			case STRUCT:
-				panic("st1 struct")
 			default:
 				lval.val, lval.pos = tk.val, tk.pos
 				return
@@ -290,9 +290,9 @@ dump:
 				panic("st6 *")
 			case IDENTIFIER:
 				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st13
-			//case DDD:
-			//	x.ddd = true
-			//	fallthrough
+			case DDD:
+				x.ddd = true
+				fallthrough
 			default:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
@@ -331,7 +331,7 @@ dump:
 		case st14:
 			switch r {
 			case IDENTIFIER:
-				x.toks, x.state = append(x.toks, tk), st15
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st15
 			default:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
@@ -355,7 +355,7 @@ dump:
 			case FUNC:
 				x.toks, x.state = append(x.toks, tk), st5
 			case ',':
-				panic("st17 ,")
+				x.toks, x.state = append(x.toks, tk), st18
 			case COLAS:
 				panic("st17 :=")
 			case STRUCT:
@@ -365,9 +365,23 @@ dump:
 				goto dump
 			}
 		case st18:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				x.preamble = len(x.toks)
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st19
+			default:
+				panic("st18 default")
+			}
 		case st19:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case ',':
+				panic("st19 ,")
+			case COLAS:
+				panic("st19 :=")
+			default:
+				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
+				goto dump
+			}
 		case st20: // state 20 accepts rule 5
 			panic(fmt.Sprintf("internal error st%d", x.state+1))
 		case st21:
