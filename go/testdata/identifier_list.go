@@ -1,7 +1,7 @@
 package main
 
 const a = 1
-//const b, c = 2, 3
+const b, c = 2, 3
 //const ()
 //const (
 //	e = 4

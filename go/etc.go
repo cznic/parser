@@ -258,11 +258,16 @@ dump:
 				panic("st2 default")
 			}
 		case st3:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st4
+			default:
+				panic("st3 default")
+			}
 		case st4: // state 4 accepts rule 1
 			switch r {
 			case ',':
-				panic("st4 ,")
+				x.toks, x.state = append(x.toks, tk), st3
 			default:
 				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
 				goto dump
