@@ -227,8 +227,9 @@ ConstDecl111:
 	}
 |	ConstDecl111 ';'
 	{
-		lx := yylex.(*lx)
-		lx.toks, lx.state = nil, st2 //TODO named state alias
+		panic(".y:230")
+		//lx := yylex.(*lx)
+		//lx.toks, lx.state = nil, st2 //TODO named state alias
 	}
 	ConstSpec
 	{
@@ -606,8 +607,9 @@ ParameterList1:
 	}
 |	ParameterList1 ','
 	{
-		lx := yylex.(*lx)
-		lx.toks, lx.ids, lx.state, lx.preamble = nil, nil, st6, 0 //TODO named state alias
+		panic(".y:610")
+		//lx := yylex.(*lx)
+		//lx.toks, lx.ids, lx.state, lx.preamble = nil, nil, st6, 0 //TODO named state alias
 	}
 	ParameterDecl
 	{
@@ -671,6 +673,7 @@ PrimaryExpr:
 	}
 |	FUNC Function
 	{
+		panic(".y:676 FUNC")
 		$$ = []PrimaryExpr{"func", $2} //TODO 99
 	}
 |	Name
@@ -876,19 +879,22 @@ SourceFile2:
 	}
 |	SourceFile2 FUNC IDENTIFIER Function ';'
 	{
+		panic(".y:882 FUNC")
 		$$ = append($1.([]SourceFile2), "func", $3, $4, ";") //TODO 144
 	}
 |	SourceFile2 FUNC IDENTIFIER Signature ';'
 	{
+		panic(".y:887 FUNC")
 		$$ = append($1.([]SourceFile2), "func", $3, $4, ";") //TODO 145
 	}
 |	SourceFile2 FUNC Receiver MethodName Function ';'
 	{
-		panic(".y:885 FUNC")
+		panic(".y:892 FUNC")
 		$$ = append($1.([]SourceFile2), "func", $3, $4, $5, ";") //TODO 146
 	}
 |	SourceFile2 FUNC Receiver MethodName Signature ';'
 	{
+		panic(".y:897 FUNC")
 		$$ = append($1.([]SourceFile2), "func", $3, $4, $5, ";") //TODO 147
 	}
 
@@ -1048,8 +1054,9 @@ StructType11:
 	}
 |	StructType11 ';'
 	{
-		lx := yylex.(*lx)
-		lx.toks, lx.preamble, lx.ids, lx.state = nil, 0, nil, st14 //TODO named state alias
+		panic(".y:1053")
+		//lx := yylex.(*lx)
+		//lx.toks, lx.preamble, lx.ids, lx.state = nil, 0, nil, st14 //TODO named state alias
 	}
 	FieldDecl
 	{
@@ -1105,6 +1112,7 @@ TypeLit:
 	}
 |	FUNC Signature
 	{
+		panic(".y:1115 FUNC")
 		$$ = []TypeLit{"func", $2} //TODO 194
 	}
 |	INTERFACE '{' '}'
@@ -1227,8 +1235,9 @@ VarDecl111:
 	}
 |	VarDecl111 ';'
 	{
-		lx := yylex.(*lx)
-		lx.toks, lx.state = nil, st2 //TODO named state alias
+		panic(".y:1233")
+		//lx := yylex.(*lx)
+		//lx.toks, lx.state = nil, st2 //TODO named state alias
 	}
 	VarSpec
 	{

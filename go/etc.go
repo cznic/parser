@@ -168,6 +168,14 @@ const (
 	st13
 	st14
 	st15
+	st16
+	st17
+	st18
+	st19
+	st20
+	st21
+	st22
+	st23
 )
 
 type pos struct {
@@ -191,97 +199,6 @@ type lx struct {
 	prevValid bool
 	ddd       bool
 }
-
-/*
-_______________________________________________________________________________
-(11:20) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ cat fsm
-const	C
-struct  S
-var	V
-ident	I
-colas	A
-func	F
-
-%%
-
-{ident}?({const}|{var})\(?{ident}(,{ident})*	// identifier_list
-{ident}?{struct}\{{ident}(,{ident})*		// identifier_list
-{ident}?{func}{ident}?\({ident}(,{ident})*	// identifier_list
-{ident}(,{ident})*{colas}			// idlist_colas
-
-%%
-
-PrimaryExpr:
-|	FUNC Function
-SourceFile2:
-|	SourceFile2 FUNC IDENTIFIER Function ';'
-|	SourceFile2 FUNC IDENTIFIER Signature ';'
-|	SourceFile2 FUNC Receiver MethodName Function ';'
-|	SourceFile2 FUNC Receiver MethodName Signature ';'
-TypeLit:
-|	FUNC Signature
-
-----
-
-FUNC '(' ...
-FUNC IDENTIFIER '(' ...
-FUNC IDENTIFIER '(' ...
-//TODO FUNC Receiver IDENTIFIER '(' ...
-//TODO FUNC Receiver IDENTIFIER '(' ...
-FUNC '(' ...
-_______________________________________________________________________________
-(11:20) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ golex -DFA fsm
-StartConditions:
-	INITIAL, scId:0, stateId:1
-DFA:
-[1]
-	"C", "V", --> 2
-	"F"--> 5
-	"I"--> 9
-	"S"--> 13
-[2]
-	"("--> 3
-	"I"--> 4
-[3]
-	"I"--> 4
-[4]
-	","--> 3
-[5]
-	"("--> 6
-	"I"--> 8
-[6]
-	"I"--> 7
-[7]
-	","--> 6
-[8]
-	"("--> 6
-[9]
-	"C", "V", --> 2
-	"F"--> 5
-	","--> 10
-	"A"--> 12
-	"S"--> 13
-[10]
-	"I"--> 11
-[11]
-	","--> 10
-	"A"--> 12
-[12]
-[13]
-	"{"--> 14
-[14]
-	"I"--> 15
-[15]
-	","--> 14
-state 4 accepts rule 1
-state 7 accepts rule 3
-state 12 accepts rule 4
-state 15 accepts rule 2
-
-_______________________________________________________________________________
-(11:20) jnml@fsc-r550:~/src/github.com/cznic/parser/go$
-
-*/
 
 func (x *lx) Lex(lval *yySymType) (r int) {
 	dbg("\n<<<< Lex state st%d", x.state+1)
@@ -314,157 +231,80 @@ dump:
 		case st1:
 			switch r {
 			case CONST, VAR:
-				x.toks, x.state = []tok{tk}, st2
+				panic("st1 const, var")
 			case FUNC:
-				x.toks, x.state = []tok{tk}, st5
-			case STRUCT:
-				panic("st1 struct")
+				panic("st1 func")
 			case IDENTIFIER:
 				if !x.ddd {
-					x.toks, x.ids, x.state = []tok{tk}, []tok{tk}, st9
+					x.toks, x.ids, x.state = []tok{tk}, []tok{tk}, st17
 					break
 				}
 
 				fallthrough
+			case STRUCT:
+				panic("st1 struct")
 			default:
 				lval.val, lval.pos = tk.val, tk.pos
 				return
 			}
 		case st2:
-			switch r {
-			case '(':
-				x.toks, x.ids, x.state = append(x.toks, tk), nil, st3
-				x.preamble = len(x.toks)
-			case IDENTIFIER:
-				x.preamble = len(x.toks)
-				x.toks, x.ids, x.state = append(x.toks, tk), []tok{tk}, st4
-			default:
-				panic("st2 default")
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st3:
-			switch r {
-			case IDENTIFIER:
-				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st4
-			default:
-				x.dump, x.state = append(x.toks, tk), st1
-				goto dump
-			}
-		case st4: // state 4 accepts rule 1: IDENTIFIER_LIST after CONST, VAR
-			switch r {
-			case ',':
-				x.toks, x.state = append(x.toks, tk), st3
-			default:
-				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
-				goto dump
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st4: // state 4 accepts rule 1
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st5:
-			switch r {
-			case '(':
-				x.toks, x.ids, x.state = append(x.toks, tk), nil, st6
-				x.preamble = len(x.toks)
-			case IDENTIFIER:
-				x.toks, x.state = append(x.toks, tk), st8
-			default:
-				panic("st5 default")
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st6:
-			switch r {
-			case IDENTIFIER:
-				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st7
-			case DDD:
-				x.ddd = true
-				fallthrough
-			default:
-				x.dump, x.state = append(x.toks, tk), st1
-				goto dump
-			}
-		case st7: // state 7 accepts rule 3: IDENTIFIER_LIST after FUNC [ IDENTIFIER ] "("
-			switch r {
-			case ',':
-				x.toks, x.state = append(x.toks, tk), st6
-			case ')':
-				x.dump, x.state = append(x.toks, tk), st1
-				goto dump
-			default:
-				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
-				goto dump
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st7:
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st8:
-			switch r {
-			case '(':
-				x.toks, x.ids, x.state = append(x.toks, tk), nil, st6
-				x.preamble = len(x.toks)
-			default:
-				x.dump, x.state = append(x.toks, tk), st1
-				goto dump
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st9:
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st10:
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st11:
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st12: // state 12 accepts rule 3
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st13: // state 13 accepts rule 4
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st14:
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st15: // state 15 accepts rule 4
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st16:
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st17:
 			switch r {
 			case CONST, VAR:
-				panic("st9 const var")
+				panic("st17 const, var")
 			case FUNC:
-				x.toks, x.state = append(x.toks, tk), st5
+				panic("st17 func")
 			case ',':
-				x.toks, x.state = append(x.toks, tk), st10
+				panic("st17 ,")
 			case COLAS:
-				panic("st9 :=")
+				panic("st17 :=")
 			case STRUCT:
-				x.toks, x.state = append(x.toks, tk), st13
+				panic("st17 struct")
 			default:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
 			}
-		case st10:
-			switch r {
-			case IDENTIFIER:
-				x.preamble = len(x.toks)
-				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st11
-			default:
-				x.dump, x.state = append(x.toks, tk), st1
-				goto dump
-			}
-		case st11:
-			switch r {
-			case ',':
-				panic("st11 ,")
-			case COLAS:
-				panic("st11 :=")
-			default:
-				dbg("x.toks %#v", x.toks)
-				dbg("x.preamble %#v", x.preamble)
-				dbg("x.ids %#v", x.ids)
-				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
-				goto dump
-			}
-		case st12: // state 12 accepts rule 4: IDLIST_COLAS
+		case st18:
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st19:
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st20: // state 20 accepts rule 5
 			panic(fmt.Sprintf("internal error st%d", x.state+1))
-		case st13:
-			switch r {
-			case '{':
-				x.toks, x.ids, x.state = append(x.toks, tk), nil, st14
-				x.preamble = len(x.toks)
-			default:
-				panic("st13 default")
-			}
-		case st14:
-			switch r {
-			case IDENTIFIER:
-				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st15
-			default:
-				x.dump, x.state = append(x.toks, tk), st1
-				goto dump
-			}
-		case st15: // state 15 accepts rule 2: IDENTIFIER_LIST after STRUCT
-			switch r {
-			case ',':
-				x.toks, x.state = append(x.toks, tk), st14
-			case '}', '.', ';':
-				x.dump, x.state = append(x.toks, tk), st1
-				goto dump
-			default:
-				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
-				goto dump
-			}
+		case st21:
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st22:
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st23: // state 23 accepts rule 2
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		default:
 			panic(fmt.Sprintf("internal error st%d", x.state+1))
 		}
@@ -479,7 +319,7 @@ func (x *lx) lex() (y tok) {
 		} else {
 			s = yyToknames[y.tk-ANDAND]
 		}
-		dbg("........ returning %q", s)
+		dbg("........ %d:%d returning %q", x.Line, x.Col, s)
 	}()
 	for {
 		t, val := x.ScanSemis()
