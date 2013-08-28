@@ -60,20 +60,20 @@ state 12 accepts rule 4		IDLIST_COLAS
 state 15 accepts rule 2		IDENTIFIER_LIST after STRUCT
 
 PrimaryExpr:
-|	FUNC Function // works
+|	FUNC Function						// works
 SourceFile2:
-|	SourceFile2 FUNC IDENTIFIER Function ';'
-|	SourceFile2 FUNC IDENTIFIER Signature ';'
+|	SourceFile2 FUNC IDENTIFIER Function ';'		// works
+|	SourceFile2 FUNC IDENTIFIER Signature ';'		// works
 |	SourceFile2 FUNC Receiver MethodName Function ';'
 |	SourceFile2 FUNC Receiver MethodName Signature ';'
 TypeLit:
-|	FUNC Signature // works
+|	FUNC Signature						// works
 
 ----
 
-FUNC '(' ... // works
-FUNC IDENTIFIER '(' ...
-FUNC IDENTIFIER '(' ...
+FUNC '(' ...				// works
+FUNC IDENTIFIER '(' ...			// works
+FUNC IDENTIFIER '(' ...			// works
 //TODO FUNC Receiver IDENTIFIER '(' ...
 //TODO FUNC Receiver IDENTIFIER '(' ...
-FUNC '(' ... // works
+FUNC '(' ...				// works

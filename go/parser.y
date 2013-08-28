@@ -876,7 +876,6 @@ SourceFile2:
 	}
 |	SourceFile2 FUNC IDENTIFIER Function ';'
 	{
-		panic(".y:875 FUNC")
 		$$ = append($1.([]SourceFile2), "func", $3, $4, ";") //TODO 144
 	}
 |	SourceFile2 FUNC IDENTIFIER Signature ';'
