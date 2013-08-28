@@ -331,13 +331,22 @@ dump:
 		case st22:
 			switch r {
 			case IDENTIFIER:
-				panic("st22 identifier")
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st23
 			default:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
 			}
 		case st23: // state 23 accepts rule 2
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case ',':
+				panic("st23 ,")
+			case '}', '.', ';':
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
+			default:
+				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
+				goto dump
+			}
 		default:
 			panic(fmt.Sprintf("internal error st%d", x.state+1))
 		}
