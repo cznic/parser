@@ -300,12 +300,22 @@ dump:
 		case st7:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st8:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case ')':
+				x.toks, x.state = append(x.toks, tk), st9
+			default:
+				panic("st8 default")
+			}
 		case st9:
 			switch r {
 			case IDENTIFIER:
 				panic("st9 identifier")
 			default:
+				n := len(x.toks)-1 // x.toks[n] is ')'
+				if t := x.toks[n-2]; t.tk == IDENTIFIER && x.toks[n-1].tk == IDENTIFIER {
+					// Fix pseudo Receiver (actually Parameters).
+					x.toks[n-2] = tok{IDENTIFIER_LIST, []tok{t}, t.pos}
+				}
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
 			}
@@ -320,7 +330,7 @@ dump:
 			case '*':
 				panic("st13 *")
 			case IDENTIFIER:
-				panic("st13 identifier")
+				x.toks, x.state = append(x.toks, tk), st8
 			case ')':
 				x.toks, x.state = append(x.toks, tk), st9
 			case ',':

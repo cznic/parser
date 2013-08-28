@@ -142,7 +142,7 @@ type (
 	_ func()
 	_ func(T)
 	_ func(...T)
-	//_ func(id T)
+	_ func(id T)
 	//_ func(id ...T)
 	//_ func(id, id2 T)
 	//_ func(id, id2 ...T)
