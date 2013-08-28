@@ -289,7 +289,10 @@ dump:
 			case '*':
 				panic("st6 *")
 			case IDENTIFIER:
-				panic("st6 identifier")
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st13
+			//case DDD:
+			//	x.ddd = true
+			//	fallthrough
 			default:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
@@ -299,7 +302,13 @@ dump:
 		case st8:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st9:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				panic("st9 identifier")
+			default:
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
+			}
 		case st10:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st11:
@@ -307,7 +316,18 @@ dump:
 		case st12: // state 12 accepts rule 3
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st13: // state 13 accepts rule 4
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case '*':
+				panic("st13 *")
+			case IDENTIFIER:
+				panic("st13 identifier")
+			case ')':
+				x.toks, x.state = append(x.toks, tk), st9
+			case ',':
+				panic("st13 ,")
+			default:
+				panic("st13 default")
+			}
 		case st14:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st15: // state 15 accepts rule 4
