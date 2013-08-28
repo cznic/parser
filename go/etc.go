@@ -363,7 +363,7 @@ dump:
 				x.toks, x.ids, x.state = append(x.toks, tk), nil, st6
 				x.preamble = len(x.toks)
 			case IDENTIFIER:
-				panic("st5 identifier")
+				x.toks, x.state = append(x.toks, tk), st8
 			default:
 				panic("st5 default")
 			}
@@ -378,7 +378,7 @@ dump:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
 			}
-		case st7: // state 7 accepts rule 3: IDENTIFIER_LIST after FUNC
+		case st7: // state 7 accepts rule 3: IDENTIFIER_LIST after FUNC [ IDENTIFIER ] "("
 			switch r {
 			case ',':
 				x.toks, x.state = append(x.toks, tk), st6
@@ -390,7 +390,14 @@ dump:
 				goto dump
 			}
 		case st8:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case '(':
+				x.toks, x.ids, x.state = append(x.toks, tk), nil, st6
+				x.preamble = len(x.toks)
+			default:
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
+			}
 		case st9:
 			switch r {
 			case CONST, VAR:

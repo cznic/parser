@@ -881,8 +881,7 @@ SourceFile2:
 	}
 |	SourceFile2 FUNC IDENTIFIER Signature ';'
 	{
-		panic(".y:880 FUNC")
-		//TODO $$ = append($1.([]SourceFile2), "func", $3, $4, ";") //TODO 145
+		$$ = append($1.([]SourceFile2), "func", $3, $4, ";") //TODO 145
 	}
 |	SourceFile2 FUNC Receiver MethodName Function ';'
 	{
