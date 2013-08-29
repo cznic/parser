@@ -280,7 +280,7 @@ dump:
 				x.toks, x.ids, x.state = append(x.toks, tk), nil, st6
 				x.preamble = len(x.toks)
 			case IDENTIFIER:
-				panic("st5 identifier")
+				x.toks, x.state = append(x.toks, tk), st16
 			default:
 				panic("st5 default")
 			}
@@ -365,7 +365,13 @@ dump:
 				goto dump
 			}
 		case st16:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case '(':
+				x.toks, x.ids, x.state = append(x.toks, tk), nil, st14
+				x.preamble = len(x.toks)
+			default:
+				panic("st16 default")
+			}
 		case st17:
 			switch r {
 			case CONST, VAR:

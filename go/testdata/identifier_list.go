@@ -145,26 +145,26 @@ type (
 	_ func(id T)
 	_ func(id ...T)
 	_ func(id, id2 T)
-	//_ func(id, id2 ...T)
-	//_ func(id, id2 T, id3 U)
-	//_ func(id, id2 T, id3, id4 U)
-	//_ func(T1, T2)
+	_ func(id, id2 ...T)
+	_ func(id, id2 T, id3 U)
+	_ func(id, id2 T, id3, id4 U)
+	_ func(T1, T2)
 )
 
-//var (
-//	_ = func() {}
-//	_ = func(T) {}
-//	_ = func(...T) {}
-//	_ = func(id T) {}
-//	_ = func(id ...T) {}
-//	_ = func(id, id2 T) {}
-//	_ = func(id, id2 ...T) {}
-//	_ = func(id, id2 T, id3 U) {}
-//	_ = func(id, id2 T, id3, id4 U) {}
-//	_ = func(T1, T2) {}
-//)
-//
-//func _()
+var (
+	_ = func() {}
+	_ = func(T) {}
+	_ = func(...T) {}
+	_ = func(id T) {}
+	_ = func(id ...T) {}
+	_ = func(id, id2 T) {}
+	_ = func(id, id2 ...T) {}
+	_ = func(id, id2 T, id3 U) {}
+	_ = func(id, id2 T, id3, id4 U) {}
+	_ = func(T1, T2) {}
+)
+
+func _()
 //func _(T)
 //func _(...T)
 //func _(id T)
