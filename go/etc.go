@@ -287,7 +287,7 @@ dump:
 		case st6:
 			switch r {
 			case '*':
-				panic("st6 *")
+				x.toks, x.state = append(x.toks, tk), st7
 			case IDENTIFIER:
 				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st13
 			case DDD:
@@ -298,7 +298,12 @@ dump:
 				goto dump
 			}
 		case st7:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				x.toks, x.state = append(x.toks, tk), st8
+			default:
+				panic("st7 default")
+			}
 		case st8:
 			switch r {
 			case ')':
