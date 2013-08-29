@@ -309,7 +309,7 @@ dump:
 		case st9:
 			switch r {
 			case IDENTIFIER:
-				panic("st9 identifier")
+				x.toks, x.state = append(x.toks, tk), st10
 			default:
 				n := len(x.toks) - 1 // x.toks[n] is ')'
 				if t := x.toks[n-2]; t.tk == IDENTIFIER && x.toks[n-1].tk == IDENTIFIER {
@@ -320,9 +320,20 @@ dump:
 				goto dump
 			}
 		case st10:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case '(':
+				x.toks, x.state = append(x.toks, tk), st11
+			default:
+				panic("st10 default")
+			}
 		case st11:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				panic("st11 identifier")
+			default:
+				x.dump, x.state = append(x.toks, tk), st1
+				goto dump
+			}
 		case st12: // state 12 accepts rule 3
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st13: // state 13 accepts rule 4

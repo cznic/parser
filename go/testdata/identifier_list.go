@@ -166,27 +166,27 @@ var (
 
 func _()
 func _(T)
-//func _(...T)
-//func _(id T)
-//func _(id ...T)
-//func _(id, id2 T)
-//func _(id, id2 ...T)
-//func _(id, id2 T, id3 U)
-//func _(id, id2 T, id3, id4 U)
-//func _(T1, T2)
-//
-//func _() {}
-//func _(T) {}
-//func _(...T) {}
-//func _(id T) {}
-//func _(id ...T) {}
-//func _(id, id2 T) {}
-//func _(id, id2 ...T) {}
-//func _(id, id2 T, id3 U) {}
-//func _(id, id2 T, id3, id4 U) {}
-//func _(T1, T2) {}
-//
-//func (T) _()
+func _(...T)
+func _(id T)
+func _(id ...T)
+func _(id, id2 T)
+func _(id, id2 ...T)
+func _(id, id2 T, id3 U)
+func _(id, id2 T, id3, id4 U)
+func _(T1, T2)
+
+func _() {}
+func _(T) {}
+func _(...T) {}
+func _(id T) {}
+func _(id ...T) {}
+func _(id, id2 T) {}
+func _(id, id2 ...T) {}
+func _(id, id2 T, id3 U) {}
+func _(id, id2 T, id3, id4 U) {}
+func _(T1, T2) {}
+
+func (T) _()
 //func (*T) _()
 //func (id T) _()
 //func (id *T) _()
