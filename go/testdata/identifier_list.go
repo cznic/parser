@@ -188,5 +188,5 @@ func _(T1, T2) {}
 
 func (T) _()
 func (*T) _()
-//func (id T) _()
-//func (id *T) _()
+func (id T) _()
+func (id *T) _()

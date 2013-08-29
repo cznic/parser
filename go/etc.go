@@ -344,7 +344,7 @@ dump:
 		case st13: // state 13 accepts rule 4
 			switch r {
 			case '*':
-				panic("st13 *")
+				x.toks, x.state = append(x.toks, tk), st7
 			case IDENTIFIER:
 				x.toks, x.state = append(x.toks, tk), st8
 			case ')':
