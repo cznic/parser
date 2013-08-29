@@ -340,6 +340,7 @@ dump:
 				n := len(x.toks) - 1 // x.toks[n] is IDENTIFIER
 				t := x.toks[n]
 				x.toks[n] = tok{IDENTIFIER_LIST, []tok{t}, t.pos}
+				x.toks = append(x.toks, tk)
 			default:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
@@ -360,7 +361,8 @@ dump:
 				x.dump, x.state = append(x.toks, tk), st1
 				goto dump
 			default:
-				panic("st15 default")
+				x.dump, x.state = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), st1
+				goto dump
 			}
 		case st16:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
