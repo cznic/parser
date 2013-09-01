@@ -609,7 +609,7 @@ ParameterList1:
 |	ParameterList1 ','
 	{
 		lx := yylex.(*lx)
-		lx.toks, lx.ids, lx.state, lx.preamble = nil, nil, st6, 0 //TODO named state alias
+		lx.toks, lx.ids, lx.state, lx.preamble = nil, nil, st11, 0 //TODO named state alias
 	}
 	ParameterDecl
 	{
