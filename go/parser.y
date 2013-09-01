@@ -211,7 +211,8 @@ BaseTypeName:
 Block:
 	'{' StatementList '}'
 	{
-		$$ = []Block{"{", $2, "}"} //TODO 5
+		//$$ = []Block{"{", $2, "}"} //TODO 5
+		$$ = []Block{$2} //TODO 5
 	}
 
 Condition:
@@ -1110,7 +1111,6 @@ TypeLit:
 	}
 |	FUNC Signature
 	{
-		panic(".y:1116 FUNC")
 		$$ = []TypeLit{"func", $2} //TODO 194
 	}
 |	INTERFACE '{' '}'
