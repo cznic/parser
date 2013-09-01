@@ -6,7 +6,7 @@ var (
 	_ = func() {}
 	_ = func(int) {}
 	_ = func(int, uint) {}
-	//_ = func(int, uint, float64) {}
+	_ = func(int, uint, float64) {}
 
 	//_ = func() {}
 	//_ = func(int,) {}
