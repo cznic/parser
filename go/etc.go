@@ -351,7 +351,7 @@ dump:
 		case st16:
 			switch r {
 			case ',':
-				panic("st16 ,")
+				x.toks, x.state = append(x.toks, tk), st15
 			case COLAS:
 				panic("st16 :=")
 			default:

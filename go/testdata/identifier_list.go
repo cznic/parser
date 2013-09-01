@@ -34,7 +34,7 @@ var (
 	_ = func(int, uint, ...float64) {}
 	_ = func(int, ...uint, float64) {}
 	_ = func(int, ...uint, ...float64) {}
-	//_ = func(...int, uint, float64) {}
+	_ = func(...int, uint, float64) {}
 	//_ = func(...int, uint, ...float64) {}
 	//_ = func(...int, ...uint, float64) {}
 	//_ = func(...int, ...uint, ...float64) {}
