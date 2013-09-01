@@ -608,9 +608,8 @@ ParameterList1:
 	}
 |	ParameterList1 ','
 	{
-		panic(".y:611")
-		//lx := yylex.(*lx)
-		//lx.toks, lx.ids, lx.state, lx.preamble = nil, nil, st6, 0 //TODO named state alias
+		lx := yylex.(*lx)
+		lx.toks, lx.ids, lx.state, lx.preamble = nil, nil, st6, 0 //TODO named state alias
 	}
 	ParameterDecl
 	{
