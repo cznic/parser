@@ -4,14 +4,15 @@ func	F
 ident	I
 struct  S
 var	V
+list	{ident}(,{ident})*
+rx	\({ident}?\*?{ident}\)
 
 %%
 
-{ident}?({const}|{var})\(?{ident}(,{ident})*		// 1) identifier_list
-{ident}?{struct}\{{ident}(,{ident})*			// 2) identifier_list
-{ident}?{func}\({ident}?\*?{ident}\){ident}\({ident}(,{ident})*	// 3) identifier_list
-{ident}?{func}{ident}?\({ident}(,{ident})*		// 4) identifier_list
-{ident}(,{ident})*{colas}				// 5) idlist_colas
+({const}|{var})\(?{list}
+{func}((\({rx}\))?{ident})?\({list}
+{struct}\{{list}
+{list}{colas}
 
 %%
 
@@ -19,8 +20,8 @@ DFA:
 [1]
 	"C", "V", --> 2
 	"F"--> 5
-	"I"--> 17
-	"S"--> 21
+	"I"--> 16
+	"S"--> 19
 [2]
 	"("--> 3
 	"I"--> 4
@@ -30,73 +31,81 @@ DFA:
 	","--> 3
 [5]
 	"("--> 6
-	"I"--> 16
+	"I"--> 12
 [6]
-	"*"--> 7
-	"I"--> 13
+	"("--> 7
+	"I"--> 14
 [7]
-	"I"--> 8
+	"*"--> 8
+	"I"--> 15
 [8]
-	")"--> 9
+	"I"--> 9
 [9]
-	"I"--> 10
+	")"--> 10
 [10]
-	"("--> 11
+	")"--> 11
 [11]
 	"I"--> 12
 [12]
-	","--> 11
+	"("--> 13
 [13]
-	"*"--> 7
-	"I"--> 8
-	")"--> 9
-	","--> 14
+	"I"--> 14
 [14]
-	"I"--> 15
+	","--> 13
 [15]
-	","--> 14
+	"*"--> 8
+	"I"--> 9
+	")"--> 10
 [16]
-	"("--> 14
+	","--> 17
+	"A"--> 18
 [17]
-	"C", "V", --> 2
-	"F"--> 5
-	","--> 18
-	"A"--> 20
-	"S"--> 21
+	"I"--> 16
 [18]
-	"I"--> 19
 [19]
-	","--> 18
-	"A"--> 20
+	"{"--> 20
 [20]
+	"I"--> 21
 [21]
-	"{"--> 22
-[22]
-	"I"--> 23
-[23]
-	","--> 22
-state 4 accepts rule 1
-state 12 accepts rule 3
-state 13 accepts rule 4
-state 15 accepts rule 4
-state 20 accepts rule 5
-state 23 accepts rule 2
+	","--> 20
+state 4 accepts rule 1		// const var
+state 14 accepts rule 2		// struct
+state 18 accepts rule 4		// func
+state 21 accepts rule 3		// colas
+
 ...............................................................................
 PrimaryExpr:
-|	FUNC Function						
+|	FUNC Function						// 1
 SourceFile2:
-|	SourceFile2 FUNC IDENTIFIER Function ';'		
-|	SourceFile2 FUNC IDENTIFIER Signature ';'		
-|	SourceFile2 FUNC Receiver MethodName Function ';'
-|	SourceFile2 FUNC Receiver MethodName Signature ';'
+|	SourceFile2 FUNC IDENTIFIER Function ';'		// 2
+|	SourceFile2 FUNC IDENTIFIER Signature ';'		// 3
+|	SourceFile2 FUNC Receiver MethodName Function ';'	// 4
+|	SourceFile2 FUNC Receiver MethodName Signature ';'	// 5
 TypeLit:
-|	FUNC Signature						
+|	FUNC Signature						// 6
 
 ----
 
-FUNC '(' ...				
-FUNC IDENTIFIER '(' ...			
-FUNC IDENTIFIER '(' ...			
-//TODO FUNC Receiver IDENTIFIER '(' ...
-//TODO FUNC Receiver IDENTIFIER '(' ...
-FUNC '(' ...				
+FUNC '(' params ')' '(' result ')' '{' ...				// 1a
+FUNC '(' params ')' '{' ...						// 1b
+
+FUNC IDENTIFIER '(' params ')' '(' result ')' '{' ...			// 2c
+FUNC IDENTIFIER '(' params ')' '{' ...					// 2d
+
+FUNC IDENTIFIER '(' params ')' '(' result ')' ';'			// 3e
+FUNC IDENTIFIER '(' params ')' ';'					// 3f
+
+FUNC '(' receiver ')' IDENTIFIER '(' params ')' '(' result ')' '{' ...	// 4g
+FUNC '(' receiver ')' IDENTIFIER '(' params ')' '{' ...			// 4h
+
+FUNC '(' receiver ')' IDENTIFIER '(' params ')' '(' result ')' ';'	// 5i
+FUNC '(' receiver ')' IDENTIFIER '(' params ')' ';'			// 5j
+
+FUNC '(' params ')' '(' result ')'					// 6k
+FUNC '(' params ')'							// 6l
+....
+
+FUNC '(' list				// abkl
+FUNC IDENTIFIER '(' list		// cdef
+FUNC '(' rx ')' IDENTIFIER '(' list 	// ghij
+....

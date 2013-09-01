@@ -103,7 +103,6 @@ func TestTestData(t *testing.T) {
 //	test(t, std)
 //}
 
-//TODO
-//func TestTests(t *testing.T) {
-//	test(t, tests)
-//}
+func TestTests(t *testing.T) {
+	test(t, tests)
+}

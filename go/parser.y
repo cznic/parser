@@ -227,8 +227,9 @@ ConstDecl111:
 	}
 |	ConstDecl111 ';'
 	{
-		lx := yylex.(*lx)
-		lx.toks, lx.state = nil, st2 //TODO named state alias
+		panic(".y:230")
+		//lx := yylex.(*lx)
+		//lx.toks, lx.state = nil, st2 //TODO named state alias
 	}
 	ConstSpec
 	{
@@ -606,8 +607,9 @@ ParameterList1:
 	}
 |	ParameterList1 ','
 	{
-		lx := yylex.(*lx)
-		lx.toks, lx.ids, lx.state, lx.preamble = nil, nil, st14, 0 //TODO named state alias
+		panic(".y:610")
+		//lx := yylex.(*lx)
+		//lx.toks, lx.ids, lx.state, lx.preamble = nil, nil, st14, 0 //TODO named state alias
 	}
 	ParameterDecl
 	{
@@ -624,8 +626,9 @@ Parameters:
 	}
 |	'(' ParameterDecl ParameterList1 ')'
 	{
-		yylex.(*lx).ddd = false
-		$$ = []Parameters{"(", $2, $3, ")"} //TODO 88
+		panic(".y:629")
+		//yylex.(*lx).ddd = false
+		//$$ = []Parameters{"(", $2, $3, ")"} //TODO 88
 	}
 
 PrimaryExpr:
@@ -1048,8 +1051,9 @@ StructType11:
 	}
 |	StructType11 ';'
 	{
-		lx := yylex.(*lx)
-		lx.toks, lx.preamble, lx.ids, lx.state = nil, 0, nil, st22 //TODO named state alias
+		panic(".y:1054")
+		//lx := yylex.(*lx)
+		//lx.toks, lx.preamble, lx.ids, lx.state = nil, 0, nil, st22 //TODO named state alias
 	}
 	FieldDecl
 	{
@@ -1227,8 +1231,9 @@ VarDecl111:
 	}
 |	VarDecl111 ';'
 	{
-		lx := yylex.(*lx)
-		lx.toks, lx.state = nil, st2 //TODO named state alias
+		panic(".y:1234")
+		//lx := yylex.(*lx)
+		//lx.toks, lx.state = nil, st2 //TODO named state alias
 	}
 	VarSpec
 	{
