@@ -333,7 +333,7 @@ dump:
 			case FUNC:
 				x.toks, x.state = append(x.toks, tk), st5
 			case ',':
-				panic("st14 ,")
+				x.toks, x.state = append(x.toks, tk), st15
 			case COLAS:
 				panic("st14 colas")
 			case STRUCT:
@@ -342,9 +342,21 @@ dump:
 				x.dump = append(x.toks, tk)
 			}
 		case st15:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st16
+			default:
+				panic("st15 default")
+			}
 		case st16:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case ',':
+				panic("st16 ,")
+			case COLAS:
+				panic("st16 :=")
+			default:
+				x.dump = append(x.toks, tk)
+			}
 		case st17: // state 17 accepts rule 4 // colas
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st18:
