@@ -310,7 +310,7 @@ dump:
 		case st10:
 			switch r {
 			case '(':
-				x.toks, x.state = append(x.toks, tk), st11
+				x.preamble, x.toks, x.ids, x.state = len(x.toks)+1, append(x.toks, tk), nil, st11
 			default:
 				panic("st10 default")
 			}

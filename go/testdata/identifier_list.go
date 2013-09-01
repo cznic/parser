@@ -81,9 +81,9 @@ var (
 )
 
 func _()
-//func _(T)
-//func _(...T)
-//func _(id T)
+func _(T)
+func _(...T)
+func _(id T)
 //func _(id ...T)
 //func _(id, id2 T)
 //func _(id, id2 ...T)
