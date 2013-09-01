@@ -778,9 +778,14 @@ Signature:
 	{
 		$$ = $1 //TODO 123
 	}
-|	Parameters Parameters
+|	Parameters
 	{
-		$$ = []Signature{$1, $2} //TODO 124
+		lx := yylex.(*lx)
+		lx.toks, lx.ids, lx.state, lx.preamble = nil, nil, st11, 0 //TODO named state alias
+	}
+	Parameters
+	{
+		$$ = []Signature{$1, $3} //TODO 124
 	}
 |	Parameters Name
 	{
