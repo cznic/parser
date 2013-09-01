@@ -304,7 +304,7 @@ dump:
 			case IDENTIFIER:
 				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st12
 			default:
-				panic("st11 default")
+				x.dump = append(x.toks, tk)
 			}
 		case st12: // state 12 accepts rule 2 // func
 			switch r {
