@@ -234,11 +234,11 @@ dump:
 		case st1:
 			switch r {
 			case CONST, VAR:
-				x.toks, x.state = []tok{tk}, st2
+				panic("st1 const, var")
 			case FUNC:
 				panic("st1 func")
 			case IDENTIFIER:
-				x.toks, x.state = []tok{tk}, st16
+				x.toks, x.state = []tok{tk}, st14
 			case STRUCT:
 				panic("st1 struct")
 			default:
@@ -246,22 +246,10 @@ dump:
 				return
 			}
 		case st2:
-			switch r {
-			case '(':
-				x.toks, x.state = append(x.toks, tk), st3
-			case IDENTIFIER:
-				panic("st2 identifier")
-			default:
-				panic("st2 default")
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st3:
-			switch r {
-			case IDENTIFIER:
-				panic("st3 identifier")
-			default:
-				x.dump = append(x.toks, tk)
-			}
-		case st4: // state 4 accepts rule 1		// const var
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st4: // state 4 accepts rule 1	// const, var
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st5:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
@@ -277,32 +265,28 @@ dump:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st11:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
-		case st12:
+		case st12: // state 12 accepts rule 2 // func
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
-		case st13:
+		case st13: // state 13 accepts rule 2 // func
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
-		case st14: // state 14 accepts rule 2		// struct
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
-		case st15:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
-		case st16:
+		case st14:
 			switch r {
 			case ',':
-				panic("st16 ,")
+				panic("st14 ,")
 			case COLAS:
-				panic("st16 :=")
+				panic("st14 :=")
 			default:
 				x.dump = append(x.toks, tk)
 			}
+		case st15:
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st16: // state 16 accepts rule 4 // colas
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st17:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
-		case st18: // state 18 accepts rule 4		// func
+		case st18:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
-		case st19:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
-		case st20:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
-		case st21: // state 21 accepts rule 3		// colas
+		case st19: // state 19 accepts rule 3 // struct
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		default:
 			panic(fmt.Sprintf("internal error st%d", x.state+1))

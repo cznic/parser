@@ -10,7 +10,7 @@ rx	\({ident}?\*?{ident}\)
 %%
 
 ({const}|{var})\(?{list}
-{func}((\({rx}\))?{ident})?\({list}
+{func}({rx}?{ident})?\({list}
 {struct}\{{list}
 {list}{colas}
 
@@ -20,8 +20,8 @@ DFA:
 [1]
 	"C", "V", --> 2
 	"F"--> 5
-	"I"--> 16
-	"S"--> 19
+	"I"--> 14
+	"S"--> 17
 [2]
 	"("--> 3
 	"I"--> 4
@@ -31,47 +31,45 @@ DFA:
 	","--> 3
 [5]
 	"("--> 6
-	"I"--> 12
+	"I"--> 10
 [6]
-	"("--> 7
-	"I"--> 14
+	"*"--> 7
+	"I"--> 13
 [7]
-	"*"--> 8
-	"I"--> 15
+	"I"--> 8
 [8]
-	"I"--> 9
+	")"--> 9
 [9]
-	")"--> 10
+	"I"--> 10
 [10]
-	")"--> 11
+	"("--> 11
 [11]
 	"I"--> 12
 [12]
-	"("--> 13
+	","--> 11
 [13]
-	"I"--> 14
+	"*"--> 7
+	"I"--> 8
+	")"--> 9
+	","--> 11
 [14]
-	","--> 13
+	","--> 15
+	"A"--> 16
 [15]
-	"*"--> 8
-	"I"--> 9
-	")"--> 10
+	"I"--> 14
 [16]
-	","--> 17
-	"A"--> 18
 [17]
-	"I"--> 16
+	"{"--> 18
 [18]
+	"I"--> 19
 [19]
-	"{"--> 20
-[20]
-	"I"--> 21
-[21]
-	","--> 20
-state 4 accepts rule 1		// const var
-state 14 accepts rule 2		// struct
-state 18 accepts rule 4		// func
-state 21 accepts rule 3		// colas
+	","--> 18
+state 4 accepts rule 1	// const, var
+state 12 accepts rule 2 // func
+state 13 accepts rule 2 // func
+state 16 accepts rule 4 // colas
+state 19 accepts rule 3 // struct
+
 
 ...............................................................................
 PrimaryExpr:

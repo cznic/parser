@@ -674,6 +674,7 @@ PrimaryExpr:
 	}
 |	FUNC Function
 	{
+		panic(".y:677 FUNC")
 		$$ = []PrimaryExpr{"func", $2} //TODO 99
 	}
 |	Name
@@ -879,19 +880,22 @@ SourceFile2:
 	}
 |	SourceFile2 FUNC IDENTIFIER Function ';'
 	{
+		panic(".y:883 FUNC")
 		$$ = append($1.([]SourceFile2), "func", $3, $4, ";") //TODO 144
 	}
 |	SourceFile2 FUNC IDENTIFIER Signature ';'
 	{
+		panic(".y:88 FUNC")
 		$$ = append($1.([]SourceFile2), "func", $3, $4, ";") //TODO 145
 	}
 |	SourceFile2 FUNC Receiver MethodName Function ';'
 	{
-		panic(".y:892 FUNC")
+		panic(".y:893 FUNC")
 		$$ = append($1.([]SourceFile2), "func", $3, $4, $5, ";") //TODO 146
 	}
 |	SourceFile2 FUNC Receiver MethodName Signature ';'
 	{
+		panic(".y:898 FUNC")
 		$$ = append($1.([]SourceFile2), "func", $3, $4, $5, ";") //TODO 147
 	}
 
@@ -1109,6 +1113,7 @@ TypeLit:
 	}
 |	FUNC Signature
 	{
+		panic(".y:1116 FUNC")
 		$$ = []TypeLit{"func", $2} //TODO 194
 	}
 |	INTERFACE '{' '}'
