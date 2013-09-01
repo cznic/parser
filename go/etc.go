@@ -346,7 +346,7 @@ dump:
 			case IDENTIFIER:
 				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st16
 			default:
-				panic("st15 default")
+				x.dump = append(x.toks, tk)
 			}
 		case st16:
 			switch r {
