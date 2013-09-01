@@ -257,7 +257,7 @@ dump:
 		case st3:
 			switch r {
 			case IDENTIFIER:
-				x.preamble, x.toks, x.state = len(x.toks), append(x.toks, tk), st4
+				x.preamble, x.toks, x.ids, x.state = len(x.toks), append(x.toks, tk), []tok{tk}, st4
 			default:
 				x.dump = append(x.toks, tk)
 			}
@@ -282,7 +282,7 @@ dump:
 			case '*':
 				panic("st6 *")
 			case IDENTIFIER:
-				panic("st6 identifier")
+				x.preamble, x.toks, x.ids, x.state = len(x.toks), append(x.toks, tk), []tok{tk}, st13
 			default:
 				x.dump = append(x.toks, tk)
 			}
@@ -291,15 +291,43 @@ dump:
 		case st8:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st9:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				panic("st9 identifier")
+			default:
+				x.dump = append(x.toks, tk)
+			}
 		case st10:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st11:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st12
+			default:
+				panic("st11 default")
+			}
 		case st12: // state 12 accepts rule 2 // func
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case ',':
+				panic("st12 ,")
+			case ')':
+				x.dump = append(x.toks, tk)
+			default:
+				panic("st12 default")
+			}
 		case st13: // state 13 accepts rule 2 // func
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case '*':
+				panic("st13 *")
+			case IDENTIFIER:
+				panic("st13 identifier")
+			case ')':
+				x.toks, x.state = append(x.toks, tk), st9
+			case ',':
+				x.toks, x.state = append(x.toks, tk), st11
+			default:
+				panic("st13 default")
+			}
 		case st14:
 			switch r {
 			case ',':
