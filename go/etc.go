@@ -195,7 +195,7 @@ type lx struct {
 	preamble  int
 	prev      tok
 	prevValid bool
-	ddd       bool
+	rxFix     int
 }
 
 func (x *lx) Lex(lval *yySymType) (r int) {
@@ -232,6 +232,7 @@ dump:
 
 		switch r = tk.tk; x.state {
 		case st1:
+			x.rxFix = 0
 			switch r {
 			case CONST, VAR:
 				x.toks, x.state = []tok{tk}, st2
@@ -289,12 +290,21 @@ dump:
 		case st7:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st8:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case ')':
+				x.toks, x.state = append(x.toks, tk), st9
+			default:
+				panic("st8 default")
+			}
 		case st9:
 			switch r {
 			case IDENTIFIER:
 				panic("st9 identifier")
 			default:
+				if i := x.rxFix; i != 0 {
+					t := x.toks[i]
+					x.toks[i] = tok{IDENTIFIER_LIST, []tok{t}, t.pos}
+				}
 				x.dump = append(x.toks, tk)
 			}
 		case st10:
@@ -318,7 +328,7 @@ dump:
 			case '*':
 				panic("st13 *")
 			case IDENTIFIER:
-				panic("st13 identifier")
+				x.rxFix, x.toks, x.state = len(x.toks)-1, append(x.toks, tk), st8
 			case ')':
 				x.toks, x.state = append(x.toks, tk), st9
 			case ',':

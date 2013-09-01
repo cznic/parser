@@ -626,7 +626,6 @@ Parameters:
 	}
 |	'(' ParameterDecl ParameterList1 ')'
 	{
-		yylex.(*lx).ddd = false
 		$$ = []Parameters{"(", $2, $3, ")"} //TODO 88
 	}
 
