@@ -110,7 +110,7 @@ func (id *T) _()
 // ----------------------------------------------------------------------------
 
 func M(f uint64) (in, out T) {
-	//in = make(T, 100)
+	in = make(T, 100)
 	//out = make(T, 100)
 	//go func(in, out T, f uint64) {
 	//	for {
