@@ -234,11 +234,11 @@ dump:
 		case st1:
 			switch r {
 			case CONST, VAR:
-				x.toks, x.state = []tok{tk}, st2
+				panic("st1 const var")
 			case FUNC:
-				x.toks, x.state = []tok{tk}, st5
+				panic("st1 func")
 			case IDENTIFIER:
-				x.preamble, x.toks, x.ids, x.state = 0, []tok{tk}, []tok{tk}, st14
+				x.toks, x.ids, x.state = []tok{tk}, []tok{tk}, st14
 			case STRUCT:
 				panic("st1 struct")
 			default:
@@ -246,106 +246,55 @@ dump:
 				return
 			}
 		case st2:
-			switch r {
-			case '(':
-				x.toks, x.state = append(x.toks, tk), st3
-			case IDENTIFIER:
-				panic("st2 identifier")
-			default:
-				panic("st2 default")
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st3:
-			switch r {
-			case IDENTIFIER:
-				x.preamble, x.toks, x.ids, x.state = len(x.toks), append(x.toks, tk), []tok{tk}, st4
-			default:
-				x.dump = append(x.toks, tk)
-			}
-		case st4: // state 4 accepts rule 1	// const, var
-			switch r {
-			case ',':
-				panic("st4 ,")
-			default:
-				x.dump = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk)
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st4: // state 4 accepts rule 1 // const, var
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st5:
-			switch r {
-			case '(':
-				x.toks, x.state = append(x.toks, tk), st6
-			case IDENTIFIER:
-				panic("st5 identifier")
-			default:
-				panic("st5 default")
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st6:
-			switch r {
-			case '*':
-				panic("st6 *")
-			case IDENTIFIER:
-				x.preamble, x.toks, x.ids, x.state = len(x.toks), append(x.toks, tk), []tok{tk}, st13
-			default:
-				x.dump = append(x.toks, tk)
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st7:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st8:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st9:
-			switch r {
-			case IDENTIFIER:
-				panic("st9 identifier")
-			default:
-				x.dump = append(x.toks, tk)
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st10:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st11:
-			switch r {
-			case IDENTIFIER:
-				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st12
-			default:
-				panic("st11 default")
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st12: // state 12 accepts rule 2 // func
-			switch r {
-			case ',':
-				x.toks, x.state = append(x.toks, tk), st11
-			case ')':
-				x.dump = append(x.toks, tk)
-			default:
-				panic("st12 default")
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st13: // state 13 accepts rule 2 // func
-			switch r {
-			case '*':
-				panic("st13 *")
-			case IDENTIFIER:
-				panic("st13 identifier")
-			case ')':
-				x.toks, x.state = append(x.toks, tk), st9
-			case ',':
-				x.toks, x.state = append(x.toks, tk), st11
-			default:
-				panic("st13 default")
-			}
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st14:
 			switch r {
+			case CONST, VAR:
+				panic("st14 const var")
+			case FUNC:
+				panic("st14 func")
 			case ',':
 				panic("st14 ,")
 			case COLAS:
-				panic("st14 :=")
+				panic("st14 colas")
+			case STRUCT:
+				panic("st14 struct")
 			default:
 				x.dump = append(x.toks, tk)
 			}
 		case st15:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
-		case st16: // state 16 accepts rule 4 // colas
+		case st16:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
-		case st17:
+		case st17: // state 17 accepts rule 4 // colas
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st18:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
-		case st19: // state 19 accepts rule 3 // struct
+		case st19:
+			panic(fmt.Sprintf("TODO st%d", x.state+1))
+		case st20: // state 20 accepts rule 3 // struct
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		default:
 			panic(fmt.Sprintf("internal error st%d", x.state+1))

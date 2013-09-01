@@ -9,9 +9,9 @@ rx	\({ident}?\*?{ident}\)
 
 %%
 
-({const}|{var})\(?{list}
-{func}({rx}?{ident})?\({list}
-{struct}\{{list}
+{ident}?({const}|{var})\(?{list}
+{ident}?{func}({rx}?{ident})?\({list}
+{ident}?{struct}\{{list}
 {list}{colas}
 
 %%
@@ -21,7 +21,7 @@ DFA:
 	"C", "V", --> 2
 	"F"--> 5
 	"I"--> 14
-	"S"--> 17
+	"S"--> 18
 [2]
 	"("--> 3
 	"I"--> 4
@@ -53,23 +53,28 @@ DFA:
 	")"--> 9
 	","--> 11
 [14]
+	"C", "V", --> 2
+	"F"--> 5
 	","--> 15
-	"A"--> 16
+	"A"--> 17
+	"S"--> 18
 [15]
-	"I"--> 14
+	"I"--> 16
 [16]
+	","--> 15
+	"A"--> 17
 [17]
-	"{"--> 18
 [18]
-	"I"--> 19
+	"{"--> 19
 [19]
-	","--> 18
-state 4 accepts rule 1	// const, var
+	"I"--> 20
+[20]
+	","--> 19
+state 4 accepts rule 1 // const, var
 state 12 accepts rule 2 // func
 state 13 accepts rule 2 // func
-state 16 accepts rule 4 // colas
-state 19 accepts rule 3 // struct
-
+state 17 accepts rule 4 // colas
+state 20 accepts rule 3 // struct
 
 ...............................................................................
 PrimaryExpr:
