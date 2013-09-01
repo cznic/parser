@@ -274,7 +274,7 @@ dump:
 			case '(':
 				x.toks, x.state = append(x.toks, tk), st6
 			case IDENTIFIER:
-				panic("st5 identifier")
+				x.toks, x.state = append(x.toks, tk), st10
 			default:
 				panic("st5 default")
 			}
@@ -308,7 +308,12 @@ dump:
 				x.dump = append(x.toks, tk)
 			}
 		case st10:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case '(':
+				x.toks, x.state = append(x.toks, tk), st11
+			default:
+				panic("st10 default")
+			}
 		case st11:
 			switch r {
 			case IDENTIFIER:
