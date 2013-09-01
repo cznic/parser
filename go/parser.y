@@ -608,8 +608,9 @@ ParameterList1:
 	}
 |	ParameterList1 ','
 	{
-		lx := yylex.(*lx)
-		lx.toks, lx.ids, lx.state, lx.preamble = nil, nil, st6, 0 //TODO named state alias
+		panic(".y:611")
+		//lx := yylex.(*lx)
+		//lx.toks, lx.ids, lx.state, lx.preamble = nil, nil, st6, 0 //TODO named state alias
 	}
 	ParameterDecl
 	{
@@ -626,8 +627,9 @@ Parameters:
 	}
 |	'(' ParameterDecl ParameterList1 ')'
 	{
-		yylex.(*lx).ddd = false
-		$$ = []Parameters{"(", $2, $3, ")"} //TODO 88
+		panic(".y:630")
+		//yylex.(*lx).ddd = false
+		//$$ = []Parameters{"(", $2, $3, ")"} //TODO 88
 	}
 
 PrimaryExpr:
@@ -1233,8 +1235,9 @@ VarDecl111:
 	}
 |	VarDecl111 ';'
 	{
-		lx := yylex.(*lx)
-		lx.toks, lx.state = nil, st3 //TODO named state alias
+		panic(".y:1238")
+		//lx := yylex.(*lx)
+		//lx.toks, lx.state = nil, st3 //TODO named state alias
 	}
 	VarSpec
 	{
