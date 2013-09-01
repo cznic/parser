@@ -338,7 +338,7 @@ dump:
 		case st13: // state 13 accepts rule 2 // func
 			switch r {
 			case '*':
-				panic("st13 *")
+				x.toks, x.state = append(x.toks, tk), st7
 			case IDENTIFIER:
 				x.rxFix, x.toks, x.state = len(x.toks)-1, append(x.toks, tk), st8
 			case ')':
