@@ -367,7 +367,7 @@ dump:
 			case COLAS:
 				panic("st14 colas")
 			case STRUCT:
-				panic("st14 struct")
+				x.toks, x.state = append(x.toks, tk), st18
 			default:
 				x.dump = append(x.toks, tk)
 			}
