@@ -31,7 +31,6 @@ import (
 
 %token	ANDAND
 %token	ANDNOT
-%token	ASSIGN_OP
 %token	CHANCOMM
 %token	COMM
 %token	COMMCHAN
@@ -54,11 +53,24 @@ import (
 %token	RSH
 %token	RUNE_LIT
 %token	STRING_LIT
+%token	ADD_ASSIGN
+%token	AND_ASSIGN
+%token	MUL_ASSIGN
+%token	OR_ASSIGN 
+%token	QUO_ASSIGN
+%token	REM_ASSIGN
+%token	SHL_ASSIGN
+%token	SHR_ASSIGN
+%token	SUB_ASSIGN
+%token	XOR_ASSIGN
+%token	AND_NOT_ASSIGN
 
 %type	<item> 	/*TODO real type(s), if/where applicable */
+	ADD_ASSIGN
 	ANDAND
 	ANDNOT
-	ASSIGN_OP
+	AND_ASSIGN
+	AND_NOT_ASSIGN
 	CHANCOMM
 	COMM
 	COMMCHAN
@@ -71,9 +83,17 @@ import (
 	LBR
 	LE
 	LSH
+	MUL_ASSIGN
 	NE
 	OROR
+	OR_ASSIGN 
+	QUO_ASSIGN
+	REM_ASSIGN
 	RSH
+	SHL_ASSIGN
+	SHR_ASSIGN
+	SUB_ASSIGN
+	XOR_ASSIGN
 
 %token BREAK
 %token CASE
@@ -152,7 +172,7 @@ import (
 	Start
 	Statement
 	StatementList
-	StatementList1
+	//StatementList1
 	StructType
 	StructType11
 	Type
@@ -817,9 +837,53 @@ SimpleStmt:
 	{
 		$$ = []SimpleStmt{$1, $2} //TODO 131
 	}
-|	ExpressionList ASSIGN_OP ExpressionList
+|	ExpressionList '=' ExpressionList
 	{
-		$$ = []SimpleStmt{$1, $2, $3} //TODO 132
+		$$ = []SimpleStmt{$1, '=', $3} //TODO 1320
+	}
+|	ExpressionList ADD_ASSIGN ExpressionList
+	{
+		$$ = []SimpleStmt{$1, $2, $3} //TODO 1321
+	}
+|	ExpressionList SUB_ASSIGN ExpressionList
+	{
+		$$ = []SimpleStmt{$1, $2, $3} //TODO 1322
+	}
+|	ExpressionList MUL_ASSIGN ExpressionList
+	{
+		$$ = []SimpleStmt{$1, $2, $3} //TODO 1323
+	}
+|	ExpressionList QUO_ASSIGN ExpressionList
+	{
+		$$ = []SimpleStmt{$1, $2, $3} //TODO 1324
+	}
+|	ExpressionList REM_ASSIGN ExpressionList
+	{
+		$$ = []SimpleStmt{$1, $2, $3} //TODO 1325
+	}
+|	ExpressionList AND_ASSIGN ExpressionList
+	{
+		$$ = []SimpleStmt{$1, $2, $3} //TODO 1326
+	}
+|	ExpressionList OR_ASSIGN ExpressionList
+	{
+		$$ = []SimpleStmt{$1, $2, $3} //TODO 1327
+	}
+|	ExpressionList XOR_ASSIGN ExpressionList
+	{
+		$$ = []SimpleStmt{$1, $2, $3} //TODO 1328
+	}
+|	ExpressionList SHL_ASSIGN ExpressionList
+	{
+		$$ = []SimpleStmt{$1, $2, $3} //TODO 1329
+	}
+|	ExpressionList SHR_ASSIGN ExpressionList
+	{
+		$$ = []SimpleStmt{$1, $2, $3} //TODO 1330
+	}
+|	ExpressionList AND_NOT_ASSIGN ExpressionList
+	{
+		$$ = []SimpleStmt{$1, $2, $3} //TODO 1331
 	}
 |	IDLIST_COLAS ExpressionList
 	{
@@ -1018,6 +1082,7 @@ Statement:
 		$$ = []Statement{"defer", $2} //TODO 176
 	}
 
+/*
 StatementList:
 	StatementList1
 	{
@@ -1025,13 +1090,24 @@ StatementList:
 	}
 
 StatementList1:
-	/* EMPTY */
+	/* EMPTY * /
 	{
 		$$ = []StatementList1(nil) //TODO 178
 	}
 |	StatementList1 Statement ';'
 	{
 		$$ = append($1.([]StatementList1), $2, ";") //TODO 179
+	}
+*/
+
+StatementList:
+	Statement
+	{
+		$$ = []StatementList{$1} //TODO 177
+	}
+|	StatementList ';' Statement
+	{
+		$$ = append($1.([]StatementList), ";", $3) //TODO 179
 	}
 
 StructType:
@@ -1310,7 +1386,7 @@ type (
 	Start interface{}
 	Statement interface{}
 	StatementList interface{}
-	StatementList1 interface{}
+	//StatementList1 interface{}
 	StructType interface{}
 	StructType11 interface{}
 	Type interface{}
