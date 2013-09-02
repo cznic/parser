@@ -62,7 +62,9 @@ func ParseFile(filename string, src interface{}) (f interface{}, err error) {
 	return
 }
 
-const COLAS = -1
+const (
+	COLAS = -1
+)
 
 var xlat = []int{
 	//token.ILLEGAL:        ILLEGAL,
@@ -188,14 +190,16 @@ type tok struct {
 
 type lx struct {
 	*scanner.Scanner
-	state     int
-	dump      []tok
-	toks      []tok
-	ids       []tok
-	preamble  int
-	prev      tok
-	prevValid bool
-	rxFix     int
+	state      int
+	dump       []tok
+	toks       []tok
+	ids        []tok
+	preamble   int
+	prev       tok
+	prevValid  bool
+	rxFix      int
+	lbrHunt    bool
+	lbrBalance int
 }
 
 func (x *lx) Lex(lval *yySymType) (r int) {
@@ -418,12 +422,31 @@ func (x *lx) lex() (y tok) {
 
 		if p, n := x.prev.tk, tok.tk; (p == ',' || p == ';') && (n == ')' || n == '}') {
 			tok.val, x.prevValid = x.prev, false
-			return tok
+			y = tok
+			break
 		}
 
 		y, x.prev = x.prev, tok
-		return
+		break
 	}
+
+	switch y.tk {
+	case FOR, IF, SWITCH:
+		x.lbrHunt, x.lbrBalance = true, 0
+	case '(':
+		if x.lbrHunt {
+			x.lbrBalance++
+		}
+	case ')':
+		if x.lbrHunt {
+			x.lbrBalance--
+		}
+	case '{':
+		if x.lbrHunt && x.lbrBalance <= 0 {
+			y.tk, x.lbrHunt = LBR, false
+		}
+	}
+	return
 }
 
 func (x *lx) err(pos pos, format string, arg ...interface{}) {

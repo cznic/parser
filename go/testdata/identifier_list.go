@@ -113,9 +113,9 @@ func M(f uint64) (in, out T) {
 	in = make(T, 100)
 	out = make(T, 100)
 	go func(in, out T, f uint64) {
-	//	for {
-	//		out <- f*<-in
-	//	}
+		for {
+			out <- f*<-in
+		}
 	}(in, out, f)
 	return in, out
 }
