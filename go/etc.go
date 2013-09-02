@@ -407,7 +407,7 @@ dump:
 			switch r {
 			case ',':
 				panic("st20 ,")
-			case '}':
+			case '}', '.':
 				x.dump = append(x.toks, tk)
 			default:
 				x.dump = append(x.toks[:mathutil.Max(0, x.preamble)], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk)
