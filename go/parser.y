@@ -249,7 +249,7 @@ ConstDecl111:
 |	ConstDecl111 ';'
 	{
 		lx := yylex.(*lx)
-		lx.preamble, lx.toks, lx.state = 0, nil, st3 //TODO named state alias
+		lx.preamble, lx.toks, lx.ids, lx.state = 0, nil, nil, st3 //TODO named state alias
 	}
 	ConstSpec
 	{
@@ -1310,7 +1310,7 @@ VarDecl111:
 |	VarDecl111 ';'
 	{
 		lx := yylex.(*lx)
-		lx.preamble, lx.toks, lx.state = 0, nil, st3 //TODO named state alias
+		lx.preamble, lx.toks, lx.ids, lx.state = 0, nil, nil, st3 //TODO named state alias
 	}
 	VarSpec
 	{
