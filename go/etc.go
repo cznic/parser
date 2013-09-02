@@ -239,7 +239,7 @@ dump:
 			x.rxFix = 0
 			switch r {
 			case CONST, VAR:
-				x.toks, x.state = []tok{tk}, st2
+				x.preamble, x.toks, x.state = 0, []tok{tk}, st2
 			case FUNC:
 				x.toks, x.state = []tok{tk}, st5
 			case IDENTIFIER:
@@ -253,7 +253,7 @@ dump:
 		case st2:
 			switch r {
 			case '(':
-				x.preamble, x.toks, x.state = 0, append(x.toks, tk), st3
+				x.toks, x.state = append(x.toks, tk), st3
 			case IDENTIFIER:
 				x.preamble, x.toks, x.ids, x.state = len(x.toks), append(x.toks, tk), []tok{tk}, st4
 			default:
@@ -272,10 +272,8 @@ dump:
 		case st4: // state 4 accepts rule 1 // const, var
 			switch r {
 			case ',':
-				panic("st4 ,")
+				x.toks, x.state = append(x.toks, tk), st3
 			default:
-				dbg("x.toks %+v", x.toks)
-				dbg("x.preamble %d", x.preamble)
 				x.dump = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk)
 			}
 		case st5:
