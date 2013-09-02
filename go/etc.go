@@ -408,7 +408,7 @@ dump:
 			case ',':
 				panic("st20 ,")
 			default:
-				x.dump = append(x.toks, tk)
+				x.dump = append(x.toks[:mathutil.Max(0, x.preamble)], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk)
 			}
 		default:
 			panic(fmt.Sprintf("internal error st%d", x.state+1))
