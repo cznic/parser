@@ -399,12 +399,17 @@ dump:
 		case st19:
 			switch r {
 			case IDENTIFIER:
-				panic("st19 identifier")
+				x.preamble, x.toks, x.ids, x.state = len(x.toks), append(x.toks, tk), []tok{tk}, st20
 			default:
 				x.dump = append(x.toks, tk)
 			}
 		case st20: // state 20 accepts rule 3 // struct
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case ',':
+				panic("st20 ,")
+			default:
+				x.dump = append(x.toks, tk)
+			}
 		default:
 			panic(fmt.Sprintf("internal error st%d", x.state+1))
 		}

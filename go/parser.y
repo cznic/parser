@@ -1115,11 +1115,11 @@ StructType:
 		if $<val>3 != nil {
 			yylex.(*lx).err($<val>3.(tok).pos, "unexpected %q before ')'", string($<val>3.(tok).tk))
 		}
-		$$ = []StructType{"struct", "l-br", "r-br"} //TODO 180
+		$$ = []StructType{"struct", "l-brace", "r-brace"} //TODO 180
 	}
 |	STRUCT '{' FieldDecl StructType11 '}'
 	{
-		$$ = []StructType{"struct", "l-br", $3, $4, "r-be"} //TODO 181
+		$$ = []StructType{"struct", "l-brace", $3, $4, "r-brace"} //TODO 181
 	}
 
 StructType11:
