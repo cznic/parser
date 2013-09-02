@@ -14,6 +14,7 @@ import (
 	"io"
 	"io/ioutil"
 
+	"github.com/cznic/mathutil"
 	"github.com/cznic/scanner/go"
 )
 
@@ -239,7 +240,7 @@ dump:
 			x.rxFix = 0
 			switch r {
 			case CONST, VAR:
-				x.preamble, x.toks, x.state = 0, []tok{tk}, st2
+				x.preamble, x.toks, x.ids, x.state = -1, []tok{tk}, nil, st2
 			case FUNC:
 				x.toks, x.state = []tok{tk}, st5
 			case IDENTIFIER:
@@ -262,7 +263,7 @@ dump:
 		case st3:
 			switch r {
 			case IDENTIFIER:
-				if x.preamble == 0 {
+				if x.preamble < 0 {
 					x.preamble = len(x.toks)
 				}
 				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st4
@@ -274,7 +275,7 @@ dump:
 			case ',':
 				x.toks, x.state = append(x.toks, tk), st3
 			default:
-				x.dump = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk)
+				x.dump = append(x.toks[:mathutil.Max(0, x.preamble)], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk)
 			}
 		case st5:
 			switch r {
