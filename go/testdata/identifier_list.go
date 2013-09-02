@@ -171,23 +171,23 @@ var (
 var ( u = 19; v, w = 19, 20; )
 
 type ()
-//type (
-//	t struct{}
-//	t struct { *a }
-//	t struct { *b.c }
-//	t struct { d }
-//	t struct { e.f }
-//	t struct { g int }
-//	t struct { h, i int }
-//
-//	t struct { *a; *b }
-//	t struct { *c.d; *e.f }
-//	t struct { g; h }
-//	t struct { i.j; k.l }
-//	t struct { m int; n int }
-//	t struct { o, p int; q, r int }
-//)
-//
+type (
+	//t struct{}
+	//t struct { *a }
+	//t struct { *b.c }
+	//t struct { d }
+	//t struct { e.f }
+	//t struct { g int }
+	//t struct { h, i int }
+
+	//t struct { *a; *b }
+	//t struct { *c.d; *e.f }
+	//t struct { g; h }
+	//t struct { i.j; k.l }
+	//t struct { m int; n int }
+	//t struct { o, p int; q, r int }
+)
+
 //type ()
 //type (
 //	t struct{}
