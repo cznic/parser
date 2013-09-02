@@ -585,7 +585,9 @@ Statement = Declaration
 	| SelectStmt
 	| ForStmt
 	| DeferStmt .
-StatementList = { Statement ";" } .
+
+//StatementList = { Statement ";" } .
+StatementList = Statement { ";" Statement } .
 
 //StructType = "struct" "{" { FieldDecl ";" } "}" .
 StructType = "struct" "{" [ FieldDecl { ";" FieldDecl } ] "}" .
