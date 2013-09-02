@@ -390,9 +390,19 @@ dump:
 		case st17: // state 17 accepts rule 4 // colas
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st18:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case '{':
+				x.toks, x.state = append(x.toks, tk), st19
+			default:
+				panic("st18 default")
+			}
 		case st19:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				panic("st19 identifier")
+			default:
+				x.dump = append(x.toks, tk)
+			}
 		case st20: // state 20 accepts rule 3 // struct
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		default:
