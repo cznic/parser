@@ -67,7 +67,7 @@ func test(t *testing.T, root string) {
 				}
 			}
 
-			dbg("%s", pth)
+			dbg("PATH %s", pth)
 			_, eerr := parser.ParseFile(token.NewFileSet(), pth, nil, 0)
 			_, gerr := ParseFile(pth, nil)
 

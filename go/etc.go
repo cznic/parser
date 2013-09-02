@@ -244,7 +244,7 @@ dump:
 			case FUNC:
 				x.toks, x.state = []tok{tk}, st5
 			case IDENTIFIER:
-				x.toks, x.ids, x.state = []tok{tk}, []tok{tk}, st14
+				x.preamble, x.toks, x.ids, x.state = 0, []tok{tk}, []tok{tk}, st14
 			case STRUCT:
 				panic("st1 struct")
 			default:
@@ -365,7 +365,7 @@ dump:
 			case ',':
 				x.toks, x.state = append(x.toks, tk), st15
 			case COLAS:
-				panic("st14 colas")
+				x.dump = append(x.toks[:x.preamble], tok{IDLIST_COLAS, x.ids, x.ids[0].pos})
 			case STRUCT:
 				x.toks, x.state = append(x.toks, tk), st18
 			default:
