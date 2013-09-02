@@ -392,7 +392,7 @@ dump:
 		case st18:
 			switch r {
 			case '{':
-				x.preamble, x.toks, x.state = -1, append(x.toks, tk), st19
+				x.preamble, x.toks, x.ids, x.state = -1, append(x.toks, tk), nil, st19
 			default:
 				panic("st18 default")
 			}
@@ -402,7 +402,7 @@ dump:
 				if x.preamble < 0 {
 					x.preamble = len(x.toks)
 				}
-				x.toks, x.ids, x.state = append(x.toks, tk), []tok{tk}, st20
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st20
 			default:
 				x.dump = append(x.toks, tk)
 			}
