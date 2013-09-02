@@ -1311,7 +1311,7 @@ VarDecl111:
 |	VarDecl111 ';'
 	{
 		lx := yylex.(*lx)
-		lx.toks, lx.state = nil, st3 //TODO named state alias
+		lx.preamble, lx.toks, lx.state = 0, nil, st3 //TODO named state alias
 	}
 	VarSpec
 	{

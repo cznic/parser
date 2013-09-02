@@ -253,7 +253,7 @@ dump:
 		case st2:
 			switch r {
 			case '(':
-				x.toks, x.state = append(x.toks, tk), st3
+				x.preamble, x.toks, x.state = 0, append(x.toks, tk), st3
 			case IDENTIFIER:
 				x.preamble, x.toks, x.ids, x.state = len(x.toks), append(x.toks, tk), []tok{tk}, st4
 			default:
@@ -262,7 +262,10 @@ dump:
 		case st3:
 			switch r {
 			case IDENTIFIER:
-				x.preamble, x.toks, x.ids, x.state = len(x.toks), append(x.toks, tk), append(x.ids, tk), st4
+				if x.preamble == 0 {
+					x.preamble = len(x.toks)
+				}
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st4
 			default:
 				x.dump = append(x.toks, tk)
 			}
@@ -271,6 +274,8 @@ dump:
 			case ',':
 				panic("st4 ,")
 			default:
+				dbg("x.toks %+v", x.toks)
+				dbg("x.preamble %d", x.preamble)
 				x.dump = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk)
 			}
 		case st5:
