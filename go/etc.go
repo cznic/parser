@@ -392,21 +392,24 @@ dump:
 		case st18:
 			switch r {
 			case '{':
-				x.toks, x.state = append(x.toks, tk), st19
+				x.preamble, x.toks, x.state = -1, append(x.toks, tk), st19
 			default:
 				panic("st18 default")
 			}
 		case st19:
 			switch r {
 			case IDENTIFIER:
-				x.preamble, x.toks, x.ids, x.state = len(x.toks), append(x.toks, tk), []tok{tk}, st20
+				if x.preamble < 0 {
+					x.preamble = len(x.toks)
+				}
+				x.toks, x.ids, x.state = append(x.toks, tk), []tok{tk}, st20
 			default:
 				x.dump = append(x.toks, tk)
 			}
 		case st20: // state 20 accepts rule 3 // struct
 			switch r {
 			case ',':
-				panic("st20 ,")
+				x.toks, x.state = append(x.toks, tk), st19
 			case '}', '.':
 				x.dump = append(x.toks, tk)
 			default:
