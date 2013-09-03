@@ -49,14 +49,6 @@ iebnf2y -M -iy 1 -o parser.y parser.ebnf	005	006	011
 Result
 
 ebnf2y -M -o parser.y parser.ebnf		026	006	032
-iebnf2y -M -iy 1 -o parser.y parser.ebnf	002	006	008
-
-...............................................................................
--MethodExpr,-ReceiverType
-
-ebnf2y -M -o parser.y parser.ebnf		024	002	026
-iebnf2y -M -iy 1 -o parser.y parser.ebnf	000	002	002
-
 */
 
 andand		= "&&" .
@@ -423,9 +415,7 @@ LiteralValue = "{" [ ElementList ] "}" .
 
 MapType = "map" "[" KeyType "]" ElementType .
 MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
-
-//MethodExpr = ReceiverType "." MethodName .
-
+MethodExpr = ReceiverType "." MethodName .
 MethodName = identifier .
 MethodSpec = MethodName Signature
 	| InterfaceTypeName .
@@ -437,12 +427,9 @@ Name = identifier [ "." identifier ] .
 //	| OperandName
 //	| MethodExpr
 //	| "(" Expression ")" .
-//Operand = Literal
-//	| Name
-//	| MethodExpr
-//	| "(" Expression ")" .
 Operand = Literal
 	| Name
+	| MethodExpr
 	| "(" Expression ")" .
 
 //OperandName = identifier | QualifiedIdent .
@@ -484,9 +471,9 @@ Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
 //ReceiverType = TypeName
 //	| "(" "*" TypeName ")"
 //	| "(" ReceiverType ")" .
-//ReceiverType = Name
-//	| "(" "*" Name ")"
-//	| "(" ReceiverType ")" .
+ReceiverType = Name
+	| "(" "*" Name ")"
+	| "(" ReceiverType ")" .
 
 RecvExpr = Expression .
 

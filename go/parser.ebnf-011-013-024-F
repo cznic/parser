@@ -15,48 +15,6 @@ BuiltinCall,Call,ForClause,[,;][)}],lbr,commchan,chancomm
 %left	'+' '-' '^' '|'
 %left	'%' '&' '*' '/' ANDNOT LSH RSH
 
-...............................................................................
--BuiltinCall,-BuiltinArgs,ArgumentList,TypeLitNoPtr
-
-ebnf2y -M -o parser.y parser.ebnf		034	015	049
-iebnf2y -M -iy 1 -o parser.y parser.ebnf	005	014	019
-
-...............................................................................
--OperandName,-TypeName,-QualifiedIdent
-
-%left	OROR
-%left	ANDAND
-%left	'<' '>' EQ GE LE NE
-%left	'+' '-' '^' '|'
-%left	'%' '&' '*' '/' ANDNOT LSH RSH
-
-%left	notDot	// Name
-%left	'.'
-
-%left	notLParen // Signature
-%left	'('
-
-ebnf2y -M -o parser.y parser.ebnf		038	007	045
-iebnf2y -M -iy 1 -o parser.y parser.ebnf	006	006	012
-
-...............................................................................
-Key,-FieldName,-ElementIndex
-
-ebnf2y -M -o parser.y parser.ebnf		037	006	043
-iebnf2y -M -iy 1 -o parser.y parser.ebnf	005	006	011
-
-...............................................................................
-Result
-
-ebnf2y -M -o parser.y parser.ebnf		026	006	032
-iebnf2y -M -iy 1 -o parser.y parser.ebnf	002	006	008
-
-...............................................................................
--MethodExpr,-ReceiverType
-
-ebnf2y -M -o parser.y parser.ebnf		024	002	026
-iebnf2y -M -iy 1 -o parser.y parser.ebnf	000	002	002
-
 */
 
 andand		= "&&" .
@@ -223,13 +181,10 @@ unicode_value = unicode_char
 	| big_u_value
 	| escaped_char .
 
-//AnonymousField = [ "*" ] TypeName .
-AnonymousField = [ "*" ] Name .
+AnonymousField = [ "*" ] TypeName .
 
 //ArgumentList = ExpressionList [ "..." ] .
-
-//ArgumentList = ExpressionList [ ddd ] .
-ArgumentList = [ TypeLitNoPtr  "," ] ExpressionList [ ddd ] .
+ArgumentList = ExpressionList [ ddd ] .
 
 ArrayLength = Expression .
 ArrayType = "[" ArrayLength "]" ElementType .
@@ -246,12 +201,11 @@ BasicLit = int_lit
 	| string_lit .
 Block = "{" StatementList "}" .
 BreakStmt = "break" [ Label ] .
-
-//BuiltinArgs = Type [ "," ArgumentList ] //TODO-
-//	| ArgumentList .
+BuiltinArgs = Type [ "," ArgumentList ] //TODO-
+	| ArgumentList .
 
 //BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
-//BuiltinCall = identifier "(" [ BuiltinArgs ] ")" . //TODO-
+BuiltinCall = identifier "(" [ BuiltinArgs ] ")" . //TODO-
 
 //Call = "(" [ ArgumentList [ "," ] ] ")" .
 Call = "(" [ ArgumentList ] ")" .
@@ -300,9 +254,7 @@ Declaration = ConstDecl
 	| VarDecl .
 DeferStmt = "defer" Expression .
 Element = [ Key ":" ] Value .
-
-//ElementIndex = Expression .
-
+ElementIndex = Expression .
 ElementList = Element { "," Element } .
 ElementType = Type .
 EmptyStmt = .
@@ -331,7 +283,7 @@ FieldDecl = (
 		| AnonymousField
 	  ) [ Tag ] .
 
-//FieldName = identifier .
+FieldName = identifier .
 
 //ForClause = [ InitStmt ] ";" [ Condition ] ";" [ PostStmt ] .
 ForClause = InitStmt ";" [ Condition ] ";" PostStmt .
@@ -386,12 +338,8 @@ InitStmt = SimpleStmt .
 //InterfaceType = "interface" "{" { MethodSpec ";" } "}" .
 InterfaceType = "interface" "{" [ MethodSpec { ";" MethodSpec } ] "}" .
 
-//InterfaceTypeName = TypeName .
-InterfaceTypeName = Name .
-
-//Key = FieldName | ElementIndex .
-Key = Expression .
-
+InterfaceTypeName = TypeName .
+Key = FieldName | ElementIndex .
 KeyType = Type .
 Label = identifier .
 LabeledStmt = Label ":" Statement .
@@ -405,48 +353,27 @@ Literal = BasicLit
 //	| SliceType
 //	| MapType
 //	| TypeName .
-//LiteralType = StructType
-//	| ArrayType
-//	| "[" ddd "]" ElementType
-//	| SliceType
-//	| MapType
-//	| TypeName .
 LiteralType = StructType
 	| ArrayType
 	| "[" ddd "]" ElementType
 	| SliceType
 	| MapType
-	| Name .
+	| TypeName .
 
 //LiteralValue = "{" [ ElementList [ "," ] ] "}" .
 LiteralValue = "{" [ ElementList ] "}" .
 
 MapType = "map" "[" KeyType "]" ElementType .
 MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
-
-//MethodExpr = ReceiverType "." MethodName .
-
+MethodExpr = ReceiverType "." MethodName .
 MethodName = identifier .
 MethodSpec = MethodName Signature
 	| InterfaceTypeName .
-
-//
-Name = identifier [ "." identifier ] .
-
-//Operand = Literal
-//	| OperandName
-//	| MethodExpr
-//	| "(" Expression ")" .
-//Operand = Literal
-//	| Name
-//	| MethodExpr
-//	| "(" Expression ")" .
 Operand = Literal
-	| Name
+	| OperandName
+	| MethodExpr
 	| "(" Expression ")" .
-
-//OperandName = identifier | QualifiedIdent .
-
+OperandName = identifier | QualifiedIdent .
 PackageClause = "package" PackageName .
 PackageName = identifier .
 
@@ -462,13 +389,13 @@ PointerType = "*" BaseType .
 PostStmt = SimpleStmt .
 PrimaryExpr = Operand
 	| Conversion
+	| BuiltinCall
 	| PrimaryExpr Selector
 	| PrimaryExpr Index
 	| PrimaryExpr Slice
 	| PrimaryExpr TypeAssertion
 	| PrimaryExpr Call .
-
-//QualifiedIdent = PackageName "." identifier .
+QualifiedIdent = PackageName "." identifier .
 
 //RangeClause = (
 //		  ExpressionList "="
@@ -480,14 +407,9 @@ RangeClause = (
 	  ) "range" Expression .
 
 Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
-
-//ReceiverType = TypeName
-//	| "(" "*" TypeName ")"
-//	| "(" ReceiverType ")" .
-//ReceiverType = Name
-//	| "(" "*" Name ")"
-//	| "(" ReceiverType ")" .
-
+ReceiverType = TypeName
+	| "(" "*" TypeName ")"
+	| "(" ReceiverType ")" .
 RecvExpr = Expression .
 
 //RecvStmt = [
@@ -499,9 +421,7 @@ RecvStmt = [
 		| idlist_colas
 	  ] RecvExpr .
 
-//Result = Parameters | Type .
-Result = Parameters | Name | TypeLit .
-
+Result = Parameters | Type .
 ReturnStmt = "return" [ ExpressionList ] .
 SelectStmt = "select" "{" { CommClause } "}" .
 Selector = "." identifier .
@@ -549,14 +469,9 @@ Tag = string_lit .
 TopLevelDecl = Declaration
 	| FunctionDecl
 	| MethodDecl .
-
-//Type = TypeName
-//	| TypeLit
-//	| "(" Type ")" .
-Type = Name
+Type = TypeName
 	| TypeLit
 	| "(" Type ")" .
-
 TypeAssertion = "." "(" Type ")" .
 TypeCaseClause = TypeSwitchCase ":" StatementList .
 
@@ -570,28 +485,15 @@ TypeDecl = "type" (
 	  ) .
 
 TypeList = Type { "," Type } .
-
-//TypeLit = ArrayType
-//	| StructType
-//	| PointerType
-//	| FunctionType
-//	| InterfaceType
-//	| SliceType
-//	| MapType
-//	| ChannelType .
-TypeLit = TypeLitNoPtr
-	| PointerType .
-TypeLitNoPtr = ArrayType
+TypeLit = ArrayType
 	| StructType
+	| PointerType
 	| FunctionType
 	| InterfaceType
 	| SliceType
 	| MapType
 	| ChannelType .
-
-
-//TypeName = identifier | QualifiedIdent .
-
+TypeName = identifier | QualifiedIdent .
 TypeSpec = identifier Type .
 TypeSwitchCase = "case" TypeList
 	| "default" .

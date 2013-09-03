@@ -24,39 +24,8 @@ iebnf2y -M -iy 1 -o parser.y parser.ebnf	005	014	019
 ...............................................................................
 -OperandName,-TypeName,-QualifiedIdent
 
-%left	OROR
-%left	ANDAND
-%left	'<' '>' EQ GE LE NE
-%left	'+' '-' '^' '|'
-%left	'%' '&' '*' '/' ANDNOT LSH RSH
-
-%left	notDot	// Name
-%left	'.'
-
-%left	notLParen // Signature
-%left	'('
-
 ebnf2y -M -o parser.y parser.ebnf		038	007	045
-iebnf2y -M -iy 1 -o parser.y parser.ebnf	006	006	012
-
-...............................................................................
-Key,-FieldName,-ElementIndex
-
-ebnf2y -M -o parser.y parser.ebnf		037	006	043
-iebnf2y -M -iy 1 -o parser.y parser.ebnf	005	006	011
-
-...............................................................................
-Result
-
-ebnf2y -M -o parser.y parser.ebnf		026	006	032
-iebnf2y -M -iy 1 -o parser.y parser.ebnf	002	006	008
-
-...............................................................................
--MethodExpr,-ReceiverType
-
-ebnf2y -M -o parser.y parser.ebnf		024	002	026
-iebnf2y -M -iy 1 -o parser.y parser.ebnf	000	002	002
-
+iebnf2y -M -iy 1 -o parser.y parser.ebnf	009	006	015
 */
 
 andand		= "&&" .
@@ -300,9 +269,7 @@ Declaration = ConstDecl
 	| VarDecl .
 DeferStmt = "defer" Expression .
 Element = [ Key ":" ] Value .
-
-//ElementIndex = Expression .
-
+ElementIndex = Expression .
 ElementList = Element { "," Element } .
 ElementType = Type .
 EmptyStmt = .
@@ -331,7 +298,7 @@ FieldDecl = (
 		| AnonymousField
 	  ) [ Tag ] .
 
-//FieldName = identifier .
+FieldName = identifier .
 
 //ForClause = [ InitStmt ] ";" [ Condition ] ";" [ PostStmt ] .
 ForClause = InitStmt ";" [ Condition ] ";" PostStmt .
@@ -389,9 +356,7 @@ InterfaceType = "interface" "{" [ MethodSpec { ";" MethodSpec } ] "}" .
 //InterfaceTypeName = TypeName .
 InterfaceTypeName = Name .
 
-//Key = FieldName | ElementIndex .
-Key = Expression .
-
+Key = FieldName | ElementIndex .
 KeyType = Type .
 Label = identifier .
 LabeledStmt = Label ":" Statement .
@@ -423,9 +388,7 @@ LiteralValue = "{" [ ElementList ] "}" .
 
 MapType = "map" "[" KeyType "]" ElementType .
 MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
-
-//MethodExpr = ReceiverType "." MethodName .
-
+MethodExpr = ReceiverType "." MethodName .
 MethodName = identifier .
 MethodSpec = MethodName Signature
 	| InterfaceTypeName .
@@ -437,12 +400,9 @@ Name = identifier [ "." identifier ] .
 //	| OperandName
 //	| MethodExpr
 //	| "(" Expression ")" .
-//Operand = Literal
-//	| Name
-//	| MethodExpr
-//	| "(" Expression ")" .
 Operand = Literal
 	| Name
+	| MethodExpr
 	| "(" Expression ")" .
 
 //OperandName = identifier | QualifiedIdent .
@@ -484,9 +444,9 @@ Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
 //ReceiverType = TypeName
 //	| "(" "*" TypeName ")"
 //	| "(" ReceiverType ")" .
-//ReceiverType = Name
-//	| "(" "*" Name ")"
-//	| "(" ReceiverType ")" .
+ReceiverType = Name
+	| "(" "*" Name ")"
+	| "(" ReceiverType ")" .
 
 RecvExpr = Expression .
 
@@ -499,9 +459,7 @@ RecvStmt = [
 		| idlist_colas
 	  ] RecvExpr .
 
-//Result = Parameters | Type .
-Result = Parameters | Name | TypeLit .
-
+Result = Parameters | Type .
 ReturnStmt = "return" [ ExpressionList ] .
 SelectStmt = "select" "{" { CommClause } "}" .
 Selector = "." identifier .
