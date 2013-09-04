@@ -606,11 +606,11 @@ PackageName:
 ParameterDecl:
 	ParameterDecl2 Type
 	{
-		$$ = []ParameterDecl{$1, $2} //TODO 83
+		$$ = []ParameterDecl{$1, "T:", $2} //TODO 83
 	}
 |	IDENTIFIER_LIST ParameterDecl2 Type
 	{
-		$$ = []ParameterDecl{$1, $2, $3} //TODO 84
+		$$ = []ParameterDecl{$1, $2, "T:", $3} //TODO 84
 	}
 
 ParameterDecl2:
@@ -620,7 +620,7 @@ ParameterDecl2:
 	}
 |	DDD
 	{
-		$$ = $1 //TODO 86
+		$$ = "..." //$1 //TODO 86
 	}
 
 ParameterList1:
@@ -628,9 +628,14 @@ ParameterList1:
 	{
 		$$ = []ParameterList1(nil) //TODO 87
 	}
-|	ParameterList1 ',' ParameterDecl
+|	ParameterList1 ','
 	{
-		$$ = append($1.([]ParameterList1), ",", $3) //TODO 88
+		lx := yylex.(*lx)
+		lx.toks, lx.ids, lx.state, lx.preamble = nil, nil, st11, 0 //TODO named state alias
+	}
+	ParameterDecl
+	{
+		$$ = append($1.([]ParameterList1), ",", $4) //TODO 88
 	}
 
 Parameters:
