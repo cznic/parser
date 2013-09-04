@@ -73,7 +73,7 @@ func test(t *testing.T, root string) {
 			_, gerr := ParseFile(pth, nil)
 
 			if g, e := gerr == nil, eerr == nil; g != e {
-				t.Fatalf("%q\ng: %v\ne: %v", pth, gerr, eerr)
+				t.Fatalf("cnt: %d, %q\ng: %v\ne: %v", count, pth, gerr, eerr)
 			}
 
 			if *optPE && gerr != nil {

@@ -39,6 +39,8 @@ import (
 %token	COMMCHAN
 %token	DDD
 %token	DEC
+%token	DOT_LPAR
+%token	DOT_LPAR_TYPE
 %token	EQ
 %token	FLOAT_LIT
 %token	GE
@@ -77,6 +79,8 @@ import (
 	COMMCHAN
 	DDD
 	DEC
+	DOT_LPAR
+	DOT_LPAR_TYPE
 	EQ
 	GE
 	IDLIST_COLAS
@@ -735,9 +739,9 @@ PrimaryExpr:
 	{
 		$$ = []PrimaryExpr{$1, "[", $3, ":", $5, "]"} //TODO 111
 	}
-|	PrimaryExpr '.' '(' Type ')'
+|	PrimaryExpr DOT_LPAR Type ')'
 	{
-		$$ = []PrimaryExpr{$1, ".", "(", $4, ")"} //TODO 112
+		$$ = []PrimaryExpr{$1, ".", "(", $3, ")"} //TODO 112
 	}
 |	PrimaryExpr '(' ')'
 	{
@@ -1074,21 +1078,21 @@ Statement:
 	{
 		$$ = []Statement{"switch", $2, ";", $4, $5, $6, "⎬"} //TODO 186
 	}
-|	SWITCH PrimaryExpr '.' '(' TYPE ')' '{' TypeSwitchStmt2 '}'
+|	SWITCH PrimaryExpr DOT_LPAR_TYPE ')' LBR TypeSwitchStmt2 '}'
 	{
-		$$ = []Statement{"switch", $2, ".", "(", "type", ")", "⎨", $8, "⎬"} //TODO 187
+		$$ = []Statement{"switch", $2, ".", "(", "type", ")", "⎨", $6, "⎬"} //TODO 187
 	}
-|	SWITCH SimpleStmt ';' PrimaryExpr '.' '(' TYPE ')' '{' TypeSwitchStmt2 '}'
+|	SWITCH SimpleStmt ';' PrimaryExpr DOT_LPAR_TYPE ')' LBR TypeSwitchStmt2 '}'
 	{
-		$$ = []Statement{"switch", $2, ";", $4, ".", "(", "type", ")", "⎨", $10, "⎬"} //TODO 188
+		$$ = []Statement{"switch", $2, ";", $4, ".", "(", "type", ")", "⎨", $8, "⎬"} //TODO 188
 	}
-|	SWITCH IDLIST_COLAS PrimaryExpr '.' '(' TYPE ')' '{' TypeSwitchStmt2 '}'
+|	SWITCH IDLIST_COLAS PrimaryExpr DOT_LPAR_TYPE ')' LBR TypeSwitchStmt2 '}'
 	{
-		$$ = []Statement{"switch", $2, $3, ".", "(", "type", ")", "⎨", $9, "⎬"} //TODO 189
+		$$ = []Statement{"switch", $2, $3, ".", "(", "type", ")", "⎨", $7, "⎬"} //TODO 189
 	}
-|	SWITCH SimpleStmt ';' IDLIST_COLAS PrimaryExpr '.' '(' TYPE ')' '{' TypeSwitchStmt2 '}'
+|	SWITCH SimpleStmt ';' IDLIST_COLAS PrimaryExpr DOT_LPAR_TYPE ')' LBR TypeSwitchStmt2 '}'
 	{
-		$$ = []Statement{"switch", $2, ";", $4, $5, ".", "(", "type", ")", "⎨", $11, "⎬"} //TODO 190
+		$$ = []Statement{"switch", $2, ";", $4, $5, ".", "(", "type", ")", "⎨", $9, "⎬"} //TODO 190
 	}
 |	SELECT '{' SelectStmt1 '}'
 	{

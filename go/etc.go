@@ -221,7 +221,7 @@ func (x *lx) Lex(lval *yySymType) (r int) {
 		dbg(">>>> %d:%d: returning %q, (%v)\n", lval.pos.line, lval.pos.col, s, lval.val)
 		//TODO-
 		if e := recover(); e != nil {
-			dbg("%s:%d:%d: %v", x.Fname, x.Line, x.Col, e)
+			dbg("recovered: %s:%d:%d: %v", x.Fname, x.Line, x.Col, e)
 			r = -1
 		}
 	}()
@@ -257,7 +257,7 @@ dump:
 			case IDENTIFIER:
 				x.preamble, x.toks, x.ids, x.state = 0, []tok{tk}, []tok{tk}, st14
 			case STRUCT:
-				panic("st1 struct")
+				x.toks, x.state = []tok{tk}, st18
 			default:
 				lval.pos, lval.val = tk.pos, tk.val
 				return
@@ -285,6 +285,12 @@ dump:
 			switch r {
 			case ',':
 				x.toks, x.state = append(x.toks, tk), st3
+			case STRUCT:
+				x.toks[0] = tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}
+				x.toks, x.state = append(x.toks, tk), st18
+			case FUNC:
+				x.toks[0] = tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}
+				x.toks, x.state = append(x.toks, tk), st5
 			default:
 				x.dump = append(x.toks[:mathutil.Max(0, x.preamble)], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk)
 			}
@@ -459,6 +465,17 @@ func (x *lx) lex0() (y tok) {
 			tok.val, x.prev0Valid = x.prev0, false
 			y = tok
 			break
+		}
+
+		if p, n := x.prev0.tk, tok.tk; p == '.' && n == '(' {
+			tok.tk, tok.pos, x.prev0Valid = DOT_LPAR, x.prev0.pos, true
+			x.prev0 = tok
+			continue
+		}
+
+		if p, n := x.prev0.tk, tok.tk; p == DOT_LPAR && n == TYPE {
+			tok.tk, tok.pos, x.prev0Valid = DOT_LPAR_TYPE, x.prev0.pos, false
+			return tok
 		}
 
 		y, x.prev0 = x.prev0, tok

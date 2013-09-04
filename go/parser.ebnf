@@ -75,6 +75,9 @@ Result
 ebnf2y -M -o parser.y parser.ebnf		031	000	031
 iebnf2y -M -iy 1 -o parser.y parser.ebnf	000	000	000
 
+...............................................................................
+dot_lpar,dot_lpar_type
+
 */
 
 andand		= "&&" .
@@ -107,6 +110,8 @@ and_not_assign	= "&^=" .
 
 lbr = .
 lpar = .
+dot_lpar = "." "(" .
+dot_lpar_type = "." "(" "type".
 
 Binary_op = oror
 	| andand
@@ -580,7 +585,9 @@ Type = Name
 CType = TypeLitNoPtr 
 	| "(" [ "*" ] TypeLitNoPtr ")" .
 
-TypeAssertion = "." "(" Type ")" .
+//TypeAssertion = "." "(" Type ")" .
+TypeAssertion = dot_lpar Type ")" .
+
 TypeCaseClause = TypeSwitchCase ":" StatementList .
 
 //TypeDecl = "type" (
@@ -619,9 +626,11 @@ TypeSwitchCase = "case" TypeList
 	| "default" .
 
 //TypeSwitchGuard = [ identifier ":=" ] PrimaryExpr "." "(" "type" ")" .
-TypeSwitchGuard = [ idlist_colas ] PrimaryExpr "." "(" "type" ")" .
+//TypeSwitchGuard = [ idlist_colas ] PrimaryExpr "." "(" "type" ")" .
+TypeSwitchGuard = [ idlist_colas ] PrimaryExpr dot_lpar_type ")" .
 
-TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
+//TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
+TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard lbr { TypeCaseClause } "}" .
 
 //UnaryExpr = PrimaryExpr
 //	| unary_op UnaryExpr .

@@ -1,9 +1,6 @@
 package main
 
-func main() {
-	switch x.(type) {
-	}
-}
+//TODO rename this file
 
 var (
 	_ = func(int) (i int) {}
