@@ -2,71 +2,71 @@ package main
 
 //TODO ParameterDecl 
 
-var (
-	_ = func() {}
-	_ = func(int) {}
-	_ = func(int, uint) {}
-	_ = func(int, uint, float64) {}
-
-	_ = func() {}
-	_ = func(int,) {}
-	_ = func(int, uint,) {}
-	_ = func(int, uint, float64,) {}
-)
-
-type (
-	_ func()
-	_ func(int)
-	_ func(int, uint)
-	_ func(int, uint, float64)
-
-	_ func()
-	_ func(int,)
-	_ func(int, uint,)
-	_ func(int, uint, float64,)
-)
-
-var (
-	_ = func(...int) {}
-	_ = func(...T, U) {}
-	_ = func(T, ...U) {}
-	_ = func(int, uint, float64) {}
-	_ = func(int, uint, ...float64) {}
-	_ = func(int, ...uint, float64) {}
-	_ = func(int, ...uint, ...float64) {}
-	_ = func(...int, uint, float64) {}
-	_ = func(...int, uint, ...float64) {}
-	_ = func(...int, ...uint, float64) {}
-	_ = func(...int, ...uint, ...float64) {}
-)
-
-type (
-	_ func(...int)
-	_ func(...T, U)
-	_ func(T, ...U)
-	_ func(int, uint, float64)
-	_ func(int, uint, ...float64)
-	_ func(int, ...uint, float64)
-	_ func(int, ...uint, ...float64)
-	_ func(...int, uint, float64)
-	_ func(...int, uint, ...float64)
-	_ func(...int, ...uint, float64)
-	_ func(...int, ...uint, ...float64)
-)
-
-type (
-	_ func()
-	_ func(T)
-	_ func(...T)
-	_ func(id T)
-	_ func(id ...T)
-	_ func(id, id2 T)
-	_ func(id, id2 ...T)
-	_ func(id, id2 T, id3 U)
-	//_ func(id, id2 T, id3, id4 U)
-	//_ func(T1, T2)
-)
-
+//var (
+//	_ = func() {}
+//	_ = func(int) {}
+//	_ = func(int, uint) {}
+//	_ = func(int, uint, float64) {}
+//
+//	_ = func() {}
+//	_ = func(int,) {}
+//	_ = func(int, uint,) {}
+//	_ = func(int, uint, float64,) {}
+//)
+//
+//type (
+//	_ func()
+//	_ func(int)
+//	_ func(int, uint)
+//	_ func(int, uint, float64)
+//
+//	_ func()
+//	_ func(int,)
+//	_ func(int, uint,)
+//	_ func(int, uint, float64,)
+//)
+//
+//var (
+//	_ = func(...int) {}
+//	_ = func(...T, U) {}
+//	_ = func(T, ...U) {}
+//	_ = func(int, uint, float64) {}
+//	_ = func(int, uint, ...float64) {}
+//	_ = func(int, ...uint, float64) {}
+//	_ = func(int, ...uint, ...float64) {}
+//	_ = func(...int, uint, float64) {}
+//	_ = func(...int, uint, ...float64) {}
+//	_ = func(...int, ...uint, float64) {}
+//	_ = func(...int, ...uint, ...float64) {}
+//)
+//
+//type (
+//	_ func(...int)
+//	_ func(...T, U)
+//	_ func(T, ...U)
+//	_ func(int, uint, float64)
+//	_ func(int, uint, ...float64)
+//	_ func(int, ...uint, float64)
+//	_ func(int, ...uint, ...float64)
+//	_ func(...int, uint, float64)
+//	_ func(...int, uint, ...float64)
+//	_ func(...int, ...uint, float64)
+//	_ func(...int, ...uint, ...float64)
+//)
+//
+//type (
+//	_ func()
+//	_ func(T)
+//	_ func(...T)
+//	_ func(id T)
+//	_ func(id ...T)
+//	_ func(id, id2 T)
+//	_ func(id, id2 ...T)
+//	_ func(id, id2 T, id3 U)
+//	_ func(id, id2 T, id3, id4 U)
+//	_ func(T1, T2)
+//)
+//
 //var (
 //	_ = func() {}
 //	_ = func(T) {}
@@ -107,7 +107,7 @@ type (
 //func (id T) _()
 //func (id *T) _()
 //
-//// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 //
 //func M(f uint64) (in, out T) {
 //	in = make(T, 100)
