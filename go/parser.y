@@ -811,13 +811,19 @@ SendStmt:
 	}
 
 Signature:
-	'(' ')' Signature1
+	'(' ')'
 	{
-		$$ = []Signature{"(", ")", $3} //TODO 131
 	}
-|	'(' ParameterList ')' Signature1
+	Signature1
 	{
-		$$ = []Signature{"(", $2, ")", $4} //TODO 132
+		$$ = []Signature{"(", ")", $4} //TODO 131
+	}
+|	'(' ParameterList ')'
+	{
+	}
+	Signature1
+	{
+		$$ = []Signature{"(", $2, ")", $5} //TODO 132
 	}
 
 Signature1:

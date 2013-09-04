@@ -196,14 +196,18 @@ type lx struct {
 	toks       []tok
 	ids        []tok
 	preamble   int
-	prev       tok
-	prevValid  bool
+	prev0      tok
+	prev0Valid bool
 	rxFix      int
 	lbrHunt    bool
 	lbrBalance int
 }
 
 func (x *lx) Lex(lval *yySymType) (r int) {
+	return x.lex1(lval)
+}
+
+func (x *lx) lex1(lval *yySymType) (r int) {
 	dbg("\n<<<< Lex state st%d", x.state+1)
 	defer func() {
 		var s string
@@ -233,7 +237,7 @@ dump:
 		}
 
 		dbg("[state st%d]", x.state+1)
-		tk := x.lex()
+		tk := x.lex0()
 
 		switch r = tk.tk; x.state {
 		case st1:
@@ -421,7 +425,7 @@ dump:
 	}
 }
 
-func (x *lx) lex() (y tok) {
+func (x *lx) lex0() (y tok) {
 	defer func() {
 		var s string
 		if y.tk < 128 {
@@ -439,18 +443,18 @@ func (x *lx) lex() (y tok) {
 
 		tok := tok{xlat[t], val, pos{x.Line, x.Col}}
 		//dbg("ScanSemis %v (%v : %v, %#x, %q)", t, val, tok.tk, tok.tk, string(tok.tk))
-		if !x.prevValid {
-			x.prev, x.prevValid = tok, true
+		if !x.prev0Valid {
+			x.prev0, x.prev0Valid = tok, true
 			continue
 		}
 
-		if p, n := x.prev.tk, tok.tk; (p == ',' || p == ';') && (n == ')' || n == '}') {
-			tok.val, x.prevValid = x.prev, false
+		if p, n := x.prev0.tk, tok.tk; (p == ',' || p == ';') && (n == ')' || n == '}') {
+			tok.val, x.prev0Valid = x.prev0, false
 			y = tok
 			break
 		}
 
-		y, x.prev = x.prev, tok
+		y, x.prev0 = x.prev0, tok
 		break
 	}
 
