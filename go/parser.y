@@ -10,7 +10,7 @@
 // 
 //   [1]: http://github.com/cznic/ebnf2y
 
-package main //TODO real package name
+package parser
 
 //TODO required only be the demo _dump function
 import (
@@ -24,6 +24,8 @@ import (
 %}
 
 %union {
+	val  interface{}
+	pos  pos
 	item interface{} //TODO insert real field(s)
 }
 
@@ -75,14 +77,9 @@ import (
 	DDD
 	DEC
 	EQ
-	FLOAT_LIT
 	GE
-	IDENTIFIER
-	IDENTIFIER_LIST
 	IDLIST_COLAS
-	IMAGINARY_LIT
 	INC
-	INT_LIT
 	LBR
 	LE
 	LSH
@@ -93,12 +90,13 @@ import (
 	QUO_ASSIGN
 	REM_ASSIGN
 	RSH
-	RUNE_LIT
 	SHL_ASSIGN
 	SHR_ASSIGN
-	STRING_LIT
 	SUB_ASSIGN
 	XOR_ASSIGN
+
+%type	<val>	FLOAT_LIT IDENTIFIER IDENTIFIER_LIST IMAGINARY_LIT INT_LIT 
+		RUNE_LIT STRING_LIT
 
 %token BREAK
 %token CASE
@@ -207,6 +205,9 @@ import (
 
 %left	notLParen // Signature
 %left	'('
+
+%left	notPackage
+%left	PACKAGE
 
 %start Start
 
@@ -919,7 +920,12 @@ SliceType:
 	}
 
 SourceFile:
-	PACKAGE PackageName ';' SourceFile1 SourceFile2
+	%prec notPackage
+	{
+		yylex.(*lx).error("package statement must be first")
+		goto ret1
+	}
+|	PACKAGE PackageName ';' SourceFile1 SourceFile2
 	{
 		$$ = []SourceFile{"package", $2, ";", $4, $5} //TODO 155
 	}
@@ -1383,23 +1389,25 @@ type (
 	VarSpec interface{}
 )
 	
-func _dump() {
+func _dump() string {
 	s := fmt.Sprintf("%#v", _parserResult)
 	s = strings.Replace(s, "%", "%%", -1)
 	s = strings.Replace(s, "{", "{%i\n", -1)
 	s = strings.Replace(s, "}", "%u\n}", -1)
 	s = strings.Replace(s, ", ", ",\n", -1)
 	var buf bytes.Buffer
-	strutil.IndentFormatter(&buf, ". ").Format(s)
+	strutil.IndentFormatter(&buf, "| ").Format(s)
 	buf.WriteString("\n")
 	a := strings.Split(buf.String(), "\n")
+	var r bytes.Buffer
 	for _, v := range a {
 		if strings.HasSuffix(v, "(nil)") || strings.HasSuffix(v, "(nil),") {
 			continue
 		}
-	
-		fmt.Println(v)
+
+		fmt.Fprintln(&r, v)
 	}
+	return r.String()
 }
 
 // End of demo stuff
