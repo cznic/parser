@@ -57,6 +57,21 @@ iebnf2y -M -iy 1 -o parser.y parser.ebnf	002	006	008
 ebnf2y -M -o parser.y parser.ebnf		032	000	032
 iebnf2y -M -iy 1 -o parser.y parser.ebnf	000	000	000
 
+...............................................................................
+Result
+
+%left	OROR
+%left	ANDAND
+%left	'<' '>' EQ GE LE NE
+%left	'+' '-' '^' '|'
+%left	'%' '&' '*' '/' ANDNOT LSH RSH
+
+%left	notDot	// Name
+%left	'.'
+
+ebnf2y -M -o parser.y parser.ebnf		031	000	031
+iebnf2y -M -iy 1 -o parser.y parser.ebnf	000	000	000
+
 */
 
 andand		= "&&" .
@@ -88,6 +103,7 @@ xor_assign	= "^=" .
 and_not_assign	= "&^=" .
 
 lbr = .
+lpar = .
 
 Binary_op = oror
 	| andand
@@ -500,7 +516,9 @@ RecvStmt = [
 	  ] RecvExpr .
 
 //Result = Parameters | Type .
-Result = Parameters | Name | TypeLit .
+//Result = Parameters | Name | TypeLit .
+Result = RParameters | Name | TypeLit .
+RParameters = lpar [ ParameterList ] ")" .
 
 ReturnStmt = "return" [ ExpressionList ] .
 SelectStmt = "select" "{" { CommClause } "}" .
