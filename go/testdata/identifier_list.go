@@ -3,8 +3,8 @@ package main
 //TODO ParameterDecl 
 
 var (
-	_ = func(int) (i int) {} //TODO-
-	_ = func() (i int) {} //TODO-
+	_ = func(int) (i int) {}
+	_ = func() (i int) {}
 	_ = func() {}
 	_ = func(int) {}
 	_ = func(int, uint) {}
@@ -17,6 +17,8 @@ var (
 )
 
 type (
+	_ func(int) (i int)
+	_ func() (i int)
 	_ func()
 	_ func(int)
 	_ func(int, uint)
@@ -187,23 +189,23 @@ type (
 	t struct { g; h }
 	t struct { i.j; k.l }
 	t struct { m int; n int }
-	//t struct { o, p int; q, r int }
+	t struct { o, p int; q, r int }
 )
 
-//type ()
-//type (
-//	t struct{}
-//	t struct { *a; }
-//	t struct { *b.c; }
-//	t struct { d; }
-//	t struct { e.f; }
-//	t struct { g int; }
-//	t struct { h, i int; }
-//
-//	t struct { *a; *b; }
-//	t struct { *c.d; *e.f; }
-//	t struct { g; h; }
-//	t struct { i.j; k.l; }
-//	t struct { m int; n int; }
-//	t struct { o, p int; q, r int; }
-//)
+type ()
+type (
+	t struct{}
+	t struct { *a; }
+	t struct { *b.c; }
+	t struct { d; }
+	t struct { e.f; }
+	t struct { g int; }
+	t struct { h, i int; }
+
+	t struct { *a; *b; }
+	t struct { *c.d; *e.f; }
+	t struct { g; h; }
+	t struct { i.j; k.l; }
+	t struct { m int; n int; }
+	t struct { o, p int; q, r int; }
+)
