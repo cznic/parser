@@ -201,6 +201,9 @@ import (
 %left	notDot	// Name
 %left	'.'
 
+%left	notPackage
+%left	PACKAGE
+
 %start Start
 
 %%
@@ -228,9 +231,14 @@ ConstDecl111:
 	{
 		$$ = []ConstDecl111(nil) //TODO 4
 	}
-|	ConstDecl111 ';' ConstSpec
+|	ConstDecl111 ';'
 	{
-		$$ = append($1.([]ConstDecl111), ";", $3) //TODO 5
+		lx := yylex.(*lx)
+		lx.preamble, lx.toks, lx.ids, lx.state = 0, nil, nil, st3 //TODO named state alias
+	}
+	ConstSpec
+	{
+		$$ = append($1.([]ConstDecl111), ";", $4) //TODO 5
 	}
 
 ConstSpec:
@@ -941,7 +949,12 @@ SliceType:
 	}
 
 SourceFile:
-	PACKAGE PackageName ';' SourceFile1 SourceFile2
+	%prec notPackage
+	{
+		yylex.(*lx).error("package statement must be first")
+		goto ret1
+	}
+|	PACKAGE PackageName ';' SourceFile1 SourceFile2
 	{
 		$$ = []SourceFile{"package", $2, ";", $4, $5} //TODO 159
 	}
@@ -1141,9 +1154,14 @@ StructType11:
 	{
 		$$ = []StructType11(nil) //TODO 204
 	}
-|	StructType11 ';' FieldDecl
+|	StructType11 ';'
 	{
-		$$ = append($1.([]StructType11), ";", $3) //TODO 205
+		lx := yylex.(*lx)
+		lx.toks, lx.preamble, lx.ids, lx.state = nil, 0, nil, st19 //TODO named state alias
+	}
+	FieldDecl
+	{
+		$$ = append($1.([]StructType11), ";", $4) //TODO 205
 	}
 
 Type:

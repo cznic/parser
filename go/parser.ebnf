@@ -69,6 +69,9 @@ Result
 %left	notDot	// Name
 %left	'.'
 
+%left	notPackage
+%left	PACKAGE
+
 ebnf2y -M -o parser.y parser.ebnf		031	000	031
 iebnf2y -M -iy 1 -o parser.y parser.ebnf	000	000	000
 
