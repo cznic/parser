@@ -636,9 +636,14 @@ ParameterList1:
 	{
 		$$ = []ParameterList1(nil) //TODO 90
 	}
-|	ParameterList1 ',' ParameterDecl
+|	ParameterList1 ','
 	{
-		$$ = append($1.([]ParameterList1), ",", $3) //TODO 91
+		lx := yylex.(*lx)
+		lx.toks, lx.ids, lx.state, lx.preamble = nil, nil, st11, 0 //TODO named state alias
+	}
+	ParameterDecl
+	{
+		$$ = append($1.([]ParameterList1), ",", $4) //TODO 91
 	}
 
 Parameters1:
