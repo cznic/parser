@@ -1,6 +1,9 @@
 package main
 
-//TODO ParameterDecl 
+func main() {
+	switch x.(type) {
+	}
+}
 
 var (
 	_ = func(int) (i int) {}

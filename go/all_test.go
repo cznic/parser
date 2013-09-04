@@ -68,6 +68,7 @@ func test(t *testing.T, root string) {
 			}
 
 			dbg("PATH %s", pth)
+			yyDebug = 4 //TODO-
 			_, eerr := parser.ParseFile(token.NewFileSet(), pth, nil, 0)
 			_, gerr := ParseFile(pth, nil)
 
@@ -103,7 +104,6 @@ func TestTestData(t *testing.T) {
 //	test(t, std)
 //}
 
-//TODO
-//func TestTests(t *testing.T) {
-//	test(t, tests)
-//}
+func TestTests(t *testing.T) {
+	test(t, tests)
+}

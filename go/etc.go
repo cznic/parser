@@ -219,6 +219,11 @@ func (x *lx) Lex(lval *yySymType) (r int) {
 			s = yyToknames[r-ADD_ASSIGN]
 		}
 		dbg(">>>> %d:%d: returning %q, (%v)\n", lval.pos.line, lval.pos.col, s, lval.val)
+		//TODO-
+		if e := recover(); e != nil {
+			dbg("%s:%d:%d: %v", x.Fname, x.Line, x.Col, e)
+			r = -1
+		}
 	}()
 
 dump:
@@ -389,12 +394,12 @@ dump:
 			case ',':
 				x.toks, x.state = append(x.toks, tk), st15
 			case COLAS:
-				panic("st16 :=")
+				x.dump = append(x.toks[:x.preamble], tok{IDLIST_COLAS, x.ids, x.ids[0].pos})
 			default:
 				x.dump = append(x.toks, tk)
 			}
 		case st17: // state 17 accepts rule 4 // colas
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			panic(fmt.Sprintf("internal error st%d", x.state+1))
 		case st18:
 			switch r {
 			case '{':
