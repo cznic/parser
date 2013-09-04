@@ -210,7 +210,7 @@ func (x *lx) Lex(lval *yySymType) (r int) {
 		if r < 128 {
 			s = string(r)
 		} else {
-			s = yyToknames[r-ANDAND]
+			s = yyToknames[r-ADD_ASSIGN]
 		}
 		dbg(">>>> %d:%d: returning %q, (%v)\n", lval.pos.line, lval.pos.col, s, lval.val)
 	}()
@@ -427,7 +427,7 @@ func (x *lx) lex() (y tok) {
 		if y.tk < 128 {
 			s = string(y.tk)
 		} else {
-			s = yyToknames[y.tk-ANDAND]
+			s = yyToknames[y.tk-ADD_ASSIGN]
 		}
 		dbg("........ %d:%d returning %q", x.Line, x.Col, s)
 	}()
@@ -438,7 +438,7 @@ func (x *lx) lex() (y tok) {
 		}
 
 		tok := tok{xlat[t], val, pos{x.Line, x.Col}}
-		//dbg("ScanSemis %v", t)
+		//dbg("ScanSemis %v (%v : %v, %#x, %q)", t, val, tok.tk, tok.tk, string(tok.tk))
 		if !x.prevValid {
 			x.prev, x.prevValid = tok, true
 			continue
