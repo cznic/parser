@@ -1278,9 +1278,14 @@ VarDecl111:
 	{
 		$$ = []VarDecl111(nil) //TODO 237
 	}
-|	VarDecl111 ';' VarSpec
+|	VarDecl111 ';'
 	{
-		$$ = append($1.([]VarDecl111), ";", $3) //TODO 238
+		lx := yylex.(*lx)
+		lx.preamble, lx.toks, lx.ids, lx.state = 0, nil, nil, st3 //TODO named state alias
+	}
+	VarSpec
+	{
+		$$ = append($1.([]VarDecl111), ";", $4) //TODO 238
 	}
 
 VarSpec:
