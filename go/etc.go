@@ -201,15 +201,17 @@ type lx struct {
 	rxFix      int
 	lbrHunt    bool
 	lbrBalance int
+	lparHunt   bool
 }
 
 func (x *lx) Lex(lval *yySymType) (r int) {
-	return x.lex1(lval)
-}
-
-func (x *lx) lex1(lval *yySymType) (r int) {
 	dbg("\n<<<< Lex state st%d", x.state+1)
 	defer func() {
+		if x.lparHunt && r == '(' {
+			//dbg("LPAR")
+			r, x.preamble, x.toks, x.ids, x.state = LPAR, 0, nil, nil, st11
+		}
+		x.lparHunt = false
 		var s string
 		if r < 128 {
 			s = string(r)

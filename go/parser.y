@@ -214,7 +214,7 @@ ArrayType:
 Block:
 	'{' StatementList '}'
 	{
-		$$ = []Block{"{", $2, "}"} //TODO 2
+		$$ = []Block{"⎨", $2, "⎬"} //TODO 2
 	}
 
 Condition:
@@ -480,11 +480,11 @@ FunctionName:
 IfStmt:
 	IF Expression LBR StatementList '}' IfStmt2
 	{
-		$$ = []IfStmt{"if", $2, $3, $4, "}", $6} //TODO 60
+		$$ = []IfStmt{"if", $2, $3, $4, "⎬", $6} //TODO 60
 	}
 |	IF SimpleStmt ';' Expression LBR StatementList '}' IfStmt2
 	{
-		$$ = []IfStmt{"if", $2, ";", $4, $5, $6, "}", $8} //TODO 61
+		$$ = []IfStmt{"if", $2, ";", $4, $5, $6, "⎬", $8} //TODO 61
 	}
 
 IfStmt2:
@@ -550,11 +550,11 @@ Label:
 LiteralValue:
 	'{' '}'
 	{
-		$$ = []LiteralValue{"{", "}"} //TODO 74
+		$$ = []LiteralValue{"⎨", "⎬"} //TODO 74
 	}
 |	'{' Element ElementList1 '}'
 	{
-		$$ = []LiteralValue{"{", $2, $3, "}"} //TODO 75
+		$$ = []LiteralValue{"⎨", $2, $3, "⎬"} //TODO 75
 	}
 
 MapType:
@@ -807,12 +807,13 @@ SelectStmt1:
 SendStmt:
 	Expression COMM Expression
 	{
-		$$ = []SendStmt{$1, $2, $3} //TODO 130
+		$$ = []SendStmt{$1, "<-(B)", $3} //$2, $3} //TODO 130
 	}
 
 Signature:
 	'(' ')'
 	{
+		yylex.(*lx).lparHunt = true
 	}
 	Signature1
 	{
@@ -820,6 +821,7 @@ Signature:
 	}
 |	'(' ParameterList ')'
 	{
+		yylex.(*lx).lparHunt = true
 	}
 	Signature1
 	{
@@ -1053,55 +1055,55 @@ Statement:
 	}
 |	SWITCH ExprSwitchStmt2 LBR ExprSwitchStmt3 '}'
 	{
-		$$ = []Statement{"switch", $2, $3, $4, "}"} //TODO 185
+		$$ = []Statement{"switch", $2, $3, $4, "⎬"} //TODO 185
 	}
 |	SWITCH SimpleStmt ';' ExprSwitchStmt2 LBR ExprSwitchStmt3 '}'
 	{
-		$$ = []Statement{"switch", $2, ";", $4, $5, $6, "}"} //TODO 186
+		$$ = []Statement{"switch", $2, ";", $4, $5, $6, "⎬"} //TODO 186
 	}
 |	SWITCH PrimaryExpr '.' '(' TYPE ')' '{' TypeSwitchStmt2 '}'
 	{
-		$$ = []Statement{"switch", $2, ".", "(", "type", ")", "{", $8, "}"} //TODO 187
+		$$ = []Statement{"switch", $2, ".", "(", "type", ")", "⎨", $8, "⎬"} //TODO 187
 	}
 |	SWITCH SimpleStmt ';' PrimaryExpr '.' '(' TYPE ')' '{' TypeSwitchStmt2 '}'
 	{
-		$$ = []Statement{"switch", $2, ";", $4, ".", "(", "type", ")", "{", $10, "}"} //TODO 188
+		$$ = []Statement{"switch", $2, ";", $4, ".", "(", "type", ")", "⎨", $10, "⎬"} //TODO 188
 	}
 |	SWITCH IDLIST_COLAS PrimaryExpr '.' '(' TYPE ')' '{' TypeSwitchStmt2 '}'
 	{
-		$$ = []Statement{"switch", $2, $3, ".", "(", "type", ")", "{", $9, "}"} //TODO 189
+		$$ = []Statement{"switch", $2, $3, ".", "(", "type", ")", "⎨", $9, "⎬"} //TODO 189
 	}
 |	SWITCH SimpleStmt ';' IDLIST_COLAS PrimaryExpr '.' '(' TYPE ')' '{' TypeSwitchStmt2 '}'
 	{
-		$$ = []Statement{"switch", $2, ";", $4, $5, ".", "(", "type", ")", "{", $11, "}"} //TODO 190
+		$$ = []Statement{"switch", $2, ";", $4, $5, ".", "(", "type", ")", "⎨", $11, "⎬"} //TODO 190
 	}
 |	SELECT '{' SelectStmt1 '}'
 	{
-		$$ = []Statement{"select", "{", $3, "}"} //TODO 191
+		$$ = []Statement{"select", "⎨", $3, "⎬"} //TODO 191
 	}
 |	FOR LBR StatementList '}'
 	{
-		$$ = []Statement{"for", $2, $3, "}"} //TODO 192
+		$$ = []Statement{"for", $2, $3, "⎬"} //TODO 192
 	}
 |	FOR Condition LBR StatementList '}'
 	{
-		$$ = []Statement{"for", $2, $3, $4, "}"} //TODO 193
+		$$ = []Statement{"for", $2, $3, $4, "⎬"} //TODO 193
 	}
 |	FOR InitStmt ';' ';' PostStmt LBR StatementList '}'
 	{
-		$$ = []Statement{"for", $2, ";", ";", $5, $6, $7, "}"} //TODO 194
+		$$ = []Statement{"for", $2, ";", ";", $5, $6, $7, "⎬"} //TODO 194
 	}
 |	FOR InitStmt ';' Condition ';' PostStmt LBR StatementList '}'
 	{
-		$$ = []Statement{"for", $2, ";", $4, ";", $6, $7, $8, "}"} //TODO 195
+		$$ = []Statement{"for", $2, ";", $4, ";", $6, $7, $8, "⎬"} //TODO 195
 	}
 |	FOR ExpressionList '=' RANGE Expression LBR StatementList '}'
 	{
-		$$ = []Statement{"for", $2, "=", "range", $5, $6, $7, "}"} //TODO 196
+		$$ = []Statement{"for", $2, "=", "range", $5, $6, $7, "⎬"} //TODO 196
 	}
 |	FOR IDLIST_COLAS RANGE Expression LBR StatementList '}'
 	{
-		$$ = []Statement{"for", $2, "range", $4, $5, $6, "}"} //TODO 197
+		$$ = []Statement{"for", $2, "range", $4, $5, $6, "⎬"} //TODO 197
 	}
 |	DEFER Expression
 	{
@@ -1127,11 +1129,11 @@ StatementList1:
 StructType:
 	STRUCT '{' '}'
 	{
-		$$ = []StructType{"struct", "{", "}"} //TODO 202
+		$$ = []StructType{"struct", "⎨", "⎬"} //TODO 202
 	}
 |	STRUCT '{' FieldDecl StructType11 '}'
 	{
-		$$ = []StructType{"struct", "{", $3, $4, "}"} //TODO 203
+		$$ = []StructType{"struct", "⎨", $3, $4, "⎬"} //TODO 203
 	}
 
 StructType11:
@@ -1203,11 +1205,11 @@ TypeLitNoPtr:
 	}
 |	INTERFACE '{' '}'
 	{
-		$$ = []TypeLitNoPtr{"interface", "{", "}"} //TODO 218
+		$$ = []TypeLitNoPtr{"interface", "⎨", "⎬"} //TODO 218
 	}
 |	INTERFACE '{' MethodSpec InterfaceType11 '}'
 	{
-		$$ = []TypeLitNoPtr{"interface", "{", $3, $4, "}"} //TODO 219
+		$$ = []TypeLitNoPtr{"interface", "⎨", $3, $4, "⎬"} //TODO 219
 	}
 |	SliceType
 	{
@@ -1281,7 +1283,7 @@ UnaryExpr:
 	}
 |	COMM UnaryExpr
 	{
-		$$ = []UnaryExpr{$1, $2} //TODO 236
+		$$ = []UnaryExpr{"<-(U)", $2} //$1, $2} //TODO 236
 	}
 
 VarDecl111:
