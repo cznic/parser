@@ -835,7 +835,6 @@ Signature:
 	}
 |	'(' ParameterList ')'
 	{
-		panic(".y:839")
 		yylex.(*lx).lparHunt = true
 	}
 	Signature1
