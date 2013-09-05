@@ -231,7 +231,7 @@ dump:
 		r, lval.pos, lval.val = tk.tk, tk.pos, tk.val
 		x.dump = x.dump[1:]
 		if len(x.dump) == 0 {
-			x.dump = nil
+			x.dump = x.dump[:0]
 		}
 		x.state = st1
 		return
@@ -247,9 +247,10 @@ dump:
 
 		switch r = tk.tk; x.state {
 		case st1:
+			x.preamble = -1
 			switch r {
 			case CONST, VAR:
-				panic("st1 const var")
+				x.toks, x.state = append(x.toks[:0], tk), st2
 			case FUNC:
 				panic("st1 func")
 			case IDENTIFIER:
@@ -260,9 +261,21 @@ dump:
 				x.dump = append(x.dump[:0], tk)
 			}
 		case st2:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case '(':
+				x.toks, x.state = append(x.toks, tk), st3
+			case IDENTIFIER:
+				panic("st2 identifier")
+			default:
+				panic("st2 default")
+			}
 		case st3:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				panic("st3 identifier")
+			default:
+				x.dump = append(x.toks, tk)
+			}
 		case st4: // state 4 accepts rule 1: const var
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st5:
