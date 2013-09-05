@@ -324,9 +324,21 @@ dump:
 		case st10:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st11:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st12
+			default:
+				panic("st11 default")
+			}
 		case st12: // state 12 accepts rule 2: func
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case ',':
+				panic("st12 ,")
+			case ')':
+				x.preamble, x.toks, x.ids, x.state = -1, append(x.toks, tk), nil, st9
+			default:
+				panic("st12 default")
+			}
 		case st13: // state 13 accepts rule 2: func
 			switch r {
 			case '*':
@@ -336,7 +348,8 @@ dump:
 			case ')':
 				x.preamble, x.toks, x.ids, x.state = -1, append(x.toks, tk), nil, st9
 			case ',':
-				panic("st13 ,")
+				x.toks, x.state = append(x.toks, tk), st11
+
 			default:
 				panic("st13 default")
 			}
