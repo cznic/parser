@@ -827,7 +827,6 @@ SendStmt:
 Signature:
 	'(' ')'
 	{
-		panic(".y:830")
 		yylex.(*lx).lparHunt = true
 	}
 	Signature1
@@ -1320,9 +1319,8 @@ VarDecl111:
 	}
 |	VarDecl111 ';'
 	{
-		panic(".y:1323")
 		lx := yylex.(*lx)
-		lx.preamble, lx.toks, lx.ids, lx.state = 0, nil, nil, st3 //TODO named state alias
+		lx.preamble, lx.toks, lx.ids, lx.state = -1, lx.toks[:0], nil, st3 //TODO named state alias
 	}
 	VarSpec
 	{

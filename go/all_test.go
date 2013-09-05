@@ -81,7 +81,7 @@ func test(t *testing.T, root string) {
 				t.Log(eerr)
 			}
 
-			if *optAST {
+			if *optAST && gerr == nil {
 				t.Log(_dump())
 			}
 

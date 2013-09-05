@@ -204,13 +204,12 @@ func (x *lx) Lex(lval *yySymType) (r int) {
 	dbg("\n<<<< Lex state st%d", x.state+1)
 	defer func() {
 		if e := recover(); e != nil {
-			_parserResult = nil
 			dbg(
-				"---------------------------\n\nRECOVERED: %s:%d:%d: %v\n\n---------------------------",
+				"---------------------------\n\n!!! RECOVERED: %s:%d:%d: %v\n\n---------------------------",
 				x.Fname, x.Line, x.Col, e,
 			)
-			r = -1
-			dbg("%v", _parserResult)
+			r = 0
+			x.error("")
 			return
 		}
 
@@ -251,18 +250,18 @@ dump:
 
 		switch r = tk.tk; x.state {
 		case st1:
-			x.preamble = -1
+			x.preamble, x.toks, x.ids = -1, x.toks[:0], nil
 			switch r {
 			case CONST, VAR:
-				x.toks, x.state = append(x.toks[:0], tk), st2
+				x.toks, x.state = append(x.toks, tk), st2
 			case FUNC:
-				panic("st1 func")
+				x.toks, x.state = append(x.toks, tk), st5
 			case IDENTIFIER:
-				x.toks, x.state = append(x.toks[:0], tk), st14
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st14
 			case STRUCT:
 				panic("st1 struct")
 			default:
-				x.dump = append(x.dump[:0], tk)
+				x.dump = append(x.dump, tk)
 			}
 		case st2:
 			switch r {
@@ -284,11 +283,30 @@ dump:
 				x.dump = append(x.toks, tk)
 			}
 		case st4: // state 4 accepts rule 1: const var
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case ',':
+				panic("st4 ,")
+			default:
+				x.dump = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk)
+			}
 		case st5:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case '(':
+				x.toks, x.state = append(x.toks, tk), st6
+			case IDENTIFIER:
+				panic("st5 identifier")
+			default:
+				panic("st5 default")
+			}
 		case st6:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case '*':
+				panic("st6 *")
+			case IDENTIFIER:
+				panic("st6 identifier")
+			default:
+				x.dump = append(x.toks, tk)
+			}
 		case st7:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		case st8:
@@ -352,17 +370,20 @@ func (x *lx) lex0() (y tok) {
 		}
 
 		if p, n := x.buf.tk, tok.tk; (p == ',' || p == ';') && (n == ')' || n == '}') {
-			tok.val, x.bufValid = x.buf, false
+			tok.val, x.bufValid = x.buf, true
+			x.buf = tok
 			continue
 		}
 
 		if p, n := x.buf.tk, tok.tk; p == '.' && n == '(' {
-			tok.tk, tok.pos, x.bufValid = DOT_LPAR, x.buf.pos, false
+			tok.tk, tok.pos, x.bufValid = DOT_LPAR, x.buf.pos, true
+			x.buf = tok
 			continue
 		}
 
 		if p, n := x.buf.tk, tok.tk; p == DOT_LPAR && n == TYPE {
 			tok.tk, tok.pos, x.bufValid = DOT_LPAR_TYPE, x.buf.pos, true
+			x.buf = tok
 			continue
 		}
 
