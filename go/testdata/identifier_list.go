@@ -3,6 +3,11 @@ package main
 //TODO rename this file
 
 var (
+	a struct{}
+	//a, b struct{}
+)
+
+var (
 	_ = func(int) (i int) {}
 	_ = func() (i int) {}
 	_ = func() {}
