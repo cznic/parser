@@ -9,19 +9,22 @@ rx	\({ident}?\*?{ident}\)
 
 %%
 
-{ident}?({const}|{var})\(?{list}
-{ident}?{func}({rx}?{ident})?\({list}
-{ident}?{struct}\{{list}
+({const}|{var})\(?{list}
+{func}({rx}?{ident})?\({list}
+{struct}\{{list}
 {list}{colas}
 
 %%
 
+(10:35) jnml@fsc-r550:~/src/github.com/cznic/parser/go$ golex -DFA fsm
+StartConditions:
+	INITIAL, scId:0, stateId:1
 DFA:
 [1]
 	"C", "V", --> 2
 	"F"--> 5
 	"I"--> 14
-	"S"--> 18
+	"S"--> 17
 [2]
 	"("--> 3
 	"I"--> 4
@@ -53,28 +56,22 @@ DFA:
 	")"--> 9
 	","--> 11
 [14]
-	"C", "V", --> 2
-	"F"--> 5
 	","--> 15
-	"A"--> 17
-	"S"--> 18
+	"A"--> 16
 [15]
-	"I"--> 16
+	"I"--> 14
 [16]
-	","--> 15
-	"A"--> 17
 [17]
+	"{"--> 18
 [18]
-	"{"--> 19
+	"I"--> 19
 [19]
-	"I"--> 20
-[20]
-	","--> 19
-state 4 accepts rule 1 // const, var
-state 12 accepts rule 2 // func
-state 13 accepts rule 2 // func
-state 17 accepts rule 4 // colas
-state 20 accepts rule 3 // struct
+	","--> 18
+state 4 accepts rule 1: const var
+state 12 accepts rule 2: func
+state 13 accepts rule 2: func 
+state 16 accepts rule 4: idlist_colas
+state 19 accepts rule 3: struct
 
 ...............................................................................
 PrimaryExpr:

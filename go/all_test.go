@@ -68,7 +68,7 @@ func test(t *testing.T, root string) {
 			}
 
 			dbg("PATH %s", pth)
-			yyDebug = 4 //TODO-
+			//yyDebug = 4 //TODO-
 			_, eerr := parser.ParseFile(token.NewFileSet(), pth, nil, 0)
 			_, gerr := ParseFile(pth, nil)
 

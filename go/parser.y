@@ -237,6 +237,7 @@ ConstDecl111:
 	}
 |	ConstDecl111 ';'
 	{
+		panic(".y:240")
 		lx := yylex.(*lx)
 		lx.preamble, lx.toks, lx.ids, lx.state = 0, nil, nil, st3 //TODO named state alias
 	}
@@ -640,6 +641,7 @@ ParameterList1:
 	}
 |	ParameterList1 ','
 	{
+		panic(".y:644")
 		lx := yylex.(*lx)
 		lx.toks, lx.ids, lx.state, lx.preamble = nil, nil, st11, 0 //TODO named state alias
 	}
@@ -825,6 +827,7 @@ SendStmt:
 Signature:
 	'(' ')'
 	{
+		panic(".y:830")
 		yylex.(*lx).lparHunt = true
 	}
 	Signature1
@@ -833,6 +836,7 @@ Signature:
 	}
 |	'(' ParameterList ')'
 	{
+		panic(".y:839")
 		yylex.(*lx).lparHunt = true
 	}
 	Signature1
@@ -1160,6 +1164,7 @@ StructType11:
 	}
 |	StructType11 ';'
 	{
+		panic(".y:1167")
 		lx := yylex.(*lx)
 		lx.toks, lx.preamble, lx.ids, lx.state = nil, 0, nil, st19 //TODO named state alias
 	}
@@ -1315,6 +1320,7 @@ VarDecl111:
 	}
 |	VarDecl111 ';'
 	{
+		panic(".y:1323")
 		lx := yylex.(*lx)
 		lx.preamble, lx.toks, lx.ids, lx.state = 0, nil, nil, st3 //TODO named state alias
 	}
