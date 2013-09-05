@@ -2,6 +2,9 @@ package main
 
 //TODO rename this file
 
+var()
+//type()
+//
 //var (
 //	_ = func() {}
 //	_ = func(int) {}
