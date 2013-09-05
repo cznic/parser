@@ -203,6 +203,17 @@ type lx struct {
 func (x *lx) Lex(lval *yySymType) (r int) {
 	dbg("\n<<<< Lex state st%d", x.state+1)
 	defer func() {
+		if e := recover(); e != nil {
+			_parserResult = nil
+			dbg(
+				"---------------------------\n\nRECOVERED: %s:%d:%d: %v\n\n---------------------------",
+				x.Fname, x.Line, x.Col, e,
+			)
+			r = -1
+			dbg("%v", _parserResult)
+			return
+		}
+
 		if x.lparHunt && r == '(' {
 			//dbg("LPAR")
 			r, x.preamble, x.toks, x.ids, x.state = LPAR, 0, nil, nil, st11
@@ -216,13 +227,6 @@ func (x *lx) Lex(lval *yySymType) (r int) {
 		}
 		dbg(">>>> %d:%d: returning %q, (%v)\n", lval.pos.line, lval.pos.col, s, lval.val)
 		//TODO-
-		if e := recover(); e != nil {
-			dbg(
-				"---------------------------\n\nRECOVERED: %s:%d:%d: %v\n\n---------------------------",
-				x.Fname, x.Line, x.Col, e,
-			)
-			r = -1
-		}
 	}()
 
 dump:
@@ -272,7 +276,10 @@ dump:
 		case st3:
 			switch r {
 			case IDENTIFIER:
-				panic("st3 identifier")
+				if x.preamble < 0 {
+					x.preamble = len(x.toks)
+				}
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st4
 			default:
 				x.dump = append(x.toks, tk)
 			}
