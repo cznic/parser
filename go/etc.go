@@ -269,7 +269,7 @@ dump:
 			case '(':
 				x.toks, x.state = append(x.toks, tk), st3
 			case IDENTIFIER:
-				panic("st2 identifier")
+				x.preamble, x.toks, x.ids, x.state = len(x.toks), append(x.toks, tk), append(x.ids, tk), st4
 			default:
 				panic("st2 default")
 			}
