@@ -466,7 +466,7 @@ FieldDecl:
 FieldDecl1:
 	IDENTIFIER_LIST Type
 	{
-		$$ = []FieldDecl1{$1, $2} //TODO 55
+		$$ = []FieldDecl1{$1, "T:", $2} //TODO 55
 	}
 |	Name
 	{

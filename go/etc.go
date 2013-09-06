@@ -428,7 +428,7 @@ dump:
 			case '}', '.':
 				x.dump = append(x.toks, tk)
 			default:
-				panic("st19 default")
+				x.dump = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk)
 			}
 		default:
 			panic(fmt.Sprintf("internal error st%d", x.state+1))
