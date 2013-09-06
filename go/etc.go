@@ -303,7 +303,7 @@ dump:
 			x.rxFix = -1
 			switch r {
 			case '*':
-				panic("st6 *")
+				x.toks, x.state = append(x.toks, tk), st7
 			case IDENTIFIER:
 				if x.preamble < 0 {
 					x.preamble = len(x.toks)
@@ -313,7 +313,12 @@ dump:
 				x.dump = append(x.toks, tk)
 			}
 		case st7:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				x.toks, x.state = append(x.toks, tk), st8
+			default:
+				panic("st7 default")
+			}
 		case st8:
 			switch r {
 			case ')':
