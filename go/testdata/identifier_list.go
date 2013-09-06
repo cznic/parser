@@ -127,15 +127,15 @@ func M(f uint64) (in, out T) {
 
 const a = 1
 const b, c = 2, 3
-//const ()
-//const (
-//	e = 4
-//)
-//const ( f = 5 )
-//const (
-//	g    = 6
-//	h, i = 7, 8
-//)
+const ()
+const (
+	e = 4
+)
+const ( f = 5 )
+const (
+	g    = 6
+	h, i = 7, 8
+)
 //const ( j = 1; k, l = 9, 10 )
 //
 //const ()
