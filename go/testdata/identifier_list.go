@@ -6,6 +6,8 @@ var()
 type()
 
 var (
+	_ = func(int) (i int) {}
+	_ = func() (i int) {}
 	_ = func() {}
 	_ = func(int) {}
 	_ = func(int, uint) {}
@@ -19,16 +21,16 @@ var (
 
 type (
 	_ func(int) (i int)
-	//_ func() (i int)
-	//_ func()
-	//_ func(int)
-	//_ func(int, uint)
-	//_ func(int, uint, float64)
+	_ func() (i int)
+	_ func()
+	_ func(int)
+	_ func(int, uint)
+	_ func(int, uint, float64)
 
-	//_ func()
-	//_ func(int,)
-	//_ func(int, uint,)
-	//_ func(int, uint, float64,)
+	_ func()
+	_ func(int,)
+	_ func(int, uint,)
+	_ func(int, uint, float64,)
 )
 
 //var (

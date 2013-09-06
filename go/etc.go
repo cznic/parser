@@ -356,11 +356,21 @@ dump:
 		case st14:
 			switch r {
 			case ',':
-				panic("str14 ,")
+				panic("st14 ,")
 			case COLAS:
-				panic("str14 :=")
+				panic("st14 :=")
 			default:
-				x.dump = append(x.toks, tk)
+				x.preamble, x.ids = -1, nil
+				switch r {
+				case CONST, VAR:
+					x.toks, x.state = append(x.toks, tk), st2
+				case FUNC:
+					x.toks, x.state = append(x.toks, tk), st5
+				case STRUCT:
+					panic("st1 struct")
+				default:
+					x.dump = append(x.toks, tk)
+				}
 			}
 		case st15:
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
