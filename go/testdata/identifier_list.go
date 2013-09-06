@@ -66,7 +66,7 @@ type (
 	_ func(id, id2 T)
 	_ func(id, id2 ...T)
 	_ func(id, id2 T, id3 U)
-	//_ func(id, id2 T, id3, id4 U)
+	_ func(id, id2 T, id3, id4 U)
 	//_ func(T1, T2)
 )
 
