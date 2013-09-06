@@ -425,7 +425,7 @@ dump:
 			switch r {
 			case ',':
 				panic("st19 ,")
-			case '}':
+			case '}', '.':
 				x.dump = append(x.toks, tk)
 			default:
 				panic("st19 default")
