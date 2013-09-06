@@ -390,7 +390,7 @@ dump:
 				case FUNC:
 					x.toks, x.state = append(x.toks, tk), st5
 				case STRUCT:
-					panic("st1 struct")
+					x.preamble, x.toks, x.ids, x.state = -1, append(x.toks, tk), nil, st17
 				default:
 					x.dump = append(x.toks, tk)
 				}
@@ -405,9 +405,19 @@ dump:
 		case st16: // state 16 accepts rule 4: idlist_colas
 			panic(fmt.Sprintf("internal error st%d", x.state+1))
 		case st17:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case '{':
+				x.toks, x.state = append(x.toks, tk), st18
+			default:
+				panic("st17 default")
+			}
 		case st18:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				panic("st18 identifier")
+			default:
+				x.dump = append(x.toks, tk)
+			}
 		case st19: // state 19 accepts rule 3: struct
 			panic(fmt.Sprintf("TODO st%d", x.state+1))
 		default:

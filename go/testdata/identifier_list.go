@@ -175,7 +175,7 @@ var ( u = 19; v, w = 19, 20; )
 
 type ()
 type (
-	//t struct{}
+	t struct{}
 	//t struct { *a }
 	//t struct { *b.c }
 	//t struct { d }
