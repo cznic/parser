@@ -324,7 +324,7 @@ dump:
 		case st9:
 			switch r {
 			case IDENTIFIER:
-				panic("st9 identifier")
+				x.rxFix, x.preamble, x.toks, x.state = -1, -1, append(x.toks, tk), st10
 			default:
 				if i := x.rxFix; i >= 0 {
 					x.toks[i] = tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}
