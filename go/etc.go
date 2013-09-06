@@ -425,7 +425,7 @@ dump:
 			switch r {
 			case ',':
 				x.toks, x.state = append(x.toks, tk), st18
-			case '}', '.':
+			case '}', '.', ';':
 				x.dump = append(x.toks, tk)
 			default:
 				x.dump = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk)
