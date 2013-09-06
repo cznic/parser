@@ -1162,9 +1162,8 @@ StructType11:
 	}
 |	StructType11 ';'
 	{
-		panic(".y:1167")
 		lx := yylex.(*lx)
-		lx.toks, lx.preamble, lx.ids, lx.state = nil, 0, nil, st19 //TODO named state alias
+		lx.toks, lx.preamble, lx.ids, lx.state = lx.toks[:0], -1, nil, st18 //TODO named state alias
 	}
 	FieldDecl
 	{
