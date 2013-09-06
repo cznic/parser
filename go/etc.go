@@ -286,7 +286,7 @@ dump:
 		case st4: // state 4 accepts rule 1: const var
 			switch r {
 			case ',':
-				panic("st4 ,")
+				x.toks, x.state = append(x.toks, tk), st3
 			default:
 				x.dump = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk)
 			}
