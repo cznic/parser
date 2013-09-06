@@ -424,7 +424,7 @@ dump:
 		case st19: // state 19 accepts rule 3: struct
 			switch r {
 			case ',':
-				panic("st19 ,")
+				x.toks, x.state = append(x.toks, tk), st18
 			case '}', '.':
 				x.dump = append(x.toks, tk)
 			default:

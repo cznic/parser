@@ -181,7 +181,7 @@ type (
 	t struct { d }
 	t struct { e.f }
 	t struct { g int }
-	//t struct { h, i int }
+	t struct { h, i int }
 
 	//t struct { *a; *b }
 	//t struct { *c.d; *e.f }
