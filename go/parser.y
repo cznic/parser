@@ -826,6 +826,7 @@ SendStmt:
 Signature:
 	'(' ')'
 	{
+		dbg(".y:829: lparHunt")
 		yylex.(*lx).lparHunt = true
 	}
 	Signature1
@@ -834,6 +835,7 @@ Signature:
 	}
 |	'(' ParameterList ')'
 	{
+		dbg(".y:838: lparHunt")
 		yylex.(*lx).lparHunt = true
 	}
 	Signature1
