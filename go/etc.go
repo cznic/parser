@@ -377,7 +377,7 @@ dump:
 			case IDENTIFIER:
 				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st14
 			default:
-				panic("st15 default")
+				x.dump = append(x.toks, tk)
 			}
 		case st16: // state 16 accepts rule 4: idlist_colas
 			panic(fmt.Sprintf("internal error st%d", x.state+1))

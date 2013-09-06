@@ -37,10 +37,10 @@ var (
 	_ = func(...int) {}
 	_ = func(...T, U) {}
 	_ = func(T, ...U) {}
-	//_ = func(int, uint, float64) {}
-	//_ = func(int, uint, ...float64) {}
-	//_ = func(int, ...uint, float64) {}
-	//_ = func(int, ...uint, ...float64) {}
+	_ = func(int, uint, float64) {}
+	_ = func(int, uint, ...float64) {}
+	_ = func(int, ...uint, float64) {}
+	_ = func(int, ...uint, ...float64) {}
 	//_ = func(...int, uint, float64) {}
 	//_ = func(...int, uint, ...float64) {}
 	//_ = func(...int, ...uint, float64) {}
