@@ -287,6 +287,8 @@ dump:
 			switch r {
 			case ',':
 				x.toks, x.state = append(x.toks, tk), st3
+			case FUNC:
+				x.preamble, x.toks, x.ids, x.state = -1, append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), nil, st5
 			case STRUCT:
 				x.preamble, x.toks, x.ids, x.state = -1, append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), nil, st17
 			default:
@@ -326,7 +328,10 @@ dump:
 			case ')':
 				x.toks, x.state = append(x.toks, tk), st9
 			default:
-				panic("st8 default")
+				if i := x.rxFix; i >= 0 {
+					x.toks[i] = tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}
+				}
+				x.dump = append(x.toks, tk)
 			}
 		case st9:
 			switch r {

@@ -34,7 +34,7 @@ var (
 	whitelist = []string{}
 )
 
-func test(t *testing.T, root string) {
+func test(t *testing.T, root string, canError bool) {
 	var (
 		count int
 		size  int64
@@ -72,6 +72,10 @@ func test(t *testing.T, root string) {
 			_, eerr := parser.ParseFile(token.NewFileSet(), pth, nil, 0)
 			_, gerr := ParseFile(pth, nil)
 
+			if gerr != nil && !canError {
+				t.Fatalf("cnt: %d, %q\ng: %v\ne: %v", count, pth, gerr, eerr)
+			}
+
 			if g, e := gerr == nil, eerr == nil; g != e {
 				t.Fatalf("cnt: %d, %q\ng: %v\ne: %v", count, pth, gerr, eerr)
 			}
@@ -96,14 +100,14 @@ func test(t *testing.T, root string) {
 }
 
 func TestTestData(t *testing.T) {
-	test(t, "testdata")
+	test(t, "testdata", false)
 }
 
 //TODO
 //func TestStdlib(t *testing.T) {
-//	test(t, std)
+//	test(t, std, false)
 //}
 
 func TestTests(t *testing.T) {
-	test(t, tests)
+	test(t, tests, true)
 }

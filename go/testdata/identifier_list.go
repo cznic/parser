@@ -209,12 +209,19 @@ type (
 	t struct { o, p int; q, r int; }
 )
 
-var s0 struct {
-	X int
+var _ struct {
+	_ int
 }
 
+
 var (
-	s0 struct {
-		X int
+	_ struct {
+		_ int
 	}
+
+	_ func()
+	_ func(d os.FileInfo) bool
 )
+
+var _ func()
+func _(d os.FileInfo) bool {}
