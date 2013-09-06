@@ -260,7 +260,7 @@ dump:
 			case IDENTIFIER:
 				x.preamble, x.toks, x.ids, x.state = 0, append(x.toks, tk), append(x.ids, tk), st14
 			case STRUCT:
-				panic("st1 struct")
+				x.toks, x.state = append(x.toks, tk), st17
 			default:
 				x.dump = append(x.dump, tk)
 			}
