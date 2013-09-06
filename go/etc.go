@@ -356,7 +356,7 @@ dump:
 		case st14:
 			switch r {
 			case ',':
-				panic("st14 ,")
+				x.toks, x.state = append(x.toks, tk), st15
 			case COLAS:
 				panic("st14 :=")
 			default:
@@ -373,7 +373,12 @@ dump:
 				}
 			}
 		case st15:
-			panic(fmt.Sprintf("TODO st%d", x.state+1))
+			switch r {
+			case IDENTIFIER:
+				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st14
+			default:
+				panic("st15 default")
+			}
 		case st16: // state 16 accepts rule 4: idlist_colas
 			panic(fmt.Sprintf("internal error st%d", x.state+1))
 		case st17:
