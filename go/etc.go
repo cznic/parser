@@ -336,6 +336,9 @@ dump:
 		case st11:
 			switch r {
 			case IDENTIFIER:
+				if x.preamble < 0 {
+					x.preamble = len(x.toks)
+				}
 				x.toks, x.ids, x.state = append(x.toks, tk), append(x.ids, tk), st12
 			default:
 				x.dump = append(x.toks, tk)
@@ -347,6 +350,7 @@ dump:
 			case ')':
 				x.preamble, x.toks, x.ids, x.state = -1, append(x.toks, tk), nil, st9
 			default:
+				dbg("preamble %d", x.preamble)
 				x.dump = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk)
 			}
 		case st13: // state 13 accepts rule 2: func
