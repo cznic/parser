@@ -333,7 +333,7 @@ dump:
 		case st12: // state 12 accepts rule 2: func
 			switch r {
 			case ',':
-				panic("st12 ,")
+				x.toks, x.state = append(x.toks, tk), st11
 			case ')':
 				x.preamble, x.toks, x.ids, x.state = -1, append(x.toks, tk), nil, st9
 			default:
