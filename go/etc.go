@@ -287,6 +287,8 @@ dump:
 			switch r {
 			case ',':
 				x.toks, x.state = append(x.toks, tk), st3
+			case STRUCT:
+				x.preamble, x.toks, x.ids, x.state = -1, append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk), nil, st17
 			default:
 				x.dump = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk)
 			}

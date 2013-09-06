@@ -208,3 +208,13 @@ type (
 	t struct { m int; n int; }
 	t struct { o, p int; q, r int; }
 )
+
+var s0 struct {
+	X int
+}
+
+var (
+	s0 struct {
+		X int
+	}
+)
