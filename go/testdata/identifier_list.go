@@ -11,26 +11,26 @@ var (
 	_ = func(int, uint) {}
 	_ = func(int, uint, float64) {}
 
-	//_ = func() {}
-	//_ = func(int,) {}
-	//_ = func(int, uint,) {}
-	//_ = func(int, uint, float64,) {}
+	_ = func() {}
+	_ = func(int,) {}
+	_ = func(int, uint,) {}
+	_ = func(int, uint, float64,) {}
 )
 
-//type (
-//	_ func(int) (i int)
-//	_ func() (i int)
-//	_ func()
-//	_ func(int)
-//	_ func(int, uint)
-//	_ func(int, uint, float64)
-//
-//	_ func()
-//	_ func(int,)
-//	_ func(int, uint,)
-//	_ func(int, uint, float64,)
-//)
-//
+type (
+	_ func(int) (i int)
+	//_ func() (i int)
+	//_ func()
+	//_ func(int)
+	//_ func(int, uint)
+	//_ func(int, uint, float64)
+
+	//_ func()
+	//_ func(int,)
+	//_ func(int, uint,)
+	//_ func(int, uint, float64,)
+)
+
 //var (
 //	_ = func(...int) {}
 //	_ = func(...T, U) {}

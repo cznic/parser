@@ -337,7 +337,7 @@ dump:
 			case ')':
 				x.preamble, x.toks, x.ids, x.state = -1, append(x.toks, tk), nil, st9
 			default:
-				panic("st12 default")
+				x.dump = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk)
 			}
 		case st13: // state 13 accepts rule 2: func
 			switch r {
@@ -386,7 +386,7 @@ func (x *lx) lex0() (y tok) {
 		} else {
 			s = yyToknames[y.tk-ADD_ASSIGN]
 		}
-		dbg("........ %d:%d returning %q", x.Line, x.Col, s)
+		dbg("........ %d:%d returning %q(%v)", x.Line, x.Col, s, y.val)
 	}()
 	for {
 		t, val := x.ScanSemis()
