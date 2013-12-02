@@ -37,6 +37,7 @@ type yySymType struct {
 	list   []interface{}
 	nlist  []*Nmno
 	nmno   *Nmno
+	num    int
 	number int
 	prec   *Prec
 	rule   *Rule
@@ -193,7 +194,7 @@ func (r Rword) String() string {
 		return s
 	}
 
-	return fmt.Sprintf("%T(%d)", r, r)
+	return fmt.Sprintf("Rword(%d)", r)
 }
 
 type lexer struct {
@@ -231,8 +232,8 @@ func (l *lexer) Lex(lval *yySymType) (y int) {
 	}
 
 	for {
-		tok, val := l.Scan()
-		lval.line, lval.col = l.Line, l.Col
+		tok, val, num := l.Scan()
+		lval.line, lval.col, lval.num = l.Line, l.Col, num
 		//dbg("%s %T(%#v) %s:%d:%d", tok, val, val, l.fname, l.Line, l.Col)
 		switch tok {
 		case scanner.COMMENT:
@@ -350,7 +351,6 @@ func str(v interface{}) string {
 				s = fmt.Sprintf("'%c'", v)
 			}
 			f.Format("%T{Identifier: %s, Act: ", x, s)
-			//TODO bypassing compiler bug? Should work w/o test for nil
 			if x.Act != nil {
 				g(x.Act)
 			} else {
@@ -542,7 +542,7 @@ out:
 		c = yyTok2[1] /* unknown char */
 	}
 	if yyDebug >= 3 {
-		__yyfmt__.Printf("lex %U %s\n", uint(char), yyTokname(c))
+		__yyfmt__.Printf("lex %s(%d)\n", yyTokname(c), uint(char))
 	}
 	return c
 }
@@ -639,7 +639,7 @@ yydefault:
 			Nerrs++
 			if yyDebug >= 1 {
 				__yyfmt__.Printf("%s", yyStatname(yystate))
-				__yyfmt__.Printf("saw %s\n", yyTokname(yychar))
+				__yyfmt__.Printf(" saw %s\n", yyTokname(yychar))
 			}
 			fallthrough
 
@@ -746,7 +746,7 @@ yydefault:
 			n := 0
 		union_loop:
 			for {
-				tok, _ := lx.Scan()
+				tok, _, _ := lx.Scan()
 				switch tok {
 				case scanner.LBRACE:
 					n++
@@ -770,7 +770,7 @@ yydefault:
 			var last scanner.Token
 		lcurl_loop:
 			for {
-				tok, _ := lx.ScanRaw()
+				tok, _, _ := lx.ScanRaw()
 				if tok == scanner.RBRACE && last == scanner.REM && lx.Pos() == lpos+1 {
 					lx.Mode(true)
 					s := string(lx.src[off0+1 : lpos-1])
@@ -788,6 +788,21 @@ yydefault:
 		}
 	case 10:
 		{
+			if yyS[yypt-2].rword == Type {
+				for _, v := range yyS[yypt-0].nlist {
+					switch v.Identifier.(type) {
+					case int:
+						yylex.Error("literal invalid with %% type.")
+						goto ret1
+					}
+
+					if v.Number > 0 {
+						yylex.Error("number invalid with %% type.")
+						goto ret1
+					}
+				}
+			}
+
 			yyVAL.def = &Def{Rword: yyS[yypt-2].rword, Tag: yyS[yypt-1].s, Nlist: yyS[yypt-0].nlist}
 		}
 	case 11:
@@ -833,12 +848,10 @@ yydefault:
 		}
 	case 20:
 		{
-			/*TODO Note: literal invalid with % type. */
 			yyVAL.nmno = &Nmno{yyS[yypt-0].item, -1}
 		}
 	case 21:
 		{
-			/*TODO Note: invalid with % type. */
 			yyVAL.nmno = &Nmno{yyS[yypt-1].item, yyS[yypt-0].number}
 		}
 	case 22:
@@ -880,7 +893,7 @@ yydefault:
 			n := 0
 		act_loop:
 			for {
-				tok, _ := lx.Scan()
+				tok, _, _ := lx.Scan() //TODO []struct{tok, lval, nul}
 				switch tok {
 				case scanner.LBRACE:
 					n++

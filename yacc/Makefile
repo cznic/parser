@@ -1,7 +1,7 @@
 .PHONY: all clean
 
 all: editor
-	go vet
+	go vet || true
 	go install
 	make todo
 

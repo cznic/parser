@@ -38,6 +38,7 @@ import (
 	list   []interface{}
 	nlist  []*Nmno
 	nmno   *Nmno
+	num    int
 	number int
 	prec   *Prec
 	rule   *Rule
@@ -134,7 +135,7 @@ def:
 		n := 0
 	union_loop:
 		for {
-			tok, _ := lx.Scan()
+			tok, _, _ := lx.Scan()
 			switch tok {
 			case scanner.LBRACE:
 				n++
@@ -158,7 +159,7 @@ def:
 		var last scanner.Token
 	lcurl_loop:
 		for {
-			tok, _ := lx.ScanRaw()
+			tok, _, _ := lx.ScanRaw()
 			if tok == scanner.RBRACE && last == scanner.REM && lx.Pos() == lpos+1 {
 				lx.Mode(true)
 				s := string(lx.src[off0+1:lpos-1])
@@ -176,6 +177,21 @@ def:
 	}
 |	rword tag nlist
 	{
+		if $1 == Type {
+			for _, v := range $3 {
+				switch v.Identifier.(type) {
+				case int:
+					yylex.Error("literal invalid with %% type.")
+					goto ret1
+				}
+
+				if v.Number > 0 {
+					yylex.Error("number invalid with %% type.")
+					goto ret1
+				}
+			}
+		}
+
 		$$ = &Def{Rword: $1, Tag: $2, Nlist: $3}
 	}
 
@@ -229,12 +245,10 @@ nlist:
 nmno:
 	_IDENTIFIER
 	{
-		/*TODO Note: literal invalid with % type. */
 		$$ = &Nmno{$1, -1}
 	}
 |	_IDENTIFIER _NUMBER
 	{
-		/*TODO Note: invalid with % type. */
 		$$ = &Nmno{$1, $2}
 	}
 
@@ -286,7 +300,7 @@ act:
 		n := 0
 	act_loop:
 		for {
-			tok, _ := lx.Scan()
+			tok, _, _ := lx.Scan() //TODO []struct{tok, lval, nul}
 			switch tok {
 			case scanner.LBRACE:
 				n++
@@ -430,7 +444,7 @@ func (r Rword) String() string {
 		return s
 	}
 
-	return fmt.Sprintf("%T(%d)", r, r)
+	return fmt.Sprintf("Rword(%d)", r)
 }
 
 type lexer struct {
@@ -468,8 +482,8 @@ func (l *lexer) Lex(lval *yySymType) (y int) {
 	}
 
 	for {
-		tok, val := l.Scan()
-		lval.line, lval.col = l.Line, l.Col
+		tok, val, num := l.Scan()
+		lval.line, lval.col, lval.num = l.Line, l.Col, num
 		//dbg("%s %T(%#v) %s:%d:%d", tok, val, val, l.fname, l.Line, l.Col)
 		switch tok {
 		case scanner.COMMENT:
@@ -588,7 +602,6 @@ func str(v interface{}) string {
 				s = fmt.Sprintf("'%c'", v)
 			}
 			f.Format("%T{Identifier: %s, Act: ", x, s)
-			//TODO bypassing compiler bug? Should work w/o test for nil
 			if x.Act != nil {
 				g(x.Act)
 			} else {

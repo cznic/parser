@@ -2,6 +2,8 @@ package main
 
 //TODO rename this file
 
+func a(b *c, d e)
+
 var()
 type()
 

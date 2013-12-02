@@ -390,8 +390,8 @@ Foo:
 func ExampleDef_type() {
 	spec, err := Parse("type.y", []byte(`
 
-%type <typ> foo '+' '-' 1234 'L'
-%type <list> '?'
+%type	<typ>	foo bar
+%type	<list>	baz
 
 %%
 
@@ -409,14 +409,12 @@ Foo:
 	// . . *parser.Def{
 	// . . . Rword: Type, Tag: "typ", Nlist: []*parser.Nmno{
 	// . . . . *parser.Nmno{Identifier: "foo", Number: -1}
-	// . . . . *parser.Nmno{Identifier: '+', Number: -1}
-	// . . . . *parser.Nmno{Identifier: '-', Number: 1234}
-	// . . . . *parser.Nmno{Identifier: 'L', Number: -1}
+	// . . . . *parser.Nmno{Identifier: "bar", Number: -1}
 	// . . . }
 	// . . }
 	// . . *parser.Def{
 	// . . . Rword: Type, Tag: "list", Nlist: []*parser.Nmno{
-	// . . . . *parser.Nmno{Identifier: '?', Number: -1}
+	// . . . . *parser.Nmno{Identifier: "baz", Number: -1}
 	// . . . }
 	// . . }
 	// . }
