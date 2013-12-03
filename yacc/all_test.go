@@ -504,7 +504,15 @@ Bar:
 	// . . . . '1'
 	// . . . . "Baz"
 	// . . . . "foo"
-	// . . . . *parser.Act{Src: "\n\t\t$$ = \"abc\"\n\t"}
+	// . . . . []*parser.Act{
+	// . . . . . *parser.Act{
+	// . . . . . . Src: "\n\t\t"
+	// . . . . . . Tok: DLR_DLR, Tag: "", Num: 0
+	// . . . . . }
+	// . . . . . *parser.Act{
+	// . . . . . . Src: "= \"abc\"\n\t"
+	// . . . . . }
+	// . . . . }
 	// . . . }
 	// . . }
 	// . . *parser.Rule{
@@ -512,9 +520,21 @@ Bar:
 	// . . . . '1'
 	// . . . . "Baz"
 	// . . . . "foo"
-	// . . . . *parser.Act{Src: "\n\t$$ = \"def\"\n\t"}
+	// . . . . []*parser.Act{
+	// . . . . . *parser.Act{
+	// . . . . . . Src: "\n\t"
+	// . . . . . . Tok: DLR_DLR, Tag: "", Num: 0
+	// . . . . . }
+	// . . . . . *parser.Act{
+	// . . . . . . Src: "= \"def\"\n\t"
+	// . . . . . }
+	// . . . . }
 	// . . . . '2'
-	// . . . . *parser.Act{Src: "\n\t\tfmt.Println([]t{2})\n\t"}
+	// . . . . []*parser.Act{
+	// . . . . . *parser.Act{
+	// . . . . . . Src: "\n\t\tfmt.Println([]t{2})\n\t"
+	// . . . . . }
+	// . . . . }
 	// . . . }
 	// . . }
 	// . . *parser.Rule{
@@ -562,14 +582,38 @@ StatementList:
 	// . Rules: []*parser.Rule{
 	// . . *parser.Rule{
 	// . . . Name: "StatementList", Body: []interface {}{
-	// . . . . *parser.Act{Src: "\n\t\t$$ = nil\n\t"}
+	// . . . . []*parser.Act{
+	// . . . . . *parser.Act{
+	// . . . . . . Src: "\n\t\t"
+	// . . . . . . Tok: DLR_DLR, Tag: "", Num: 0
+	// . . . . . }
+	// . . . . . *parser.Act{
+	// . . . . . . Src: "= nil\n\t"
+	// . . . . . }
+	// . . . . }
 	// . . . }
 	// . . }
 	// . . *parser.Rule{
 	// . . . Name: "StatementList", Body: []interface {}{
 	// . . . . "StatementList"
 	// . . . . "Statement"
-	// . . . . *parser.Act{Src: "\n\t\t$$ = append($1, $2)\n\t"}
+	// . . . . []*parser.Act{
+	// . . . . . *parser.Act{
+	// . . . . . . Src: "\n\t\t"
+	// . . . . . . Tok: DLR_DLR, Tag: "", Num: 0
+	// . . . . . }
+	// . . . . . *parser.Act{
+	// . . . . . . Src: "= append("
+	// . . . . . . Tok: DLR_NUM, Tag: "", Num: 1
+	// . . . . . }
+	// . . . . . *parser.Act{
+	// . . . . . . Src: ", "
+	// . . . . . . Tok: DLR_NUM, Tag: "", Num: 2
+	// . . . . . }
+	// . . . . . *parser.Act{
+	// . . . . . . Src: ")\n\t"
+	// . . . . . }
+	// . . . . }
 	// . . . }
 	// . . }
 	// . }
@@ -641,13 +685,27 @@ Foo:
 	// . . . Name: "Foo", Body: []interface {}{
 	// . . . . "bar"
 	// . . . }
-	// . . . Prec: *parser.Prec{Identifier: "A", Act: <nil>}
+	// . . . Prec: *parser.Prec{
+	// . . . . Identifier: "A"
+	// . . . . []*parser.Act{
+	// . . . . }
+	// . . . }
 	// . . }
 	// . . *parser.Rule{
 	// . . . Name: "Foo", Body: []interface {}{
 	// . . . . "foo"
 	// . . . }
-	// . . . Prec: *parser.Prec{Identifier: "B", Act: *parser.Act{Src: "\n\t\tqux($1)\n\t"}
+	// . . . Prec: *parser.Prec{
+	// . . . . Identifier: "B"
+	// . . . . []*parser.Act{
+	// . . . . . *parser.Act{
+	// . . . . . . Src: "\n\t\tqux("
+	// . . . . . . Tok: DLR_NUM, Tag: "", Num: 1
+	// . . . . . }
+	// . . . . . *parser.Act{
+	// . . . . . . Src: ")\n\t"
+	// . . . . . }
+	// . . . . }
 	// . . . }
 	// . . }
 	// . }

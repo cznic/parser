@@ -12,7 +12,7 @@ Grammar for the input to yacc.
 
 */
 
-// Package parser (WIP:TODO) implements a parser for yacc source files.
+// Package parser implements a parser for yacc source files.
 package parser
 
 import __yyfmt__ "fmt"
@@ -28,7 +28,7 @@ import (
 
 type yySymType struct {
 	yys    int
-	act    *Act
+	act    []*Act
 	col    int
 	def    *Def
 	defs   []*Def
@@ -139,7 +139,7 @@ func (s *Nmno) String() string {
 // Prec defines the optional precedence of a rule.
 type Prec struct {
 	Identifier interface{}
-	Act        *Act
+	Act        []*Act
 }
 
 // String implements fmt.Stringer.
@@ -150,7 +150,9 @@ func (s *Prec) String() string {
 // Act captures the action optionally associated with a rule.
 type Act struct {
 	Src string
-	//TODO process $$
+	Tok scanner.Token // github.com/cznic/scanner/yacc.DLR_* or zero
+	Tag string        // DLR_TAG_*
+	Num int           // DLR_NUM, DLR_TAG_NUM
 }
 
 // String implements fmt.Stringer.
@@ -319,10 +321,19 @@ func str(v interface{}) string {
 			f.Format("'%c'\n", x)
 		case string:
 			f.Format("%q\n", x)
+		case []*Act:
+			f.Format("%T{%i\n", x)
+			for _, v := range x {
+				g(v)
+			}
+			f.Format("%u}\n")
 		case *Act:
-			f.Format("%T{", x)
-			f.Format("Src: %q", x.Src)
-			f.Format("}\n")
+			f.Format("%T{%i\n", x)
+			f.Format("Src: %q\n", x.Src)
+			if x.Tok != 0 {
+				f.Format("Tok: %s, Tag: %q, Num: %d\n", x.Tok, x.Tag, x.Num)
+			}
+			f.Format("%u}\n")
 		case *Def:
 			f.Format("%T{%i\n", x)
 			f.Format("Rword: %s, ", x.Rword)
@@ -350,13 +361,10 @@ func str(v interface{}) string {
 			case int:
 				s = fmt.Sprintf("'%c'", v)
 			}
-			f.Format("%T{Identifier: %s, Act: ", x, s)
-			if x.Act != nil {
-				g(x.Act)
-			} else {
-				f.Format("<nil>")
-			}
-			f.Format("}\n")
+			f.Format("%T{%i\n", x)
+			f.Format("Identifier: %s\n", s)
+			g(x.Act)
+			f.Format("%u}\n")
 		case *Rule:
 			f.Format("%T{%i\n", x)
 			f.Format("Name: %q, ", x.Name)
@@ -889,24 +897,53 @@ yydefault:
 			/* Copy action, translate $$, and so on. */
 			lx := lx(yylex)
 			lx.Mode(false)
-			off0 := lx.Pos()
+			a := []*Act{}
+			start := lx.Pos()
 			n := 0
 		act_loop:
 			for {
-				tok, _, _ := lx.Scan() //TODO []struct{tok, lval, nul}
+				tok, tag, num := lx.Scan()
+				tokStart := lx.Pos() - 1
 				switch tok {
+				case scanner.DLR_DLR, scanner.DLR_NUM, scanner.DLR_TAG_DLR, scanner.DLR_TAG_NUM:
+					s, ok := tag.(string)
+					if !ok {
+						s = ""
+					}
+
+					src := ""
+					if start > 0 {
+						src = string(lx.src[start:tokStart])
+					}
+
+					a = append(a, &Act{Src: src, Tok: tok, Tag: s, Num: num})
+					start = -1
 				case scanner.LBRACE:
 					n++
 				case scanner.RBRACE:
 					if n == 0 {
+						if start < 0 {
+							start = tokStart
+						}
+						src := lx.src[start:tokStart]
+						if len(src) != 0 {
+							a = append(a, &Act{Src: string(src)})
+						}
 						lx.Mode(true)
 						break act_loop
 					}
 
 					n--
+				case scanner.EOF:
+					lx.Error("unexpected EOF")
+					goto ret1
+				default:
+					if start < 0 {
+						start = tokStart
+					}
 				}
 			}
-			yyVAL.act = &Act{Src: string(lx.src[off0 : lx.Pos()-1])}
+			yyVAL.act = a
 		}
 	case 30:
 		{
