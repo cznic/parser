@@ -110,8 +110,8 @@ func ExampleDef_union() {
 	spec, err := Parse("union.y", []byte(`
 
 %union{
-	bar int
-	baz struct{a, b int}
+        bar int
+        baz struct{a, b int}
 }
 
 %%
@@ -128,7 +128,7 @@ Foo:
 	// *parser.Spec{
 	// . Defs: []*parser.Def{
 	// . . *parser.Def{
-	// . . . Rword: Union, Tag: "{\n\tbar int\n\tbaz struct{a, b int}\n}", Nlist: []*parser.Nmno{
+	// . . . Rword: Union, Tag: "{\n        bar int\n        baz struct{a, b int}\n}", Nlist: []*parser.Nmno{
 	// . . . }
 	// . . }
 	// . }
@@ -465,23 +465,23 @@ func ExampleRule() {
 %%
 
 Foo:
-	Bar
-|	'1' Baz foo
-	{
-		$$ = "abc"
-	}
-|	'1' Baz foo
-	{
-	$$ = "def"
-	}
-	'2'
-	{
-		fmt.Println([]t{2})
-	}
+        Bar
+|   '1' Baz foo
+        {
+            $$ = "abc"
+        }
+|   '2' Qux lol
+        {
+            $$ = "def"
+        }
+        '2'
+        {
+            fmt.Println([]t{2})
+        }
 
 Bar:
-	/* Empty */
-|	Bar IDENT	
+        /* Empty */
+|   Bar IDENT	
 
 `))
 	if err != nil {
@@ -506,33 +506,33 @@ Bar:
 	// . . . . "foo"
 	// . . . . []*parser.Act{
 	// . . . . . *parser.Act{
-	// . . . . . . Src: "\n\t\t"
+	// . . . . . . Src: "\n            "
 	// . . . . . . Tok: DLR_DLR, Tag: "", Num: 0
 	// . . . . . }
 	// . . . . . *parser.Act{
-	// . . . . . . Src: "= \"abc\"\n\t"
+	// . . . . . . Src: "= \"abc\"\n        "
 	// . . . . . }
 	// . . . . }
 	// . . . }
 	// . . }
 	// . . *parser.Rule{
 	// . . . Name: "Foo", Body: []interface {}{
-	// . . . . '1'
-	// . . . . "Baz"
-	// . . . . "foo"
+	// . . . . '2'
+	// . . . . "Qux"
+	// . . . . "lol"
 	// . . . . []*parser.Act{
 	// . . . . . *parser.Act{
-	// . . . . . . Src: "\n\t"
+	// . . . . . . Src: "\n            "
 	// . . . . . . Tok: DLR_DLR, Tag: "", Num: 0
 	// . . . . . }
 	// . . . . . *parser.Act{
-	// . . . . . . Src: "= \"def\"\n\t"
+	// . . . . . . Src: "= \"def\"\n        "
 	// . . . . . }
 	// . . . . }
 	// . . . . '2'
 	// . . . . []*parser.Act{
 	// . . . . . *parser.Act{
-	// . . . . . . Src: "\n\t\tfmt.Println([]t{2})\n\t"
+	// . . . . . . Src: "\n            fmt.Println([]t{2})\n        "
 	// . . . . . }
 	// . . . . }
 	// . . . }
@@ -558,14 +558,14 @@ func ExampleAct() {
 %%
 
 StatementList:
-	/* Empty */
-	{
-		$$ = nil
-	}
-|	StatementList Statement
-	{
-		$$ = append($1, $2)
-	}
+        /* Empty */
+        {
+            $$ = nil
+        }
+|   StatementList Statement
+        {
+            $$ = append($1, $2)
+        }
 
 %%
 
@@ -584,11 +584,11 @@ StatementList:
 	// . . . Name: "StatementList", Body: []interface {}{
 	// . . . . []*parser.Act{
 	// . . . . . *parser.Act{
-	// . . . . . . Src: "\n\t\t"
+	// . . . . . . Src: "\n            "
 	// . . . . . . Tok: DLR_DLR, Tag: "", Num: 0
 	// . . . . . }
 	// . . . . . *parser.Act{
-	// . . . . . . Src: "= nil\n\t"
+	// . . . . . . Src: "= nil\n        "
 	// . . . . . }
 	// . . . . }
 	// . . . }
@@ -599,7 +599,7 @@ StatementList:
 	// . . . . "Statement"
 	// . . . . []*parser.Act{
 	// . . . . . *parser.Act{
-	// . . . . . . Src: "\n\t\t"
+	// . . . . . . Src: "\n            "
 	// . . . . . . Tok: DLR_DLR, Tag: "", Num: 0
 	// . . . . . }
 	// . . . . . *parser.Act{
@@ -611,7 +611,7 @@ StatementList:
 	// . . . . . . Tok: DLR_NUM, Tag: "", Num: 2
 	// . . . . . }
 	// . . . . . *parser.Act{
-	// . . . . . . Src: ")\n\t"
+	// . . . . . . Src: ")\n        "
 	// . . . . . }
 	// . . . . }
 	// . . . }
@@ -664,11 +664,11 @@ func ExamplePrec() {
 %%
 
 Foo:
-	bar %prec A
-|	foo %prec B
-	{
-		qux($1)
-	}
+        bar %prec A
+|   foo %prec B
+        {
+            qux($1)
+        }
 
 `))
 	if err != nil {
@@ -699,11 +699,11 @@ Foo:
 	// . . . . Identifier: "B"
 	// . . . . []*parser.Act{
 	// . . . . . *parser.Act{
-	// . . . . . . Src: "\n\t\tqux("
+	// . . . . . . Src: "\n            qux("
 	// . . . . . . Tok: DLR_NUM, Tag: "", Num: 1
 	// . . . . . }
 	// . . . . . *parser.Act{
-	// . . . . . . Src: ")\n\t"
+	// . . . . . . Src: ")\n        "
 	// . . . . . }
 	// . . . . }
 	// . . . }
