@@ -111,7 +111,7 @@ defs:
 	{
 		$$ = []*Def(nil)
 	}
-	| defs def
+|	defs def
 	{
 		$$ = append($1, $2)
 	}

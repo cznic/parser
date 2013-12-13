@@ -202,13 +202,13 @@ type lx struct {
 }
 
 func (x *lx) Lex(lval *yySymType) (r int) {
-	dbg("\n<<<< Lex state st%d", x.state+1)
+	//dbg("\n<<<< Lex state st%d", x.state+1)
 	defer func() {
 		if e := recover(); e != nil {
-			dbg(
-				"---------------------------\n\n!!! RECOVERED: %s:%d:%d: %v\n\n---------------------------",
-				x.Fname, x.Line, x.Col, e,
-			)
+			//dbg(
+			//	"---------------------------\n\n!!! RECOVERED: %s:%d:%d: %v\n\n---------------------------",
+			//	x.Fname, x.Line, x.Col, e,
+			//)
 			r = 0
 			x.error("")
 			return
@@ -219,13 +219,13 @@ func (x *lx) Lex(lval *yySymType) (r int) {
 			r, x.preamble, x.toks, x.ids, x.state = LPAR, 0, nil, nil, st11
 		}
 		x.lparHunt = false
-		var s string
-		if r < 128 {
-			s = string(r)
-		} else {
-			s = yyToknames[r-ADD_ASSIGN]
-		}
-		dbg(">>>> %d:%d: returning %q, (%v)\n", lval.pos.line, lval.pos.col, s, lval.val)
+		//var s string
+		//if r < 128 {
+		//	s = string(r)
+		//} else {
+		//	s = yyToknames[r-ADD_ASSIGN]
+		//}
+		//dbg(">>>> %d:%d: returning %q, (%v)\n", lval.pos.line, lval.pos.col, s, lval.val)
 		//TODO-
 	}()
 
@@ -246,7 +246,7 @@ dump:
 			goto dump
 		}
 
-		dbg("[state st%d]", x.state+1)
+		//dbg("[state st%d]", x.state+1)
 		tk := x.lex0()
 
 		switch r = tk.tk; x.state {
@@ -367,7 +367,7 @@ dump:
 			case ')':
 				x.dump = append(x.toks, tk)
 			default:
-				dbg("preamble %d", x.preamble)
+				//dbg("preamble %d", x.preamble)
 				x.dump = append(x.toks[:x.preamble], tok{IDENTIFIER_LIST, x.ids, x.ids[0].pos}, tk)
 			}
 		case st13: // state 13 accepts rule 2: func
@@ -445,13 +445,13 @@ dump:
 
 func (x *lx) lex0() (y tok) {
 	defer func() {
-		var s string
-		if y.tk < 128 {
-			s = string(y.tk)
-		} else {
-			s = yyToknames[y.tk-ADD_ASSIGN]
-		}
-		dbg("........ %d:%d returning %q(%v)", x.Line, x.Col, s, y.val)
+		//var s string
+		//if y.tk < 128 {
+		//	s = string(y.tk)
+		//} else {
+		//	s = yyToknames[y.tk-ADD_ASSIGN]
+		//}
+		//dbg("........ %d:%d returning %q(%v)", x.Line, x.Col, s, y.val)
 	}()
 	for {
 		t, val := x.ScanSemis()
