@@ -122,9 +122,9 @@ string_lit = .
 
 //AnonymousField = [ "*" ] TypeName .
 AnonymousField = 
-          TypeName
+          QualifiedIdent
         |
-          "*" TypeName
+          "*" QualifiedIdent
         .
 //ArgumentList = ExpressionList [ "..." ] .
 ArgumentList = ExpressionList [ ddd ] .
@@ -300,7 +300,7 @@ IncDecStmt = Expression ( inc | dec ) .
 Index = "[" Expression "]" .
 InitStmt = SimpleStmt .
 InterfaceType = "interface" "{" { MethodSpec ";" } "}" .
-InterfaceTypeName = TypeName .
+//InterfaceTypeName = TypeName .
 //Key = FieldName | ElementIndex .
 //Key = identifier | ElementIndex .
 KeyType = Type .
@@ -321,7 +321,7 @@ LiteralType = StructType
         | "[" ddd "]" ElementType
         | SliceType
         | MapType
-        | TypeName .
+        | QualifiedIdent .
 LiteralValue = "{" [ ElementList [ "," ] ] "}" .
 MapType = "map" "[" KeyType "]" ElementType .
 //MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
@@ -332,12 +332,16 @@ MethodExpr = ReceiverType "." identifier .
 //MethodSpec = MethodName Signature
 //        | InterfaceTypeName .
 MethodSpec = identifier Signature
-        | InterfaceTypeName .
+        | QualifiedIdent .
+//Operand = Literal
+//        | OperandName
+//        | MethodExpr
+//        | "(" Expression ")" .
 Operand = Literal
-        | OperandName
+        | QualifiedIdent
         | MethodExpr
         | "(" Expression ")" .
-OperandName = identifier | QualifiedIdent .
+//OperandName = identifier | QualifiedIdent .
 //PackageClause = "package" PackageName .
 PackageClause = "package" identifier .
 //PackageName = identifier .
@@ -362,7 +366,7 @@ PrimaryExpr = Operand
         | PrimaryExpr TypeAssertion
         | PrimaryExpr Call .
 //QualifiedIdent = PackageName "." identifier .
-QualifiedIdent = identifier "." identifier .
+QualifiedIdent = identifier [ "." identifier ] .
 //RangeClause = (
 //                  ExpressionList "="
 //                | IdentifierList ":="
@@ -382,8 +386,11 @@ Receiver =
           "(" identifier "*" identifier ")"
         .
 
-ReceiverType = TypeName
-        | "(" "*" TypeName ")"
+//ReceiverType = TypeName
+//        | "(" "*" TypeName ")"
+//        | "(" ReceiverType ")" .
+ReceiverType = QualifiedIdent
+        | "(" "*" QualifiedIdent ")"
         | "(" ReceiverType ")" .
 RecvExpr = Expression .
 //RecvStmt = [
@@ -452,7 +459,10 @@ Tag = string_lit .
 TopLevelDecl = Declaration
         | FunctionDecl
         | MethodDecl .
-Type = TypeName
+//Type = TypeName
+//        | TypeLit
+//        | "(" Type ")" .
+Type = QualifiedIdent
         | TypeLit
         | "(" Type ")" .
 TypeAssertion = "." "(" Type ")" .
@@ -474,7 +484,7 @@ TypeLit = ArrayType
         | SliceType
         | MapType
         | ChannelType .
-TypeName = identifier | QualifiedIdent .
+//TypeName = identifier | QualifiedIdent .
 TypeSpec = identifier Type .
 TypeSwitchCase = "case" TypeList
         | "default" .
