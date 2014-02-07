@@ -122,9 +122,13 @@ CommCase = "case" ( SendStmt | RecvStmt )
 CommClause = CommCase ":" StatementList .
 CompositeLit = LiteralType LiteralValue .
 Condition = Expression .
+//ConstDecl = "const" (
+//                  ConstSpec
+//                | "(" { ConstSpec ";" } ")"
+//          ) .
 ConstDecl = "const" (
                   ConstSpec
-                | "(" { ConstSpec ";" } ")"
+                | "(" [ ConstSpec { ";" ConstSpec } [ ";" ] ] ")"
           ) .
 ConstSpec = IdentifierList [
                  [ Type ] "=" ExpressionList
@@ -139,7 +143,7 @@ Element = [ Key ":" ] Value .
 ElementIndex = Expression .
 ElementList = Element { "," Element } .
 ElementType = Type .
-EmptyStmt = .
+//EmptyStmt = .
 ExprCaseClause = ExprSwitchCase ":" StatementList .
 ExprSwitchCase = "case" ExpressionList
         | "default" .
@@ -194,9 +198,13 @@ IdentifierList = identifier { "," identifier } .
 IfStmt = "if" [ SimpleStmt ";" ] Expression Block [
                  "else" ( IfStmt | Block )
           ] .
+//ImportDecl = "import" (
+//                  ImportSpec
+//                | "(" { ImportSpec ";" } ")"
+//          ) .
 ImportDecl = "import" (
                   ImportSpec
-                | "(" { ImportSpec ";" } ")"
+                | "(" [ ImportSpec { ";" ImportSpec } [ ";" ] ] ")"
           ) .
 ImportPath = string_lit .
 ImportSpec = [ "." | PackageName ] ImportPath .
@@ -266,12 +274,17 @@ Selector = "." identifier .
 SendStmt = Channel "<-" Expression .
 ShortVarDecl = IdentifierList ":=" ExpressionList .
 Signature = Parameters [ Result ] .
-SimpleStmt = EmptyStmt
-        | ExpressionStmt
-        | SendStmt
-        | IncDecStmt
-        | Assignment
-        | ShortVarDecl .
+//SimpleStmt = EmptyStmt
+//        | ExpressionStmt
+//        | SendStmt
+//        | IncDecStmt
+//        | Assignment
+//        | ShortVarDecl .
+SimpleStmt = ExpressionStmt
+           | SendStmt
+           | IncDecStmt
+           | Assignment
+           | ShortVarDecl .
 Slice = "[" (
                  [ Expression ] ":" [ Expression ]
           )
@@ -307,9 +320,13 @@ Type = TypeName
         | "(" Type ")" .
 TypeAssertion = "." "(" Type ")" .
 TypeCaseClause = TypeSwitchCase ":" StatementList .
+//TypeDecl = "type" (
+//                  TypeSpec
+//                | "(" { TypeSpec ";" } ")"
+//          ) .
 TypeDecl = "type" (
                   TypeSpec
-                | "(" { TypeSpec ";" } ")"
+                | "(" [ TypeSpec { ";" TypeSpec } [ ";" ] ] ")"
           ) .
 TypeList = Type { "," Type } .
 TypeLit = ArrayType
@@ -331,9 +348,13 @@ TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard "{" { TypeCaseClaus
 UnaryExpr = PrimaryExpr
         | ( "!" | "&" | "*" | "+" | "-" | "<-" | "^" ) UnaryExpr .
 Value = Expression | LiteralValue .
+//VarDecl = "var" (
+//                  VarSpec
+//                | "(" { VarSpec ";" } ")"
+//          ) .
 VarDecl = "var" (
                   VarSpec
-                | "(" { VarSpec ";" } ")"
+                | "(" [ VarSpec { ";" VarSpec } [ ";" ] ] ")"
           ) .
 VarSpec = IdentifierList (
                   Type [ "=" ExpressionList ]
