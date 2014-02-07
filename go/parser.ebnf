@@ -180,7 +180,11 @@ Declaration = ConstDecl
         | VarDecl .
 DeferStmt = "defer" Expression .
 //Element = [ Key ":" ] Value .
-Element = [ Expression ":" ] Value .
+//Element = [ Expression ":" ] Value .
+Element = 
+	  Value 
+	| Expression ":" Value 
+	.
 //ElementIndex = Expression .
 ElementList = Element { "," Element } .
 ElementType = Type .
