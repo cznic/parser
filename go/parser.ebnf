@@ -214,9 +214,13 @@ FunctionType = "func" Signature .
 GoStmt = "go" Expression .
 GotoStmt = "goto" Label .
 IdentifierList = identifier { "," identifier } .
-IfStmt = "if" [ SimpleStmt ";" ] Expression Block [
-		 "else" ( IfStmt | Block )
-	  ] .
+//IfStmt = "if" [ SimpleStmt ";" ] Expression Block [
+//		 "else" ( IfStmt | Block )
+//	  ] .
+IfStmt =
+	  "if" Expression Block [ "else" ( IfStmt | Block ) ]
+	| "if" SimpleStmt ";" Expression Block [ "else" ( IfStmt | Block ) ]
+	.
 ImportDecl = "import" (
 		  ImportSpec
 		| "(" { ImportSpec ";" } ")"
