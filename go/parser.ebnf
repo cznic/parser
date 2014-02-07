@@ -1,3 +1,4 @@
+lbr = .
 add_asgn = "+=" .
 and_asgn = "&=" .
 and_not = "&^" .
@@ -139,6 +140,7 @@ BasicLit = int_lit
         | rune_lit
         | string_lit .
 Block = "{" StatementList "}" .
+Block2 = lbr StatementList "}" .
 //BreakStmt = "break" [ Label ] .
 BreakStmt = "break" [ identifier ] .
 BuiltinArgs = Type [ "," ArgumentList ]
@@ -185,7 +187,8 @@ ElementType = Type .
 ExprCaseClause = ExprSwitchCase ":" StatementList .
 ExprSwitchCase = "case" ExpressionList
         | "default" .
-ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] "{" { ExprCaseClause } "}" .
+//ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] "{" { ExprCaseClause } "}" .
+ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] lbr { ExprCaseClause } "}" .
 //Expression = UnaryExpr
 //        | Expression binary_op UnaryExpr .
 Expression = UnaryExpr
@@ -219,11 +222,16 @@ FieldDecl = (
           ) [ Tag ] .
 //FieldName = identifier .
 ForClause = [ InitStmt ] ";" [ Condition ] ";" [ PostStmt ] .
+//ForStmt = "for" [
+//                  Condition
+//                | ForClause
+//                | RangeClause
+//          ] Block .
 ForStmt = "for" [
                   Condition
                 | ForClause
                 | RangeClause
-          ] Block .
+          ] Block2 .
 Function = Signature FunctionBody .
 FunctionBody = Block .
 //FunctionDecl = "func" FunctionName ( Function | Signature ) .
@@ -239,11 +247,11 @@ IdentifierList = identifier { "," identifier } .
 //                 "else" ( IfStmt | Block )
 //          ] .
 IfStmt =
-          "if" Expression Block [
+          "if" Expression Block2 [
                  "else" ( IfStmt | Block )
           ] 
         | 
-          "if" SimpleStmt ";" Expression Block [
+          "if" SimpleStmt ";" Expression Block2 [
                  "else" ( IfStmt | Block )
           ] 
         .
@@ -445,9 +453,9 @@ TypeSwitchGuard =
         .
 //TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
 TypeSwitchStmt =
-          "switch" TypeSwitchGuard "{" { TypeCaseClause } "}"
+          "switch" TypeSwitchGuard lbr { TypeCaseClause } "}"
         |
-          "switch" SimpleStmt ";" TypeSwitchGuard "{" { TypeCaseClause } "}"
+          "switch" SimpleStmt ";" TypeSwitchGuard lbr { TypeCaseClause } "}"
         .
 //UnaryExpr = PrimaryExpr
 //        | unary_op UnaryExpr .
