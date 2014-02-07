@@ -80,7 +80,12 @@ string_lit = .
 //        | big_u_value
 //        | escaped_char .
 
-AnonymousField = [ "*" ] TypeName .
+//AnonymousField = [ "*" ] TypeName .
+AnonymousField = 
+          TypeName
+        |
+          "*" TypeName
+        .
 ArgumentList = ExpressionList [ "..." ] .
 ArrayLength = Expression .
 ArrayType = "[" ArrayLength "]" ElementType .
@@ -358,7 +363,12 @@ TypeName = identifier | QualifiedIdent .
 TypeSpec = identifier Type .
 TypeSwitchCase = "case" TypeList
         | "default" .
-TypeSwitchGuard = [ identifier ":=" ] PrimaryExpr "." "(" "type" ")" .
+//TypeSwitchGuard = [ identifier ":=" ] PrimaryExpr "." "(" "type" ")" .
+TypeSwitchGuard = 
+          PrimaryExpr "." "(" "type" ")"
+        |
+          identifier ":=" PrimaryExpr "." "(" "type" ")"
+        .
 //TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
 TypeSwitchStmt =
           "switch" TypeSwitchGuard "{" { TypeCaseClause } "}"
