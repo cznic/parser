@@ -288,7 +288,7 @@ IncDecStmt = Expression ( inc | dec ) .
 Index = "[" Expression "]" .
 InitStmt = SimpleStmt .
 InterfaceType = "interface" "{" { MethodSpec ";" } "}" .
-InterfaceTypeName = TypeName .
+//InterfaceTypeName = TypeName .
 //Key = FieldName | ElementIndex .
 //Key = identifier | ElementIndex .
 KeyType = Type .
@@ -320,7 +320,7 @@ MethodExpr = ReceiverType "." identifier .
 //MethodSpec = MethodName Signature
 //        | InterfaceTypeName .
 MethodSpec = identifier Signature
-        | InterfaceTypeName .
+        | TypeName .
 //Operand = Literal
 //        | OperandName
 //        | MethodExpr
