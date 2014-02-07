@@ -172,7 +172,7 @@ Element = [ Key ":" ] Value .
 ElementIndex = Expression .
 ElementList = Element { "," Element } .
 ElementType = Type .
-EmptyStmt = .
+//EmptyStmt = .
 ExprCaseClause = ExprSwitchCase ":" StatementList .
 ExprSwitchCase = "case" ExpressionList
 	| "default" .
@@ -283,12 +283,19 @@ Selector = "." identifier .
 SendStmt = Channel comm Expression .
 ShortVarDecl = IdentifierList colas ExpressionList .
 Signature = Parameters [ Result ] .
-SimpleStmt = EmptyStmt
+//SimpleStmt = EmptyStmt
+//	| ExpressionStmt
+//	| SendStmt
+//	| IncDecStmt
+//	| Assignment
+//	| ShortVarDecl .
+SimpleStmt =
+	  Assignment
 	| ExpressionStmt
-	| SendStmt
 	| IncDecStmt
-	| Assignment
-	| ShortVarDecl .
+	| SendStmt
+	| ShortVarDecl
+	.
 Slice = "[" (
 		 [ Expression ] ":" [ Expression ]
 	  )
@@ -312,7 +319,8 @@ Statement = Declaration
 	| SelectStmt
 	| ForStmt
 	| DeferStmt .
-StatementList = { Statement ";" } .
+//StatementList = { Statement ";" } .
+StatementList = [ Statement ] { ";" [ Statement ] } .
 StructType = "struct" "{" { FieldDecl ";" } "}" .
 SwitchStmt = ExprSwitchStmt | TypeSwitchStmt .
 Tag = string_lit .
