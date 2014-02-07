@@ -1,36 +1,3 @@
-// scanner hacks
-
-lbr = .
-// "(" "," ")" -> unexpected comma
-// "," ")" -> ")"
-
-
-add_asgn = "+=" .
-and_asgn = "&=" .
-and_not = "&^" .
-and_not_asgn = "&^=" .
-andand = "&&" .
-colas = ":=" .
-comm = "<-" .
-ddd = "..." .
-dec = "--" .
-div_asgn = "/=" .
-eq = "==" .
-gt = ">=" .
-inc = "++" .
-lsh = "<<" .
-lsh_asgn = "<<=" .
-lt = "<=" .
-mod_asgn = "%=" .
-mul_asgn = "*=" .
-ne = "!=" .
-or_asgn = "|=" .
-oror = "||" .
-rsh = ">>" .
-rsh_asgn = ">>=" .
-sub_asgn = "-=" .
-xor_asgn = "^=" .
-
 //add_op = "+"
 //        | "-"
 //        | "|"
@@ -119,24 +86,23 @@ AnonymousField =
         |
           "*" TypeName
         .
-//ArgumentList = ExpressionList [ "..." ] .
-ArgumentList = ExpressionList [ ddd ] .
+ArgumentList = ExpressionList [ "..." ] .
 ArrayLength = Expression .
 ArrayType = "[" ArrayLength "]" ElementType .
 //Assignment = ExpressionList assign_op ExpressionList .
 Assignment = ExpressionList (
-                       mod_asgn
-                     | and_asgn
-                     | and_not_asgn
-                     | mul_asgn
-                     | add_asgn
-                     | sub_asgn
-                     | div_asgn
-                     | lsh_asgn
+                       "%="
+                     | "&="
+                     | "&^="
+                     | "*="
+                     | "+="
+                     | "-="
+                     | "/="
+                     | "<<="
                      | "="
-                     | rsh_asgn
-                     | xor_asgn
-                     | or_asgn
+                     | ">>="
+                     | "^="
+                     | "|="
              ) ExpressionList .
 BaseType = Type .
 //BaseTypeName = identifier .
@@ -146,23 +112,15 @@ BasicLit = int_lit
         | rune_lit
         | string_lit .
 Block = "{" StatementList "}" .
-Block2 = lbr StatementList "}" .
-//BreakStmt = "break" [ Label ] .
-BreakStmt = "break" [ identifier ] .
+BreakStmt = "break" [ Label ] .
 BuiltinArgs = Type [ "," ArgumentList ]
         | ArgumentList .
-//BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
-BuiltinCall = identifier "(" [ BuiltinArgs ] ")" .
-//Call = "(" [ ArgumentList [ "," ] ] ")" .
-Call = "(" [ ArgumentList ] ")" .
+BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
+Call = "(" [ ArgumentList [ "," ] ] ")" .
 Channel = Expression .
-//ChannelType = (
-//                  "chan" [ "<-" ]
-//                | "<-" "chan"
-//          ) ElementType .
 ChannelType = (
-                  "chan" [ comm ]
-                | comm "chan"
+                  "chan" [ "<-" ]
+                | "<-" "chan"
           ) ElementType .
 CommCase = "case" ( SendStmt | RecvStmt )
         | "default" .
@@ -180,62 +138,44 @@ ConstDecl = "const" (
 ConstSpec = IdentifierList [
                  [ Type ] "=" ExpressionList
           ] .
-//ContinueStmt = "continue" [ Label ] .
-ContinueStmt = "continue" [ identifier ] .
-//Conversion = Type "(" Expression ")" .
+ContinueStmt = "continue" [ Label ] .
+Conversion = Type "(" Expression [ "," ] ")" .
 Declaration = ConstDecl
         | TypeDecl
         | VarDecl .
 DeferStmt = "defer" Expression .
-//Element = [ Key ":" ] Value .
-//Element = [ Expression ":" ] Value .
-Element = 
-	  Value 
-	| Expression ":" Value 
-	.
-//ElementIndex = Expression .
+Element = [ Key ":" ] Value .
+ElementIndex = Expression .
 ElementList = Element { "," Element } .
 ElementType = Type .
 //EmptyStmt = .
 ExprCaseClause = ExprSwitchCase ":" StatementList .
 ExprSwitchCase = "case" ExpressionList
         | "default" .
-//ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] "{" { ExprCaseClause } "}" .
-
-//ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] lbr { ExprCaseClause } "}" .
-ExprSwitchStmt =
-          "switch" lbr { ExprCaseClause } "}"
-        |
-          "switch" Expression lbr { ExprCaseClause } "}"
-        |
-          "switch" SimpleStmt ";" lbr { ExprCaseClause } "}"
-        |
-          "switch" SimpleStmt ";" Expression lbr { ExprCaseClause } "}"
-        .
-
+ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] "{" { ExprCaseClause } "}" .
 //Expression = UnaryExpr
 //        | Expression binary_op UnaryExpr .
 Expression = UnaryExpr
         | Expression (
-                    ne // "!="
+                    "!="
                   | "%"
                   | "&"
-                  | andand // "&&"
-                  | and_not // "&^"
+                  | "&&"
+                  | "&^"
                   | "*"
                   | "+"
                   | "-"
                   | "/"
                   | "<"
-                  | lsh // "<<"
-                  | lt // "<="
-                  | eq // "=="
+                  | "<<"
+                  | "<="
+                  | "=="
                   | ">"
-                  | gt // ">="
-                  | rsh // ">>"
+                  | ">="
+                  | ">>"
                   | "^"
                   | "|"
-                  | oror // "||"
+                  | "||"
           ) UnaryExpr .
 ExpressionList = Expression { "," Expression } .
 ExpressionStmt = Expression .
@@ -244,38 +184,31 @@ FieldDecl = (
                   IdentifierList Type
                 | AnonymousField
           ) [ Tag ] .
-//FieldName = identifier .
+FieldName = identifier .
 ForClause = [ InitStmt ] ";" [ Condition ] ";" [ PostStmt ] .
-//ForStmt = "for" [
-//                  Condition
-//                | ForClause
-//                | RangeClause
-//          ] Block .
 ForStmt = "for" [
                   Condition
                 | ForClause
                 | RangeClause
-          ] Block2 .
+          ] Block .
 Function = Signature FunctionBody .
 FunctionBody = Block .
-//FunctionDecl = "func" FunctionName ( Function | Signature ) .
-FunctionDecl = "func" identifier ( Function | Signature ) .
+FunctionDecl = "func" FunctionName ( Function | Signature ) .
 FunctionLit = "func" Function .
-//FunctionName = identifier .
+FunctionName = identifier .
 FunctionType = "func" Signature .
 GoStmt = "go" Expression .
-//GotoStmt = "goto" Label .
-GotoStmt = "goto" identifier .
+GotoStmt = "goto" Label .
 IdentifierList = identifier { "," identifier } .
 //IfStmt = "if" [ SimpleStmt ";" ] Expression Block [
 //                 "else" ( IfStmt | Block )
 //          ] .
 IfStmt =
-          "if" Expression Block2 [
+          "if" Expression Block [
                  "else" ( IfStmt | Block )
           ] 
         | 
-          "if" SimpleStmt ";" Expression Block2 [
+          "if" SimpleStmt ";" Expression Block [
                  "else" ( IfStmt | Block )
           ] 
         .
@@ -290,78 +223,46 @@ ImportDecl = "import" (
 ImportPath = string_lit .
 //ImportSpec = [ "." | PackageName ] ImportPath .
 ImportSpec = [ "." | identifier ] ImportPath .
-//IncDecStmt = Expression ( "++" | "--" ) .
-IncDecStmt = Expression ( inc | dec ) .
+IncDecStmt = Expression ( "++" | "--" ) .
 Index = "[" Expression "]" .
 InitStmt = SimpleStmt .
 InterfaceType = "interface" "{" { MethodSpec ";" } "}" .
-//InterfaceTypeName = TypeName .
-//Key = FieldName | ElementIndex .
-//Key = identifier | ElementIndex .
+InterfaceTypeName = TypeName .
+Key = FieldName | ElementIndex .
 KeyType = Type .
-//Label = identifier .
-//LabeledStmt = Label ":" Statement .
-LabeledStmt = identifier ":" Statement .
+Label = identifier .
+LabeledStmt = Label ":" Statement .
 Literal = BasicLit
         | CompositeLit
         | FunctionLit .
-//LiteralType = StructType
-//        | ArrayType
-//        | "[" "..." "]" ElementType
-//        | SliceType
-//        | MapType
-//        | TypeName .
 LiteralType = StructType
         | ArrayType
-        | "[" ddd "]" ElementType
+        | "[" "..." "]" ElementType
         | SliceType
         | MapType
         | TypeName .
 LiteralValue = "{" [ ElementList [ "," ] ] "}" .
 MapType = "map" "[" KeyType "]" ElementType .
-//MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
-MethodDecl = "func" Receiver identifier ( Function | Signature ) .
-//MethodExpr = ReceiverType "." MethodName .
-MethodExpr = ReceiverType "." identifier .
-//MethodName = identifier .
-//MethodSpec = MethodName Signature
-//        | InterfaceTypeName .
-MethodSpec = identifier Signature
-        | TypeName .
-//Operand = Literal
-//        | OperandName
-//        | MethodExpr
-//        | "(" Expression ")" .
+MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
+MethodExpr = ReceiverType "." MethodName .
+MethodName = identifier .
+MethodSpec = MethodName Signature
+        | InterfaceTypeName .
 Operand = Literal
-        | identifier
-	| TypeLit
+        | OperandName
         | MethodExpr
         | "(" Expression ")" .
-//OperandName = identifier | QualifiedIdent .
+OperandName = identifier | QualifiedIdent .
 //PackageClause = "package" PackageName .
 PackageClause = "package" identifier .
 //PackageName = identifier .
-//ParameterDecl = [ IdentifierList ] [ "..." ] Type .
-//ParameterDecl = [ IdentifierList ] [ ddd ] Type .
-ParameterDecl =
-          Type
-        | identifier Type
-        | identifier ddd Type
-        | ddd Type
-        .
+ParameterDecl = [ IdentifierList ] [ "..." ] Type .
 ParameterList = ParameterDecl { "," ParameterDecl } .
-Parameters = "(" [ ParameterList ] ")" .
+Parameters = "(" [ ParameterList [ "," ] ] ")" .
 PointerType = "*" BaseType .
 PostStmt = SimpleStmt .
-//PrimaryExpr = Operand
-//        | Conversion
-//        | BuiltinCall
-//        | PrimaryExpr Selector
-//        | PrimaryExpr Index
-//        | PrimaryExpr Slice
-//        | PrimaryExpr TypeAssertion
-//        | PrimaryExpr Call .
 PrimaryExpr = Operand
+        | Conversion
         | BuiltinCall
         | PrimaryExpr Selector
         | PrimaryExpr Index
@@ -370,13 +271,9 @@ PrimaryExpr = Operand
         | PrimaryExpr Call .
 //QualifiedIdent = PackageName "." identifier .
 QualifiedIdent = identifier "." identifier .
-//RangeClause = (
-//                  ExpressionList "="
-//                | IdentifierList ":="
-//          ) "range" Expression .
 RangeClause = (
                   ExpressionList "="
-                | IdentifierList colas
+                | IdentifierList ":="
           ) "range" Expression .
 //Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
 Receiver =
@@ -402,16 +299,14 @@ RecvStmt =
         |
           
            (       ExpressionList "="
-                | IdentifierList colas )
+                | IdentifierList ":=" )
            RecvExpr .
 Result = Parameters | Type .
 ReturnStmt = "return" [ ExpressionList ] .
 SelectStmt = "select" "{" { CommClause } "}" .
 Selector = "." identifier .
-//SendStmt = Channel "<-" Expression .
-SendStmt = Channel comm Expression .
-//ShortVarDecl = IdentifierList ":=" ExpressionList .
-ShortVarDecl = IdentifierList colas ExpressionList .
+SendStmt = Channel "<-" Expression .
+ShortVarDecl = IdentifierList ":=" ExpressionList .
 Signature = Parameters [ Result ] .
 //SimpleStmt = EmptyStmt
 //        | ExpressionStmt
@@ -424,16 +319,12 @@ SimpleStmt = ExpressionStmt
            | IncDecStmt
            | Assignment
            | ShortVarDecl .
-//Slice = "[" (
-//                 [ Expression ] ":" [ Expression ]
-//          )
-//        | (
-//                 [ Expression ] ":" Expression ":" Expression
-//          ) "]" .
-Slice = "["
-		[ Expression ] ":" [ Expression [ ":" Expression ] ]
-	"]"
-	.
+Slice = "[" (
+                 [ Expression ] ":" [ Expression ]
+          )
+        | (
+                 [ Expression ] ":" Expression ":" Expression
+          ) "]" .
 SliceType = "[" "]" ElementType .
 SourceFile = PackageClause ";" { ImportDecl ";" } { TopLevelDecl ";" } .
 Statement = Declaration
@@ -489,18 +380,18 @@ TypeSwitchCase = "case" TypeList
 TypeSwitchGuard = 
           PrimaryExpr "." "(" "type" ")"
         |
-          identifier colas PrimaryExpr "." "(" "type" ")"
+          identifier ":=" PrimaryExpr "." "(" "type" ")"
         .
 //TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
 TypeSwitchStmt =
-          "switch" TypeSwitchGuard lbr { TypeCaseClause } "}"
+          "switch" TypeSwitchGuard "{" { TypeCaseClause } "}"
         |
-          "switch" SimpleStmt ";" TypeSwitchGuard lbr { TypeCaseClause } "}"
+          "switch" SimpleStmt ";" TypeSwitchGuard "{" { TypeCaseClause } "}"
         .
 //UnaryExpr = PrimaryExpr
 //        | unary_op UnaryExpr .
 UnaryExpr = PrimaryExpr
-        | ( "!" | "&" | "*" | "+" | "-" | comm | "^" ) UnaryExpr .
+        | ( "!" | "&" | "*" | "+" | "-" | "<-" | "^" ) UnaryExpr .
 Value = Expression | LiteralValue .
 //VarDecl = "var" (
 //                  VarSpec

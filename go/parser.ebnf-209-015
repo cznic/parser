@@ -1,10 +1,3 @@
-// scanner hacks
-
-lbr = .
-// "(" "," ")" -> unexpected comma
-// "," ")" -> ")"
-
-
 add_asgn = "+=" .
 and_asgn = "&=" .
 and_not = "&^" .
@@ -146,15 +139,12 @@ BasicLit = int_lit
         | rune_lit
         | string_lit .
 Block = "{" StatementList "}" .
-Block2 = lbr StatementList "}" .
 //BreakStmt = "break" [ Label ] .
 BreakStmt = "break" [ identifier ] .
 BuiltinArgs = Type [ "," ArgumentList ]
         | ArgumentList .
-//BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
-BuiltinCall = identifier "(" [ BuiltinArgs ] ")" .
-//Call = "(" [ ArgumentList [ "," ] ] ")" .
-Call = "(" [ ArgumentList ] ")" .
+BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
+Call = "(" [ ArgumentList [ "," ] ] ")" .
 Channel = Expression .
 //ChannelType = (
 //                  "chan" [ "<-" ]
@@ -182,37 +172,20 @@ ConstSpec = IdentifierList [
           ] .
 //ContinueStmt = "continue" [ Label ] .
 ContinueStmt = "continue" [ identifier ] .
-//Conversion = Type "(" Expression ")" .
+Conversion = Type "(" Expression [ "," ] ")" .
 Declaration = ConstDecl
         | TypeDecl
         | VarDecl .
 DeferStmt = "defer" Expression .
-//Element = [ Key ":" ] Value .
-//Element = [ Expression ":" ] Value .
-Element = 
-	  Value 
-	| Expression ":" Value 
-	.
-//ElementIndex = Expression .
+Element = [ Key ":" ] Value .
+ElementIndex = Expression .
 ElementList = Element { "," Element } .
 ElementType = Type .
 //EmptyStmt = .
 ExprCaseClause = ExprSwitchCase ":" StatementList .
 ExprSwitchCase = "case" ExpressionList
         | "default" .
-//ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] "{" { ExprCaseClause } "}" .
-
-//ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] lbr { ExprCaseClause } "}" .
-ExprSwitchStmt =
-          "switch" lbr { ExprCaseClause } "}"
-        |
-          "switch" Expression lbr { ExprCaseClause } "}"
-        |
-          "switch" SimpleStmt ";" lbr { ExprCaseClause } "}"
-        |
-          "switch" SimpleStmt ";" Expression lbr { ExprCaseClause } "}"
-        .
-
+ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] "{" { ExprCaseClause } "}" .
 //Expression = UnaryExpr
 //        | Expression binary_op UnaryExpr .
 Expression = UnaryExpr
@@ -246,16 +219,11 @@ FieldDecl = (
           ) [ Tag ] .
 //FieldName = identifier .
 ForClause = [ InitStmt ] ";" [ Condition ] ";" [ PostStmt ] .
-//ForStmt = "for" [
-//                  Condition
-//                | ForClause
-//                | RangeClause
-//          ] Block .
 ForStmt = "for" [
                   Condition
                 | ForClause
                 | RangeClause
-          ] Block2 .
+          ] Block .
 Function = Signature FunctionBody .
 FunctionBody = Block .
 //FunctionDecl = "func" FunctionName ( Function | Signature ) .
@@ -271,11 +239,11 @@ IdentifierList = identifier { "," identifier } .
 //                 "else" ( IfStmt | Block )
 //          ] .
 IfStmt =
-          "if" Expression Block2 [
+          "if" Expression Block [
                  "else" ( IfStmt | Block )
           ] 
         | 
-          "if" SimpleStmt ";" Expression Block2 [
+          "if" SimpleStmt ";" Expression Block [
                  "else" ( IfStmt | Block )
           ] 
         .
@@ -295,9 +263,9 @@ IncDecStmt = Expression ( inc | dec ) .
 Index = "[" Expression "]" .
 InitStmt = SimpleStmt .
 InterfaceType = "interface" "{" { MethodSpec ";" } "}" .
-//InterfaceTypeName = TypeName .
+InterfaceTypeName = TypeName .
 //Key = FieldName | ElementIndex .
-//Key = identifier | ElementIndex .
+Key = identifier | ElementIndex .
 KeyType = Type .
 //Label = identifier .
 //LabeledStmt = Label ":" Statement .
@@ -327,41 +295,23 @@ MethodExpr = ReceiverType "." identifier .
 //MethodSpec = MethodName Signature
 //        | InterfaceTypeName .
 MethodSpec = identifier Signature
-        | TypeName .
-//Operand = Literal
-//        | OperandName
-//        | MethodExpr
-//        | "(" Expression ")" .
+        | InterfaceTypeName .
 Operand = Literal
-        | identifier
-	| TypeLit
+        | OperandName
         | MethodExpr
         | "(" Expression ")" .
-//OperandName = identifier | QualifiedIdent .
+OperandName = identifier | QualifiedIdent .
 //PackageClause = "package" PackageName .
 PackageClause = "package" identifier .
 //PackageName = identifier .
 //ParameterDecl = [ IdentifierList ] [ "..." ] Type .
-//ParameterDecl = [ IdentifierList ] [ ddd ] Type .
-ParameterDecl =
-          Type
-        | identifier Type
-        | identifier ddd Type
-        | ddd Type
-        .
+ParameterDecl = [ IdentifierList ] [ ddd ] Type .
 ParameterList = ParameterDecl { "," ParameterDecl } .
-Parameters = "(" [ ParameterList ] ")" .
+Parameters = "(" [ ParameterList [ "," ] ] ")" .
 PointerType = "*" BaseType .
 PostStmt = SimpleStmt .
-//PrimaryExpr = Operand
-//        | Conversion
-//        | BuiltinCall
-//        | PrimaryExpr Selector
-//        | PrimaryExpr Index
-//        | PrimaryExpr Slice
-//        | PrimaryExpr TypeAssertion
-//        | PrimaryExpr Call .
 PrimaryExpr = Operand
+        | Conversion
         | BuiltinCall
         | PrimaryExpr Selector
         | PrimaryExpr Index
@@ -424,16 +374,12 @@ SimpleStmt = ExpressionStmt
            | IncDecStmt
            | Assignment
            | ShortVarDecl .
-//Slice = "[" (
-//                 [ Expression ] ":" [ Expression ]
-//          )
-//        | (
-//                 [ Expression ] ":" Expression ":" Expression
-//          ) "]" .
-Slice = "["
-		[ Expression ] ":" [ Expression [ ":" Expression ] ]
-	"]"
-	.
+Slice = "[" (
+                 [ Expression ] ":" [ Expression ]
+          )
+        | (
+                 [ Expression ] ":" Expression ":" Expression
+          ) "]" .
 SliceType = "[" "]" ElementType .
 SourceFile = PackageClause ";" { ImportDecl ";" } { TopLevelDecl ";" } .
 Statement = Declaration
@@ -493,9 +439,9 @@ TypeSwitchGuard =
         .
 //TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
 TypeSwitchStmt =
-          "switch" TypeSwitchGuard lbr { TypeCaseClause } "}"
+          "switch" TypeSwitchGuard "{" { TypeCaseClause } "}"
         |
-          "switch" SimpleStmt ";" TypeSwitchGuard lbr { TypeCaseClause } "}"
+          "switch" SimpleStmt ";" TypeSwitchGuard "{" { TypeCaseClause } "}"
         .
 //UnaryExpr = PrimaryExpr
 //        | unary_op UnaryExpr .

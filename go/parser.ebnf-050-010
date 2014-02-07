@@ -1,10 +1,4 @@
-// scanner hacks
-
 lbr = .
-// "(" "," ")" -> unexpected comma
-// "," ")" -> ")"
-
-
 add_asgn = "+=" .
 and_asgn = "&=" .
 and_not = "&^" .
@@ -151,10 +145,8 @@ Block2 = lbr StatementList "}" .
 BreakStmt = "break" [ identifier ] .
 BuiltinArgs = Type [ "," ArgumentList ]
         | ArgumentList .
-//BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
-BuiltinCall = identifier "(" [ BuiltinArgs ] ")" .
-//Call = "(" [ ArgumentList [ "," ] ] ")" .
-Call = "(" [ ArgumentList ] ")" .
+BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
+Call = "(" [ ArgumentList [ "," ] ] ")" .
 Channel = Expression .
 //ChannelType = (
 //                  "chan" [ "<-" ]
@@ -182,7 +174,7 @@ ConstSpec = IdentifierList [
           ] .
 //ContinueStmt = "continue" [ Label ] .
 ContinueStmt = "continue" [ identifier ] .
-//Conversion = Type "(" Expression ")" .
+Conversion = Type "(" Expression [ "," ] ")" .
 Declaration = ConstDecl
         | TypeDecl
         | VarDecl .
@@ -295,7 +287,7 @@ IncDecStmt = Expression ( inc | dec ) .
 Index = "[" Expression "]" .
 InitStmt = SimpleStmt .
 InterfaceType = "interface" "{" { MethodSpec ";" } "}" .
-//InterfaceTypeName = TypeName .
+InterfaceTypeName = TypeName .
 //Key = FieldName | ElementIndex .
 //Key = identifier | ElementIndex .
 KeyType = Type .
@@ -327,17 +319,12 @@ MethodExpr = ReceiverType "." identifier .
 //MethodSpec = MethodName Signature
 //        | InterfaceTypeName .
 MethodSpec = identifier Signature
-        | TypeName .
-//Operand = Literal
-//        | OperandName
-//        | MethodExpr
-//        | "(" Expression ")" .
+        | InterfaceTypeName .
 Operand = Literal
-        | identifier
-	| TypeLit
+        | OperandName
         | MethodExpr
         | "(" Expression ")" .
-//OperandName = identifier | QualifiedIdent .
+OperandName = identifier | QualifiedIdent .
 //PackageClause = "package" PackageName .
 PackageClause = "package" identifier .
 //PackageName = identifier .
@@ -350,18 +337,11 @@ ParameterDecl =
         | ddd Type
         .
 ParameterList = ParameterDecl { "," ParameterDecl } .
-Parameters = "(" [ ParameterList ] ")" .
+Parameters = "(" [ ParameterList [ "," ] ] ")" .
 PointerType = "*" BaseType .
 PostStmt = SimpleStmt .
-//PrimaryExpr = Operand
-//        | Conversion
-//        | BuiltinCall
-//        | PrimaryExpr Selector
-//        | PrimaryExpr Index
-//        | PrimaryExpr Slice
-//        | PrimaryExpr TypeAssertion
-//        | PrimaryExpr Call .
 PrimaryExpr = Operand
+        | Conversion
         | BuiltinCall
         | PrimaryExpr Selector
         | PrimaryExpr Index
