@@ -1,6 +1,6 @@
 pack_name = .
 type_name = .
-dcl_name = .
+DclName = identifier | pack_name | type_name .
 
 
 add_asgn = "+=" .
@@ -213,14 +213,14 @@ ForStmt = "for" [
 Function = Signature FunctionBody .
 FunctionBody = Block .
 //FunctionDecl = "func" FunctionName ( Function | Signature ) .
-FunctionDecl = "func" dcl_name ( Function | Signature ) .
+FunctionDecl = "func" DclName ( Function | Signature ) .
 FunctionLit = "func" Function .
 //FunctionName = identifier .
 FunctionType = "func" Signature .
 GoStmt = "go" Expression .
 GotoStmt = "goto" Label .
 //IdentifierList = identifier { "," identifier } .
-IdentifierList = dcl_name { "," dcl_name } .
+IdentifierList = DclName { "," DclName } .
 //IfStmt = "if" [ SimpleStmt ";" ] Expression Block [
 //		 "else" ( IfStmt | Block )
 //	  ] .
@@ -234,7 +234,7 @@ ImportDecl = "import" (
 	  ) .
 ImportPath = string_lit .
 //ImportSpec = [ "." | PackageName ] ImportPath .
-ImportSpec = [ "." | dcl_name ] ImportPath .
+ImportSpec = [ "." | DclName ] ImportPath .
 IncDecStmt = Expression ( inc | dec ) .
 Index = "[" Expression "]" .
 InitStmt = SimpleStmt .
@@ -243,7 +243,7 @@ InterfaceTypeName = TypeName .
 //Key = FieldName | ElementIndex .
 Key = identifier | ElementIndex .
 KeyType = Type .
-Label = dcl_name .
+Label = DclName .
 LabeledStmt = Label ":" Statement .
 Literal = BasicLit
 	| CompositeLit
@@ -258,7 +258,7 @@ LiteralValue = "{" [ ElementList [ "," ] ] "}" .
 MapType = "map" "[" KeyType "]" ElementType .
 MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
 MethodExpr = ReceiverType "." MethodName .
-MethodName = dcl_name .
+MethodName = DclName .
 MethodSpec = MethodName Signature
 	| InterfaceTypeName .
 Operand = Literal
@@ -271,13 +271,13 @@ OperandName =
 	| pack_name "." identifier
 	.
 //PackageClause = "package" PackageName .
-PackageClause = "package" dcl_name .
+PackageClause = "package" DclName .
 //PackageName = identifier .
 //ParameterDecl = [ IdentifierList ] [ ddd ] Type .
 ParameterDecl = 
 	  Type
-	| dcl_name Type
-	| dcl_name ddd Type
+	| DclName Type
+	| DclName ddd Type
 	| ddd Type
 	.
 ParameterList = ParameterDecl { "," ParameterDecl } .
@@ -301,8 +301,8 @@ RangeClause = (
 Receiver =
 	  "(" type_name ")"
 	| "(" "*" type_name ")"
-	| "(" dcl_name  type_name ")"
-	| "(" dcl_name "*" type_name ")"
+	| "(" DclName  type_name ")"
+	| "(" DclName "*" type_name ")"
 	.
 ReceiverType = TypeName
 	| "(" "*" TypeName ")"
@@ -386,10 +386,10 @@ TypeName =
 	  type_name
 	| pack_name "." type_name
 	.
-TypeSpec = dcl_name Type .
+TypeSpec = DclName Type .
 TypeSwitchCase = "case" TypeList
 	| "default" .
-TypeSwitchGuard = [ dcl_name colas ] PrimaryExpr "." "(" "type" ")" .
+TypeSwitchGuard = [ DclName colas ] PrimaryExpr "." "(" "type" ")" .
 //TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
 TypeSwitchStmt =
 	  "switch" TypeSwitchGuard "{" { TypeCaseClause } "}"
