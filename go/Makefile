@@ -1,4 +1,4 @@
-.PHONY: all clean
+.PHONY: all clean nuke
 
 all: editor
 	go vet
@@ -14,6 +14,9 @@ editor: clean parser.go
 parser.go: parser.y
 	go tool yacc -l -o $@ $<
 	sed -i 's|//line .*:.*||' $@
+
+parser.y: parser.ebnf
+	ebnf2y -o $@ -pkg parser $<
 
 todo:
 	@grep -nr ^[[:space:]]*_[[:space:]]*=[[:space:]][[:alpha:]][[:alnum:]]* *.go || true
