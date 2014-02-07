@@ -176,7 +176,13 @@ ElementType = Type .
 ExprCaseClause = ExprSwitchCase ":" StatementList .
 ExprSwitchCase = "case" ExpressionList
 	| "default" .
-ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] "{" { ExprCaseClause } "}" .
+//ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] "{" { ExprCaseClause } "}" .
+ExprSwitchStmt =
+	  "switch" "{" { ExprCaseClause } "}"
+	| "switch" Expression "{" { ExprCaseClause } "}"
+	| "switch" SimpleStmt ";" "{" { ExprCaseClause } "}"
+	| "switch" SimpleStmt ";" Expression "{" { ExprCaseClause } "}"
+	.
 //Expression = UnaryExpr
 //	| Expression binary_op UnaryExpr .
 Expression = Term { oror Term } .
