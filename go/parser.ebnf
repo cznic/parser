@@ -305,7 +305,13 @@ OperandName = identifier | QualifiedIdent .
 PackageClause = "package" identifier .
 //PackageName = identifier .
 //ParameterDecl = [ IdentifierList ] [ "..." ] Type .
-ParameterDecl = [ IdentifierList ] [ ddd ] Type .
+//ParameterDecl = [ IdentifierList ] [ ddd ] Type .
+ParameterDecl =
+          Type
+        | identifier Type
+        | identifier ddd Type
+        | ddd Type
+        .
 ParameterList = ParameterDecl { "," ParameterDecl } .
 Parameters = "(" [ ParameterList [ "," ] ] ")" .
 PointerType = "*" BaseType .
