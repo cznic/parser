@@ -221,7 +221,8 @@ ImportDecl = "import" (
                 | "(" [ ImportSpec { ";" ImportSpec } [ ";" ] ] ")"
           ) .
 ImportPath = string_lit .
-ImportSpec = [ "." | PackageName ] ImportPath .
+//ImportSpec = [ "." | PackageName ] ImportPath .
+ImportSpec = [ "." | identifier ] ImportPath .
 IncDecStmt = Expression ( "++" | "--" ) .
 Index = "[" Expression "]" .
 InitStmt = SimpleStmt .
@@ -252,8 +253,9 @@ Operand = Literal
         | MethodExpr
         | "(" Expression ")" .
 OperandName = identifier | QualifiedIdent .
-PackageClause = "package" PackageName .
-PackageName = identifier .
+//PackageClause = "package" PackageName .
+PackageClause = "package" identifier .
+//PackageName = identifier .
 ParameterDecl = [ IdentifierList ] [ "..." ] Type .
 ParameterList = ParameterDecl { "," ParameterDecl } .
 Parameters = "(" [ ParameterList [ "," ] ] ")" .
@@ -267,7 +269,8 @@ PrimaryExpr = Operand
         | PrimaryExpr Slice
         | PrimaryExpr TypeAssertion
         | PrimaryExpr Call .
-QualifiedIdent = PackageName "." identifier .
+//QualifiedIdent = PackageName "." identifier .
+QualifiedIdent = identifier "." identifier .
 RangeClause = (
                   ExpressionList "="
                 | IdentifierList ":="
