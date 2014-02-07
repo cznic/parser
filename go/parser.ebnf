@@ -359,7 +359,12 @@ TypeSpec = identifier Type .
 TypeSwitchCase = "case" TypeList
         | "default" .
 TypeSwitchGuard = [ identifier ":=" ] PrimaryExpr "." "(" "type" ")" .
-TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
+//TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
+TypeSwitchStmt =
+          "switch" TypeSwitchGuard "{" { TypeCaseClause } "}"
+        |
+          "switch" SimpleStmt ";" TypeSwitchGuard "{" { TypeCaseClause } "}"
+        .
 //UnaryExpr = PrimaryExpr
 //        | unary_op UnaryExpr .
 UnaryExpr = PrimaryExpr
