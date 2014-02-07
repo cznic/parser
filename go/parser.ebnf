@@ -358,7 +358,8 @@ Result = Parameters | Type .
 ReturnStmt = "return" [ ExpressionList ] .
 SelectStmt = "select" "{" { CommClause } "}" .
 Selector = "." identifier .
-SendStmt = Channel "<-" Expression .
+//SendStmt = Channel "<-" Expression .
+SendStmt = Channel comm Expression .
 //ShortVarDecl = IdentifierList ":=" ExpressionList .
 ShortVarDecl = IdentifierList colas ExpressionList .
 Signature = Parameters [ Result ] .
@@ -445,7 +446,7 @@ TypeSwitchStmt =
 //UnaryExpr = PrimaryExpr
 //        | unary_op UnaryExpr .
 UnaryExpr = PrimaryExpr
-        | ( "!" | "&" | "*" | "+" | "-" | "<-" | "^" ) UnaryExpr .
+        | ( "!" | "&" | "*" | "+" | "-" | comm | "^" ) UnaryExpr .
 Value = Expression | LiteralValue .
 //VarDecl = "var" (
 //                  VarSpec
