@@ -3,42 +3,7 @@
 //        | "|"
 //        | "^" .
 //assign_op = [ add_op | mul_op ] "=" .
-assign_op =
-            "%="
-          | "&="
-          | "&^="
-          | "*="
-          | "+="
-          | "-="
-          | "/="
-          | "<<="
-          | "="
-          | ">>="
-          | "^="
-          | "|="
-          .
 //big_u_value = "\\" "U" hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit .
-binary_op =
-          "!="
-        | "%"
-        | "&"
-        | "&&"
-        | "&^"
-        | "*"
-        | "+"
-        | "-"
-        | "/"
-        | "<"
-        | "<<"
-        | "<="
-        | "=="
-        | ">"
-        | ">="
-        | ">>"
-        | "^"
-        | "|"
-        | "||"
-        .
 //byte_value = octal_byte_value | hex_byte_value .
 //decimal_digit = "0" … "9" .
 //decimal_lit = ( "1" … "9" ) { decimal_digit } .
@@ -98,15 +63,15 @@ int_lit = .
 rune_lit = .
 //string_lit = raw_string_lit | interpreted_string_lit .
 string_lit = .
-unary_op =
-          "!"
-        | "&"
-        | "*"
-        | "+"
-        | "-"
-        | "<-"
-        | "^"
-        .
+//unary_op =
+//          "!"
+//        | "&"
+//        | "*"
+//        | "+"
+//        | "-"
+//        | "<-"
+//        | "^"
+//        .
 //unicode_char = .
 //unicode_digit = .
 //unicode_letter = .
@@ -119,7 +84,21 @@ AnonymousField = [ "*" ] TypeName .
 ArgumentList = ExpressionList [ "..." ] .
 ArrayLength = Expression .
 ArrayType = "[" ArrayLength "]" ElementType .
-Assignment = ExpressionList assign_op ExpressionList .
+//Assignment = ExpressionList assign_op ExpressionList .
+Assignment = ExpressionList (
+                       "%="
+                     | "&="
+                     | "&^="
+                     | "*="
+                     | "+="
+                     | "-="
+                     | "/="
+                     | "<<="
+                     | "="
+                     | ">>="
+                     | "^="
+                     | "|="
+             ) ExpressionList .
 BaseType = Type .
 BaseTypeName = identifier .
 BasicLit = int_lit
@@ -165,8 +144,30 @@ ExprCaseClause = ExprSwitchCase ":" StatementList .
 ExprSwitchCase = "case" ExpressionList
         | "default" .
 ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] "{" { ExprCaseClause } "}" .
+//Expression = UnaryExpr
+//        | Expression binary_op UnaryExpr .
 Expression = UnaryExpr
-        | Expression binary_op UnaryExpr .
+        | Expression (
+                    "!="
+                  | "%"
+                  | "&"
+                  | "&&"
+                  | "&^"
+                  | "*"
+                  | "+"
+                  | "-"
+                  | "/"
+                  | "<"
+                  | "<<"
+                  | "<="
+                  | "=="
+                  | ">"
+                  | ">="
+                  | ">>"
+                  | "^"
+                  | "|"
+                  | "||"
+          ) UnaryExpr .
 ExpressionList = Expression { "," Expression } .
 ExpressionStmt = Expression .
 FallthroughStmt = "fallthrough" .
@@ -325,8 +326,10 @@ TypeSwitchCase = "case" TypeList
         | "default" .
 TypeSwitchGuard = [ identifier ":=" ] PrimaryExpr "." "(" "type" ")" .
 TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
+//UnaryExpr = PrimaryExpr
+//        | unary_op UnaryExpr .
 UnaryExpr = PrimaryExpr
-        | unary_op UnaryExpr .
+        | ( "!" | "&" | "*" | "+" | "-" | "<-" | "^" ) UnaryExpr .
 Value = Expression | LiteralValue .
 VarDecl = "var" (
                   VarSpec
