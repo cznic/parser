@@ -1,3 +1,8 @@
+pack_name = .
+type_name = .
+//TODO dcl_name = .
+
+
 add_asgn = "+=" .
 and_asgn = "&=" .
 andand = "&&" .
@@ -133,7 +138,8 @@ Assignment =
 	| ExpressionList xor_asgn ExpressionList
 	.
 BaseType = Type .
-BaseTypeName = identifier .
+//BaseTypeName = identifier .
+BaseTypeName = type_name .
 BasicLit = int_lit
 	| float_lit
 	| imaginary_lit
@@ -226,7 +232,8 @@ ImportDecl = "import" (
 		| "(" { ImportSpec ";" } ")"
 	  ) .
 ImportPath = string_lit .
-ImportSpec = [ "." | PackageName ] ImportPath .
+//ImportSpec = [ "." | PackageName ] ImportPath .
+ImportSpec = [ "." | identifier ] ImportPath .
 IncDecStmt = Expression ( inc | dec ) .
 Index = "[" Expression "]" .
 InitStmt = SimpleStmt .
@@ -256,9 +263,14 @@ Operand = Literal
 	| OperandName
 	| MethodExpr
 	| "(" Expression ")" .
-OperandName = identifier | QualifiedIdent .
-PackageClause = "package" PackageName .
-PackageName = identifier .
+//OperandName = identifier | QualifiedIdent .
+OperandName =
+	  identifier
+	| pack_name "." identifier
+	.
+//PackageClause = "package" PackageName .
+PackageClause = "package" identifier .
+//PackageName = identifier .
 //ParameterDecl = [ IdentifierList ] [ ddd ] Type .
 ParameterDecl = 
 	  Type
@@ -278,12 +290,18 @@ PrimaryExpr = Operand
 	| PrimaryExpr Slice
 	| PrimaryExpr TypeAssertion
 	| PrimaryExpr Call .
-QualifiedIdent = PackageName "." identifier .
+//QualifiedIdent = PackageName "." identifier .
 RangeClause = (
 		  ExpressionList "="
 		| IdentifierList colas
 	  ) "range" Expression .
-Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
+//Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
+Receiver =
+	  "(" BaseTypeName ")"
+	| "(" "*" BaseTypeName ")"
+	| "(" identifier  BaseTypeName ")"
+	| "(" identifier "*" BaseTypeName ")"
+	.
 ReceiverType = TypeName
 	| "(" "*" TypeName ")"
 	| "(" ReceiverType ")" .
@@ -361,7 +379,11 @@ TypeLit = ArrayType
 	| SliceType
 	| MapType
 	| ChannelType .
-TypeName = identifier | QualifiedIdent .
+//TypeName = identifier | QualifiedIdent .
+TypeName =
+	  type_name
+	| pack_name "." type_name
+	.
 TypeSpec = identifier Type .
 TypeSwitchCase = "case" TypeList
 	| "default" .
