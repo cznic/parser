@@ -153,7 +153,8 @@ BuiltinArgs = Type [ "," ArgumentList ]
         | ArgumentList .
 //BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
 BuiltinCall = identifier "(" [ BuiltinArgs ] ")" .
-Call = "(" [ ArgumentList [ "," ] ] ")" .
+//Call = "(" [ ArgumentList [ "," ] ] ")" .
+Call = "(" [ ArgumentList ] ")" .
 Channel = Expression .
 //ChannelType = (
 //                  "chan" [ "<-" ]
