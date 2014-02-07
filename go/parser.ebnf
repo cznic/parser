@@ -1,4 +1,9 @@
+// scanner hacks
+
 lbr = .
+// "(" "," ")" -> unexpected comma
+// "," ")" -> ")"
+
 
 add_asgn = "+=" .
 and_asgn = "&=" .
@@ -146,7 +151,8 @@ Block2 = lbr StatementList "}" .
 BreakStmt = "break" [ identifier ] .
 BuiltinArgs = Type [ "," ArgumentList ]
         | ArgumentList .
-BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
+//BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
+BuiltinCall = identifier "(" [ BuiltinArgs ] ")" .
 Call = "(" [ ArgumentList [ "," ] ] ")" .
 Channel = Expression .
 //ChannelType = (
