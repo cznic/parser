@@ -112,7 +112,8 @@ BasicLit = int_lit
         | rune_lit
         | string_lit .
 Block = "{" StatementList "}" .
-BreakStmt = "break" [ Label ] .
+//BreakStmt = "break" [ Label ] .
+BreakStmt = "break" [ identifier ] .
 BuiltinArgs = Type [ "," ArgumentList ]
         | ArgumentList .
 BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
@@ -138,7 +139,8 @@ ConstDecl = "const" (
 ConstSpec = IdentifierList [
                  [ Type ] "=" ExpressionList
           ] .
-ContinueStmt = "continue" [ Label ] .
+//ContinueStmt = "continue" [ Label ] .
+ContinueStmt = "continue" [ identifier ] .
 Conversion = Type "(" Expression [ "," ] ")" .
 Declaration = ConstDecl
         | TypeDecl
@@ -184,7 +186,7 @@ FieldDecl = (
                   IdentifierList Type
                 | AnonymousField
           ) [ Tag ] .
-FieldName = identifier .
+//FieldName = identifier .
 ForClause = [ InitStmt ] ";" [ Condition ] ";" [ PostStmt ] .
 ForStmt = "for" [
                   Condition
@@ -193,12 +195,14 @@ ForStmt = "for" [
           ] Block .
 Function = Signature FunctionBody .
 FunctionBody = Block .
-FunctionDecl = "func" FunctionName ( Function | Signature ) .
+//FunctionDecl = "func" FunctionName ( Function | Signature ) .
+FunctionDecl = "func" identifier ( Function | Signature ) .
 FunctionLit = "func" Function .
-FunctionName = identifier .
+//FunctionName = identifier .
 FunctionType = "func" Signature .
 GoStmt = "go" Expression .
-GotoStmt = "goto" Label .
+//GotoStmt = "goto" Label .
+GotoStmt = "goto" identifier .
 IdentifierList = identifier { "," identifier } .
 //IfStmt = "if" [ SimpleStmt ";" ] Expression Block [
 //                 "else" ( IfStmt | Block )
@@ -228,10 +232,12 @@ Index = "[" Expression "]" .
 InitStmt = SimpleStmt .
 InterfaceType = "interface" "{" { MethodSpec ";" } "}" .
 InterfaceTypeName = TypeName .
-Key = FieldName | ElementIndex .
+//Key = FieldName | ElementIndex .
+Key = identifier | ElementIndex .
 KeyType = Type .
-Label = identifier .
-LabeledStmt = Label ":" Statement .
+//Label = identifier .
+//LabeledStmt = Label ":" Statement .
+LabeledStmt = identifier ":" Statement .
 Literal = BasicLit
         | CompositeLit
         | FunctionLit .
