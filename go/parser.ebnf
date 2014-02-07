@@ -1,87 +1,117 @@
-add_op = "+"
-	| "-"
-	| "|"
-	| "^" .
-assign_op = [ add_op | mul_op ] "=" .
-big_u_value = "\\" "U" hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit .
-binary_op = "||"
-	| "&&"
-	| rel_op
-	| add_op
-	| mul_op .
-byte_value = octal_byte_value | hex_byte_value .
-decimal_digit = "0" … "9" .
-decimal_lit = ( "1" … "9" ) { decimal_digit } .
-decimals = decimal_digit { decimal_digit } .
-escaped_char = "\\" (
-		  "a"
-		| "b"
-		| "f"
-		| "n"
-		| "r"
-		| "t"
-		| "v"
-		| "\\"
-		| "'"
-		| "\""
-	  ) .
-exponent = ( "e" | "E" ) [ "+" | "-" ] decimals .
-float_lit = decimals "." [ decimals ] [ exponent ]
-	| decimals exponent
-	| "." decimals [ exponent ] .
-hex_byte_value = "\\" "x" hex_digit hex_digit .
-hex_digit = "0" … "9"
-	| "A" … "F"
-	| "a" … "f" .
-hex_lit = "0" ( "x" | "X" ) hex_digit { hex_digit } .
-identifier = letter { letter | unicode_digit } .
-imaginary_lit = ( decimals | float_lit ) "i" .
-int_lit = decimal_lit
-	| octal_lit
-	| hex_lit .
-interpreted_string_lit = "\"" { unicode_value | byte_value } "\"" .
-letter = unicode_letter | "_" .
-little_u_value = "\\" "u" hex_digit hex_digit hex_digit hex_digit .
-mul_op = "*"
-	| "/"
-	| "%"
-	| "<<"
-	| ">>"
-	| "&"
-	| "&^" .
-newline = .
-octal_byte_value = "\\" octal_digit octal_digit octal_digit .
-octal_digit = "0" … "7" .
-octal_lit = "0" { octal_digit } .
-raw_string_lit = "`" { unicode_char | newline } "`" .
-rel_op = "=="
-	| "!="
-	| "<"
-	| "<="
-	| ">"
-	| ">=" .
-rune_lit = "'" ( unicode_value | byte_value ) "'" .
-string_lit = raw_string_lit | interpreted_string_lit .
-unary_op = "+"
-	| "-"
-	| "!"
-	| "^"
-	| "*"
-	| "&"
-	| "<-" .
-unicode_char = .
-unicode_digit = .
-unicode_letter = .
-unicode_value = unicode_char
-	| little_u_value
-	| big_u_value
-	| escaped_char .
+andand = "&&" .
+andnot = "&^" .
+eq = "==" .
+ge = ">=" .
+le = "<=" .
+lsh = "<<" .
+neq = "!=" .
+oror = "||" .
+rsh = ">>" .
+
+//add_op = "+"
+//	| "-"
+//	| "|"
+//	| "^" .
+//assign_op = [ add_op | mul_op ] "=" .
+//big_u_value = "\\" "U" hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit .
+//binary_op = "||"
+//	| "&&"
+//	| rel_op
+//	| add_op
+//	| mul_op .
+//byte_value = octal_byte_value | hex_byte_value .
+//decimal_digit = "0" … "9" .
+//decimal_lit = ( "1" … "9" ) { decimal_digit } .
+//decimals = decimal_digit { decimal_digit } .
+//escaped_char = "\\" (
+//		  "a"
+//		| "b"
+//		| "f"
+//		| "n"
+//		| "r"
+//		| "t"
+//		| "v"
+//		| "\\"
+//		| "'"
+//		| "\""
+//	  ) .
+//exponent = ( "e" | "E" ) [ "+" | "-" ] decimals .
+//float_lit = decimals "." [ decimals ] [ exponent ]
+//	| decimals exponent
+//	| "." decimals [ exponent ] .
+float_lit = .
+//hex_byte_value = "\\" "x" hex_digit hex_digit .
+//hex_digit = "0" … "9"
+//	| "A" … "F"
+//	| "a" … "f" .
+//hex_lit = "0" ( "x" | "X" ) hex_digit { hex_digit } .
+//identifier = letter { letter | unicode_digit } .
+identifier = .
+//imaginary_lit = ( decimals | float_lit ) "i" .
+imaginary_lit = .
+//int_lit = decimal_lit
+//	| octal_lit
+//	| hex_lit .
+int_lit = .
+//interpreted_string_lit = "\"" { unicode_value | byte_value } "\"" .
+//letter = unicode_letter | "_" .
+//little_u_value = "\\" "u" hex_digit hex_digit hex_digit hex_digit .
+//mul_op = "*"
+//	| "/"
+//	| "%"
+//	| "<<"
+//	| ">>"
+//	| "&"
+//	| "&^" .
+//newline = .
+//octal_byte_value = "\\" octal_digit octal_digit octal_digit .
+//octal_digit = "0" … "7" .
+//octal_lit = "0" { octal_digit } .
+//raw_string_lit = "`" { unicode_char | newline } "`" .
+//rel_op = "=="
+//	| "!="
+//	| "<"
+//	| "<="
+//	| ">"
+//	| ">=" .
+//rune_lit = "'" ( unicode_value | byte_value ) "'" .
+rune_lit = .
+//string_lit = raw_string_lit | interpreted_string_lit .
+string_lit = .
+//unary_op = "+"
+//	| "-"
+//	| "!"
+//	| "^"
+//	| "*"
+//	| "&"
+//	| "<-" .
+//unicode_char = .
+//unicode_digit = .
+//unicode_letter = .
+//unicode_value = unicode_char
+//	| little_u_value
+//	| big_u_value
+//	| escaped_char .
 
 AnonymousField = [ "*" ] TypeName .
 ArgumentList = ExpressionList [ "..." ] .
 ArrayLength = Expression .
 ArrayType = "[" ArrayLength "]" ElementType .
-Assignment = ExpressionList assign_op ExpressionList .
+//Assignment = ExpressionList assign_op ExpressionList .
+Assignment =
+	  ExpressionList "=" ExpressionList
+	| ExpressionList "+=" ExpressionList
+	| ExpressionList "-=" ExpressionList
+	| ExpressionList "|=" ExpressionList
+	| ExpressionList "^=" ExpressionList
+	| ExpressionList "*=" ExpressionList
+	| ExpressionList "/=" ExpressionList
+	| ExpressionList "%=" ExpressionList
+	| ExpressionList "<<=" ExpressionList
+	| ExpressionList ">>=" ExpressionList
+	| ExpressionList "&=" ExpressionList
+	| ExpressionList "&^=" ExpressionList
+	.
 BaseType = Type .
 BaseTypeName = identifier .
 BasicLit = int_lit
@@ -127,8 +157,14 @@ ExprCaseClause = ExprSwitchCase ":" StatementList .
 ExprSwitchCase = "case" ExpressionList
 	| "default" .
 ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] "{" { ExprCaseClause } "}" .
-Expression = UnaryExpr
-	| Expression binary_op UnaryExpr .
+//Expression = UnaryExpr
+//	| Expression binary_op UnaryExpr .
+Expression = Term { oror Term } .
+Term = Factor { andand Factor } .
+Factor =  PrimaryFactor  { ( ge | ">" | le | "<" | neq | eq ) PrimaryFactor } .
+PrimaryFactor = PrimaryTerm  { ( "^" | "|" | "-" | "+" ) PrimaryTerm } .
+PrimaryTerm = UnaryExpr { ( andnot | "&" | lsh | rsh | "%" | "/" | "*" ) UnaryExpr } .
+UnaryExpr = [ "^" | "!" | "-" | "+" ] PrimaryExpr .
 ExpressionList = Expression { "," Expression } .
 ExpressionStmt = Expression .
 FallthroughStmt = "fallthrough" .
@@ -287,8 +323,8 @@ TypeSwitchCase = "case" TypeList
 	| "default" .
 TypeSwitchGuard = [ identifier ":=" ] PrimaryExpr "." "(" "type" ")" .
 TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
-UnaryExpr = PrimaryExpr
-	| unary_op UnaryExpr .
+//UnaryExpr = PrimaryExpr
+//	| unary_op UnaryExpr .
 Value = Expression | LiteralValue .
 VarDecl = "var" (
 		  VarSpec
