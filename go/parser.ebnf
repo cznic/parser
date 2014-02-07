@@ -249,10 +249,14 @@ LiteralType = StructType
         | TypeName .
 LiteralValue = "{" [ ElementList [ "," ] ] "}" .
 MapType = "map" "[" KeyType "]" ElementType .
-MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
-MethodExpr = ReceiverType "." MethodName .
-MethodName = identifier .
-MethodSpec = MethodName Signature
+//MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
+MethodDecl = "func" Receiver identifier ( Function | Signature ) .
+//MethodExpr = ReceiverType "." MethodName .
+MethodExpr = ReceiverType "." identifier .
+//MethodName = identifier .
+//MethodSpec = MethodName Signature
+//        | InterfaceTypeName .
+MethodSpec = identifier Signature
         | InterfaceTypeName .
 Operand = Literal
         | OperandName
