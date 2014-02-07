@@ -1,4 +1,5 @@
 lbr = .
+
 add_asgn = "+=" .
 and_asgn = "&=" .
 and_not = "&^" .
@@ -320,11 +321,15 @@ MethodExpr = ReceiverType "." identifier .
 //        | InterfaceTypeName .
 MethodSpec = identifier Signature
         | InterfaceTypeName .
+//Operand = Literal
+//        | OperandName
+//        | MethodExpr
+//        | "(" Expression ")" .
 Operand = Literal
-        | OperandName
+        | identifier
         | MethodExpr
         | "(" Expression ")" .
-OperandName = identifier | QualifiedIdent .
+//OperandName = identifier | QualifiedIdent .
 //PackageClause = "package" PackageName .
 PackageClause = "package" identifier .
 //PackageName = identifier .
