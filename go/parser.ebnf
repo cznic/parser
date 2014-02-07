@@ -188,7 +188,18 @@ ExprCaseClause = ExprSwitchCase ":" StatementList .
 ExprSwitchCase = "case" ExpressionList
         | "default" .
 //ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] "{" { ExprCaseClause } "}" .
-ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] lbr { ExprCaseClause } "}" .
+
+//ExprSwitchStmt = "switch" [ SimpleStmt ";" ] [ Expression ] lbr { ExprCaseClause } "}" .
+ExprSwitchStmt =
+          "switch" lbr { ExprCaseClause } "}"
+        |
+          "switch" Expression lbr { ExprCaseClause } "}"
+        |
+          "switch" SimpleStmt ";" lbr { ExprCaseClause } "}"
+        |
+          "switch" SimpleStmt ";" Expression lbr { ExprCaseClause } "}"
+        .
+
 //Expression = UnaryExpr
 //        | Expression binary_op UnaryExpr .
 Expression = UnaryExpr
