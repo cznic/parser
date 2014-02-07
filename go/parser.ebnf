@@ -341,8 +341,11 @@ ParameterDecl =
         | identifier ddd Type
         | ddd Type
         .
-ParameterList = ParameterDecl { "," ParameterDecl } .
-Parameters = "(" [ ParameterList [ "," ] ] ")" .
+//ParameterList = ParameterDecl { "," ParameterDecl } .
+//Parameters = "(" [ ParameterList [ "," ] ] ")" .
+Parameters = "(" ")"
+	| "(" ParameterDecl { "," ParameterDecl } [ "," ] ")"
+	.
 PointerType = "*" BaseType .
 PostStmt = SimpleStmt .
 PrimaryExpr = Operand
