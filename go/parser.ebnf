@@ -399,7 +399,11 @@ TypeName =
 TypeSpec = DclName Type .
 TypeSwitchCase = "case" TypeList
 	| "default" .
-TypeSwitchGuard = [ DclName colas ] PrimaryExpr "." "(" "type" ")" .
+//TypeSwitchGuard = [ DclName colas ] PrimaryExpr "." "(" "type" ")" .
+TypeSwitchGuard =
+	  PrimaryExpr "." "(" "type" ")"
+	| DclName colas PrimaryExpr "." "(" "type" ")"
+	.
 //TypeSwitchStmt = "switch" [ SimpleStmt ";" ] TypeSwitchGuard "{" { TypeCaseClause } "}" .
 TypeSwitchStmt =
 	  "switch" TypeSwitchGuard lbr { TypeCaseClause } "}"
