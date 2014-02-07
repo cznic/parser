@@ -201,12 +201,24 @@ ExprSwitchStmt =
 	.
 //Expression = UnaryExpr
 //	| Expression binary_op UnaryExpr .
+
+//Expression =
+//	  UnaryExpr
+//	| Expression ( oror | andand | ge | ">" | le | "<" | neq | eq | "^" | "|" | "-" | "+" | andnot | "&" | lsh | rsh | "%" | "/" | "*" ) UnaryExpr
+//	.
+//UnaryExpr =
+//	  PrimaryExpr
+//	| ( "^" | "!" | "-" | "+" ) UnaryExpr
+//	.
+//
+
 Expression = Term { oror Term } .
 Term = Factor { andand Factor } .
 Factor =  PrimaryFactor  { ( ge | ">" | le | "<" | neq | eq ) PrimaryFactor } .
 PrimaryFactor = PrimaryTerm  { ( "^" | "|" | "-" | "+" ) PrimaryTerm } .
 PrimaryTerm = UnaryExpr { ( andnot | "&" | lsh | rsh | "%" | "/" | "*" ) UnaryExpr } .
 UnaryExpr = PrimaryExpr | ( "^" | "!" | "-" | "+" ) UnaryExpr .
+
 ExpressionList = Expression { "," Expression } .
 ExpressionStmt = Expression .
 FallthroughStmt = "fallthrough" .
@@ -318,10 +330,15 @@ ReceiverType = TypeName
 	| "(" "*" TypeName ")"
 	| "(" ReceiverType ")" .
 RecvExpr = Expression .
-RecvStmt = [
-		  ExpressionList "="
-		| IdentifierList colas
-	  ] RecvExpr .
+//RecvStmt = [
+//		  ExpressionList "="
+//		| IdentifierList colas
+//	  ] RecvExpr .
+RecvStmt =
+	  RecvExpr
+	| IdentifierList colas RecvExpr
+	| ExpressionList "=" RecvExpr
+	.
 Result = Parameters | Type .
 ReturnStmt = "return" [ ExpressionList ] .
 SelectStmt = "select" "{" { CommClause } "}" .
