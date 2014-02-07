@@ -1,3 +1,16 @@
+/*
+
+%left           COMM   //* outside the usual hierarchy; here for good error messages * /
+
+%left           OROR
+%left           ANDAND
+%left           EQ NE LE GE '<' '>'
+%left           '+' '-' '|' '^'
+%left           '*' '/' '%' '&' LSH RSH ANDNOT
+
+*/
+
+
 lbr = .
 add_asgn = "+=" .
 and_asgn = "&=" .
