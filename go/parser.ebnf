@@ -150,8 +150,10 @@ Block2 = lbr StatementList "}" .
 BreakStmt = "break" [ Label ] .
 BuiltinArgs = Type [ "," ArgumentList ]
 	| ArgumentList .
-BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
-Call = "(" [ ArgumentList [ "," ] ] ")" .
+//BuiltinCall = identifier "(" [ BuiltinArgs [ "," ] ] ")" .
+BuiltinCall = identifier "(" [ BuiltinArgs ] ")" .
+//Call = "(" [ ArgumentList [ "," ] ] ")" .
+Call = "(" [ ArgumentList ] ")" .
 Channel = Expression .
 ChannelType = (
 		  "chan" [ comm ]
@@ -170,7 +172,8 @@ ConstSpec = IdentifierList [
 		 [ Type ] "=" ExpressionList
 	  ] .
 ContinueStmt = "continue" [ Label ] .
-Conversion = Type "(" Expression [ "," ] ")" .
+//Conversion = Type "(" Expression [ "," ] ")" .
+Conversion = Type "(" Expression ")" .
 Declaration = ConstDecl
 	| TypeDecl
 	| VarDecl .
@@ -256,7 +259,7 @@ LiteralType = StructType
 	| SliceType
 	| MapType
 	| TypeName .
-LiteralValue = "{" [ ElementList [ "," ] ] "}" .
+LiteralValue = "{" [ ElementList ] "}" .
 MapType = "map" "[" KeyType "]" ElementType .
 MethodDecl = "func" Receiver MethodName ( Function | Signature ) .
 MethodExpr = ReceiverType "." MethodName .
@@ -283,7 +286,7 @@ ParameterDecl =
 	| ddd Type
 	.
 ParameterList = ParameterDecl { "," ParameterDecl } .
-Parameters = "(" [ ParameterList [ "," ] ] ")" .
+Parameters = "(" [ ParameterList ] ")" .
 PointerType = "*" BaseType .
 PostStmt = SimpleStmt .
 PrimaryExpr = Operand
