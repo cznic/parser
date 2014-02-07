@@ -178,8 +178,14 @@ Declaration = ConstDecl
 	| TypeDecl
 	| VarDecl .
 DeferStmt = "defer" Expression .
-Element = [ Key ":" ] Value .
-ElementIndex = Expression .
+//Element = [ Key ":" ] Value .
+Element =
+	  Expression
+	| Expression ":" Expression
+	| Expression ":" LiteralValue
+	| LiteralValue
+	.
+//ElementIndex = Expression .
 ElementList = Element { "," Element } .
 ElementType = Type .
 //EmptyStmt = .
@@ -246,7 +252,6 @@ InitStmt = SimpleStmt .
 InterfaceType = "interface" "{" { MethodSpec ";" } "}" .
 InterfaceTypeName = TypeName .
 //Key = FieldName | ElementIndex .
-Key = identifier | ElementIndex .
 KeyType = Type .
 Label = DclName .
 LabeledStmt = Label ":" Statement .
@@ -402,7 +407,7 @@ TypeSwitchStmt =
 	.
 //UnaryExpr = PrimaryExpr
 //	| unary_op UnaryExpr .
-Value = Expression | LiteralValue .
+//Value = Expression | LiteralValue .
 VarDecl = "var" (
 		  VarSpec
 		| "(" { VarSpec ";" } ")"
