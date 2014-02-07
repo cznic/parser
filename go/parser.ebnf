@@ -105,7 +105,7 @@ Assignment = ExpressionList (
                      | "|="
              ) ExpressionList .
 BaseType = Type .
-BaseTypeName = identifier .
+//BaseTypeName = identifier .
 BasicLit = int_lit
         | float_lit
         | imaginary_lit
@@ -272,7 +272,17 @@ RangeClause = (
                   ExpressionList "="
                 | IdentifierList ":="
           ) "range" Expression .
-Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
+//Receiver = "(" [ identifier ] [ "*" ] BaseTypeName ")" .
+Receiver =
+          "(" identifier ")"
+        |
+          "(" "*" identifier ")"
+        |
+          "(" identifier identifier ")"
+        |
+          "(" identifier "*" identifier ")"
+        .
+
 ReceiverType = TypeName
         | "(" "*" TypeName ")"
         | "(" ReceiverType ")" .
