@@ -182,7 +182,7 @@ ConstSpec = IdentifierList [
           ] .
 //ContinueStmt = "continue" [ Label ] .
 ContinueStmt = "continue" [ identifier ] .
-Conversion = Type "(" Expression [ "," ] ")" .
+//Conversion = Type "(" Expression ")" .
 Declaration = ConstDecl
         | TypeDecl
         | VarDecl .
@@ -333,7 +333,7 @@ MethodSpec = identifier Signature
 //        | MethodExpr
 //        | "(" Expression ")" .
 Operand = Literal
-        | identifier
+        | Type //hack for identifier
         | MethodExpr
         | "(" Expression ")" .
 //OperandName = identifier | QualifiedIdent .
@@ -348,15 +348,12 @@ ParameterDecl =
         | identifier ddd Type
         | ddd Type
         .
-//ParameterList = ParameterDecl { "," ParameterDecl } .
-//Parameters = "(" [ ParameterList [ "," ] ] ")" .
-Parameters = "(" ")"
-	| "(" ParameterDecl { "," ParameterDecl } [ "," ] ")"
-	.
+ParameterList = ParameterDecl { "," ParameterDecl } .
+Parameters = "(" [ ParameterList ] ")" .
 PointerType = "*" BaseType .
 PostStmt = SimpleStmt .
 PrimaryExpr = Operand
-        | Conversion
+        //| Conversion
         | BuiltinCall
         | PrimaryExpr Selector
         | PrimaryExpr Index
