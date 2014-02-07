@@ -333,7 +333,7 @@ MethodSpec = identifier Signature
 //        | MethodExpr
 //        | "(" Expression ")" .
 Operand = Literal
-        | Type //hack for identifier
+        | identifier
         | MethodExpr
         | "(" Expression ")" .
 //OperandName = identifier | QualifiedIdent .
@@ -352,14 +352,22 @@ ParameterList = ParameterDecl { "," ParameterDecl } .
 Parameters = "(" [ ParameterList ] ")" .
 PointerType = "*" BaseType .
 PostStmt = SimpleStmt .
+//PrimaryExpr = Operand
+//        | Conversion
+//        | BuiltinCall
+//        | PrimaryExpr Selector
+//        | PrimaryExpr Index
+//        | PrimaryExpr Slice
+//        | PrimaryExpr TypeAssertion
+//        | PrimaryExpr Call .
 PrimaryExpr = Operand
-        //| Conversion
         | BuiltinCall
         | PrimaryExpr Selector
         | PrimaryExpr Index
         | PrimaryExpr Slice
         | PrimaryExpr TypeAssertion
-        | PrimaryExpr Call .
+        | PrimaryExpr Call 
+	| "(" Type ")" Call .
 //QualifiedIdent = PackageName "." identifier .
 QualifiedIdent = identifier "." identifier .
 //RangeClause = (
