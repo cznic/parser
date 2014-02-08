@@ -75,7 +75,11 @@ type parser struct {
 }
 
 func (p *parser) Error(e string) {
-	p.errors.Add(p.file.Position(p.pos), e)
+	p.errPos(pos(p.pos), e)
+}
+
+func (p *parser) errPos(pos pos, e string) {
+	p.errors.Add(p.file.Position(token.Pos(pos)), e)
 }
 
 var xlat = map[token.Token]int{

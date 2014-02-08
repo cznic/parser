@@ -14,6 +14,7 @@ import (
 	"github.com/cznic/strutil"
 )
 
+// String pretty prints Nodes or lists of Nodes.
 func String(fs *token.FileSet, v interface{}) (r string) {
 	var b bytes.Buffer
 	f := strutil.IndentFormatter(&b, "·  ")
@@ -62,17 +63,20 @@ func String(fs *token.FileSet, v interface{}) (r string) {
 			default:
 				for i := 0; i < rv.NumField(); i++ {
 					field := rv.Field(i)
+					fieldName := structType.Field(i).Name
 					switch fldTypeName := field.Type().Name(); fldTypeName {
 					case "pos":
 						p := token.Pos(field.Interface().(pos))
 						f.Format("%s: %s\n", fldTypeName, fs.Position(p))
+					case "Token":
+						f.Format("%s: %s\n", fieldName, field.Interface())
 					default:
 						fldName := structType.Field(i).Name
 						if !ast.IsExported(fldName) {
 							break
 						}
 
-						s(fmt.Sprintf("%s: ", structType.Field(i).Name), rv.Field(i))
+						s(fmt.Sprintf("%s: ", fieldName), rv.Field(i))
 					}
 				}
 			}

@@ -132,8 +132,12 @@ const yyMaxDepth = 200
 
 func yy(y yyLexer) *parser { return y.(*parser) }
 
-func yyError(y yyLexer, msg string) {
+func yyErr(y yyLexer, msg string) {
 	yy(y).Error(msg)
+}
+
+func yyErrPos(y yyLexer, n Node, msg string) {
+	yy(y).errPos(pos(n.Pos()), msg)
 }
 
 func yyTLD(y yyLexer, n Node) {
@@ -962,16 +966,12 @@ yydefault:
 		}
 	case 3:
 		{ //60
-			yyError(yylex, "package statement must be first")
+			yyErr(yylex, "package statement must be first")
 			goto ret1
 		}
 	case 4:
 		{ //64
 			yyVAL.node = &Package{yyS[yypt-2].token.pos, yyS[yypt-1].node.(*Ident)}
-		}
-	case 7:
-		{ //79
-			panic(".y:80")
 		}
 	case 8:
 		{ //83
@@ -979,7 +979,7 @@ yydefault:
 		}
 	case 10:
 		{ //93
-			panic(".y:94")
+			yyTLD(yylex, newImport(yylex, yyS[yypt-0].token.pos, nil, newLiteral(yyS[yypt-0].token)))
 		}
 	case 11:
 		{ //97

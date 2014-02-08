@@ -62,7 +62,7 @@ file:
 package:
 	%prec notPackage
 	{ //60
-		yyError(yylex, "package statement must be first")
+		yyErr(yylex, "package statement must be first")
 		goto ret1
 	}
 |	_PACKAGE sym ';'
@@ -75,9 +75,6 @@ imports:
 
 import:
 	_IMPORT import_stmt
-	{ //79
-		panic(".y:80")
-	}
 |	_IMPORT '(' import_stmt_list osemi ')'
 	{ //83
 		panic(".y:84")
@@ -87,7 +84,7 @@ import:
 import_stmt:
 	_LITERAL
 	{ //93
-		panic(".y:94")
+		yyTLD(yylex, newImport(yylex, $1.pos, nil, newLiteral($1)))
 	}
 |	sym _LITERAL
 	{ //97
@@ -1298,8 +1295,12 @@ oliteral:
 
 func yy(y yyLexer) *parser { return y.(*parser) }
 
-func yyError(y yyLexer, msg string) {
+func yyErr(y yyLexer, msg string) {
 	yy(y).Error(msg)
+}
+
+func yyErrPos(y yyLexer, n Node, msg string) {
+	yy(y).errPos(pos(n.Pos()), msg)
 }
 
 func yyTLD(y yyLexer, n Node) {
