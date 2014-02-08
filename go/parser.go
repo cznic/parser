@@ -1314,7 +1314,7 @@ yydefault:
 		}
 	case 92:
 		{ //471
-			panic(".y:472")
+			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, token.SHL, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 93:
 		{ //475

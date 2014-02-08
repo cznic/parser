@@ -471,7 +471,7 @@ expr:
 	}
 |	expr _LSH expr
 	{ //471
-		panic(".y:472")
+		$$ = &BinOp{$2.pos, token.SHL, $1, $3}
 	}
 |	expr _RSH expr
 	{ //475

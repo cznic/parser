@@ -18,6 +18,14 @@ type pos token.Pos
 
 func (p pos) Pos() token.Pos { return token.Pos(p) }
 
+// ---------------------------------------------------------------------- BinOp
+
+type BinOp struct {
+	pos
+	Op   token.Token
+	L, R Node
+}
+
 // ------------------------------------------------------------------ constDecl
 type constDecl struct {
 	pos

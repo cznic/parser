@@ -42,12 +42,12 @@ const (  // iota is reset to 0
 	c242 = iota  // c2 == 2
 )
 
-//const (
-//	a46 = 1 << iota  // a == 1 (iota has been reset)
-//	b47 = 1 << iota  // b == 2
-//	c48 = 1 << iota  // c == 4
-//)
-//
+const (
+	a46 = 1 << iota  // a == 1 (iota has been reset)
+	b47 = 1 << iota  // b == 2
+	c48 = 1 << iota  // c == 4
+)
+
 //const (
 //	u52         = iota * 42  // u == 0     (untyped integer constant)
 //	v53 float64 = iota * 42  // v == 42.0  (float64 constant)
