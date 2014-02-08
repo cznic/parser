@@ -20,6 +20,7 @@ package parser
 	_GOTO _GT _IF _IGNORE _IMPORT _INC _INTERFACE _LE _LITERAL _LSH _LT
 	_MAP _NAME _NE _OROR _PACKAGE _RANGE _RETURN _RSH _SELECT _STRUCT
 	_SWITCH _TYPE _VAR
+	'.'
 
 %type	<node>
 	dcl_name
@@ -98,7 +99,7 @@ import_stmt:
 	}
 |	'.' _LITERAL
 	{ //101
-		panic(".y:102")
+		$$ = newImport(yylex, &Ident{$1.pos, "."}, newLiteral($2))
 	}
 
 import_stmt_list:
