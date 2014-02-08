@@ -7,6 +7,7 @@ package parser
 import (
 	"bytes"
 	"fmt"
+	"go/ast"
 	"go/token"
 	"reflect"
 
@@ -55,19 +56,23 @@ func String(fs *token.FileSet, v interface{}) (r string) {
 		case reflect.String:
 			f.Format("%s%q\n", pre, v.(string))
 		case reflect.Struct:
-			t := rv.Type()
+			structType := rv.Type()
 			f.Format("%s%T{%i\n", pre, v)
-			switch t.Name() {
+			switch structType.Name() {
 			default:
 				for i := 0; i < rv.NumField(); i++ {
-					fld := rv.Field(i)
-					fldt := fld.Type()
-					switch tnm := fldt.Name(); tnm {
+					field := rv.Field(i)
+					switch fldTypeName := field.Type().Name(); fldTypeName {
 					case "pos":
-						p := token.Pos(fld.Interface().(pos))
-						f.Format("%s: %s\n", tnm, fs.Position(p))
+						p := token.Pos(field.Interface().(pos))
+						f.Format("%s: %s\n", fldTypeName, fs.Position(p))
 					default:
-						s(fmt.Sprintf("%s: ", t.Field(i).Name), rv.Field(i))
+						fldName := structType.Field(i).Name
+						if !ast.IsExported(fldName) {
+							break
+						}
+
+						s(fmt.Sprintf("%s: ", structType.Field(i).Name), rv.Field(i))
 					}
 				}
 			}
