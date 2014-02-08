@@ -60,9 +60,12 @@ func String(fs *token.FileSet, v interface{}) (r string) {
 			f.Format("%s%q\n", pre, v.(string))
 		case reflect.Struct:
 			structType := rv.Type()
-			f.Format("%s%T{%i\n", pre, v)
 			switch structType.Name() {
+			case "Ident":
+				id := rv.Interface().(Ident)
+				f.Format("%s%T{%s %q}\n", pre, v, fs.Position(id.Pos()), id.Lit)
 			default:
+				f.Format("%s%T{%i\n", pre, v)
 				for i := 0; i < rv.NumField(); i++ {
 					field := rv.Field(i)
 					fieldName := structType.Field(i).Name
@@ -73,16 +76,15 @@ func String(fs *token.FileSet, v interface{}) (r string) {
 					case "Token":
 						f.Format("%s: %s\n", fieldName, field.Interface())
 					default:
-						fldName := structType.Field(i).Name
-						if !ast.IsExported(fldName) {
+						if !ast.IsExported(fieldName) {
 							break
 						}
 
 						s(fmt.Sprintf("%s: ", fieldName), rv.Field(i))
 					}
 				}
+				f.Format("%u}\n")
 			}
-			f.Format("%u}\n")
 		default:
 			panic(fmt.Sprintf("internal error %s %T(%v)", rv.Kind(), v, v))
 		}

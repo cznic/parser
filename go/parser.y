@@ -58,6 +58,7 @@ import "go/token"
 %left	preferToRightParen
 
 %%
+
 file:
 	package
 	{ //46
@@ -217,7 +218,7 @@ constdcl1:
 |	dcl_name_list ntype
 	{ //214
 		panic(".y:215")
-		yyErrPos(yylex, $2, "const declaration cannot have type without expression")
+		//yyErrPos(yylex, $2, "const declaration cannot have type without expression")
 	}
 |	dcl_name_list
 	{ //218

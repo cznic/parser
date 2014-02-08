@@ -96,9 +96,9 @@ type Import struct {
 func newImport(y yyLexer, nm Node, pth *Literal) *Import {
 	switch {
 	case pth.Kind != token.STRING:
-		yy(y).errPos(pth.Pos(), "import statement not a string")
+		yyErrPos(y, pth, "import statement not a string")
 	case pth.Lit == `""`:
-		yy(y).errPos(pth.Pos(), "import path is empty")
+		yyErrPos(y, pth, "import path is empty")
 	}
 	return &Import{Name: nm.(*Ident), Path: pth}
 }
