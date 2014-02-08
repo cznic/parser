@@ -1195,7 +1195,7 @@ dcl_name_list:
 	}
 |	dcl_name_list ',' dcl_name
 	{ //1209
-		panic(".y:1210")
+		$$ = append($1, $3)
 	}
 
 expr_list:
@@ -1205,7 +1205,7 @@ expr_list:
 	}
 |	expr_list ',' expr
 	{ //1219
-		panic(".y:1220")
+		$$ = append($1, $3)
 	}
 
 expr_or_type_list:

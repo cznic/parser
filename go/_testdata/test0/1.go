@@ -24,5 +24,5 @@ const (
 	size24 int64 = 1024
 	eof25        = -1 // untyped integer constant
 )
-//const a, b, c = 3, 4, "foo" // a = 3, b = 4, c = "foo", untyped integer and string constants
-//const u, v float32 = 0, 3   // u = 0.0, v = 3.0
+const a27, b27, c27 = 3, 4, "foo" // a = 3, b = 4, c = "foo", untyped integer and string constants
+const u28, v28 float32 = 0, 3   // u = 0.0, v = 3.0

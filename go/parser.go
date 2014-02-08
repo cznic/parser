@@ -1928,7 +1928,7 @@ yydefault:
 		}
 	case 250:
 		{ //1209
-			panic(".y:1210")
+			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
 		}
 	case 251:
 		{ //1215
@@ -1936,7 +1936,7 @@ yydefault:
 		}
 	case 252:
 		{ //1219
-			panic(".y:1220")
+			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
 		}
 	case 253:
 		{ //1225
