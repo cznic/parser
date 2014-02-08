@@ -673,7 +673,7 @@ onew_name:
 sym:
 	_NAME
 	{ //683
-		$$ = &Ident{$1.pos, $1.lit}
+		$$ = &Ident{$1.pos, $1.lit, -1}
 	}
 
 name:

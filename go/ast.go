@@ -25,6 +25,7 @@ func (p pos) Pos() token.Pos { return token.Pos(p) }
 type Ident struct {
 	pos
 	Lit string
+	xyz int //TODO-
 }
 
 // -------------------------------------------------------------------- Package

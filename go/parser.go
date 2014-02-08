@@ -1488,7 +1488,7 @@ yydefault:
 		}
 	case 138:
 		{ //683
-			yyVAL.node = &Ident{yyS[yypt-0].tk.pos, yyS[yypt-0].tk.lit}
+			yyVAL.node = &Ident{yyS[yypt-0].tk.pos, yyS[yypt-0].tk.lit, -1}
 		}
 	case 139:
 		{ //689
