@@ -119,3 +119,11 @@ type QualifiedIdent struct {
 	pos
 	Q, I *Ident
 }
+
+// ----------------------------------------------------------------------- UnOp
+
+type UnOp struct {
+	pos
+	Op token.Token
+	R  Node
+}

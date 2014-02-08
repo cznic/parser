@@ -6,6 +6,8 @@
 
 package parser
 
+import "go/token"
+
 %}
 
 %union	{
@@ -20,10 +22,10 @@ package parser
 	_GOTO _GT _IF _IGNORE _IMPORT _INC _INTERFACE _LE _LITERAL _LSH _LT
 	_MAP _NAME _NE _OROR _PACKAGE _RANGE _RETURN _RSH _SELECT _STRUCT
 	_SWITCH _TYPE _VAR
-	'.'
+	'.' '-'
 
 %type	<node>
-	constdcl
+	constdcl constdcl1
 	dcl_name dotname
 	expr
 	import_stmt
@@ -33,7 +35,7 @@ package parser
 	uexpr
 
 %type	<list>
-	common_dcl
+	common_dcl constdcl_list
 	dcl_name_list
 	expr_list
 	import_stmt_list
@@ -156,11 +158,11 @@ common_dcl:
 	}
 |	lconst '(' constdcl osemi ')'
 	{ //154
-		panic(".y:155")
+		$$ = newConstDecls(yylex, []Node{$3})
 	}
 |	lconst '(' constdcl ';' constdcl_list osemi ')'
 	{ //158
-		panic(".y:159")
+		$$ = newConstDecls(yylex, append([]Node{$3}, $5...))
 	}
 |	lconst '(' ')'
 	{ //162
@@ -212,9 +214,6 @@ constdcl:
 
 constdcl1:
 	constdcl
-	{ //210
-		panic(".y:211")
-	}
 |	dcl_name_list ntype
 	{ //214
 		panic(".y:215")
@@ -499,7 +498,7 @@ uexpr:
 	}
 |	'-' uexpr
 	{ //501
-		panic(".y:502")
+		$$ = &UnOp{$1.pos, token.SUB, $2}
 	}
 |	'!' uexpr
 	{ //505
@@ -952,7 +951,7 @@ vardcl_list:
 constdcl_list:
 	constdcl1
 	{ //967
-		panic(".y:968")
+		$$ = []Node{$1}
 	}
 |	constdcl_list ';' constdcl1
 	{ //971
