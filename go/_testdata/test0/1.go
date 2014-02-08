@@ -48,12 +48,12 @@ const (
 	c48 = 1 << iota  // c == 4
 )
 
-//const (
-//	u52         = iota * 42  // u == 0     (untyped integer constant)
-//	v53 float64 = iota * 42  // v == 42.0  (float64 constant)
-//	w54         = iota * 42  // w == 84    (untyped integer constant)
-//)
-//
+const (
+	u52         = iota * 42  // u == 0     (untyped integer constant)
+	v53 float64 = iota * 42  // v == 42.0  (float64 constant)
+	w54         = iota * 42  // w == 84    (untyped integer constant)
+)
+
 //const x57 = iota  // x == 0 (iota has been reset)
 //const y58 = iota  // y == 0 (iota has been reset)
 //Within an ExpressionList, the value of each iota is the same because it is only incremented after each ConstSpec:
