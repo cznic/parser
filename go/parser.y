@@ -11,16 +11,21 @@ import "go/token"
 %}
 
 %union	{
-	tok token.Token
-	lit string
+	tok struct { pos pos; tok token.Token; lit string }
+	node Node
 }
 
-%token	_ANDAND _ANDNOT _ASOP _BODY _BREAK _CASE _CHAN _COLAS _COMM _CONST
+%token	<tok>
+	_ANDAND _ANDNOT _ASOP _BODY _BREAK _CASE _CHAN _COLAS _COMM _CONST
 	_CONTINUE _DDD _DEC _DEFAULT _DEFER _ELSE _EQ _FALL _FOR _FUNC _GE _GO
 	_GOTO _GT _IF _IGNORE _IMPORT _INC _INTERFACE _LE _LITERAL _LSH _LT
 	_MAP _NAME _NE _OROR _PACKAGE _RANGE _RETURN _RSH _SELECT _STRUCT
 	_SWITCH _TYPE _VAR
-_
+
+%type	<node>
+	package
+	sym
+
 %left	_COMM
 
 %left	_OROR
@@ -42,16 +47,10 @@ _
 file:
 	package
 	{ //46
-		panic(".y:47")
+		yyTLD(yylex, $1)
 	}
 	imports
-	{ //50
-		panic(".y:51")
-	}
-	xdcl_list
-	{ //54
-		panic(".y:55")
-	}
+	tlds
 
 package:
 	%prec notPackage
@@ -60,13 +59,10 @@ package:
 	}
 |	_PACKAGE sym ';'
 	{ //64
-		panic(".y:65")
+		$$ = &Package{$1.pos, $2.(*Ident)}
 	}
 
 imports:
-	{ //69
-		panic(".y:70")
-	}
 |	imports import ';'
 	{ //73
 		panic(".y:74")
@@ -110,7 +106,7 @@ import_stmt_list:
 		panic(".y:112")
 	}
 
-xdcl:
+tld:
 	{ //116
 		panic(".y:117")
 	}
@@ -679,7 +675,7 @@ onew_name:
 sym:
 	_NAME
 	{ //683
-		panic(".y:684")
+		$$ = &Ident{$1.pos, $1.lit}
 	}
 
 name:
@@ -941,11 +937,8 @@ fnliteral:
 		panic(".y:943")
 	}
 
-xdcl_list:
-	{ //947
-		panic(".y:948")
-	}
-|	xdcl_list xdcl ';'
+tlds:
+|	tlds tld ';'
 	{ //951
 		panic(".y:952")
 	}
@@ -1310,3 +1303,10 @@ oliteral:
 	}
 
 %%
+
+func yy(y yyLexer) *parser { return y.(*parser) }
+
+func yyTLD(y yyLexer, n Node) {
+	p := yy(y)
+	p.ast = append(p.ast, n)
+}

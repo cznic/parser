@@ -4,6 +4,31 @@
 
 package parser
 
+import (
+	"go/token"
+)
+
+var (
+	_ Node = (*Ident)(nil)
+	_ Node = (*Package)(nil)
+)
+
 type Node interface {
-	//TODO
+	Pos() token.Pos
+}
+
+type pos token.Pos
+
+func (p pos) Pos() token.Pos { return token.Pos(p) }
+
+// ---------------------------------------------------------------------- Ident
+type Ident struct {
+	pos
+	Val string
+}
+
+// -------------------------------------------------------------------- Package
+type Package struct {
+	pos
+	Name *Ident
 }
