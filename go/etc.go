@@ -64,11 +64,14 @@ func ParseFile(fset *token.FileSet, filename string, src interface{} /*TODO Opts
 }
 
 type parser struct {
-	file   *token.File
-	sc     scanner.Scanner
-	errors scanner.ErrorList
-	ast    []Node
-	pos    token.Pos
+	ast       []Node
+	constExpr []Node
+	constIota int
+	constType Node
+	errors    scanner.ErrorList
+	file      *token.File
+	pos       token.Pos
+	sc        scanner.Scanner
 }
 
 func (p *parser) Error(e string) {
@@ -179,7 +182,7 @@ var xlat = map[token.Token]int{
 	token.VAR:    _VAR,
 }
 
-type tk struct {
+type tkn struct {
 	pos pos
 	tok token.Token
 	lit string
@@ -188,8 +191,8 @@ type tk struct {
 func (p *parser) Lex(lval *yySymType) (r int) {
 	var tok token.Token
 	for r = -1; r < 0; r = xlat[tok] {
-		p.pos, tok, lval.tk.lit = p.sc.Scan()
+		p.pos, tok, lval.token.lit = p.sc.Scan()
 	}
-	lval.tk.pos, lval.tk.tok = pos(p.pos), tok
+	lval.token.pos, lval.token.tok = pos(p.pos), tok
 	return
 }

@@ -9,11 +9,12 @@ package parser
 %}
 
 %union	{
-	tk   tk
-	node Node
+	token tkn
+	node  Node
+	list  []Node
 }
 
-%token	<tk>
+%token	<token>
 	_ANDAND _ANDNOT _ASOP _BODY _BREAK _CASE _CHAN _COLAS _COMM _CONST
 	_CONTINUE _DDD _DEC _DEFAULT _DEFER _ELSE _EQ _FALL _FOR _FUNC _GE _GO
 	_GOTO _GT _IF _IGNORE _IMPORT _INC _INTERFACE _LE _LITERAL _LSH _LT
@@ -23,6 +24,9 @@ package parser
 %type	<node>
 	package
 	sym
+
+%type	<list>
+	common_dcl
 
 %left	_COMM
 
@@ -48,12 +52,13 @@ file:
 		yyTLD(yylex, $1)
 	}
 	imports
-	tlds
+	xdcl_list
 
 package:
 	%prec notPackage
 	{ //60
-		panic(".y:61")
+		yyError(yylex, "package statement must be first")
+		goto ret1
 	}
 |	_PACKAGE sym ';'
 	{ //64
@@ -104,13 +109,10 @@ import_stmt_list:
 		panic(".y:112")
 	}
 
-tld:
-	{ //116
-		panic(".y:117")
-	}
+xdcl:
 |	common_dcl
 	{ //120
-		panic(".y:121")
+		yyTLDs(yylex, $1)
 	}
 |	xfndcl
 	{ //124
@@ -152,7 +154,7 @@ common_dcl:
 	}
 |	lconst '(' ')'
 	{ //162
-		panic(".y:163")
+		$$ = nil
 	}
 |	_TYPE typedcl
 	{ //166
@@ -170,7 +172,8 @@ common_dcl:
 lconst:
 	_CONST
 	{ //180
-		panic(".y:181")
+		p := yy(yylex)
+		p.constExpr, p.constIota, p.constType = nil, 0, nil
 	}
 
 vardcl:
@@ -935,11 +938,8 @@ fnliteral:
 		panic(".y:943")
 	}
 
-tlds:
-|	tlds tld ';'
-	{ //951
-		panic(".y:952")
-	}
+xdcl_list:
+|	xdcl_list xdcl ';'
 
 vardcl_list:
 	vardcl
@@ -1304,7 +1304,16 @@ oliteral:
 
 func yy(y yyLexer) *parser { return y.(*parser) }
 
+func yyError(y yyLexer, msg string) {
+	yy(y).Error(msg)
+}
+
 func yyTLD(y yyLexer, n Node) {
 	p := yy(y)
 	p.ast = append(p.ast, n)
+}
+
+func yyTLDs(y yyLexer, l []Node) {
+	p := yy(y)
+	p.ast = append(p.ast, l...)
 }
