@@ -6,6 +6,8 @@
 
 package parser
 
+import "go/token"
+
 %}
 
 %union	{
@@ -13,27 +15,28 @@ package parser
 	lit string
 }
 
-%token	ANDAND ANDNOT ASOP BODY BREAK CASE CHAN COLAS COMM CONST CONTINUE DDD
-	DEC DEFAULT DEFER ELSE EQ FALL FOR FUNC GE GO GOTO GT IF IGNORE IMPORT
-	INC INTERFACE LE LITERAL LSH LT MAP NAME NE OROR PACKAGE RANGE RETURN
-	RSH SELECT STRUCT SWITCH TYPE VAR
+%token	_ANDAND _ANDNOT _ASOP _BODY _BREAK _CASE _CHAN _COLAS _COMM _CONST
+	_CONTINUE _DDD _DEC _DEFAULT _DEFER _ELSE _EQ _FALL _FOR _FUNC _GE _GO
+	_GOTO _GT _IF _IGNORE _IMPORT _INC _INTERFACE _LE _LITERAL _LSH _LT
+	_MAP _NAME _NE _OROR _PACKAGE _RANGE _RETURN _RSH _SELECT _STRUCT
+	_SWITCH _TYPE _VAR
+_
+%left	_COMM
 
-%left	COMM
-
-%left	OROR
-%left	ANDAND
-%left	EQ NE LE GE LT GT
+%left	_OROR
+%left	_ANDAND
+%left	_EQ _NE _LE _GE _LT _GT
 %left	'+' '-' '|' '^'
-%left	'*' '/' '%' '&' LSH RSH ANDNOT
+%left	'*' '/' '%' '&' _LSH _RSH _ANDNOT
 
-%left	NotPackage
-%left	PACKAGE
+%left	notPackage
+%left	_PACKAGE
 
-%left	NotParen
+%left	notParen
 %left	'('
 
 %left	')'
-%left	PreferToRightParen
+%left	preferToRightParen
 
 %%
 file:
@@ -51,11 +54,11 @@ file:
 	}
 
 package:
-	%prec NotPackage
+	%prec notPackage
 	{ //60
 		panic(".y:61")
 	}
-|	PACKAGE sym ';'
+|	_PACKAGE sym ';'
 	{ //64
 		panic(".y:65")
 	}
@@ -70,29 +73,29 @@ imports:
 	}
 
 import:
-	IMPORT import_stmt
+	_IMPORT import_stmt
 	{ //79
 		panic(".y:80")
 	}
-|	IMPORT '(' import_stmt_list osemi ')'
+|	_IMPORT '(' import_stmt_list osemi ')'
 	{ //83
 		panic(".y:84")
 	}
-|	IMPORT '(' ')'
+|	_IMPORT '(' ')'
 	{ //87
 		panic(".y:88")
 	}
 
 import_stmt:
-	LITERAL
+	_LITERAL
 	{ //93
 		panic(".y:94")
 	}
-|	sym LITERAL
+|	sym _LITERAL
 	{ //97
 		panic(".y:98")
 	}
-|	'.' LITERAL
+|	'.' _LITERAL
 	{ //101
 		panic(".y:102")
 	}
@@ -129,15 +132,15 @@ xdcl:
 	}
 
 common_dcl:
-	VAR vardcl
+	_VAR vardcl
 	{ //138
 		panic(".y:139")
 	}
-|	VAR '(' vardcl_list osemi ')'
+|	_VAR '(' vardcl_list osemi ')'
 	{ //142
 		panic(".y:143")
 	}
-|	VAR '(' ')'
+|	_VAR '(' ')'
 	{ //146
 		panic(".y:147")
 	}
@@ -157,21 +160,21 @@ common_dcl:
 	{ //162
 		panic(".y:163")
 	}
-|	TYPE typedcl
+|	_TYPE typedcl
 	{ //166
 		panic(".y:167")
 	}
-|	TYPE '(' typedcl_list osemi ')'
+|	_TYPE '(' typedcl_list osemi ')'
 	{ //170
 		panic(".y:171")
 	}
-|	TYPE '(' ')'
+|	_TYPE '(' ')'
 	{ //174
 		panic(".y:175")
 	}
 
 lconst:
-	CONST
+	_CONST
 	{ //180
 		panic(".y:181")
 	}
@@ -231,7 +234,7 @@ simple_stmt:
 	{ //236
 		panic(".y:237")
 	}
-|	expr ASOP expr
+|	expr _ASOP expr
 	{ //240
 		panic(".y:241")
 	}
@@ -239,33 +242,33 @@ simple_stmt:
 	{ //244
 		panic(".y:245")
 	}
-|	expr_list COLAS expr_list
+|	expr_list _COLAS expr_list
 	{ //248
 		panic(".y:249")
 	}
-|	expr INC
+|	expr _INC
 	{ //252
 		panic(".y:253")
 	}
-|	expr DEC
+|	expr _DEC
 	{ //256
 		panic(".y:257")
 	}
 
 case:
-	CASE expr_or_type_list ':'
+	_CASE expr_or_type_list ':'
 	{ //262
 		panic(".y:263")
 	}
-|	CASE expr_or_type_list '=' expr ':'
+|	_CASE expr_or_type_list '=' expr ':'
 	{ //266
 		panic(".y:267")
 	}
-|	CASE expr_or_type_list COLAS expr ':'
+|	_CASE expr_or_type_list _COLAS expr ':'
 	{ //270
 		panic(".y:271")
 	}
-|	DEFAULT ':'
+|	_DEFAULT ':'
 	{ //274
 		panic(".y:275")
 	}
@@ -296,17 +299,17 @@ caseblock_list:
 	}
 
 loop_body:
-	BODY stmt_list '}'
+	_BODY stmt_list '}'
 	{ //305
 		panic(".y:306")
 	}
 
 range_stmt:
-	expr_list '=' RANGE expr
+	expr_list '=' _RANGE expr
 	{ //311
 		panic(".y:312")
 	}
-|	expr_list COLAS RANGE expr
+|	expr_list _COLAS _RANGE expr
 	{ //315
 		panic(".y:316")
 	}
@@ -332,7 +335,7 @@ for_body:
 	}
 
 for_stmt:
-	FOR for_body
+	_FOR for_body
 	{ //341
 		panic(".y:342")
 	}
@@ -348,13 +351,13 @@ if_header:
 	}
 
 if_stmt:
-	IF if_header loop_body elseif_list else
+	_IF if_header loop_body elseif_list else
 	{ //357
 		panic(".y:358")
 	}
 
 elseif:
-	ELSE IF if_header loop_body
+	_ELSE _IF if_header loop_body
 	{ //363
 		panic(".y:364")
 	}
@@ -372,19 +375,19 @@ else:
 	{ //377
 		panic(".y:378")
 	}
-|	ELSE compound_stmt
+|	_ELSE compound_stmt
 	{ //381
 		panic(".y:382")
 	}
 
 switch_stmt:
-	SWITCH if_header BODY caseblock_list '}'
+	_SWITCH if_header _BODY caseblock_list '}'
 	{ //387
 		panic(".y:388")
 	}
 
 select_stmt:
-	SELECT BODY caseblock_list '}'
+	_SELECT _BODY caseblock_list '}'
 	{ //393
 		panic(".y:394")
 	}
@@ -394,35 +397,35 @@ expr:
 	{ //399
 		panic(".y:400")
 	}
-|	expr OROR expr
+|	expr _OROR expr
 	{ //403
 		panic(".y:404")
 	}
-|	expr ANDAND expr
+|	expr _ANDAND expr
 	{ //407
 		panic(".y:408")
 	}
-|	expr EQ expr
+|	expr _EQ expr
 	{ //411
 		panic(".y:412")
 	}
-|	expr NE expr
+|	expr _NE expr
 	{ //415
 		panic(".y:416")
 	}
-|	expr LT expr
+|	expr _LT expr
 	{ //419
 		panic(".y:420")
 	}
-|	expr LE expr
+|	expr _LE expr
 	{ //423
 		panic(".y:424")
 	}
-|	expr GE expr
+|	expr _GE expr
 	{ //427
 		panic(".y:428")
 	}
-|	expr GT expr
+|	expr _GT expr
 	{ //431
 		panic(".y:432")
 	}
@@ -458,19 +461,19 @@ expr:
 	{ //463
 		panic(".y:464")
 	}
-|	expr ANDNOT expr
+|	expr _ANDNOT expr
 	{ //467
 		panic(".y:468")
 	}
-|	expr LSH expr
+|	expr _LSH expr
 	{ //471
 		panic(".y:472")
 	}
-|	expr RSH expr
+|	expr _RSH expr
 	{ //475
 		panic(".y:476")
 	}
-|	expr COMM expr
+|	expr _COMM expr
 	{ //479
 		panic(".y:480")
 	}
@@ -508,7 +511,7 @@ uexpr:
 	{ //513
 		panic(".y:514")
 	}
-|	COMM uexpr
+|	_COMM uexpr
 	{ //517
 		panic(".y:518")
 	}
@@ -522,13 +525,13 @@ pseudocall:
 	{ //527
 		panic(".y:528")
 	}
-|	pexpr '(' expr_or_type_list DDD ocomma ')'
+|	pexpr '(' expr_or_type_list _DDD ocomma ')'
 	{ //531
 		panic(".y:532")
 	}
 
 pexpr_no_paren:
-	LITERAL
+	_LITERAL
 	{ //537
 		panic(".y:538")
 	}
@@ -544,7 +547,7 @@ pexpr_no_paren:
 	{ //549
 		panic(".y:550")
 	}
-|	pexpr '.' '(' TYPE ')'
+|	pexpr '.' '(' _TYPE ')'
 	{ //553
 		panic(".y:554")
 	}
@@ -631,7 +634,7 @@ expr_or_type:
 	{ //636
 		panic(".y:637")
 	}
-|	non_expr_type	%prec PreferToRightParen
+|	non_expr_type	%prec preferToRightParen
 	{ //640
 		panic(".y:641")
 	}
@@ -643,7 +646,7 @@ name_or_type:
 	}
 
 lbrace:
-	BODY
+	_BODY
 	{ //652
 		panic(".y:653")
 	}
@@ -674,13 +677,13 @@ onew_name:
 	}
 
 sym:
-	NAME
+	_NAME
 	{ //683
 		panic(".y:684")
 	}
 
 name:
-	sym	%prec NotParen
+	sym	%prec notParen
 	{ //689
 		panic(".y:690")
 	}
@@ -692,11 +695,11 @@ labelname:
 	}
 
 dotdotdot:
-	DDD
+	_DDD
 	{ //701
 		panic(".y:702")
 	}
-|	DDD ntype
+|	_DDD ntype
 	{ //705
 		panic(".y:706")
 	}
@@ -820,19 +823,19 @@ othertype:
 	{ //825
 		panic(".y:826")
 	}
-|	'[' DDD ']' ntype
+|	'[' _DDD ']' ntype
 	{ //829
 		panic(".y:830")
 	}
-|	CHAN non_recvchantype
+|	_CHAN non_recvchantype
 	{ //833
 		panic(".y:834")
 	}
-|	CHAN COMM ntype
+|	_CHAN _COMM ntype
 	{ //837
 		panic(".y:838")
 	}
-|	MAP '[' ntype ']' ntype
+|	_MAP '[' ntype ']' ntype
 	{ //841
 		panic(".y:842")
 	}
@@ -852,33 +855,33 @@ ptrtype:
 	}
 
 recvchantype:
-	COMM CHAN ntype
+	_COMM _CHAN ntype
 	{ //861
 		panic(".y:862")
 	}
 
 structtype:
-	STRUCT lbrace structdcl_list osemi '}'
+	_STRUCT lbrace structdcl_list osemi '}'
 	{ //867
 		panic(".y:868")
 	}
-|	STRUCT lbrace '}'
+|	_STRUCT lbrace '}'
 	{ //871
 		panic(".y:872")
 	}
 
 interfacetype:
-	INTERFACE lbrace interfacedcl_list osemi '}'
+	_INTERFACE lbrace interfacedcl_list osemi '}'
 	{ //877
 		panic(".y:878")
 	}
-|	INTERFACE lbrace '}'
+|	_INTERFACE lbrace '}'
 	{ //881
 		panic(".y:882")
 	}
 
 xfndcl:
-	FUNC fndcl fnbody
+	_FUNC fndcl fnbody
 	{ //887
 		panic(".y:888")
 	}
@@ -894,7 +897,7 @@ fndcl:
 	}
 
 fntype:
-	FUNC '(' oarg_type_list_ocomma ')' fnres
+	_FUNC '(' oarg_type_list_ocomma ')' fnres
 	{ //903
 		panic(".y:904")
 	}
@@ -909,7 +912,7 @@ fnbody:
 	}
 
 fnres:
-	%prec NotParen
+	%prec notParen
 	{ //918
 		panic(".y:919")
 	}
@@ -1024,11 +1027,11 @@ structdcl:
 	}
 
 packname:
-	NAME
+	_NAME
 	{ //1033
 		panic(".y:1034")
 	}
-|	NAME '.' sym
+|	_NAME '.' sym
 	{ //1037
 		panic(".y:1038")
 	}
@@ -1146,31 +1149,31 @@ non_dcl_stmt:
 	{ //1151
 		panic(".y:1152")
 	}
-|	FALL
+|	_FALL
 	{ //1155
 		panic(".y:1156")
 	}
-|	BREAK onew_name
+|	_BREAK onew_name
 	{ //1159
 		panic(".y:1160")
 	}
-|	CONTINUE onew_name
+|	_CONTINUE onew_name
 	{ //1163
 		panic(".y:1164")
 	}
-|	GO pseudocall
+|	_GO pseudocall
 	{ //1167
 		panic(".y:1168")
 	}
-|	DEFER pseudocall
+|	_DEFER pseudocall
 	{ //1171
 		panic(".y:1172")
 	}
-|	GOTO new_name
+|	_GOTO new_name
 	{ //1175
 		panic(".y:1176")
 	}
-|	RETURN oexpr_list
+|	_RETURN oexpr_list
 	{ //1179
 		panic(".y:1180")
 	}
@@ -1301,7 +1304,7 @@ oliteral:
 	{ //1306
 		panic(".y:1307")
 	}
-|	LITERAL
+|	_LITERAL
 	{ //1310
 		panic(".y:1311")
 	}

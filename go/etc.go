@@ -26,7 +26,7 @@ import (
 //
 // If the source couldn't be read, the returned AST is nil and the error
 // indicates the specific failure.
-func ParseFile(fset *token.FileSet, filename string, src interface{}) (ast interface{}, err error) {
+func ParseFile(fset *token.FileSet, filename string, src interface{} /*TODO Opts*/) (ast []Node, err error) {
 	var bsrc []byte
 	switch x := src.(type) {
 	case nil:
@@ -77,18 +77,18 @@ func (p *parser) Error(e string) {
 
 var xlat = map[token.Token]int{
 	// Special tokens
-	token.ILLEGAL: -1,
+	token.ILLEGAL: _IGNORE,
 	token.EOF:     0,
 	token.COMMENT: -1,
 
 	// Identifiers and basic type literals
 	// (these tokens stand for classes of literals)
-	token.IDENT:  NAME,    // main
-	token.INT:    LITERAL, // 12345
-	token.FLOAT:  LITERAL, // 123.45
-	token.IMAG:   LITERAL, // 123.45i
-	token.CHAR:   LITERAL, // 'a'
-	token.STRING: LITERAL, // "abc"
+	token.IDENT:  _NAME,    // main
+	token.INT:    _LITERAL, // 12345
+	token.FLOAT:  _LITERAL, // 123.45
+	token.IMAG:   _LITERAL, // 123.45i
+	token.CHAR:   _LITERAL, // 'a'
+	token.STRING: _LITERAL, // "abc"
 
 	// Operators and delimiters
 	token.ADD: '+', // +
@@ -97,43 +97,43 @@ var xlat = map[token.Token]int{
 	token.QUO: '/', // /
 	token.REM: '%', // %
 
-	token.AND:     '&',    // &
-	token.OR:      '|',    // |
-	token.XOR:     '^',    // ^
-	token.SHL:     LSH,    // <<
-	token.SHR:     RSH,    // >>
-	token.AND_NOT: ANDNOT, // &^
+	token.AND:     '&',     // &
+	token.OR:      '|',     // |
+	token.XOR:     '^',     // ^
+	token.SHL:     _LSH,    // <<
+	token.SHR:     _RSH,    // >>
+	token.AND_NOT: _ANDNOT, // &^
 
-	token.ADD_ASSIGN: ASOP, // +=
-	token.SUB_ASSIGN: ASOP, // -=
-	token.MUL_ASSIGN: ASOP, // *=
-	token.QUO_ASSIGN: ASOP, // /=
-	token.REM_ASSIGN: ASOP, // %=
+	token.ADD_ASSIGN: _ASOP, // +=
+	token.SUB_ASSIGN: _ASOP, // -=
+	token.MUL_ASSIGN: _ASOP, // *=
+	token.QUO_ASSIGN: _ASOP, // /=
+	token.REM_ASSIGN: _ASOP, // %=
 
-	token.AND_ASSIGN:     ASOP, // &=
-	token.OR_ASSIGN:      ASOP, // |=
-	token.XOR_ASSIGN:     ASOP, // ^=
-	token.SHL_ASSIGN:     ASOP, // <<=
-	token.SHR_ASSIGN:     ASOP, // >>=
-	token.AND_NOT_ASSIGN: ASOP, // &^=
+	token.AND_ASSIGN:     _ASOP, // &=
+	token.OR_ASSIGN:      _ASOP, // |=
+	token.XOR_ASSIGN:     _ASOP, // ^=
+	token.SHL_ASSIGN:     _ASOP, // <<=
+	token.SHR_ASSIGN:     _ASOP, // >>=
+	token.AND_NOT_ASSIGN: _ASOP, // &^=
 
-	token.LAND:  ANDAND, // &&
-	token.LOR:   ORO,    // ||
-	token.ARROW: COMM,   // <-
-	token.INC:   INC,    // ++
-	token.DEC:   DEC,    // --
+	token.LAND:  _ANDAND, // &&
+	token.LOR:   _OROR,   // ||
+	token.ARROW: _COMM,   // <-
+	token.INC:   _INC,    // ++
+	token.DEC:   _DEC,    // --
 
-	token.EQL:    EQ,  // ==
+	token.EQL:    _EQ, // ==
 	token.LSS:    '<', // <
 	token.GTR:    '>', // >
 	token.ASSIGN: '=', // =
 	token.NOT:    '!', // !
 
-	token.NEQ:      NE,    // !=
-	token.LEQ:      LE,    // <=
-	token.GEQ:      GE,    // >=
-	token.DEFINE:   COLAS, // :=
-	token.ELLIPSIS: DDD,   // ...
+	token.NEQ:      _NE,    // !=
+	token.LEQ:      _LE,    // <=
+	token.GEQ:      _GE,    // >=
+	token.DEFINE:   _COLAS, // :=
+	token.ELLIPSIS: _DDD,   // ...
 
 	token.LPAREN: '(', // (
 	token.LBRACK: '[', // [
@@ -148,39 +148,40 @@ var xlat = map[token.Token]int{
 	token.COLON:     ':', // :
 
 	// Keywords
-	token.BREAK:    BREAK,
-	token.CASE:     CASE,
-	token.CHAN:     CHAN,
-	token.CONST:    COMST,
-	token.CONTINUE: CONTINUE,
+	token.BREAK:    _BREAK,
+	token.CASE:     _CASE,
+	token.CHAN:     _CHAN,
+	token.CONST:    _CONST,
+	token.CONTINUE: _CONTINUE,
 
-	token.DEFAULT:     DEFAULT,
-	token.DEFER:       DEFER,
-	token.ELSE:        ELSE,
-	token.FALLTHROUGH: FALL,
-	token.FOR:         FOR,
+	token.DEFAULT:     _DEFAULT,
+	token.DEFER:       _DEFER,
+	token.ELSE:        _ELSE,
+	token.FALLTHROUGH: _FALL,
+	token.FOR:         _FOR,
 
-	token.FUNC:   FUNC,
-	token.GO:     GO,
-	token.GOTO:   GOTO,
-	token.IF:     IF,
-	token.IMPORT: IMPORT,
+	token.FUNC:   _FUNC,
+	token.GO:     _GO,
+	token.GOTO:   _GOTO,
+	token.IF:     _IF,
+	token.IMPORT: _IMPORT,
 
-	token.INTERFACE: INTERFACE,
-	token.MAP:       MAP,
-	token.PACKAGE:   PACKAGE,
-	token.RANGE:     RANGE,
-	token.RETURN:    RETURN,
+	token.INTERFACE: _INTERFACE,
+	token.MAP:       _MAP,
+	token.PACKAGE:   _PACKAGE,
+	token.RANGE:     _RANGE,
+	token.RETURN:    _RETURN,
 
-	token.SELECT: SELECT,
-	token.STRUCT: STRUCT,
-	token.SWITCH: SWITCH,
-	token.TYPE:   TYPE,
-	token.VAR:    VAR,
+	token.SELECT: _SELECT,
+	token.STRUCT: _STRUCT,
+	token.SWITCH: _SWITCH,
+	token.TYPE:   _TYPE,
+	token.VAR:    _VAR,
 }
 
-func (p *parser) Lex(lval *yySymType) int {
-	var tok token.Token
-	p.pos, tok, lval.lit = p.sc.Scan()
-	return int(tok) //TODO
+func (p *parser) Lex(lval *yySymType) (r int) {
+	for r = -1; r < 0; r = xlat[lval.tok] {
+		p.pos, lval.tok, lval.lit = p.sc.Scan()
+	}
+	return
 }
