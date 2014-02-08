@@ -54,13 +54,13 @@ const (
 	w54         = iota * 42  // w == 84    (untyped integer constant)
 )
 
-//const x57 = iota  // x == 0 (iota has been reset)
-//const y58 = iota  // y == 0 (iota has been reset)
+const x57 = iota  // x == 0 (iota has been reset)
+const y58 = iota  // y == 0 (iota has been reset)
 //Within an ExpressionList, the value of each iota is the same because it is only incremented after each ConstSpec:
 //
-//const (
-//	bit062, mask062 = 1 << iota, 1<<iota - 1  // bit0 == 1, mask0 == 0
-//	bit163, mask163                           // bit1 == 2, mask1 == 1
-//	_, _                                  // skips iota == 2
-//	bit365, mask365                           // bit3 == 8, mask3 == 7
-//)
+const (
+	bit062, mask062 = 1 << iota, 1<<iota - 1  // bit0 == 1, mask0 == 0
+	bit163, mask163                           // bit1 == 2, mask1 == 1
+	_, _                                  // skips iota == 2
+	bit365, mask365                           // bit3 == 8, mask3 == 7
+)

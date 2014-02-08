@@ -439,7 +439,7 @@ expr:
 	}
 |	expr '-' expr
 	{ //439
-		panic(".y:440")
+		$$ = &BinOp{$2.pos, token.SUB, $1, $3}
 	}
 |	expr '|' expr
 	{ //443
