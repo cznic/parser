@@ -27,6 +27,13 @@ type Ident struct {
 	Lit string
 }
 
+// --------------------------------------------------------------------- Literal
+type Literal struct {
+	pos
+	Kind token.Token
+	Lit  string
+}
+
 // -------------------------------------------------------------------- Package
 type Package struct {
 	pos

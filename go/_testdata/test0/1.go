@@ -1,3 +1,6 @@
 package foo
 
-const ()
+import()
+
+//const ()
+//const c = 0

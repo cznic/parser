@@ -22,11 +22,16 @@ package parser
 	_SWITCH _TYPE _VAR
 
 %type	<node>
-	package
+	dcl_name
+	expr
+	package pexpr pexpr_no_paren
 	sym
+	uexpr
 
 %type	<list>
 	common_dcl
+	dcl_name_list
+	expr_list
 
 %left	_COMM
 
@@ -67,9 +72,6 @@ package:
 
 imports:
 |	imports import ';'
-	{ //73
-		panic(".y:74")
-	}
 
 import:
 	_IMPORT import_stmt
@@ -81,9 +83,6 @@ import:
 		panic(".y:84")
 	}
 |	_IMPORT '(' ')'
-	{ //87
-		panic(".y:88")
-	}
 
 import_stmt:
 	_LITERAL
@@ -391,9 +390,6 @@ select_stmt:
 
 expr:
 	uexpr
-	{ //399
-		panic(".y:400")
-	}
 |	expr _OROR expr
 	{ //403
 		panic(".y:404")
@@ -477,9 +473,6 @@ expr:
 
 uexpr:
 	pexpr
-	{ //485
-		panic(".y:486")
-	}
 |	'*' uexpr
 	{ //489
 		panic(".y:490")
@@ -530,7 +523,7 @@ pseudocall:
 pexpr_no_paren:
 	_LITERAL
 	{ //537
-		panic(".y:538")
+		$$ = &Literal{$1.pos, $1.tok, $1.lit}
 	}
 |	name
 	{ //541
@@ -618,9 +611,6 @@ complitexpr:
 
 pexpr:
 	pexpr_no_paren
-	{ //626
-		panic(".y:627")
-	}
 |	'(' expr_or_type ')'
 	{ //630
 		panic(".y:631")
@@ -652,17 +642,19 @@ lbrace:
 		panic(".y:657")
 	}
 
+// - field name of a struct type definition
+// - label name declaration/reference
+// - method name of an interface type defintion
 new_name:
 	sym
 	{ //662
 		panic(".y:663")
 	}
 
+// identifier in the identifier list of a var or const declaration
+//TODO declare in current scope
 dcl_name:
 	sym
-	{ //668
-		panic(".y:669")
-	}
 
 onew_name:
 	{ //673
@@ -1179,6 +1171,7 @@ stmt_list:
 		panic(".y:1190")
 	}
 
+// field names of a struct type definition
 new_name_list:
 	new_name
 	{ //1195
@@ -1189,10 +1182,11 @@ new_name_list:
 		panic(".y:1200")
 	}
 
+// identifier list of the var or const declarations
 dcl_name_list:
 	dcl_name
 	{ //1205
-		panic(".y:1206")
+		$$ = []Node{$1}
 	}
 |	dcl_name_list ',' dcl_name
 	{ //1209
@@ -1202,7 +1196,7 @@ dcl_name_list:
 expr_list:
 	expr
 	{ //1215
-		panic(".y:1216")
+		$$ = []Node{$1}
 	}
 |	expr_list ',' expr
 	{ //1219
