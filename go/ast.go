@@ -6,11 +6,8 @@ package parser
 
 import (
 	"go/token"
-)
 
-var (
-	_ Node = (*Ident)(nil)
-	_ Node = (*Package)(nil)
+	"github.com/cznic/mathutil"
 )
 
 type Node interface {
@@ -20,6 +17,57 @@ type Node interface {
 type pos token.Pos
 
 func (p pos) Pos() token.Pos { return token.Pos(p) }
+
+// ------------------------------------------------------------------ constDecl
+type constDecl struct {
+	pos
+	Iota int
+	Name *Ident
+	Type Node
+	Expr Node
+}
+
+func newConstDecls(y yyLexer, lst []Node) (r []Node) {
+	for _, v0 := range lst {
+		v := v0.(*constSpec)
+		if g, e := len(v.Names), len(v.Expr); g != e {
+			switch {
+			case g > e:
+				yyErrPos(y, v.Names[e], "missing value in const declaration")
+			default:
+				yyErrPos(y, v.Expr[g], "extra expression in const declaration")
+			}
+			continue
+		}
+
+		for j, nm := range v.Names[:mathutil.Min(len(v.Names), len(v.Expr))] {
+			d := &constDecl{pos(nm.Pos()), v.Iota, nm.(*Ident), v.Type, v.Expr[j]}
+			r = append(r, d)
+		}
+	}
+	return
+}
+
+// ------------------------------------------------------------------ constSpec
+type constSpec struct {
+	pos
+	Iota  int
+	Names []Node
+	Type  Node
+	Expr  []Node
+}
+
+func newConstSpec(y yyLexer, names []Node, typ Node, expr []Node) (c *constSpec) {
+	p := yy(y)
+	switch {
+	case len(expr) == 0:
+		c = &constSpec{Iota: p.constIota, Names: names, Type: p.constType, Expr: p.constExpr}
+	default:
+		c = &constSpec{Iota: p.constIota, Names: names, Type: typ, Expr: expr}
+		p.constType, p.constExpr = typ, expr
+	}
+	return
+}
 
 // ---------------------------------------------------------------------- Ident
 
@@ -63,4 +111,11 @@ func newLiteral(lit tkn) *Literal {
 type Package struct {
 	pos
 	Name *Ident
+}
+
+// ------------------------------------------------------------- QualifiedIdent
+
+type QualifiedIdent struct {
+	pos
+	Q, I *Ident
 }

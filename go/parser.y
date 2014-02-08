@@ -23,9 +23,11 @@ package parser
 	'.'
 
 %type	<node>
-	dcl_name
+	constdcl
+	dcl_name dotname
 	expr
 	import_stmt
+	name ntype
 	package pexpr pexpr_no_paren
 	sym
 	uexpr
@@ -132,7 +134,7 @@ xdcl:
 	}
 |	error
 	{ //132
-		panic(".y:133")
+		panic(".y:137")
 	}
 
 common_dcl:
@@ -150,7 +152,7 @@ common_dcl:
 	}
 |	lconst constdcl
 	{ //150
-		panic(".y:151")
+		$$ = newConstDecls(yylex, []Node{$2})
 	}
 |	lconst '(' constdcl osemi ')'
 	{ //154
@@ -201,11 +203,11 @@ vardcl:
 constdcl:
 	dcl_name_list ntype '=' expr_list
 	{ //200
-		panic(".y:201")
+		$$ = newConstSpec(yylex, $1, $2, $4)
 	}
 |	dcl_name_list '=' expr_list
 	{ //204
-		panic(".y:205")
+		$$ = newConstSpec(yylex, $1, nil, $3)
 	}
 
 constdcl1:
@@ -216,6 +218,7 @@ constdcl1:
 |	dcl_name_list ntype
 	{ //214
 		panic(".y:215")
+		yyErrPos(yylex, $2, "const declaration cannot have type without expression")
 	}
 |	dcl_name_list
 	{ //218
@@ -682,9 +685,6 @@ sym:
 
 name:
 	sym	%prec notParen
-	{ //689
-		panic(".y:690")
-	}
 
 labelname:
 	new_name
@@ -720,9 +720,6 @@ ntype:
 		panic(".y:724")
 	}
 |	dotname
-	{ //727
-		panic(".y:728")
-	}
 |	'(' ntype ')'
 	{ //731
 		panic(".y:732")
@@ -809,7 +806,7 @@ fnret_type:
 dotname:
 	name
 	{ //815
-		panic(".y:816")
+		$$ = &QualifiedIdent{pos($1.Pos()), nil, $1.(*Ident)}
 	}
 |	name '.' sym
 	{ //819

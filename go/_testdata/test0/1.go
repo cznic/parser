@@ -12,5 +12,6 @@ import (
 	"bar12"
 )
 
-//const ()
-//const c = 0
+const ()
+const c16 = 3e8
+const c17 int = 3e8

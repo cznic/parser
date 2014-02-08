@@ -5,6 +5,7 @@
 package parser
 
 import (
+	"go/scanner"
 	"go/token"
 	"path/filepath"
 	"testing"
@@ -14,7 +15,15 @@ func Test0(t *testing.T) {
 	fs := token.NewFileSet()
 	ast, err := ParseFile(fs, filepath.FromSlash("_testdata/test0/1.go"), nil)
 	if err != nil {
-		t.Fatal(err)
+		switch x := err.(type) {
+		case scanner.ErrorList:
+			for _, v := range x {
+				t.Error(v)
+			}
+			return
+		default:
+			t.Fatal(err)
+		}
 	}
 
 	if ast == nil {

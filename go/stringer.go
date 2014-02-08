@@ -31,6 +31,8 @@ func String(fs *token.FileSet, v interface{}) (r string) {
 	s = func(pre string, rv reflect.Value) {
 		v := rv.Interface()
 		switch rv.Kind() {
+		case reflect.Int:
+			f.Format("%s%v\n", pre, v)
 		case reflect.Interface:
 			if rv.IsNil() {
 				//f.Format("%s: nil\n", pre)
