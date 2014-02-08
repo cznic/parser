@@ -1,17 +1,17 @@
-// Copyright 2013 The Go Authors. All rights reserved.
+// Copyright 2014 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
 package parser
 
 import (
+	"go/token"
 	"path/filepath"
 	"testing"
 )
 
 func Test0(t *testing.T) {
-	return //TODO-
-	ast, err := ParseFile(filepath.FromSlash("_testdata/test0/1.go"), nil)
+	ast, err := ParseFile(token.NewFileSet(), filepath.FromSlash("_testdata/test0/1.go"), nil)
 	if err != nil {
 		t.Fatal(err)
 	}

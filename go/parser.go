@@ -1,10 +1,15 @@
+// Copyright 2014 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 package parser
 
 import __yyfmt__ "fmt"
 
 type yySymType struct {
-	yys  int
-	TODO int //TODO
+	yys int
+	tok token.Token
+	lit string
 }
 
 const ANDAND = 57346
