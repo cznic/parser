@@ -179,11 +179,17 @@ var xlat = map[token.Token]int{
 	token.VAR:    _VAR,
 }
 
+type tk struct {
+	pos pos
+	tok token.Token
+	lit string
+}
+
 func (p *parser) Lex(lval *yySymType) (r int) {
 	var tok token.Token
 	for r = -1; r < 0; r = xlat[tok] {
-		p.pos, tok, lval.tok.lit = p.sc.Scan()
+		p.pos, tok, lval.tk.lit = p.sc.Scan()
 	}
-	lval.tok.pos, lval.tok.tok = pos(p.pos), tok
+	lval.tk.pos, lval.tk.tok = pos(p.pos), tok
 	return
 }

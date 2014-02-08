@@ -6,15 +6,9 @@ package parser
 
 import __yyfmt__ "fmt"
 
-import "go/token"
-
 type yySymType struct {
-	yys int
-	tok struct {
-		pos pos
-		tok token.Token
-		lit string
-	}
+	yys  int
+	tk   tk
 	node Node
 }
 
@@ -962,7 +956,7 @@ yydefault:
 		}
 	case 4:
 		{ //64
-			yyVAL.node = &Package{yyS[yypt-2].tok.pos, yyS[yypt-1].node.(*Ident)}
+			yyVAL.node = &Package{yyS[yypt-2].tk.pos, yyS[yypt-1].node.(*Ident)}
 		}
 	case 6:
 		{ //73
@@ -1494,7 +1488,7 @@ yydefault:
 		}
 	case 138:
 		{ //683
-			yyVAL.node = &Ident{yyS[yypt-0].tok.pos, yyS[yypt-0].tok.lit}
+			yyVAL.node = &Ident{yyS[yypt-0].tk.pos, yyS[yypt-0].tk.lit}
 		}
 	case 139:
 		{ //689

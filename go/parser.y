@@ -6,16 +6,14 @@
 
 package parser
 
-import "go/token"
-
 %}
 
 %union	{
-	tok struct { pos pos; tok token.Token; lit string }
+	tk   tk
 	node Node
 }
 
-%token	<tok>
+%token	<tk>
 	_ANDAND _ANDNOT _ASOP _BODY _BREAK _CASE _CHAN _COLAS _COMM _CONST
 	_CONTINUE _DDD _DEC _DEFAULT _DEFER _ELSE _EQ _FALL _FOR _FUNC _GE _GO
 	_GOTO _GT _IF _IGNORE _IMPORT _INC _INTERFACE _LE _LITERAL _LSH _LT
