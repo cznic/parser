@@ -24,6 +24,7 @@ package parser
 %type	<node>
 	dcl_name
 	expr
+	import_stmt
 	package pexpr pexpr_no_paren
 	sym
 	uexpr
@@ -75,6 +76,11 @@ imports:
 
 import:
 	_IMPORT import_stmt
+	{
+		imp := $2.(*Import)
+		imp.pos = $1.pos
+		yyTLD(yylex, imp)
+	}
 |	_IMPORT '(' import_stmt_list osemi ')'
 	{ //83
 		panic(".y:84")
@@ -84,11 +90,11 @@ import:
 import_stmt:
 	_LITERAL
 	{ //93
-		yyTLD(yylex, newImport(yylex, $1.pos, nil, newLiteral($1)))
+		$$ = newImport(yylex, (*Ident)(nil), newLiteral($1))
 	}
 |	sym _LITERAL
 	{ //97
-		panic(".y:98")
+		$$ = newImport(yylex, $1, newLiteral($2))
 	}
 |	'.' _LITERAL
 	{ //101
@@ -1300,7 +1306,7 @@ func yyErr(y yyLexer, msg string) {
 }
 
 func yyErrPos(y yyLexer, n Node, msg string) {
-	yy(y).errPos(pos(n.Pos()), msg)
+	yy(y).errPos(n.Pos(), msg)
 }
 
 func yyTLD(y yyLexer, n Node) {

@@ -75,11 +75,11 @@ type parser struct {
 }
 
 func (p *parser) Error(e string) {
-	p.errPos(pos(p.pos), e)
+	p.errPos(p.pos, e)
 }
 
-func (p *parser) errPos(pos pos, e string) {
-	p.errors.Add(p.file.Position(token.Pos(pos)), e)
+func (p *parser) errPos(pos token.Pos, e string) {
+	p.errors.Add(p.file.Position(pos), e)
 }
 
 var xlat = map[token.Token]int{
@@ -187,9 +187,10 @@ var xlat = map[token.Token]int{
 }
 
 type tkn struct {
-	pos pos
-	tok token.Token
-	lit string
+	lit  string
+	pos  pos
+	tok  token.Token
+	tpos token.Pos
 }
 
 func (p *parser) Lex(lval *yySymType) (r int) {
@@ -197,6 +198,6 @@ func (p *parser) Lex(lval *yySymType) (r int) {
 	for r = -1; r < 0; r = xlat[tok] {
 		p.pos, tok, lval.token.lit = p.sc.Scan()
 	}
-	lval.token.pos, lval.token.tok = pos(p.pos), tok
+	lval.token.tpos, lval.token.pos, lval.token.tok = p.pos, pos(p.pos), tok
 	return
 }

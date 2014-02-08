@@ -36,14 +36,14 @@ type Import struct {
 	Path *Literal
 }
 
-func newImport(y yyLexer, pos pos, nm *Ident, pth *Literal) *Import {
+func newImport(y yyLexer, nm Node, pth *Literal) *Import {
 	switch {
 	case pth.Kind != token.STRING:
-		yy(y).errPos(pth.pos, "import statement not a string")
+		yy(y).errPos(pth.Pos(), "import statement not a string")
 	case pth.Lit == `""`:
-		yy(y).errPos(pth.pos, "import path is empty")
+		yy(y).errPos(pth.Pos(), "import path is empty")
 	}
-	return &Import{pos, nm, pth}
+	return &Import{Name: nm.(*Ident), Path: pth}
 }
 
 // --------------------------------------------------------------------- Literal
