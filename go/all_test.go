@@ -11,7 +11,8 @@ import (
 )
 
 func Test0(t *testing.T) {
-	ast, err := ParseFile(token.NewFileSet(), filepath.FromSlash("_testdata/test0/1.go"), nil)
+	fs := token.NewFileSet()
+	ast, err := ParseFile(fs, filepath.FromSlash("_testdata/test0/1.go"), nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -20,5 +21,5 @@ func Test0(t *testing.T) {
 		t.Fatal(ast)
 	}
 
-	t.Log(ast)
+	t.Logf("\n%s", String(fs, ast))
 }
