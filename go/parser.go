@@ -1006,7 +1006,7 @@ yydefault:
 		}
 	case 14:
 		{ //111
-			panic(".y:112")
+			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
 		}
 	case 16:
 		{ //120

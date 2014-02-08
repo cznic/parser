@@ -114,7 +114,7 @@ import_stmt_list:
 	}
 |	import_stmt_list ';' import_stmt
 	{ //111
-		panic(".y:112")
+		$$ = append($1, $3)
 	}
 
 xdcl:

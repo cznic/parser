@@ -7,6 +7,10 @@ import . "foo6"
 import (
 	"foo8"
 )
+import (
+	"foo11"
+	"bar12"
+)
 
 //const ()
 //const c = 0
