@@ -25,4 +25,14 @@ const (
 	eof25        = -1 // untyped integer constant
 )
 const a27, b27, c27 = 3, 4, "foo" // a = 3, b = 4, c = "foo", untyped integer and string constants
-const u28, v28 float32 = 0, 3   // u = 0.0, v = 3.0
+const u28, v28 float32 = 0, 3     // u = 0.0, v = 3.0
+const (
+	Sunday30 = iota
+	Monday31
+	Tuesday32
+	Wednesday33
+	Thursday34
+	Friday35
+	Partyday36
+	numberOfDays37 // this constant is not exported
+)

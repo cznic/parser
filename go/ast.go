@@ -66,6 +66,7 @@ func newConstSpec(y yyLexer, names []Node, typ Node, expr []Node) (c *constSpec)
 		c = &constSpec{Iota: p.constIota, Names: names, Type: typ, Expr: expr}
 		p.constType, p.constExpr = typ, expr
 	}
+	p.constIota++
 	return
 }
 

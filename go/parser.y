@@ -221,7 +221,7 @@ constdcl1:
 	}
 |	dcl_name_list
 	{ //218
-		panic(".y:219")
+		$$ = newConstSpec(yylex, $1, nil, nil)
 	}
 
 typedclname:
@@ -537,9 +537,6 @@ pexpr_no_paren:
 		$$ = &Literal{$1.pos, $1.tok, $1.lit}
 	}
 |	name
-	{ //541
-		panic(".y:542")
-	}
 |	pexpr '.' sym
 	{ //545
 		panic(".y:546")
@@ -955,7 +952,7 @@ constdcl_list:
 	}
 |	constdcl_list ';' constdcl1
 	{ //971
-		panic(".y:972")
+		$$ = append($1, $3)
 	}
 
 typedcl_list:
