@@ -34,6 +34,7 @@ package parser
 	common_dcl
 	dcl_name_list
 	expr_list
+	import_stmt_list
 
 %left	_COMM
 
@@ -84,7 +85,11 @@ import:
 	}
 |	_IMPORT '(' import_stmt_list osemi ')'
 	{ //83
-		panic(".y:84")
+		for _, v := range $3 {
+			imp := v.(*Import)
+			imp.pos = $1.pos
+			yyTLD(yylex, imp)
+		}
 	}
 |	_IMPORT '(' ')'
 
@@ -105,7 +110,7 @@ import_stmt:
 import_stmt_list:
 	import_stmt
 	{ //107
-		panic(".y:108")
+		$$ = []Node{$1}
 	}
 |	import_stmt_list ';' import_stmt
 	{ //111
@@ -1249,9 +1254,6 @@ osemi:
 		panic(".y:1262")
 	}
 |	';'
-	{ //1265
-		panic(".y:1266")
-	}
 
 ocomma:
 	{ //1270
