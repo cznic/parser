@@ -6,7 +6,10 @@ package parser
 
 import __yyfmt__ "fmt"
 
-import "go/token"
+import (
+	"fmt"
+	"go/token"
+)
 
 type yySymType struct {
 	yys   int
@@ -134,19 +137,11 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyMaxDepth = 200
 
-func yy(y yyLexer) *parser { return y.(*parser) }
-
-func yyErr(y yyLexer, msg string) {
-	yy(y).Error(msg)
-}
-
-func yyErrPos(y yyLexer, n Node, msg string) {
-	yy(y).errPos(n.Pos(), msg)
-}
-
-func yyFset(y yyLexer) *token.FileSet {
-	return yy(y).fset
-}
+func yy(y yyLexer) *parser                   { return y.(*parser) }
+func yyErr(y yyLexer, msg string)            { yy(y).Error(msg) }
+func yyErrPos(y yyLexer, n Node, msg string) { yy(y).errPos(n.Pos(), msg) }
+func yyFset(y yyLexer) *token.FileSet        { return yy(y).fset }
+func yyPackageScope(y yyLexer) *Scope        { return yy(y).packageScope }
 
 func yyTLD(y yyLexer, n Node) {
 	p := yy(y)
@@ -971,17 +966,34 @@ yydefault:
 		}
 	case 4:
 		{ //64
-			yyVAL.node = &Package{yyS[yypt-2].token.pos, yyS[yypt-1].node.(*Ident)}
+			id := yyS[yypt-1].node.(*Ident)
+			yyVAL.node = &Package{yyS[yypt-2].token.pos, id}
+			ps := yyPackageScope(yylex)
+			nm := id.Lit
+			switch exNode := ps.Names[nm]; {
+			case exNode != nil:
+				ex := exNode.(*Ident)
+				g, e := nm, ex.Lit
+				if g == e {
+					break
+				}
+
+				yyErrPos(yylex, yyS[yypt-1].node, fmt.Sprintf("found package %s and %s (%s)", nm, e, yyFset(yylex).Position(ex.Pos())))
+			default:
+				ps.Names[dlrPkgName] = id
+			}
 		}
 	case 7:
 		{
 			imp := yyS[yypt-0].node.(*Import)
+			panic(".y95:")
 			imp.pos = yyS[yypt-1].token.pos
 			yyTLD(yylex, imp)
 		}
 	case 8:
 		{ //83
 			for _, v := range yyS[yypt-2].list {
+				panic(".y102:")
 				imp := v.(*Import)
 				imp.pos = yyS[yypt-4].token.pos
 				yyTLD(yylex, imp)
@@ -990,26 +1002,32 @@ yydefault:
 	case 10:
 		{ //93
 			yyVAL.node = newImport(yylex, (*Ident)(nil), newLiteral(yyS[yypt-0].token))
+			panic(".y114:")
 		}
 	case 11:
 		{ //97
 			yyVAL.node = newImport(yylex, yyS[yypt-1].node, newLiteral(yyS[yypt-0].token))
+			panic(".y119:")
 		}
 	case 12:
 		{ //101
 			yyVAL.node = newImport(yylex, &Ident{yyS[yypt-1].token.pos, "."}, newLiteral(yyS[yypt-0].token))
+			panic(".y124:")
 		}
 	case 13:
 		{ //107
 			yyVAL.list = []Node{yyS[yypt-0].node}
+			panic(".y131:")
 		}
 	case 14:
 		{ //111
 			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
+			panic(".y136:")
 		}
 	case 16:
 		{ //120
 			yyTLDs(yylex, yyS[yypt-0].list)
+			panic(".y143:")
 		}
 	case 17:
 		{ //124
@@ -1038,26 +1056,32 @@ yydefault:
 	case 23:
 		{ //150
 			yyVAL.list = newConstDecls(yylex, []Node{yyS[yypt-0].node})
+			panic(".y174:")
 		}
 	case 24:
 		{ //154
 			yyVAL.list = newConstDecls(yylex, []Node{yyS[yypt-2].node})
+			panic(".y179:")
 		}
 	case 25:
 		{ //158
 			yyVAL.list = newConstDecls(yylex, append([]Node{yyS[yypt-4].node}, yyS[yypt-2].list...))
+			panic(".y184:")
 		}
 	case 26:
 		{ //162
 			yyVAL.list = nil
+			panic(".y189:")
 		}
 	case 27:
 		{ //166
 			yyVAL.list = []Node{yyS[yypt-0].node}
+			panic(".y194:")
 		}
 	case 28:
 		{ //170
 			yyVAL.list = yyS[yypt-2].list
+			panic(".y199:")
 		}
 	case 29:
 		{ //174
@@ -1083,10 +1107,12 @@ yydefault:
 	case 34:
 		{ //200
 			yyVAL.node = newConstSpec(yylex, yyS[yypt-3].list, yyS[yypt-2].node, yyS[yypt-0].list)
+			panic(".y231:")
 		}
 	case 35:
 		{ //204
 			yyVAL.node = newConstSpec(yylex, yyS[yypt-2].list, nil, yyS[yypt-0].list)
+			panic(".y236:")
 		}
 	case 36:
 		yyVAL.node = yyS[yypt-0].node
@@ -1098,6 +1124,7 @@ yydefault:
 	case 38:
 		{ //218
 			yyVAL.node = newConstSpec(yylex, yyS[yypt-0].list, nil, nil)
+			panic(".y249:")
 		}
 	case 39:
 		{
@@ -1105,10 +1132,12 @@ yydefault:
 			// becomes visible right here, not at the end
 			// of the declaration.
 			yyVAL.node = yyS[yypt-0].node //TODO typedclname: more
+			panic(".y259:")
 		}
 	case 40:
 		{ //230
 			yyVAL.node = &TypeDecl{pos(yyS[yypt-1].node.Pos()), yyS[yypt-1].node.(*Ident), yyS[yypt-0].node}
+			panic(".y266:")
 		}
 	case 41:
 		{ //236
@@ -1283,6 +1312,7 @@ yydefault:
 	case 84:
 		{ //439
 			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, token.SUB, yyS[yypt-2].node, yyS[yypt-0].node}
+			panic(".y473:")
 		}
 	case 85:
 		{ //443
@@ -1295,6 +1325,7 @@ yydefault:
 	case 87:
 		{ //451
 			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, token.MUL, yyS[yypt-2].node, yyS[yypt-0].node}
+			panic(".y486:")
 		}
 	case 88:
 		{ //455
@@ -1315,6 +1346,7 @@ yydefault:
 	case 92:
 		{ //471
 			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, token.SHL, yyS[yypt-2].node, yyS[yypt-0].node}
+			panic(".y507:")
 		}
 	case 93:
 		{ //475
@@ -1341,6 +1373,7 @@ yydefault:
 	case 99:
 		{ //501
 			yyVAL.node = &UnOp{yyS[yypt-1].token.pos, token.SUB, yyS[yypt-0].node}
+			panic(".y535:")
 		}
 	case 100:
 		{ //505
@@ -1373,6 +1406,7 @@ yydefault:
 	case 107:
 		{ //537
 			yyVAL.node = &Literal{yyS[yypt-0].token.pos, yyS[yypt-0].token.tok, yyS[yypt-0].token.lit}
+			panic(".y572:")
 		}
 	case 108:
 		yyVAL.node = yyS[yypt-0].node
@@ -1517,6 +1551,7 @@ yydefault:
 	case 147:
 		{
 			yyVAL.node = &NamedType{pos(yyS[yypt-0].node.Pos()), yyS[yypt-0].node.(*QualifiedIdent), nil}
+			panic(".y748:")
 		}
 	case 148:
 		{ //731
@@ -1593,6 +1628,7 @@ yydefault:
 	case 166:
 		{ //815
 			yyVAL.node = &QualifiedIdent{pos(yyS[yypt-0].node.Pos()), nil, yyS[yypt-0].node.(*Ident)}
+			panic(".y837:")
 		}
 	case 167:
 		{ //819
@@ -1602,6 +1638,7 @@ yydefault:
 		{ //825
 			switch {
 			case yyS[yypt-2].node != nil:
+				panic(".y849:")
 				yyVAL.node = &ArrayType{yyS[yypt-3].token.pos, yyS[yypt-2].node, yyS[yypt-0].node}
 			default:
 				panic(".y824:")
@@ -1640,6 +1677,7 @@ yydefault:
 	case 177:
 		{ //867
 			yyVAL.node = newStructType(yyS[yypt-4].token, yyS[yypt-2].list)
+			panic(".y893:")
 		}
 	case 178:
 		{ //871
@@ -1712,22 +1750,27 @@ yydefault:
 	case 197:
 		{ //967
 			yyVAL.list = []Node{yyS[yypt-0].node}
+			panic(".y988:")
 		}
 	case 198:
 		{ //971
 			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
+			panic(".y993:")
 		}
 	case 199:
 		{ //977
 			yyVAL.list = []Node{yyS[yypt-0].node}
+			panic(".y1000:")
 		}
 	case 200:
 		{ //981
 			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
+			panic(".y1005:")
 		}
 	case 201:
 		{ //987
 			yyVAL.list = []Node{yyS[yypt-0].node}
+			panic(".y1012:")
 		}
 	case 202:
 		{ //991
@@ -1744,6 +1787,7 @@ yydefault:
 	case 205:
 		{ //1007
 			yyVAL.node = newFields(yyS[yypt-2].list, false, yyS[yypt-1].node, yyS[yypt-0].node)
+			panic(".y1033:")
 		}
 	case 206:
 		{ //1011
@@ -1912,26 +1956,32 @@ yydefault:
 	case 247:
 		{ //1195
 			yyVAL.list = []Node{yyS[yypt-0].node}
+			panic(".y1223:")
 		}
 	case 248:
 		{ //1199
 			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
+			panic(".y1228:")
 		}
 	case 249:
 		{ //1205
 			yyVAL.list = []Node{yyS[yypt-0].node}
+			panic(".y1236:")
 		}
 	case 250:
 		{ //1209
 			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
+			panic(".y1241:")
 		}
 	case 251:
 		{ //1215
 			yyVAL.list = []Node{yyS[yypt-0].node}
+			panic(".y1248:")
 		}
 	case 252:
 		{ //1219
 			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
+			panic(".y1253:")
 		}
 	case 253:
 		{ //1225
@@ -1998,6 +2048,7 @@ yydefault:
 	case 271:
 		{ //1306
 			yyVAL.node = (*Literal)(nil)
+			panic(".y1332:")
 		}
 	case 272:
 		{ //1310

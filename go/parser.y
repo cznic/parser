@@ -6,7 +6,10 @@
 
 package parser
 
-import "go/token"
+import (
+	"fmt"
+	"go/token"
+)
 
 %}
 
@@ -80,7 +83,22 @@ package:
 	}
 |	_PACKAGE sym ';'
 	{ //64
-		$$ = &Package{$1.pos, $2.(*Ident)}
+		id := $2.(*Ident)
+		$$ = &Package{$1.pos, id}
+		ps := yyPackageScope(yylex)
+		nm := id.Lit
+		switch exNode := ps.Names[nm]; {
+		case exNode != nil:
+			ex := exNode.(*Ident)
+			g, e := nm, ex.Lit
+			if g == e {
+				break
+			}
+
+			yyErrPos(yylex, $2, fmt.Sprintf("found package %s and %s (%s)", nm, e, yyFset(yylex).Position(ex.Pos())))
+		default:
+			ps.Names[dlrPkgName] = id
+		}
 	}
 
 imports:
@@ -90,12 +108,14 @@ import:
 	_IMPORT import_stmt
 	{
 		imp := $2.(*Import)
+		panic(".y95:")
 		imp.pos = $1.pos
 		yyTLD(yylex, imp)
 	}
 |	_IMPORT '(' import_stmt_list osemi ')'
 	{ //83
 		for _, v := range $3 {
+		panic(".y102:")
 			imp := v.(*Import)
 			imp.pos = $1.pos
 			yyTLD(yylex, imp)
@@ -107,30 +127,36 @@ import_stmt:
 	_LITERAL
 	{ //93
 		$$ = newImport(yylex, (*Ident)(nil), newLiteral($1))
+		panic(".y114:")
 	}
 |	sym _LITERAL
 	{ //97
 		$$ = newImport(yylex, $1, newLiteral($2))
+		panic(".y119:")
 	}
 |	'.' _LITERAL
 	{ //101
 		$$ = newImport(yylex, &Ident{$1.pos, "."}, newLiteral($2))
+		panic(".y124:")
 	}
 
 import_stmt_list:
 	import_stmt
 	{ //107
 		$$ = []Node{$1}
+		panic(".y131:")
 	}
 |	import_stmt_list ';' import_stmt
 	{ //111
 		$$ = append($1, $3)
+		panic(".y136:")
 	}
 
 xdcl:
 |	common_dcl
 	{ //120
 		yyTLDs(yylex, $1)
+		panic(".y143:")
 	}
 |	xfndcl
 	{ //124
@@ -161,26 +187,32 @@ common_dcl:
 |	lconst constdcl
 	{ //150
 		$$ = newConstDecls(yylex, []Node{$2})
+		panic(".y174:")
 	}
 |	lconst '(' constdcl osemi ')'
 	{ //154
 		$$ = newConstDecls(yylex, []Node{$3})
+		panic(".y179:")
 	}
 |	lconst '(' constdcl ';' constdcl_list osemi ')'
 	{ //158
 		$$ = newConstDecls(yylex, append([]Node{$3}, $5...))
+		panic(".y184:")
 	}
 |	lconst '(' ')'
 	{ //162
 		$$ = nil
+		panic(".y189:")
 	}
 |	_TYPE typedcl
 	{ //166
 		$$ = []Node{$2}
+		panic(".y194:")
 	}
 |	_TYPE '(' typedcl_list osemi ')'
 	{ //170
 		$$ = $3
+		panic(".y199:")
 	}
 |	_TYPE '(' ')'
 	{ //174
@@ -212,10 +244,12 @@ constdcl:
 	dcl_name_list ntype '=' expr_list
 	{ //200
 		$$ = newConstSpec(yylex, $1, $2, $4)
+		panic(".y231:")
 	}
 |	dcl_name_list '=' expr_list
 	{ //204
 		$$ = newConstSpec(yylex, $1, nil, $3)
+		panic(".y236:")
 	}
 
 constdcl1:
@@ -228,6 +262,7 @@ constdcl1:
 |	dcl_name_list
 	{ //218
 		$$ = newConstSpec(yylex, $1, nil, nil)
+		panic(".y249:")
 	}
 
 typedclname:
@@ -237,12 +272,14 @@ typedclname:
 		// becomes visible right here, not at the end
 		// of the declaration.
 		$$ = $1 //TODO typedclname: more
+		panic(".y259:")
 	}
 
 typedcl:
 	typedclname ntype
 	{ //230
 		$$ = &TypeDecl{pos($1.Pos()), $1.(*Ident), $2}
+		panic(".y266:")
 	}
 
 simple_stmt:
@@ -449,6 +486,7 @@ expr:
 |	expr '-' expr
 	{ //439
 		$$ = &BinOp{$2.pos, token.SUB, $1, $3}
+		panic(".y473:")
 	}
 |	expr '|' expr
 	{ //443
@@ -461,6 +499,7 @@ expr:
 |	expr '*' expr
 	{ //451
 		$$ = &BinOp{$2.pos, token.MUL, $1, $3}
+		panic(".y486:")
 	}
 |	expr '/' expr
 	{ //455
@@ -481,6 +520,7 @@ expr:
 |	expr _LSH expr
 	{ //471
 		$$ = &BinOp{$2.pos, token.SHL, $1, $3}
+		panic(".y507:")
 	}
 |	expr _RSH expr
 	{ //475
@@ -508,6 +548,7 @@ uexpr:
 |	'-' uexpr
 	{ //501
 		$$ = &UnOp{$1.pos, token.SUB, $2}
+		panic(".y535:")
 	}
 |	'!' uexpr
 	{ //505
@@ -544,6 +585,7 @@ pexpr_no_paren:
 	_LITERAL
 	{ //537
 		$$ = &Literal{$1.pos, $1.tok, $1.lit}
+		panic(".y572:")
 	}
 |	name
 |	pexpr '.' sym
@@ -718,6 +760,7 @@ ntype:
 |	dotname
 	{
 		$$ = &NamedType{pos($1.Pos()), $1.(*QualifiedIdent), nil}
+		panic(".y748:")
 	}
 |	'(' ntype ')'
 	{ //731
@@ -806,6 +849,7 @@ dotname:
 	name
 	{ //815
 		$$ = &QualifiedIdent{pos($1.Pos()), nil, $1.(*Ident)}
+		panic(".y837:")
 	}
 |	name '.' sym
 	{ //819
@@ -817,6 +861,7 @@ othertype:
 	{ //825
 		switch {
 		case $2 != nil:
+		panic(".y849:")
 			$$ = &ArrayType{$1.pos, $2, $4}
 		default:
 			panic(".y824:")
@@ -860,6 +905,7 @@ structtype:
 	_STRUCT lbrace structdcl_list osemi '}'
 	{ //867
 		$$ = newStructType($1, $3)
+		panic(".y893:")
 	}
 |	_STRUCT lbrace '}'
 	{ //871
@@ -954,26 +1000,31 @@ constdcl_list:
 	constdcl1
 	{ //967
 		$$ = []Node{$1}
+		panic(".y988:")
 	}
 |	constdcl_list ';' constdcl1
 	{ //971
 		$$ = append($1, $3)
+		panic(".y993:")
 	}
 
 typedcl_list:
 	typedcl
 	{ //977
 		$$ = []Node{$1}
+		panic(".y1000:")
 	}
 |	typedcl_list ';' typedcl
 	{ //981
 		$$ = append($1, $3)
+		panic(".y1005:")
 	}
 
 structdcl_list:
 	structdcl
 	{ //987
 		$$ = []Node{$1}
+		panic(".y1012:")
 	}
 |	structdcl_list ';' structdcl
 	{ //991
@@ -994,6 +1045,7 @@ structdcl:
 	new_name_list ntype oliteral
 	{ //1007
 		$$ = newFields($1, false, $2, $3)
+		panic(".y1033:")
 	}
 |	embed oliteral
 	{ //1011
@@ -1183,10 +1235,12 @@ new_name_list:
 	new_name
 	{ //1195
 		$$ = []Node{$1}
+		panic(".y1223:")
 	}
 |	new_name_list ',' new_name
 	{ //1199
 		$$ = append($1, $3)
+		panic(".y1228:")
 	}
 
 // identifier list of the var or const declarations
@@ -1194,20 +1248,24 @@ dcl_name_list:
 	dcl_name
 	{ //1205
 		$$ = []Node{$1}
+		panic(".y1236:")
 	}
 |	dcl_name_list ',' dcl_name
 	{ //1209
 		$$ = append($1, $3)
+		panic(".y1241:")
 	}
 
 expr_list:
 	expr
 	{ //1215
 		$$ = []Node{$1}
+		panic(".y1248:")
 	}
 |	expr_list ',' expr
 	{ //1219
 		$$ = append($1, $3)
+		panic(".y1253:")
 	}
 
 expr_or_type_list:
@@ -1286,6 +1344,7 @@ osimple_stmt:
 oliteral:
 	{ //1306
 		$$ = (*Literal)(nil)
+		panic(".y1332:")
 	}
 |	_LITERAL
 	{ //1310
@@ -1294,19 +1353,11 @@ oliteral:
 
 %%
 
-func yy(y yyLexer) *parser { return y.(*parser) }
-
-func yyErr(y yyLexer, msg string) {
-	yy(y).Error(msg)
-}
-
-func yyErrPos(y yyLexer, n Node, msg string) {
-	yy(y).errPos(n.Pos(), msg)
-}
-
-func yyFset(y yyLexer) *token.FileSet {
-	return yy(y).fset
-}
+func yy(y yyLexer) *parser                   { return y.(*parser) }
+func yyErr(y yyLexer, msg string)            { yy(y).Error(msg) }
+func yyErrPos(y yyLexer, n Node, msg string) { yy(y).errPos(n.Pos(), msg) }
+func yyFset(y yyLexer) *token.FileSet        { return yy(y).fset }
+func yyPackageScope(y yyLexer) *Scope        { return yy(y).packageScope }
 
 func yyTLD(y yyLexer, n Node) {
 	p := yy(y)

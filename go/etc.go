@@ -26,7 +26,7 @@ import (
 //
 // If the source couldn't be read, the returned AST is nil and the error
 // indicates the specific failure.
-func ParseFile(fset *token.FileSet, filename string, src interface{} /*TODO Opts*/) (ast []Node, err error) {
+func ParseFile(fset *token.FileSet, filename string, src interface{}, packageScope *Scope /*TODO Opts*/) (ast []Node, err error) {
 	var bsrc []byte
 	switch x := src.(type) {
 	case nil:
@@ -47,7 +47,13 @@ func ParseFile(fset *token.FileSet, filename string, src interface{} /*TODO Opts
 	}
 
 	file := fset.AddFile(filename, -1, len(bsrc))
-	p := &parser{file: file, fset: fset}
+	p := &parser{
+		file:         file,
+		fileScope:    NewScope(packageScope),
+		fset:         fset,
+		packageScope: packageScope,
+	}
+	p.currentScope = p.fileScope
 	p.sc.Init(
 		file,
 		bsrc,
@@ -64,16 +70,19 @@ func ParseFile(fset *token.FileSet, filename string, src interface{} /*TODO Opts
 }
 
 type parser struct {
-	ast       []Node
-	constExpr []Node
-	constIota int
-	constType Node
-	errors    scanner.ErrorList
-	file      *token.File
-	fset      *token.FileSet
-	pos       token.Pos
-	sc        scanner.Scanner
-	stack     []int
+	ast          []Node
+	constExpr    []Node
+	constIota    int
+	constType    Node
+	currentScope *Scope
+	errors       scanner.ErrorList
+	file         *token.File
+	fileScope    *Scope
+	fset         *token.FileSet
+	packageScope *Scope
+	pos          token.Pos
+	sc           scanner.Scanner
+	stack        []int
 }
 
 func (p *parser) Error(e string) {
@@ -237,9 +246,17 @@ func idList(l []Node) (r []*Ident) {
 	return
 }
 
+const dlrPkgName = "$pkgName"
+
+// Special name(s):
+// - "$package" in package scope holds parsed package name *Ident.
 type Scope struct {
 	Parent *Scope
 	Names  map[string]Node
 }
 
 func NewScope(parent *Scope) *Scope { return &Scope{Parent: parent, Names: map[string]Node{}} }
+
+func (s *Scope) New() *Scope {
+	return NewScope(s)
+}
