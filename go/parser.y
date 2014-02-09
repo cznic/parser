@@ -131,7 +131,6 @@ import_stmt:
 |	sym _LITERAL
 	{ //97
 		$$ = newImport(yylex, $1, newLiteral($2))
-		panic(".y119:")
 	}
 |	'.' _LITERAL
 	{ //101

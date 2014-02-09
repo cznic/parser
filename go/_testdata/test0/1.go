@@ -4,7 +4,7 @@ package foo
 // --------------------------------------------------------------------- Import
 import ()
 import "foo4"
-//TODOimport foo5 "bar5"
+import foo5 "bar5"
 //TODOimport . "foo6"
 //TODOimport (
 //TODO	"foo8"
