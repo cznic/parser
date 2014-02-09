@@ -125,14 +125,28 @@ type Import struct {
 	Path *Literal
 }
 
-func newImport(y yyLexer, nm Node, pth *Literal) *Import {
+func newImport(y yyLexer, id Node, pth *Literal) (r *Import) {
+	ps := yy(y)
 	switch {
 	case pth.Kind != token.STRING:
-		yyErrPos(y, pth, "import statement not a string")
+		ps.errPos(pth.Pos(), "import statement not a string")
 	case pth.Lit == `""`:
-		yyErrPos(y, pth, "import path is empty")
+		ps.errPos(pth.Pos(), "import path is empty")
 	}
-	return &Import{Name: nm.(*Ident), Path: pth}
+	ident := id.(*Ident)
+	var nm string
+	switch {
+	case ident != nil:
+		nm = ident.Lit
+	default:
+		panic("TODO") // must be parsed from source
+	}
+	r = &Import{Name: ident, Path: pth}
+	if nm != "." {
+		ps.fileScope.declare(ps, nm, r)
+		ps.packageScope.declare(ps, nm, r)
+	}
+	return
 }
 
 // --------------------------------------------------------------------- Literal

@@ -140,6 +140,7 @@ const yyMaxDepth = 200
 func yy(y yyLexer) *parser                   { return y.(*parser) }
 func yyErr(y yyLexer, msg string)            { yy(y).Error(msg) }
 func yyErrPos(y yyLexer, n Node, msg string) { yy(y).errPos(n.Pos(), msg) }
+func yyFileScope(y yyLexer) *Scope           { return yy(y).fileScope }
 func yyFset(y yyLexer) *token.FileSet        { return yy(y).fset }
 func yyPackageScope(y yyLexer) *Scope        { return yy(y).packageScope }
 
@@ -968,9 +969,10 @@ yydefault:
 		{ //64
 			id := yyS[yypt-1].node.(*Ident)
 			yyVAL.node = &Package{yyS[yypt-2].token.pos, id}
-			ps := yyPackageScope(yylex)
+			ps := yy(yylex)
+			psc := ps.packageScope
 			nm := id.Lit
-			switch exNode := ps.Names[nm]; {
+			switch exNode := psc.Names[dlrPkgName]; {
 			case exNode != nil:
 				ex := exNode.(*Ident)
 				g, e := nm, ex.Lit
@@ -978,9 +980,9 @@ yydefault:
 					break
 				}
 
-				yyErrPos(yylex, yyS[yypt-1].node, fmt.Sprintf("found package %s and %s (%s)", nm, e, yyFset(yylex).Position(ex.Pos())))
+				yyErrPos(yylex, yyS[yypt-1].node, fmt.Sprintf("found package %s and %s (%s)", nm, e, ps.fset.Position(ex.Pos())))
 			default:
-				ps.Names[dlrPkgName] = id
+				psc.Names[dlrPkgName] = id
 			}
 		}
 	case 7:

@@ -2,7 +2,7 @@
 package foo
 
 // --------------------------------------------------------------------- Import
-//TODOimport ()
+import ()
 //TODOimport "foo4"
 //TODOimport foo5 "bar5"
 //TODOimport . "foo6"

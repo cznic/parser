@@ -9,6 +9,7 @@ package parser
 
 import (
 	"bytes"
+	"fmt"
 	"go/scanner"
 	"go/token"
 	"io"
@@ -259,4 +260,17 @@ func NewScope(parent *Scope) *Scope { return &Scope{Parent: parent, Names: map[s
 
 func (s *Scope) New() *Scope {
 	return NewScope(s)
+}
+
+func (s *Scope) declare(p *parser, nm string, n Node) {
+	if nm == "_" {
+		return
+	}
+
+	if ex := s.Names[nm]; ex != nil {
+		p.errPos(n.Pos(), fmt.Sprintf("%%s redeclared, previous declaration at %s", ex.Pos()))
+		return
+	}
+
+	s.Names[nm] = n
 }
