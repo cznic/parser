@@ -236,3 +236,10 @@ func idList(l []Node) (r []*Ident) {
 	}
 	return
 }
+
+type Scope struct {
+	Parent *Scope
+	Names  map[string]Node
+}
+
+func NewScope(parent *Scope) *Scope { return &Scope{Parent: parent, Names: map[string]Node{}} }
