@@ -1044,7 +1044,6 @@ yydefault:
 	case 23:
 		{ //150
 			yyVAL.list = newConstDecls(yylex, []Node{yyS[yypt-0].node})
-			panic(".y174:")
 		}
 	case 24:
 		{ //154
@@ -1099,7 +1098,6 @@ yydefault:
 	case 35:
 		{ //204
 			yyVAL.node = newConstSpec(yylex, yyS[yypt-2].list, nil, yyS[yypt-0].list)
-			panic(".y236:")
 		}
 	case 36:
 		yyVAL.node = yyS[yypt-0].node
@@ -1393,7 +1391,6 @@ yydefault:
 	case 107:
 		{ //537
 			yyVAL.node = &Literal{yyS[yypt-0].token.pos, yyS[yypt-0].token.tok, yyS[yypt-0].token.lit}
-			panic(".y572:")
 		}
 	case 108:
 		yyVAL.node = yyS[yypt-0].node
@@ -1953,7 +1950,6 @@ yydefault:
 	case 249:
 		{ //1205
 			yyVAL.list = []Node{yyS[yypt-0].node}
-			panic(".y1236:")
 		}
 	case 250:
 		{ //1209
@@ -1963,7 +1959,6 @@ yydefault:
 	case 251:
 		{ //1215
 			yyVAL.list = []Node{yyS[yypt-0].node}
-			panic(".y1248:")
 		}
 	case 252:
 		{ //1219

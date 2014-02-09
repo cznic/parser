@@ -268,7 +268,7 @@ func (s *Scope) declare(p *parser, nm string, n Node) {
 	}
 
 	if ex := s.Names[nm]; ex != nil {
-		p.errPos(n.Pos(), fmt.Sprintf("%%s redeclared, previous declaration at %s", p.fset.Position(ex.Pos())))
+		p.errPos(n.Pos(), fmt.Sprintf("%s redeclared, previous declaration at %s", nm, p.fset.Position(ex.Pos())))
 		return
 	}
 

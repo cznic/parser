@@ -57,9 +57,12 @@ func newConstDecls(y yyLexer, lst []Node) (r []Node) {
 			continue
 		}
 
+		ps := yy(y)
 		for j, nm := range v.Names[:mathutil.Min(len(v.Names), len(v.Expr))] {
-			d := &ConstDecl{pos(nm.Pos()), v.Iota, nm.(*Ident), v.Type, v.Expr[j]}
+			id := nm.(*Ident)
+			d := &ConstDecl{pos(nm.Pos()), v.Iota, id, v.Type, v.Expr[j]}
 			r = append(r, d)
+			ps.currentScope.declare(ps, id.Lit, d)
 		}
 	}
 	return

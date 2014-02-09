@@ -174,7 +174,6 @@ common_dcl:
 |	lconst constdcl
 	{ //150
 		$$ = newConstDecls(yylex, []Node{$2})
-		panic(".y174:")
 	}
 |	lconst '(' constdcl osemi ')'
 	{ //154
@@ -235,7 +234,6 @@ constdcl:
 |	dcl_name_list '=' expr_list
 	{ //204
 		$$ = newConstSpec(yylex, $1, nil, $3)
-		panic(".y236:")
 	}
 
 constdcl1:
@@ -571,7 +569,6 @@ pexpr_no_paren:
 	_LITERAL
 	{ //537
 		$$ = &Literal{$1.pos, $1.tok, $1.lit}
-		panic(".y572:")
 	}
 |	name
 |	pexpr '.' sym
@@ -1234,7 +1231,6 @@ dcl_name_list:
 	dcl_name
 	{ //1205
 		$$ = []Node{$1}
-		panic(".y1236:")
 	}
 |	dcl_name_list ',' dcl_name
 	{ //1209
@@ -1246,7 +1242,6 @@ expr_list:
 	expr
 	{ //1215
 		$$ = []Node{$1}
-		panic(".y1248:")
 	}
 |	expr_list ',' expr
 	{ //1219
