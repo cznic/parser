@@ -64,6 +64,14 @@ func String(fs *token.FileSet, v interface{}) (r string) {
 			case "Ident":
 				id := rv.Interface().(Ident)
 				f.Format("%s%T{%s %q}\n", pre, v, fs.Position(id.Pos()), id.Lit)
+			case "QualifiedIdent":
+				id := rv.Interface().(QualifiedIdent)
+				switch {
+				case id.Q == nil:
+					f.Format("%s%T{%s %q}\n", pre, v, fs.Position(id.Pos()), id.I.Lit)
+				default:
+					f.Format("%s%T{%s \"%s.%s\"}\n", pre, v, fs.Position(id.Pos()), id.I.Lit, id.Q.Lit)
+				}
 			default:
 				f.Format("%s%T{%i\n", pre, v)
 				for i := 0; i < rv.NumField(); i++ {
