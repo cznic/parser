@@ -108,18 +108,17 @@ imports:
 import:
 	_IMPORT import_stmt
 	{
-		imp := $2.(*Import)
-		imp.pos = $1.pos
-		yyTLD(yylex, imp)
+		yyTLD(yylex, $2)
 	}
 |	_IMPORT '(' import_stmt_list osemi ')'
 	{ //83
-		for _, v := range $3 {
-		panic(".y102:")
-			imp := v.(*Import)
-			imp.pos = $1.pos
-			yyTLD(yylex, imp)
-		}
+		yyTLDs(yylex, $3)
+		//for _, v := range $3 {
+		//panic(".y102:")
+		//	imp := v.(*Import)
+		//	imp.pos = $1.pos
+		//	yyTLD(yylex, imp)
+		//}
 	}
 |	_IMPORT '(' ')'
 
@@ -141,12 +140,10 @@ import_stmt_list:
 	import_stmt
 	{ //107
 		$$ = []Node{$1}
-		panic(".y131:")
 	}
 |	import_stmt_list ';' import_stmt
 	{ //111
 		$$ = append($1, $3)
-		panic(".y136:")
 	}
 
 xdcl:

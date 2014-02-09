@@ -127,24 +127,29 @@ type Import struct {
 
 func newImport(y yyLexer, id Node, pth *Literal) (r *Import) {
 	ps := yy(y)
+	ident := id.(*Ident)
+	r = &Import{Name: ident, Path: pth}
 	switch {
 	case pth.Kind != token.STRING:
 		ps.errPos(pth.Pos(), "import statement not a string")
+		return
 	case pth.Lit == `""`:
 		ps.errPos(pth.Pos(), "import path is empty")
+		return
 	}
-	ident := id.(*Ident)
-	r = &Import{Name: ident, Path: pth}
+
 	var nm string
 	switch {
 	case ident != nil:
+		r.pos = ident.pos
 		nm = ident.Lit
 	default:
+		r.pos = pth.pos
 		// nm must be parsed from source.
 		//
-		// Compiler writers: before other static checks, check Import
-		// nodes with Name == nil, resolve nm and declare it in pkg and
-		// file scopes as seen below.
+		// Compiler: before other static checks, check Import nodes
+		// with Name == nil, resolve nm and declare it in pkg and file
+		// scopes as seen below.
 	}
 	if nm != "" && nm != "." {
 		ps.fileScope.declare(ps, nm, r)

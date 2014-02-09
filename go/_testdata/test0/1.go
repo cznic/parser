@@ -6,15 +6,15 @@ import ()
 import "foo4"
 import foo5 "bar5"
 import . "foo6"
-//TODOimport (
-//TODO	"foo8"
-//TODO)
-//TODOimport (
-//TODO	"bar12"
-//TODO	"foo11"
-//TODO)
-//TODO
-//TODO// ------------------------------------------------------------------ ConstDecl
+import (
+	"foo8"
+)
+import (
+	foo12 "bar12"
+	_ "foo11"
+)
+
+// ------------------------------------------------------------------ ConstDecl
 //TODOconst ()
 //TODOconst c16 = 3e8
 //TODOconst c17 int = 3e8

@@ -987,18 +987,17 @@ yydefault:
 		}
 	case 7:
 		{
-			imp := yyS[yypt-0].node.(*Import)
-			imp.pos = yyS[yypt-1].token.pos
-			yyTLD(yylex, imp)
+			yyTLD(yylex, yyS[yypt-0].node)
 		}
 	case 8:
 		{ //83
-			for _, v := range yyS[yypt-2].list {
-				panic(".y102:")
-				imp := v.(*Import)
-				imp.pos = yyS[yypt-4].token.pos
-				yyTLD(yylex, imp)
-			}
+			yyTLDs(yylex, yyS[yypt-2].list)
+			//for _, v := range $3 {
+			//panic(".y102:")
+			//	imp := v.(*Import)
+			//	imp.pos = $1.pos
+			//	yyTLD(yylex, imp)
+			//}
 		}
 	case 10:
 		{ //93
@@ -1015,12 +1014,10 @@ yydefault:
 	case 13:
 		{ //107
 			yyVAL.list = []Node{yyS[yypt-0].node}
-			panic(".y131:")
 		}
 	case 14:
 		{ //111
 			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
-			panic(".y136:")
 		}
 	case 16:
 		{ //120
