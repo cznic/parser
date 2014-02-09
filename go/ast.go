@@ -165,6 +165,13 @@ type Package struct {
 	Name *Ident
 }
 
+// -------------------------------------------------------------------- PtrType
+
+type PtrType struct {
+	pos
+	Type Node
+}
+
 // ------------------------------------------------------------- QualifiedIdent
 
 type QualifiedIdent struct {

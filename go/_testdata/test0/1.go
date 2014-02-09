@@ -75,10 +75,10 @@ type (
 	Point75 struct{ x, y float64 }
 	Polar76 Point
 )
-//type TreeNode78 struct {
-//	left, right *TreeNode
-//	value *Comparable
-//}
+type TreeNode78 struct {
+	left, right *TreeNode
+	value *Comparable
+}
 //type Block82 interface {
 //	BlockSize() int
 //	Encrypt(src, dst []byte)

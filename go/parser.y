@@ -33,7 +33,7 @@ import (
 	import_stmt
 	name new_name ntype
 	oexpr oliteral othertype
-	package pexpr pexpr_no_paren
+	package pexpr pexpr_no_paren ptrtype
 	structdcl structtype sym
 	typedcl typedclname
 	uexpr
@@ -702,9 +702,6 @@ ntype:
 	}
 |	othertype
 |	ptrtype
-	{ //723
-		panic(".y:724")
-	}
 |	dotname
 	{
 		$$ = &NamedType{pos($1.Pos()), $1.(*QualifiedIdent), nil}
@@ -837,7 +834,7 @@ othertype:
 ptrtype:
 	'*' ntype
 	{ //855
-		panic(".y:856")
+		$$ = &PtrType{$1.pos, $2}
 	}
 
 recvchantype:
@@ -967,7 +964,7 @@ structdcl_list:
 	}
 |	structdcl_list ';' structdcl
 	{ //991
-		panic(".y:992")
+		$$ = append($1, $3)
 	}
 
 interfacedcl_list:
