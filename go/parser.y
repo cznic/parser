@@ -29,10 +29,10 @@ import "go/token"
 	dcl_name dotname
 	expr
 	import_stmt
-	name ntype
-	oexpr othertype
+	name new_name ntype
+	oexpr oliteral othertype
 	package pexpr pexpr_no_paren
-	sym
+	structdcl structtype sym
 	typedcl typedclname
 	uexpr
 
@@ -41,6 +41,9 @@ import "go/token"
 	dcl_name_list
 	expr_list
 	import_stmt_list
+	new_name_list
+	structdcl_list
+	typedcl_list
 
 %left	_COMM
 
@@ -173,13 +176,11 @@ common_dcl:
 	}
 |	_TYPE typedcl
 	{ //166
-		t := $2.(*TypeDecl)
-		t.pos = $1.pos
-		$$ = []Node{t}
+		$$ = []Node{$2}
 	}
 |	_TYPE '(' typedcl_list osemi ')'
 	{ //170
-		panic(".y:171")
+		$$ = $3
 	}
 |	_TYPE '(' ')'
 	{ //174
@@ -241,7 +242,7 @@ typedclname:
 typedcl:
 	typedclname ntype
 	{ //230
-		$$ = &TypeDecl{Name: $1.(*Ident), Type: $2}
+		$$ = &TypeDecl{pos($1.Pos()), $1.(*Ident), $2}
 	}
 
 simple_stmt:
@@ -654,18 +655,12 @@ lbrace:
 		panic(".y:653")
 	}
 |	'{'
-	{ //656
-		panic(".y:657")
-	}
 
 // - field name of a struct type definition
 // - label name declaration/reference
 // - method name of an interface type defintion
 new_name:
 	sym
-	{ //662
-		panic(".y:663")
-	}
 
 // identifier in the identifier list of a var or const declaration
 //TODO declare in current scope
@@ -841,9 +836,6 @@ othertype:
 		panic(".y:842")
 	}
 |	structtype
-	{ //845
-		panic(".y:846")
-	}
 |	interfacetype
 	{ //849
 		panic(".y:850")
@@ -864,7 +856,7 @@ recvchantype:
 structtype:
 	_STRUCT lbrace structdcl_list osemi '}'
 	{ //867
-		panic(".y:868")
+		$$ = newStructType($1, $3)
 	}
 |	_STRUCT lbrace '}'
 	{ //871
@@ -968,7 +960,7 @@ constdcl_list:
 typedcl_list:
 	typedcl
 	{ //977
-		panic(".y:978")
+		$$ = []Node{$1}
 	}
 |	typedcl_list ';' typedcl
 	{ //981
@@ -978,7 +970,7 @@ typedcl_list:
 structdcl_list:
 	structdcl
 	{ //987
-		panic(".y:988")
+		$$ = []Node{$1}
 	}
 |	structdcl_list ';' structdcl
 	{ //991
@@ -998,7 +990,7 @@ interfacedcl_list:
 structdcl:
 	new_name_list ntype oliteral
 	{ //1007
-		panic(".y:1008")
+		$$ = newFields($1, false, $2, $3)
 	}
 |	embed oliteral
 	{ //1011
@@ -1187,11 +1179,11 @@ stmt_list:
 new_name_list:
 	new_name
 	{ //1195
-		panic(".y:1196")
+		$$ = []Node{$1}
 	}
 |	new_name_list ',' new_name
 	{ //1199
-		panic(".y:1200")
+		$$ = append($1, $3)
 	}
 
 // identifier list of the var or const declarations
@@ -1253,9 +1245,6 @@ braced_keyval_list:
 	}
 
 osemi:
-	{ //1261
-		panic(".y:1262")
-	}
 |	';'
 
 ocomma:
@@ -1293,7 +1282,7 @@ osimple_stmt:
 
 oliteral:
 	{ //1306
-		panic(".y:1307")
+		$$ = (*Literal)(nil)
 	}
 |	_LITERAL
 	{ //1310

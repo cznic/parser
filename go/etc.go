@@ -73,6 +73,7 @@ type parser struct {
 	fset      *token.FileSet
 	pos       token.Pos
 	sc        scanner.Scanner
+	stack     []int
 }
 
 func (p *parser) Error(e string) {
@@ -195,10 +196,43 @@ type tkn struct {
 }
 
 func (p *parser) Lex(lval *yySymType) (r int) {
-	var tok token.Token
-	for r = -1; r < 0; r = xlat[tok] {
-		p.pos, tok, lval.token.lit = p.sc.Scan()
+	for {
+		ps, tok, lit := p.sc.Scan()
+		if r = xlat[tok]; r < 0 {
+			continue
+		}
+
+		switch r {
+		case '(':
+			n := len(p.stack)
+			if n == 0 {
+				break
+			}
+
+			p.stack[n-1]++
+		case ')':
+			n := len(p.stack)
+			if n == 0 {
+				break
+			}
+
+			p.stack[n-1]--
+		case '{':
+			if n := len(p.stack); n != 0 && p.stack[n-1] == 0 {
+				r = _BODY
+				p.stack = p.stack[:n-1]
+			}
+		}
+
+		p.pos, lval.token = ps, tkn{lit, pos(ps), tok, ps}
+		return
 	}
-	lval.token.tpos, lval.token.pos, lval.token.tok = p.pos, pos(p.pos), tok
+}
+
+func idList(l []Node) (r []*Ident) {
+	r = make([]*Ident, len(l))
+	for i, v := range l {
+		r[i] = v.(*Ident)
+	}
 	return
 }

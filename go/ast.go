@@ -87,6 +87,29 @@ func newConstSpec(y yyLexer, names []Node, typ Node, expr []Node) (c *constSpec)
 	return
 }
 
+// ---------------------------------------------------------------------- Field
+
+type Field struct {
+	pos
+	Name     *Ident
+	Embedded bool
+	Type     Node
+	Tag      *Literal
+}
+
+// --------------------------------------------------------------------- fields
+type fields struct {
+	pos
+	Names    []*Ident
+	Embedded bool
+	Type     Node
+	Tag      *Literal
+}
+
+func newFields(l []Node, emb bool, typ, tag Node) *fields {
+	return &fields{Names: idList(l), Embedded: emb, Type: typ, Tag: tag.(*Literal)}
+}
+
 // ---------------------------------------------------------------------- Ident
 
 type Ident struct {
@@ -136,6 +159,30 @@ type Package struct {
 type QualifiedIdent struct {
 	pos
 	Q, I *Ident
+}
+
+// ----------------------------------------------------------------- StructType
+
+type StructType struct {
+	pos
+	Fields []*Field
+}
+
+func newStructType(n tkn, l []Node) (r *StructType) {
+	r = &StructType{pos: n.pos}
+	for _, v := range l {
+		fields := v.(*fields)
+		for _, v := range fields.Names {
+			r.Fields = append(r.Fields, &Field{
+				pos:      v.pos,
+				Name:     v,
+				Embedded: fields.Embedded,
+				Type:     fields.Type,
+				Tag:      fields.Tag,
+			})
+		}
+	}
+	return
 }
 
 // ------------------------------------------------------------------- TypeDecl

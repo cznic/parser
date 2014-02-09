@@ -31,6 +31,8 @@ func String(fs *token.FileSet, v interface{}) (r string) {
 	s = func(pre string, rv reflect.Value) {
 		v := rv.Interface()
 		switch rv.Kind() {
+		case reflect.Bool:
+			f.Format("%s%v\n", pre, v)
 		case reflect.Int:
 			f.Format("%s%v\n", pre, v)
 		case reflect.Interface:
@@ -64,6 +66,9 @@ func String(fs *token.FileSet, v interface{}) (r string) {
 			case "Ident":
 				id := rv.Interface().(Ident)
 				f.Format("%s%T{%s %q}\n", pre, v, fs.Position(id.Pos()), id.Lit)
+			case "Literal":
+				id := rv.Interface().(Literal)
+				f.Format("%s%T{%s %s %q}\n", pre, v, fs.Position(id.Pos()), id.Kind, id.Lit)
 			case "QualifiedIdent":
 				id := rv.Interface().(QualifiedIdent)
 				switch {
