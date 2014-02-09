@@ -716,6 +716,9 @@ ntype:
 		panic(".y:724")
 	}
 |	dotname
+	{
+		$$ = &NamedType{pos($1.Pos()), $1.(*QualifiedIdent), nil}
+	}
 |	'(' ntype ')'
 	{ //731
 		panic(".y:732")
@@ -964,7 +967,7 @@ typedcl_list:
 	}
 |	typedcl_list ';' typedcl
 	{ //981
-		panic(".y:982")
+		$$ = append($1, $3)
 	}
 
 structdcl_list:

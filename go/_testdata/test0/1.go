@@ -71,10 +71,10 @@ type IntArray70 [16]int
 type (
 	Point72 struct{ x, y float64 }
 )
-//type (
-//	Point75 struct{ x, y float64 }
-//	Polar76 Point
-//)
+type (
+	Point75 struct{ x, y float64 }
+	Polar76 Point
+)
 //type TreeNode78 struct {
 //	left, right *TreeNode
 //	value *Comparable

@@ -147,6 +147,13 @@ func newLiteral(lit tkn) *Literal {
 	return &Literal{lit.pos, lit.tok, lit.lit}
 }
 
+// ------------------------------------------------------------------ NamedType
+type NamedType struct {
+	pos
+	Name *QualifiedIdent
+	Type Node // resolved type
+}
+
 // -------------------------------------------------------------------- Package
 
 type Package struct {
