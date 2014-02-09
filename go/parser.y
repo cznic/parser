@@ -135,7 +135,6 @@ import_stmt:
 |	'.' _LITERAL
 	{ //101
 		$$ = newImport(yylex, &Ident{$1.pos, "."}, newLiteral($2))
-		panic(".y124:")
 	}
 
 import_stmt_list:

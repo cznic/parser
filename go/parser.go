@@ -1011,7 +1011,6 @@ yydefault:
 	case 12:
 		{ //101
 			yyVAL.node = newImport(yylex, &Ident{yyS[yypt-1].token.pos, "."}, newLiteral(yyS[yypt-0].token))
-			panic(".y124:")
 		}
 	case 13:
 		{ //107

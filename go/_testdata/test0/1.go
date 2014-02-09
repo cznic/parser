@@ -5,7 +5,7 @@ package foo
 import ()
 import "foo4"
 import foo5 "bar5"
-//TODOimport . "foo6"
+import . "foo6"
 //TODOimport (
 //TODO	"foo8"
 //TODO)
