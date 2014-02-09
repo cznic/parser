@@ -79,11 +79,11 @@ type TreeNode78 struct {
 	left, right *TreeNode
 	value *Comparable
 }
-//type Block82 interface {
-//	BlockSize() int
+type Block82 interface {
+	BlockSize() int
 //	Encrypt(src, dst []byte)
 //	Decrypt(src, dst []byte)
-//}
+}
 //type Mutex87 struct         { /* Mutex fields */ }
 //type NewMutex88 Mutex
 //type PtrMutex89 *Mutex

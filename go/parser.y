@@ -44,6 +44,7 @@ import (
 	expr_list
 	import_stmt_list
 	new_name_list
+	oarg_type_list_ocomma
 	structdcl_list
 	typedcl_list
 
@@ -785,9 +786,6 @@ fnret_type:
 		panic(".y:806")
 	}
 |	dotname
-	{ //809
-		panic(".y:810")
-	}
 
 dotname:
 	name
@@ -1069,7 +1067,7 @@ arg_type_list:
 
 oarg_type_list_ocomma:
 	{ //1096
-		panic(".y:1097")
+		$$ = nil
 	}
 |	arg_type_list ocomma
 	{ //1100
