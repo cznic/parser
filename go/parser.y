@@ -113,12 +113,6 @@ import:
 |	_IMPORT '(' import_stmt_list osemi ')'
 	{ //83
 		yyTLDs(yylex, $3)
-		//for _, v := range $3 {
-		//panic(".y102:")
-		//	imp := v.(*Import)
-		//	imp.pos = $1.pos
-		//	yyTLD(yylex, imp)
-		//}
 	}
 |	_IMPORT '(' ')'
 
