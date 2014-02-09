@@ -43,7 +43,7 @@ func yyDbg(y yyLexer, v interface{}) {
 
 func Test0(t *testing.T) {
 	fs := token.NewFileSet()
-	ast, err := ParseFile(fs, filepath.FromSlash("_testdata/test0/1.go"), nil, NewScope(nil).New())
+	ast, err := ParseFile(fs, filepath.FromSlash("_testdata/test0/1.go"), nil)
 	if err != nil {
 		switch x := err.(type) {
 		case scanner.ErrorList:

@@ -57,12 +57,10 @@ func newConstDecls(y yyLexer, lst []Node) (r []Node) {
 			continue
 		}
 
-		ps := yy(y)
 		for j, nm := range v.Names[:mathutil.Min(len(v.Names), len(v.Expr))] {
 			id := nm.(*Ident)
 			d := &ConstDecl{pos(nm.Pos()), v.Iota, id, v.Type, v.Expr[j]}
 			r = append(r, d)
-			ps.currentScope.declare(ps, id.Lit, d)
 		}
 	}
 	return
@@ -135,28 +133,8 @@ func newImport(y yyLexer, id Node, pth *Literal) (r *Import) {
 	switch {
 	case pth.Kind != token.STRING:
 		ps.errPos(pth.Pos(), "import statement not a string")
-		return
 	case pth.Lit == `""`:
 		ps.errPos(pth.Pos(), "import path is empty")
-		return
-	}
-
-	var nm string
-	switch {
-	case ident != nil:
-		r.pos = ident.pos
-		nm = ident.Lit
-	default:
-		r.pos = pth.pos
-		// nm must be parsed from source.
-		//
-		//TODO(compiler) before other static checks, check Import nodes
-		// with Name == nil, resolve nm and declare it in pkg and file
-		// scopes as seen below.
-	}
-	if nm != "" && nm != "." {
-		ps.fileScope.declare(ps, nm, r)
-		ps.packageScope.declare(ps, nm, r)
 	}
 	return
 }

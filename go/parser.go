@@ -7,7 +7,6 @@ package parser
 import __yyfmt__ "fmt"
 
 import (
-	"fmt"
 	"go/token"
 )
 
@@ -140,9 +139,7 @@ const yyMaxDepth = 200
 func yy(y yyLexer) *parser                   { return y.(*parser) }
 func yyErr(y yyLexer, msg string)            { yy(y).Error(msg) }
 func yyErrPos(y yyLexer, n Node, msg string) { yy(y).errPos(n.Pos(), msg) }
-func yyFileScope(y yyLexer) *Scope           { return yy(y).fileScope }
 func yyFset(y yyLexer) *token.FileSet        { return yy(y).fset }
-func yyPackageScope(y yyLexer) *Scope        { return yy(y).packageScope }
 
 func yyTLD(y yyLexer, n Node) {
 	p := yy(y)
@@ -967,23 +964,7 @@ yydefault:
 		}
 	case 4:
 		{ //64
-			id := yyS[yypt-1].node.(*Ident)
-			yyVAL.node = &Package{yyS[yypt-2].token.pos, id}
-			ps := yy(yylex)
-			psc := ps.packageScope
-			nm := id.Lit
-			switch exNode := psc.Names[dlrPkgName]; {
-			case exNode != nil:
-				ex := exNode.(*Ident)
-				g, e := nm, ex.Lit
-				if g == e {
-					break
-				}
-
-				yyErrPos(yylex, yyS[yypt-1].node, fmt.Sprintf("found package %s and %s (%s)", nm, e, ps.fset.Position(ex.Pos())))
-			default:
-				psc.Names[dlrPkgName] = id
-			}
+			yyVAL.node = &Package{yyS[yypt-2].token.pos, yyS[yypt-1].node.(*Ident)}
 		}
 	case 7:
 		{
@@ -1060,12 +1041,10 @@ yydefault:
 	case 27:
 		{ //166
 			yyVAL.list = []Node{yyS[yypt-0].node}
-			panic(".y194:")
 		}
 	case 28:
 		{ //170
 			yyVAL.list = yyS[yypt-2].list
-			panic(".y199:")
 		}
 	case 29:
 		{ //174
@@ -1108,17 +1087,10 @@ yydefault:
 			yyVAL.node = newConstSpec(yylex, yyS[yypt-0].list, nil, nil)
 		}
 	case 39:
-		{
-			// different from dclname because the name
-			// becomes visible right here, not at the end
-			// of the declaration.
-			yyVAL.node = yyS[yypt-0].node //TODO typedclname: more
-			panic(".y259:")
-		}
+		yyVAL.node = yyS[yypt-0].node
 	case 40:
 		{ //230
 			yyVAL.node = &TypeDecl{pos(yyS[yypt-1].node.Pos()), yyS[yypt-1].node.(*Ident), yyS[yypt-0].node}
-			panic(".y266:")
 		}
 	case 41:
 		{ //236
@@ -1612,7 +1584,6 @@ yydefault:
 		{ //825
 			switch {
 			case yyS[yypt-2].node != nil:
-				panic(".y849:")
 				yyVAL.node = &ArrayType{yyS[yypt-3].token.pos, yyS[yypt-2].node, yyS[yypt-0].node}
 			default:
 				panic(".y824:")
@@ -1651,7 +1622,6 @@ yydefault:
 	case 177:
 		{ //867
 			yyVAL.node = newStructType(yyS[yypt-4].token, yyS[yypt-2].list)
-			panic(".y893:")
 		}
 	case 178:
 		{ //871
@@ -1732,17 +1702,14 @@ yydefault:
 	case 199:
 		{ //977
 			yyVAL.list = []Node{yyS[yypt-0].node}
-			panic(".y1000:")
 		}
 	case 200:
 		{ //981
 			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
-			panic(".y1005:")
 		}
 	case 201:
 		{ //987
 			yyVAL.list = []Node{yyS[yypt-0].node}
-			panic(".y1012:")
 		}
 	case 202:
 		{ //991
@@ -1759,7 +1726,6 @@ yydefault:
 	case 205:
 		{ //1007
 			yyVAL.node = newFields(yyS[yypt-2].list, false, yyS[yypt-1].node, yyS[yypt-0].node)
-			panic(".y1033:")
 		}
 	case 206:
 		{ //1011
@@ -1928,12 +1894,10 @@ yydefault:
 	case 247:
 		{ //1195
 			yyVAL.list = []Node{yyS[yypt-0].node}
-			panic(".y1223:")
 		}
 	case 248:
 		{ //1199
 			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
-			panic(".y1228:")
 		}
 	case 249:
 		{ //1205
@@ -2016,7 +1980,6 @@ yydefault:
 	case 271:
 		{ //1306
 			yyVAL.node = (*Literal)(nil)
-			panic(".y1332:")
 		}
 	case 272:
 		{ //1310

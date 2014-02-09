@@ -7,7 +7,6 @@
 package parser
 
 import (
-	"fmt"
 	"go/token"
 )
 
@@ -83,23 +82,7 @@ package:
 	}
 |	_PACKAGE sym ';'
 	{ //64
-		id := $2.(*Ident)
-		$$ = &Package{$1.pos, id}
-		ps := yy(yylex)
-		psc := ps.packageScope
-		nm := id.Lit
-		switch exNode := psc.Names[dlrPkgName]; {
-		case exNode != nil:
-			ex := exNode.(*Ident)
-			g, e := nm, ex.Lit
-			if g == e {
-				break
-			}
-
-			yyErrPos(yylex, $2, fmt.Sprintf("found package %s and %s (%s)", nm, e, ps.fset.Position(ex.Pos())))
-		default:
-			psc.Names[dlrPkgName] = id
-		}
+		$$ = &Package{$1.pos, $2.(*Ident)}
 	}
 
 imports:
@@ -190,12 +173,10 @@ common_dcl:
 |	_TYPE typedcl
 	{ //166
 		$$ = []Node{$2}
-		panic(".y194:")
 	}
 |	_TYPE '(' typedcl_list osemi ')'
 	{ //170
 		$$ = $3
-		panic(".y199:")
 	}
 |	_TYPE '(' ')'
 	{ //174
@@ -247,19 +228,11 @@ constdcl1:
 
 typedclname:
 	sym
-	{
-		// different from dclname because the name
-		// becomes visible right here, not at the end
-		// of the declaration.
-		$$ = $1 //TODO typedclname: more
-		panic(".y259:")
-	}
 
 typedcl:
 	typedclname ntype
 	{ //230
 		$$ = &TypeDecl{pos($1.Pos()), $1.(*Ident), $2}
-		panic(".y266:")
 	}
 
 simple_stmt:
@@ -834,7 +807,6 @@ othertype:
 	{ //825
 		switch {
 		case $2 != nil:
-		panic(".y849:")
 			$$ = &ArrayType{$1.pos, $2, $4}
 		default:
 			panic(".y824:")
@@ -878,7 +850,6 @@ structtype:
 	_STRUCT lbrace structdcl_list osemi '}'
 	{ //867
 		$$ = newStructType($1, $3)
-		panic(".y893:")
 	}
 |	_STRUCT lbrace '}'
 	{ //871
@@ -983,19 +954,16 @@ typedcl_list:
 	typedcl
 	{ //977
 		$$ = []Node{$1}
-		panic(".y1000:")
 	}
 |	typedcl_list ';' typedcl
 	{ //981
 		$$ = append($1, $3)
-		panic(".y1005:")
 	}
 
 structdcl_list:
 	structdcl
 	{ //987
 		$$ = []Node{$1}
-		panic(".y1012:")
 	}
 |	structdcl_list ';' structdcl
 	{ //991
@@ -1016,7 +984,6 @@ structdcl:
 	new_name_list ntype oliteral
 	{ //1007
 		$$ = newFields($1, false, $2, $3)
-		panic(".y1033:")
 	}
 |	embed oliteral
 	{ //1011
@@ -1206,12 +1173,10 @@ new_name_list:
 	new_name
 	{ //1195
 		$$ = []Node{$1}
-		panic(".y1223:")
 	}
 |	new_name_list ',' new_name
 	{ //1199
 		$$ = append($1, $3)
-		panic(".y1228:")
 	}
 
 // identifier list of the var or const declarations
@@ -1311,7 +1276,6 @@ osimple_stmt:
 oliteral:
 	{ //1306
 		$$ = (*Literal)(nil)
-		panic(".y1332:")
 	}
 |	_LITERAL
 	{ //1310
@@ -1323,9 +1287,7 @@ oliteral:
 func yy(y yyLexer) *parser                   { return y.(*parser) }
 func yyErr(y yyLexer, msg string)            { yy(y).Error(msg) }
 func yyErrPos(y yyLexer, n Node, msg string) { yy(y).errPos(n.Pos(), msg) }
-func yyFileScope(y yyLexer) *Scope           { return yy(y).fileScope }
 func yyFset(y yyLexer) *token.FileSet        { return yy(y).fset }
-func yyPackageScope(y yyLexer) *Scope        { return yy(y).packageScope }
 
 func yyTLD(y yyLexer, n Node) {
 	p := yy(y)

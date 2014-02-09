@@ -67,35 +67,35 @@ const (
 )
 
 // ------------------------------------------------------------------- TypeDecl
-//TODOtype IntArray70 [16]int
-//TODOtype (
-//TODO	Point72 struct{ x, y float64 }
-//TODO)
-//TODOtype (
-//TODO	Point75 struct{ x, y float64 }
-//TODO	Polar76 Point
-//TODO)
-//TODO//type TreeNode78 struct {
-//TODO//	left, right *TreeNode
-//TODO//	value *Comparable
-//TODO//}
-//TODO//type Block82 interface {
-//TODO//	BlockSize() int
-//TODO//	Encrypt(src, dst []byte)
-//TODO//	Decrypt(src, dst []byte)
-//TODO//}
-//TODO//type Mutex87 struct         { /* Mutex fields */ }
-//TODO//type NewMutex88 Mutex
-//TODO//type PtrMutex89 *Mutex
-//TODO//type PrintableMutex90 struct {
-//TODO//	Mutex
-//TODO//}
-//TODO//type MyBlock93 Block
-//TODO//type TimeZone94 int
-//TODO//
-//TODO//const (
-//TODO//	EST TimeZone = -(5 + iota)
-//TODO//	CST
-//TODO//	MST
-//TODO//	PST
-//TODO//)
+type IntArray70 [16]int
+type (
+	Point72 struct{ x, y float64 }
+)
+type (
+	Point75 struct{ x, y float64 }
+	Polar76 Point
+)
+//type TreeNode78 struct {
+//	left, right *TreeNode
+//	value *Comparable
+//}
+//type Block82 interface {
+//	BlockSize() int
+//	Encrypt(src, dst []byte)
+//	Decrypt(src, dst []byte)
+//}
+//type Mutex87 struct         { /* Mutex fields */ }
+//type NewMutex88 Mutex
+//type PtrMutex89 *Mutex
+//type PrintableMutex90 struct {
+//	Mutex
+//}
+//type MyBlock93 Block
+//type TimeZone94 int
+//
+//const (
+//	EST TimeZone = -(5 + iota)
+//	CST
+//	MST
+//	PST
+//)
