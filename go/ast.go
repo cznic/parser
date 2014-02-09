@@ -134,15 +134,19 @@ func newImport(y yyLexer, id Node, pth *Literal) (r *Import) {
 		ps.errPos(pth.Pos(), "import path is empty")
 	}
 	ident := id.(*Ident)
+	r = &Import{Name: ident, Path: pth}
 	var nm string
 	switch {
 	case ident != nil:
 		nm = ident.Lit
 	default:
-		panic("TODO") // must be parsed from source
+		// nm must be parsed from source.
+		//
+		// Compiler writers: before other static checks, check Import
+		// nodes with Name == nil, resolve nm and declare it in pkg and
+		// file scopes as seen below.
 	}
-	r = &Import{Name: ident, Path: pth}
-	if nm != "." {
+	if nm != "" && nm != "." {
 		ps.fileScope.declare(ps, nm, r)
 		ps.packageScope.declare(ps, nm, r)
 	}

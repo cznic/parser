@@ -109,7 +109,6 @@ import:
 	_IMPORT import_stmt
 	{
 		imp := $2.(*Import)
-		panic(".y95:")
 		imp.pos = $1.pos
 		yyTLD(yylex, imp)
 	}
@@ -128,7 +127,6 @@ import_stmt:
 	_LITERAL
 	{ //93
 		$$ = newImport(yylex, (*Ident)(nil), newLiteral($1))
-		panic(".y114:")
 	}
 |	sym _LITERAL
 	{ //97

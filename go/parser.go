@@ -988,7 +988,6 @@ yydefault:
 	case 7:
 		{
 			imp := yyS[yypt-0].node.(*Import)
-			panic(".y95:")
 			imp.pos = yyS[yypt-1].token.pos
 			yyTLD(yylex, imp)
 		}
@@ -1004,7 +1003,6 @@ yydefault:
 	case 10:
 		{ //93
 			yyVAL.node = newImport(yylex, (*Ident)(nil), newLiteral(yyS[yypt-0].token))
-			panic(".y114:")
 		}
 	case 11:
 		{ //97
