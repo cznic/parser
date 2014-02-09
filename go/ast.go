@@ -147,7 +147,7 @@ func newImport(y yyLexer, id Node, pth *Literal) (r *Import) {
 		r.pos = pth.pos
 		// nm must be parsed from source.
 		//
-		// Compiler: before other static checks, check Import nodes
+		//TODO(compiler) before other static checks, check Import nodes
 		// with Name == nil, resolve nm and declare it in pkg and file
 		// scopes as seen below.
 	}

@@ -144,7 +144,6 @@ xdcl:
 |	common_dcl
 	{ //120
 		yyTLDs(yylex, $1)
-		panic(".y143:")
 	}
 |	xfndcl
 	{ //124
@@ -190,7 +189,6 @@ common_dcl:
 |	lconst '(' ')'
 	{ //162
 		$$ = nil
-		panic(".y189:")
 	}
 |	_TYPE typedcl
 	{ //166

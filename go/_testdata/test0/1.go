@@ -15,7 +15,7 @@ import (
 )
 
 // ------------------------------------------------------------------ ConstDecl
-//TODOconst ()
+const ()
 //TODOconst c16 = 3e8
 //TODOconst c17 int = 3e8
 //TODOconst Pi18 float64 = 3.14159265358979323846

@@ -992,12 +992,6 @@ yydefault:
 	case 8:
 		{ //83
 			yyTLDs(yylex, yyS[yypt-2].list)
-			//for _, v := range $3 {
-			//panic(".y102:")
-			//	imp := v.(*Import)
-			//	imp.pos = $1.pos
-			//	yyTLD(yylex, imp)
-			//}
 		}
 	case 10:
 		{ //93
@@ -1022,7 +1016,6 @@ yydefault:
 	case 16:
 		{ //120
 			yyTLDs(yylex, yyS[yypt-0].list)
-			panic(".y143:")
 		}
 	case 17:
 		{ //124
@@ -1066,7 +1059,6 @@ yydefault:
 	case 26:
 		{ //162
 			yyVAL.list = nil
-			panic(".y189:")
 		}
 	case 27:
 		{ //166
