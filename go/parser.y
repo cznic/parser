@@ -22,7 +22,7 @@ import "go/token"
 	_GOTO _GT _IF _IGNORE _IMPORT _INC _INTERFACE _LE _LITERAL _LSH _LT
 	_MAP _NAME _NE _OROR _PACKAGE _RANGE _RETURN _RSH _SELECT _STRUCT
 	_SWITCH _TYPE _VAR
-	'.' '-' '*'
+	'.' '-' '*' '['
 
 %type	<node>
 	constdcl constdcl1
@@ -30,8 +30,10 @@ import "go/token"
 	expr
 	import_stmt
 	name ntype
+	oexpr othertype
 	package pexpr pexpr_no_paren
 	sym
+	typedcl typedclname
 	uexpr
 
 %type	<list>
@@ -171,7 +173,9 @@ common_dcl:
 	}
 |	_TYPE typedcl
 	{ //166
-		panic(".y:167")
+		t := $2.(*TypeDecl)
+		t.pos = $1.pos
+		$$ = []Node{t}
 	}
 |	_TYPE '(' typedcl_list osemi ')'
 	{ //170
@@ -227,14 +231,17 @@ constdcl1:
 
 typedclname:
 	sym
-	{ //224
-		panic(".y:225")
+	{
+		// different from dclname because the name
+		// becomes visible right here, not at the end
+		// of the declaration.
+		$$ = $1 //TODO typedclname: more
 	}
 
 typedcl:
 	typedclname ntype
 	{ //230
-		panic(".y:231")
+		$$ = &TypeDecl{Name: $1.(*Ident), Type: $2}
 	}
 
 simple_stmt:
@@ -709,9 +716,6 @@ ntype:
 		panic(".y:716")
 	}
 |	othertype
-	{ //719
-		panic(".y:720")
-	}
 |	ptrtype
 	{ //723
 		panic(".y:724")
@@ -813,7 +817,12 @@ dotname:
 othertype:
 	'[' oexpr ']' ntype
 	{ //825
-		panic(".y:826")
+		switch {
+		case $2 != nil:
+			$$ = &ArrayType{$1.pos, $2, $4}
+		default:
+			panic(".y824:")
+		}
 	}
 |	'[' _DDD ']' ntype
 	{ //829
@@ -1263,9 +1272,6 @@ oexpr:
 		panic(".y:1280")
 	}
 |	expr
-	{ //1283
-		panic(".y:1284")
-	}
 
 oexpr_list:
 	{ //1288
@@ -1304,6 +1310,10 @@ func yyErr(y yyLexer, msg string) {
 
 func yyErrPos(y yyLexer, n Node, msg string) {
 	yy(y).errPos(n.Pos(), msg)
+}
+
+func yyFset(y yyLexer) *token.FileSet {
+	return yy(y).fset
 }
 
 func yyTLD(y yyLexer, n Node) {

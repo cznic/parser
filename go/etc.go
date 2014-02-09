@@ -47,7 +47,7 @@ func ParseFile(fset *token.FileSet, filename string, src interface{} /*TODO Opts
 	}
 
 	file := fset.AddFile(filename, -1, len(bsrc))
-	p := &parser{file: file}
+	p := &parser{file: file, fset: fset}
 	p.sc.Init(
 		file,
 		bsrc,
@@ -70,6 +70,7 @@ type parser struct {
 	constType Node
 	errors    scanner.ErrorList
 	file      *token.File
+	fset      *token.FileSet
 	pos       token.Pos
 	sc        scanner.Scanner
 }

@@ -18,6 +18,14 @@ type pos token.Pos
 
 func (p pos) Pos() token.Pos { return token.Pos(p) }
 
+// ------------------------------------------------------------------ ArrayType
+
+type ArrayType struct {
+	pos
+	Expr Node
+	Type Node
+}
+
 // ---------------------------------------------------------------------- BinOp
 
 type BinOp struct {
@@ -26,8 +34,9 @@ type BinOp struct {
 	L, R Node
 }
 
-// ------------------------------------------------------------------ constDecl
-type constDecl struct {
+// ------------------------------------------------------------------ ConstDecl
+
+type ConstDecl struct {
 	pos
 	Iota int
 	Name *Ident
@@ -49,7 +58,7 @@ func newConstDecls(y yyLexer, lst []Node) (r []Node) {
 		}
 
 		for j, nm := range v.Names[:mathutil.Min(len(v.Names), len(v.Expr))] {
-			d := &constDecl{pos(nm.Pos()), v.Iota, nm.(*Ident), v.Type, v.Expr[j]}
+			d := &ConstDecl{pos(nm.Pos()), v.Iota, nm.(*Ident), v.Type, v.Expr[j]}
 			r = append(r, d)
 		}
 	}
@@ -127,6 +136,14 @@ type Package struct {
 type QualifiedIdent struct {
 	pos
 	Q, I *Ident
+}
+
+// ------------------------------------------------------------------- TypeDecl
+
+type TypeDecl struct {
+	pos
+	Name *Ident
+	Type Node
 }
 
 // ----------------------------------------------------------------------- UnOp

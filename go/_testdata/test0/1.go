@@ -1,5 +1,7 @@
+// ---------------------------------------------------------------------Package
 package foo
 
+// --------------------------------------------------------------------- Import
 import ()
 import "foo4"
 import foo5 "bar5"
@@ -12,6 +14,7 @@ import (
 	"foo11"
 )
 
+// ------------------------------------------------------------------ ConstDecl
 const ()
 const c16 = 3e8
 const c17 int = 3e8
@@ -56,11 +59,40 @@ const (
 
 const x57 = iota  // x == 0 (iota has been reset)
 const y58 = iota  // y == 0 (iota has been reset)
-//Within an ExpressionList, the value of each iota is the same because it is only incremented after each ConstSpec:
-//
 const (
 	bit062, mask062 = 1 << iota, 1<<iota - 1  // bit0 == 1, mask0 == 0
 	bit163, mask163                           // bit1 == 2, mask1 == 1
 	_, _                                  // skips iota == 2
 	bit365, mask365                           // bit3 == 8, mask3 == 7
 )
+
+// ------------------------------------------------------------------- TypeDecl
+type IntArray [16]int
+//type (
+//	Point struct{ x, y float64 }
+//	Polar Point
+//)
+//type TreeNode struct {
+//	left, right *TreeNode
+//	value *Comparable
+//}
+//type Block interface {
+//	BlockSize() int
+//	Encrypt(src, dst []byte)
+//	Decrypt(src, dst []byte)
+//}
+//type Mutex struct         { /* Mutex fields */ }
+//type NewMutex Mutex
+//type PtrMutex *Mutex
+//type PrintableMutex struct {
+//	Mutex
+//}
+//type MyBlock Block
+//type TimeZone int
+//
+//const (
+//	EST TimeZone = -(5 + iota)
+//	CST
+//	MST
+//	PST
+//)
