@@ -178,12 +178,10 @@ common_dcl:
 |	lconst '(' constdcl osemi ')'
 	{ //154
 		$$ = newConstDecls(yylex, []Node{$3})
-		panic(".y179:")
 	}
 |	lconst '(' constdcl ';' constdcl_list osemi ')'
 	{ //158
 		$$ = newConstDecls(yylex, append([]Node{$3}, $5...))
-		panic(".y184:")
 	}
 |	lconst '(' ')'
 	{ //162
@@ -229,7 +227,6 @@ constdcl:
 	dcl_name_list ntype '=' expr_list
 	{ //200
 		$$ = newConstSpec(yylex, $1, $2, $4)
-		panic(".y231:")
 	}
 |	dcl_name_list '=' expr_list
 	{ //204
@@ -246,7 +243,6 @@ constdcl1:
 |	dcl_name_list
 	{ //218
 		$$ = newConstSpec(yylex, $1, nil, nil)
-		panic(".y249:")
 	}
 
 typedclname:
@@ -470,7 +466,6 @@ expr:
 |	expr '-' expr
 	{ //439
 		$$ = &BinOp{$2.pos, token.SUB, $1, $3}
-		panic(".y473:")
 	}
 |	expr '|' expr
 	{ //443
@@ -483,7 +478,6 @@ expr:
 |	expr '*' expr
 	{ //451
 		$$ = &BinOp{$2.pos, token.MUL, $1, $3}
-		panic(".y486:")
 	}
 |	expr '/' expr
 	{ //455
@@ -504,7 +498,6 @@ expr:
 |	expr _LSH expr
 	{ //471
 		$$ = &BinOp{$2.pos, token.SHL, $1, $3}
-		panic(".y507:")
 	}
 |	expr _RSH expr
 	{ //475
@@ -532,7 +525,6 @@ uexpr:
 |	'-' uexpr
 	{ //501
 		$$ = &UnOp{$1.pos, token.SUB, $2}
-		panic(".y535:")
 	}
 |	'!' uexpr
 	{ //505
@@ -743,7 +735,6 @@ ntype:
 |	dotname
 	{
 		$$ = &NamedType{pos($1.Pos()), $1.(*QualifiedIdent), nil}
-		panic(".y748:")
 	}
 |	'(' ntype ')'
 	{ //731
@@ -832,7 +823,6 @@ dotname:
 	name
 	{ //815
 		$$ = &QualifiedIdent{pos($1.Pos()), nil, $1.(*Ident)}
-		panic(".y837:")
 	}
 |	name '.' sym
 	{ //819
@@ -983,12 +973,10 @@ constdcl_list:
 	constdcl1
 	{ //967
 		$$ = []Node{$1}
-		panic(".y988:")
 	}
 |	constdcl_list ';' constdcl1
 	{ //971
 		$$ = append($1, $3)
-		panic(".y993:")
 	}
 
 typedcl_list:
@@ -1235,7 +1223,6 @@ dcl_name_list:
 |	dcl_name_list ',' dcl_name
 	{ //1209
 		$$ = append($1, $3)
-		panic(".y1241:")
 	}
 
 expr_list:
@@ -1246,7 +1233,6 @@ expr_list:
 |	expr_list ',' expr
 	{ //1219
 		$$ = append($1, $3)
-		panic(".y1253:")
 	}
 
 expr_or_type_list:

@@ -1048,12 +1048,10 @@ yydefault:
 	case 24:
 		{ //154
 			yyVAL.list = newConstDecls(yylex, []Node{yyS[yypt-2].node})
-			panic(".y179:")
 		}
 	case 25:
 		{ //158
 			yyVAL.list = newConstDecls(yylex, append([]Node{yyS[yypt-4].node}, yyS[yypt-2].list...))
-			panic(".y184:")
 		}
 	case 26:
 		{ //162
@@ -1093,7 +1091,6 @@ yydefault:
 	case 34:
 		{ //200
 			yyVAL.node = newConstSpec(yylex, yyS[yypt-3].list, yyS[yypt-2].node, yyS[yypt-0].list)
-			panic(".y231:")
 		}
 	case 35:
 		{ //204
@@ -1109,7 +1106,6 @@ yydefault:
 	case 38:
 		{ //218
 			yyVAL.node = newConstSpec(yylex, yyS[yypt-0].list, nil, nil)
-			panic(".y249:")
 		}
 	case 39:
 		{
@@ -1297,7 +1293,6 @@ yydefault:
 	case 84:
 		{ //439
 			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, token.SUB, yyS[yypt-2].node, yyS[yypt-0].node}
-			panic(".y473:")
 		}
 	case 85:
 		{ //443
@@ -1310,7 +1305,6 @@ yydefault:
 	case 87:
 		{ //451
 			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, token.MUL, yyS[yypt-2].node, yyS[yypt-0].node}
-			panic(".y486:")
 		}
 	case 88:
 		{ //455
@@ -1331,7 +1325,6 @@ yydefault:
 	case 92:
 		{ //471
 			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, token.SHL, yyS[yypt-2].node, yyS[yypt-0].node}
-			panic(".y507:")
 		}
 	case 93:
 		{ //475
@@ -1358,7 +1351,6 @@ yydefault:
 	case 99:
 		{ //501
 			yyVAL.node = &UnOp{yyS[yypt-1].token.pos, token.SUB, yyS[yypt-0].node}
-			panic(".y535:")
 		}
 	case 100:
 		{ //505
@@ -1535,7 +1527,6 @@ yydefault:
 	case 147:
 		{
 			yyVAL.node = &NamedType{pos(yyS[yypt-0].node.Pos()), yyS[yypt-0].node.(*QualifiedIdent), nil}
-			panic(".y748:")
 		}
 	case 148:
 		{ //731
@@ -1612,7 +1603,6 @@ yydefault:
 	case 166:
 		{ //815
 			yyVAL.node = &QualifiedIdent{pos(yyS[yypt-0].node.Pos()), nil, yyS[yypt-0].node.(*Ident)}
-			panic(".y837:")
 		}
 	case 167:
 		{ //819
@@ -1734,12 +1724,10 @@ yydefault:
 	case 197:
 		{ //967
 			yyVAL.list = []Node{yyS[yypt-0].node}
-			panic(".y988:")
 		}
 	case 198:
 		{ //971
 			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
-			panic(".y993:")
 		}
 	case 199:
 		{ //977
@@ -1954,7 +1942,6 @@ yydefault:
 	case 250:
 		{ //1209
 			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
-			panic(".y1241:")
 		}
 	case 251:
 		{ //1215
@@ -1963,7 +1950,6 @@ yydefault:
 	case 252:
 		{ //1219
 			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
-			panic(".y1253:")
 		}
 	case 253:
 		{ //1225
