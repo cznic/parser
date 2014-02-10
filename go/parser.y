@@ -986,7 +986,7 @@ structdcl:
 |	embed oliteral
 	{ //1011
 		q := $1.(*QualifiedIdent)
-		$$ = newFields([]Node{q.I}, true, &NamedType{pos($1.Pos()), q, nil, yyScope(yylex)}, $2)
+		$$ = newFields([]Node{q.I}, true, &NamedType{q.pos, q, nil, yyScope(yylex)}, $2)
 	}
 |	'(' embed ')' oliteral
 	{ //1015
@@ -994,7 +994,8 @@ structdcl:
 	}
 |	'*' embed oliteral
 	{ //1019
-		panic(".y:1020")
+		q := $2.(*QualifiedIdent)
+		$$ = newFields([]Node{q.I}, true, &PtrType{$1.pos, &NamedType{q.pos, q, nil, yyScope(yylex)}}, $3)
 	}
 |	'(' '*' embed ')' oliteral
 	{ //1023

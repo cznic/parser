@@ -1730,7 +1730,7 @@ yydefault:
 	case 206:
 		{ //1011
 			q := yyS[yypt-1].node.(*QualifiedIdent)
-			yyVAL.node = newFields([]Node{q.I}, true, &NamedType{pos(yyS[yypt-1].node.Pos()), q, nil, yyScope(yylex)}, yyS[yypt-0].node)
+			yyVAL.node = newFields([]Node{q.I}, true, &NamedType{q.pos, q, nil, yyScope(yylex)}, yyS[yypt-0].node)
 		}
 	case 207:
 		{ //1015
@@ -1738,7 +1738,8 @@ yydefault:
 		}
 	case 208:
 		{ //1019
-			panic(".y:1020")
+			q := yyS[yypt-1].node.(*QualifiedIdent)
+			yyVAL.node = newFields([]Node{q.I}, true, &PtrType{yyS[yypt-2].token.pos, &NamedType{q.pos, q, nil, yyScope(yylex)}}, yyS[yypt-0].node)
 		}
 	case 209:
 		{ //1023

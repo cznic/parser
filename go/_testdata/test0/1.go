@@ -217,15 +217,15 @@ type t113 (u)
 type t114 *u
 type t115 (*u)
 type t116 *(u)
-//TODOtype t118 struct{}
-//TODOtype t119 struct{ u }
-//TODOtype t119a struct{ *u }
-//TODOtype t119b struct{ int }
-//TODOtype t119c struct{ *int }
-//TODOtype t120 struct{ u; }
-//TODOtype t121 struct{
-//TODO	u
-//TODO}
+type t118 struct{}
+type t119 struct{ u }
+type t119a struct{ *u }
+type t119b struct{ int }
+type t119c struct{ *int }
+type t120 struct{ u; }
+type t121 struct{
+	u
+}
 //TODOtype t124 struct{
 //TODO	u;
 //TODO}
