@@ -354,8 +354,8 @@ type t248 func(x, y int)
 type t250 func(x, y int, z ...uint)
 
 type t255 func()()
-//TODOtype t256 func() int
-//TODO
+type t256 func() int
+
 //TODOconst c258 = 3
 //TODOconst c259 = 3;
 //TODOconst c260 t = 3
