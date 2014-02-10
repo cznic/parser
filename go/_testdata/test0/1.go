@@ -510,22 +510,22 @@ var v421 = *uint(3)
 var v422 = (*uint)(3)
 var v423 = **uint(3)
 var v424 = (**uint)(3)
-//TODOvar v425 = 3.(uint) // callOp{float_lit: 3, args{"uint"}}
-//TODOvar v426 *int32
-//TODOvar w427, x427, y427 = uint(*a), *(*uint)(b), (uint)(*c)
-//TODO
-//TODOvar v429 = (int)(x)
-//TODOvar v430 = int(x)
-//TODO
-//TODOvar v432 = (*int)(x)
-//TODOvar v433 = *(int)(x)
-//TODOvar v434 = *int(x)
-//TODO
-//TODOvar v436 = (**int)(x)
-//TODOvar v437 = *(*int)(x)
-//TODOvar v438 = **int(x)
-//TODO
-//TODOfunc f423() {
+var v425 = 3.(uint) // CallOp{float_lit: 3, args{"uint"}}
+var v426 *int32
+var w427, x427, y427 = uint(*a), *(*uint)(b), (uint)(*c)
+
+var v429 = (int)(x)
+var v430 = int(x)
+
+var v432 = (*int)(x)
+var v433 = *(int)(x)
+var v434 = *int(x)
+
+var v436 = (**int)(x)
+var v437 = *(*int)(x)
+var v438 = **int(x)
+
+func f423() {
 //TODO	a++
 //TODO	b--
 //TODO	a++;
@@ -621,8 +621,8 @@ var v424 = (**uint)(3)
 //TODO	if (func() bool { return true }()) { //LATER lift parens requirement in this special case (?)
 //TODO		fmt.Println("Hello, playground")
 //TODO	}
-//TODO}
-//TODO
+}
+
 //TODOvar v = func() bool {}
 //TODO
 //TODOfunc f521() {
