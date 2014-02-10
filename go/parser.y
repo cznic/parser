@@ -32,12 +32,12 @@ import (
 	constdcl constdcl1
 	dcl_name dotname
 	embed expr expr_or_type
-	fnret_type
+	fnret_type fntype
 	import_stmt indcl interfacedcl interfacetype
-	name name_or_type new_name ntype
+	name name_or_type new_name ntype non_dcl_stmt
 	oexpr oliteral othertype
 	package packname pexpr pexpr_no_paren pseudocall ptrtype
-	structdcl structtype sym
+	simple_stmt structdcl structtype sym
 	typedcl typedclname
 	uexpr
 
@@ -147,7 +147,7 @@ xdcl:
 	}
 |	non_dcl_stmt
 	{ //128
-		panic(".y:129")
+		yyErrPos(yylex, $1, "non-declaration statement outside function body");
 	}
 |	error
 
@@ -247,9 +247,6 @@ typedcl:
 
 simple_stmt:
 	expr
-	{ //236
-		panic(".y:237")
-	}
 |	expr _ASOP expr
 	{ //240
 		panic(".y:241")
@@ -699,9 +696,6 @@ ntype:
 		panic(".y:712")
 	}
 |	fntype
-	{ //715
-		panic(".y:716")
-	}
 |	othertype
 |	ptrtype
 |	dotname
@@ -883,7 +877,7 @@ fndcl:
 fntype:
 	_FUNC '(' oarg_type_list_ocomma ')' fnres
 	{ //903
-		panic(".y:904")
+		$$ = newFuncType(yylex, $1.pos, $3, $5)
 	}
 
 fnbody:
@@ -906,7 +900,7 @@ fnres:
 	}
 |	'(' oarg_type_list_ocomma ')'
 	{ //926
-		panic(".y:927")
+		$$ = $2
 	}
 
 fnlitdcl:
@@ -1100,9 +1094,6 @@ stmt:
 
 non_dcl_stmt:
 	simple_stmt
-	{ //1127
-		panic(".y:1128")
-	}
 |	for_stmt
 	{ //1131
 		panic(".y:1132")

@@ -338,20 +338,20 @@ type t200_c **float64;
 type t201_c **complex64;
 type t202_c **complex128;
 
-//TODOtype t236 func()			// typedef void (*t)();
-//TODOtype t237 func() x			// typedef x (*t)();
-//TODOtype t238 func() (x)			// typedef x (*t)();
-//TODOtype t239 func() (x y)			// typedef y (*t)();
-//TODOtype t240 func(int)			// typedef void (*t)(int);
-//TODOtype t241 func(int, uint)		// typedef void (*t)(int, int);
-//TODOtype t242 func(...int)			// typedef void (*t)(int n$, int *p);
-//TODOtype t243 func(int, ...int)		// typedef void (*t)(int, int, int*);
-//TODOtype t244 func(int, int, ...int)	// typedef void (*t)(int, int, int, int*);
-//TODOtype t245 func(x int)			// typedef void (*t)(int x);
-//TODOtype t246 func(x ...int)		// typedef void (*t)(int n$, int* x);
-//TODOtype t247 func(x int, y uint)		// typedef void (*t)(int x, int y);
-//TODOtype t248 func(x, y int)		// typedef void (*t)(int x, int y);
-//TODOtype t250 func(x, y int, z ...uint)	// typedef void (*t)(int x, int y, int n$, int *z);
+type t236 func()			
+type t237 func() x		
+type t238 func() (x)		
+type t239 func() (x y)		
+type t240 func(int)		
+type t241 func(int, uint)		
+//TODOtype t242 func(...int)		
+//TODOtype t243 func(int, ...int)	
+//TODOtype t244 func(int, int, ...int)	
+//TODOtype t245 func(x int)		
+//TODOtype t246 func(x ...int)		
+//TODOtype t247 func(x int, y uint)	
+//TODOtype t248 func(x, y int)		
+//TODOtype t250 func(x, y int, z ...uint)
 //TODO
 //TODOtype t255 func()()
 //TODOtype t256 func() int
