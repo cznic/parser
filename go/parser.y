@@ -214,7 +214,7 @@ vardcl:
 	}
 |	dcl_name_list '=' expr_list
 	{ //194
-		panic(".y:195")
+		$$ = newVarDecls($1, nil, $3)
 	}
 
 constdcl:
