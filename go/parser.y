@@ -13,9 +13,10 @@ import (
 %}
 
 %union	{
-	token tkn
-	node  Node
-	list  []Node
+	token  tkn
+	node   Node
+	list   []Node
+	params []*Param
 }
 
 %token	<token>
@@ -24,13 +25,14 @@ import (
 	_GOTO _GT _IF _IGNORE _IMPORT _INC _INTERFACE _LE _LITERAL _LSH _LT
 	_MAP _NAME _NE _OROR _PACKAGE _RANGE _RETURN _RSH _SELECT _STRUCT
 	_SWITCH _TYPE _VAR
-	'.' '-' '*' '['
+	'.' '-' '*' '[' '('
 
 %type	<node>
 	constdcl constdcl1
 	dcl_name dotname
 	embed expr
-	import_stmt
+	fnret_type
+	import_stmt indcl interfacedcl interfacetype
 	name new_name ntype
 	oexpr oliteral othertype
 	package packname pexpr pexpr_no_paren ptrtype
@@ -42,11 +44,14 @@ import (
 	common_dcl constdcl_list
 	dcl_name_list
 	expr_list
-	import_stmt_list
+	import_stmt_list interfacedcl_list
 	new_name_list
-	oarg_type_list_ocomma
 	structdcl_list
 	typedcl_list
+
+%type	<params>
+	fnres
+	oarg_type_list_ocomma
 
 %left	_COMM
 
@@ -787,6 +792,9 @@ fnret_type:
 		panic(".y:806")
 	}
 |	dotname
+	{ //790
+		$$ = &NamedType{pos($1.Pos()), $1.(*QualifiedIdent), nil, yyScope(yylex)}
+	}
 
 dotname:
 	name
@@ -826,9 +834,6 @@ othertype:
 	}
 |	structtype
 |	interfacetype
-	{ //849
-		panic(".y:850")
-	}
 
 ptrtype:
 	'*' ntype
@@ -855,7 +860,9 @@ structtype:
 interfacetype:
 	_INTERFACE lbrace interfacedcl_list osemi '}'
 	{ //877
-		panic(".y:878")
+		x := newInterfaceType(yylex, $3)
+		x.pos = $1.pos
+		$$ = x
 	}
 |	_INTERFACE lbrace '}'
 	{ //881
@@ -900,7 +907,7 @@ fnres:
 	}
 |	fnret_type
 	{ //922
-		panic(".y:923")
+		$$ = []*Param{{pos: pos($1.Pos()), Type: $1}}
 	}
 |	'(' oarg_type_list_ocomma ')'
 	{ //926
@@ -969,7 +976,7 @@ structdcl_list:
 interfacedcl_list:
 	interfacedcl
 	{ //997
-		panic(".y:998")
+		$$ = []Node{$1}
 	}
 |	interfacedcl_list ';' interfacedcl
 	{ //1001
@@ -1019,7 +1026,7 @@ embed:
 interfacedcl:
 	new_name indcl
 	{ //1049
-		panic(".y:1050")
+		$$ = &MethodSpec{pos($1.Pos()), $1.(*Ident), $2.(*FuncType)}
 	}
 |	packname
 	{ //1053
@@ -1028,12 +1035,13 @@ interfacedcl:
 |	'(' packname ')'
 	{ //1057
 		panic(".y:1058")
+		//yyErrPos(yylex, $2, "cannot parenthesize embedded type");
 	}
 
 indcl:
 	'(' oarg_type_list_ocomma ')' fnres
 	{ //1063
-		panic(".y:1064")
+		$$ = newFuncType(yylex, $1.pos, $2, $4)
 	}
 
 arg_type:

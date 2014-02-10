@@ -79,12 +79,11 @@ type TreeNode78 struct {
 	left, right *TreeNode
 	value       *Comparable
 }
-//type Block82 interface {
-//	BlockSize() int
+type Block82 interface {
+	BlockSize() int
 //	//	Encrypt(src, dst []byte)
 //	//	Decrypt(src, dst []byte)
-//}
-//
+}
 //type Mutex87 struct         { /* Mutex fields */ }
 //type NewMutex88 Mutex
 //type PtrMutex89 *Mutex
@@ -95,8 +94,8 @@ type TreeNode78 struct {
 //type TimeZone94 int
 //
 //const (
-//	EST TimeZone = -(5 + iota)
-//	CST
-//	MST
-//	PST
+//	EST97 TimeZone = -(5 + iota)
+//	CST98
+//	MST99
+//	PST100
 //)

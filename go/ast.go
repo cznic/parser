@@ -120,6 +120,23 @@ func newFields(l []Node, emb bool, typ, tag Node) *fields {
 	return &fields{Names: l, Embedded: emb, Type: typ, Tag: tag.(*Literal)}
 }
 
+// ------------------------------------------------------------------- FuncType
+type FuncType struct {
+	pos
+	Ddd     bool // in
+	In, Out []*Param
+}
+
+func newFuncType(y yyLexer, pos pos, in, out []*Param) (r *FuncType) {
+	ps := yy(y)
+	r = &FuncType{pos: pos, In: in, Out: out}
+	r.Ddd = newParams(ps, pos, in)
+	if newParams(ps, pos, out) {
+		ps.errPos(token.Pos(pos), "cannot use ... in output argument list")
+	}
+	return
+}
+
 // ---------------------------------------------------------------------- Ident
 
 type Ident struct {
@@ -155,6 +172,24 @@ func newImport(y yyLexer, id Node, pth *Literal) (r *Import) {
 	return
 }
 
+// -------------------------------------------------------------- InterfaceType
+type InterfaceType struct {
+	pos
+	Methods []*MethodSpec
+}
+
+func newInterfaceType(y yyLexer, l []Node) *InterfaceType {
+	i := &InterfaceType{Methods: make([]*MethodSpec, len(l))}
+	ps := yy(y)
+	sc := ps.currentScope.New()
+	for j, v := range l {
+		m := v.(*MethodSpec)
+		i.Methods[j] = m
+		sc.declare(ps, m.Name.Lit, m)
+	}
+	return i
+}
+
 // --------------------------------------------------------------------- Literal
 
 type Literal struct {
@@ -165,6 +200,13 @@ type Literal struct {
 
 func newLiteral(lit tkn) *Literal {
 	return &Literal{lit.pos, lit.tok, lit.lit}
+}
+
+// ----------------------------------------------------------------- MethodSpec
+type MethodSpec struct {
+	pos
+	Name *Ident
+	Type *FuncType
 }
 
 // ------------------------------------------------------------------ NamedType
@@ -180,6 +222,84 @@ type NamedType struct {
 type Package struct {
 	pos
 	Name *Ident
+}
+
+// ---------------------------------------------------------------------- Param
+type Param struct {
+	pos
+	Name  *Ident
+	Ddd   bool
+	Type  Node
+	Scope *Scope
+}
+
+func newParams(y yyLexer, pos pos, a []*Param) (ddd bool) { //TODO proper scope
+	if len(a) == 0 {
+		return
+	}
+
+	//TODO defer func() {
+	//TODO 	sc := yyScope(y)
+	//TODO 	for _, p := range a {
+	//TODO 		id := p.Name
+	//TODO 		if id == nil {
+	//TODO 			continue
+	//TODO 		}
+
+	//TODO 		d := &varSpec{sc, id, p.Type, nil}
+	//TODO 		if err := sc.declare(d); err != nil {
+	//TODO 			yyErr(y, d, err.Error())
+	//TODO 		}
+	//TODO 	}
+	//TODO }()
+
+	p := []int{}
+	for i, v := range a {
+		if v.Name != nil {
+			p = append(p, i)
+		}
+	}
+
+	defer func() {
+		for i, v := range a {
+			ddd = ddd || v.Ddd
+			if ddd && i != len(a)-1 {
+				yyErrPos(y, v, "can only use ... as final argument in list")
+			}
+		}
+	}()
+
+	if len(p) == 0 { // only types
+		return
+	}
+
+	li := 0
+	for _, i := range p {
+		ai := a[i]
+		t := ai.Type
+		for j := li; j < i; j++ {
+			aj := a[j]
+			if ai.Ddd && li < i {
+				yyErrPos(y, aj, "can only use ... as final argument in list")
+				continue
+			}
+
+			nm, ok := aj.Type.(*NamedType)
+			if !ok {
+				yyErrPos(y, aj, "mixed named and unnamed function parameters")
+				continue
+			}
+
+			if nm.Name.Q != nil {
+				yyErrPos(y, aj, "mixed named and unnamed function parameters")
+				continue
+			}
+
+			a[j].Name, a[j].Type = nm.Name.I, t
+		}
+		li = i + 1
+	}
+	return
 }
 
 // -------------------------------------------------------------------- PtrType
