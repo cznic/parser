@@ -282,6 +282,13 @@ func newParams(y yyLexer, pos pos, a []*Param) (ddd bool) {
 	return
 }
 
+// ---------------------------------------------------------------------- Paren
+
+type Paren struct {
+	pos
+	ExprOrType Node
+}
+
 // -------------------------------------------------------------------- PtrType
 
 type PtrType struct {

@@ -81,6 +81,8 @@ func String(fs *token.FileSet, v interface{}) (r string) {
 				default:
 					f.Format("%s%T{%s \"%s.%s\"}\n", pre, v, fs.Position(id.Pos()), id.I.Lit, id.Q.Lit)
 				}
+			case "Scope":
+				return
 			default:
 				f.Format("%s%T{%i\n", pre, v)
 				for i := 0; i < rv.NumField(); i++ {

@@ -26,12 +26,12 @@ import (
 	_GOTO _GT _IF _IGNORE _IMPORT _INC _INTERFACE _LE _LITERAL _LSH _LT
 	_MAP _NAME _NE _OROR _PACKAGE _RANGE _RETURN _RSH _SELECT _STRUCT
 	_SWITCH _TYPE _VAR
-	'.' '-' '*' '[' '('
+	'.' '-' '*' '[' '(' '+'
 
 %type	<node>
 	constdcl constdcl1
 	dcl_name dotname
-	embed expr
+	embed expr expr_or_type
 	fnret_type
 	import_stmt indcl interfacedcl interfacetype
 	name name_or_type new_name ntype
@@ -446,7 +446,7 @@ expr:
 	}
 |	expr '+' expr
 	{ //435
-		panic(".y:436")
+		$$ = &BinOp{$2.pos, token.ADD, $1, $3}
 	}
 |	expr '-' expr
 	{ //439
@@ -632,14 +632,11 @@ pexpr:
 	pexpr_no_paren
 |	'(' expr_or_type ')'
 	{ //630
-		panic(".y:631")
+		$$ = &Paren{$1.pos, $2}
 	}
 
 expr_or_type:
 	expr
-	{ //636
-		panic(".y:637")
-	}
 |	non_expr_type	%prec preferToRightParen
 	{ //640
 		panic(".y:641")

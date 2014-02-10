@@ -85,17 +85,17 @@ type Block82 interface {
 	Decrypt(src, dst []byte)
 }
 type Mutex87 struct         { /* Mutex fields */ }
-//type NewMutex88 Mutex
-//type PtrMutex89 *Mutex
-//type PrintableMutex90 struct {
-//	Mutex
-//}
-//type MyBlock93 Block
-//type TimeZone94 int
-//
-//const (
-//	EST97 TimeZone = -(5 + iota)
-//	CST98
-//	MST99
-//	PST100
-//)
+type NewMutex88 Mutex
+type PtrMutex89 *Mutex
+type PrintableMutex90 struct {
+	Mutex
+}
+type MyBlock93 Block
+type TimeZone94 int
+
+const (
+	EST97 TimeZone = -(5 + iota)
+	CST98
+	MST99
+	PST100
+)
