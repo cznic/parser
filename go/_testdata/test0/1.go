@@ -346,13 +346,13 @@ type t240 func(int)
 type t241 func(int, uint)		
 type t242 func(...int)		
 type t243 func(int, ...int)	
-//TODOtype t244 func(int, int, ...int)	
-//TODOtype t245 func(x int)		
-//TODOtype t246 func(x ...int)		
-//TODOtype t247 func(x int, y uint)	
-//TODOtype t248 func(x, y int)		
-//TODOtype t250 func(x, y int, z ...uint)
-//TODO
+type t244 func(int, int, ...int)	
+type t245 func(x int)		
+type t246 func(x ...int)		
+type t247 func(x int, y uint)	
+type t248 func(x, y int)		
+type t250 func(x, y int, z ...uint)
+
 //TODOtype t255 func()()
 //TODOtype t256 func() int
 //TODO

@@ -1046,7 +1046,9 @@ arg_type:
 	}
 |	sym dotdotdot
 	{ //1077
-		panic(".y:1078")
+		x := $2
+		x.Name, x.Ddd = $1.(*Ident), true
+		$$ = x
 	}
 |	dotdotdot
 

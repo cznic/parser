@@ -1782,7 +1782,9 @@ yydefault:
 		}
 	case 220:
 		{ //1077
-			panic(".y:1078")
+			x := yyS[yypt-0].param
+			x.Name, x.Ddd = yyS[yypt-1].node.(*Ident), true
+			yyVAL.param = x
 		}
 	case 221:
 		yyVAL.param = yyS[yypt-0].param
