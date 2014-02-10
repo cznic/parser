@@ -53,6 +53,7 @@ import (
 
 %type	<param>
 	arg_type
+	dotdotdot
 
 %type	<params>
 	arg_type_list
@@ -682,12 +683,12 @@ labelname:
 dotdotdot:
 	_DDD
 	{ //701
-		panic(".y:702")
-		//yy(yylex).errPos($1.tpos, "final argument in variadic function missing type")
+		yy(yylex).errPos($1.tpos, "final argument in variadic function missing type")
+		$$ = &Param{pos: $1.pos, Ddd: true}
 	}
 |	_DDD ntype
 	{ //705
-		panic(".y:706")
+		$$ = &Param{pos: $1.pos, Ddd: true, Type: $2}
 	}
 
 ntype:
@@ -1048,9 +1049,6 @@ arg_type:
 		panic(".y:1078")
 	}
 |	dotdotdot
-	{ //1081
-		panic(".y:1082")
-	}
 
 arg_type_list:
 	arg_type
