@@ -82,7 +82,7 @@ func String(fs *token.FileSet, v interface{}) (r string) {
 				case id.Q == nil:
 					f.Format("%s%T{%s %q}\n", pre, v, fs.Position(id.Pos()), id.I.Lit)
 				default:
-					f.Format("%s%T{%s \"%s.%s\"}\n", pre, v, fs.Position(id.Pos()), id.I.Lit, id.Q.Lit)
+					f.Format("%s%T{%s \"%s.%s\"}\n", pre, v, fs.Position(id.Pos()), id.Q.Lit, id.I.Lit)
 				}
 			case "Scope":
 				return

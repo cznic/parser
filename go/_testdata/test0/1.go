@@ -226,118 +226,118 @@ type t120 struct{ u; }
 type t121 struct{
 	u
 }
-//TODOtype t124 struct{
-//TODO	u;
-//TODO}
-//TODOtype t127 struct{
-//TODO	u.V
-//TODO}
-//TODOtype t130 struct{ // typedef struct{ u *u } (t130);
-//TODO	*u
-//TODO}
-//TODOtype t133 struct{
-//TODO	*u.V
-//TODO}
-//TODOtype X int
-//TODOtype y_Z int
-//TODOtype t136 struct{ // typedef struct{int i; uint j; ...} (t136);
-//TODO	i int
-//TODO	j, k uint
-//TODO	l,
-//TODO	m,
-//TODO	n *uint
-//TODO	o struct{
-//TODO		p, q bool
-//TODO		*X
-//TODO		*y.Z
-//TODO	}
-//TODO}
-//TODOtype t136b *struct{
-//TODO	i int
-//TODO	j, k uint
-//TODO	l,
-//TODO	m,
-//TODO	n *uint
-//TODO	o struct{
-//TODO		p, q bool
-//TODO		*X
-//TODO		*y.Z
-//TODO	}
-//TODO}
-//TODOtype t136c **struct{
-//TODO	i int
-//TODO	j, k uint
-//TODO	l,
-//TODO	m,
-//TODO	n *uint
-//TODO	o struct{
-//TODO		p, q bool
-//TODO		*X
-//TODO		*y.Z
-//TODO	}
-//TODO}
-//TODOtype t140 int		// typedef int (t140);		t140: int
-//TODOtype t141 *int		// typedef int (*t141);		t141: ptr{int}
-//TODOtype t142 **int		// typedef int (**t142);	t142: ptr{ptr{int}}
-//TODO
-//TODOtype t150 [3]int	// typedef int (t150)[10];	t150: array{10, int}
-//TODOtype t151 [3]*int	// typedef int *(t151)[10];	t151: array{10, ptr{int}}
-//TODOtype t152 [3]**int	// typedef int **(t152)[10];	t152: array{10, ptr{ptr{int}}}
-//TODOtype t153 *[3]int	// typedef int (*tx153)[10];	t153: ptr{array{10, int}}
-//TODOtype t154 *[3]*int	// typedef int *(*tx154)[10];	t154: ptr{array{10, ptr{int}}}
-//TODOtype t155 *[3]**int	// typedef int **(*tx155)[10];	t155: ptr{array{10, ptr{ptr{int}}}}
-//TODOtype t156 **[3]int	// typedef int (**t156)[10];	t156: ptr{ptr{array{10, int}}}
-//TODOtype t157 **[3]*int	// typedef int *(**t157)[10];	t157: ptr{ptr{array{10, ptr{int}}}}
-//TODOtype t158 **[3]**int	// typedef int **(**t158)[10];	t158: ptr{ptr{array{10, ptr{ptr{int}}}}}
-//TODO
-//TODOtype t188 bool;
-//TODOtype t189 int8;
-//TODOtype t190 int16;
-//TODOtype t191 int32;
-//TODOtype t192 int64;
-//TODOtype t193 int;
-//TODOtype t194 uint8;
-//TODOtype t195 uint16;
-//TODOtype t196 uint32;
-//TODOtype t197 uint64;
-//TODOtype t198 uint;
-//TODOtype t199 float32;
-//TODOtype t200 float64;
-//TODOtype t201 complex64;
-//TODOtype t202 complex128;
-//TODO
-//TODOtype t188_b *bool;
-//TODOtype t189_b *int8;
-//TODOtype t190_b *int16;
-//TODOtype t191_b *int32;
-//TODOtype t192_b *int64;
-//TODOtype t193_b *int;
-//TODOtype t194_b *uint8;
-//TODOtype t195_b *uint16;
-//TODOtype t196_b *uint32;
-//TODOtype t197_b *uint64;
-//TODOtype t198_b *uint;
-//TODOtype t199_b *float32;
-//TODOtype t200_b *float64;
-//TODOtype t201_b *complex64;
-//TODOtype t202_b *complex128;
-//TODO
-//TODOtype t188_c **bool;
-//TODOtype t189_c **int8;
-//TODOtype t190_c **int16;
-//TODOtype t191_c **int32;
-//TODOtype t192_c **int64;
-//TODOtype t193_c **int;
-//TODOtype t194_c **uint8;
-//TODOtype t195_c **uint16;
-//TODOtype t196_c **uint32;
-//TODOtype t197_c **uint64;
-//TODOtype t198_c **uint;
-//TODOtype t199_c **float32;
-//TODOtype t200_c **float64;
-//TODOtype t201_c **complex64;
-//TODOtype t202_c **complex128;
-//TODO
+type t124 struct{
+	u;
+}
+type t127 struct{
+	u.V
+}
+type t130 struct{
+	*u
+}
+type t133 struct{
+	*u.V
+}
+type X int
+type y_Z int
+type t136 struct{
+	i int
+	j, k uint
+	l,
+	m,
+	n *uint
+	o struct{
+		p, q bool
+		*X
+		*y.Z
+	}
+}
+type t136b *struct{
+	i int
+	j, k uint
+	l,
+	m,
+	n *uint
+	o struct{
+		p, q bool
+		*X
+		*y.Z
+	}
+}
+type t136c **struct{
+	i int
+	j, k uint
+	l,
+	m,
+	n *uint
+	o struct{
+		p, q bool
+		*X
+		*y.Z
+	}
+}
+type t140 int		
+type t141 *int		
+type t142 **int		
+
+type t150 [3]int
+type t151 [3]*int
+type t152 [3]**int	
+type t153 *[3]int
+type t154 *[3]*int	
+type t155 *[3]**int	
+type t156 **[3]int	
+type t157 **[3]*int	
+type t158 **[3]**int	
+
+type t188 bool;
+type t189 int8;
+type t190 int16;
+type t191 int32;
+type t192 int64;
+type t193 int;
+type t194 uint8;
+type t195 uint16;
+type t196 uint32;
+type t197 uint64;
+type t198 uint;
+type t199 float32;
+type t200 float64;
+type t201 complex64;
+type t202 complex128;
+
+type t188_b *bool;
+type t189_b *int8;
+type t190_b *int16;
+type t191_b *int32;
+type t192_b *int64;
+type t193_b *int;
+type t194_b *uint8;
+type t195_b *uint16;
+type t196_b *uint32;
+type t197_b *uint64;
+type t198_b *uint;
+type t199_b *float32;
+type t200_b *float64;
+type t201_b *complex64;
+type t202_b *complex128;
+
+type t188_c **bool;
+type t189_c **int8;
+type t190_c **int16;
+type t191_c **int32;
+type t192_c **int64;
+type t193_c **int;
+type t194_c **uint8;
+type t195_c **uint16;
+type t196_c **uint32;
+type t197_c **uint64;
+type t198_c **uint;
+type t199_c **float32;
+type t200_c **float64;
+type t201_c **complex64;
+type t202_c **complex128;
+
 //TODOtype t236 func()			// typedef void (*t)();
 //TODOtype t237 func() x			// typedef x (*t)();
 //TODOtype t238 func() (x)			// typedef x (*t)();
