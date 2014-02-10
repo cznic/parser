@@ -3,6 +3,7 @@
 all: editor
 	go vet
 	go install
+	#TODO golint
 	make todo
 
 editor: clean parser.go

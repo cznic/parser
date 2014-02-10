@@ -42,6 +42,13 @@ func String(fs *token.FileSet, v interface{}) (r string) {
 			}
 
 			s(pre, rv.Elem())
+		case reflect.Map:
+			return
+			//f.Format("%s%T{%i\n", pre, v)
+			//for _, v := range rv.MapKeys() {
+			//	s(fmt.Sprintf("%v: ", v), rv.MapIndex(v))
+			//}
+			//f.Format("%u}\n")
 		case reflect.Ptr:
 			if rv.IsNil() {
 				//f.Format("%s: nil\n", pre)
@@ -49,6 +56,10 @@ func String(fs *token.FileSet, v interface{}) (r string) {
 			}
 
 			p := rv.Pointer()
+			if visited[p] {
+				return
+			}
+
 			visited[p] = true
 			s(fmt.Sprintf("%s*", pre), rv.Elem())
 		case reflect.Slice:

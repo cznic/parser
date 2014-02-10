@@ -18,13 +18,13 @@ type pos token.Pos
 
 func (p pos) Pos() token.Pos { return token.Pos(p) }
 
-type declaration interface {
-	declName() string
+type Declaration interface {
+	DeclName() string
 }
 
 type Name Ident
 
-func (n *Name) declName() string { return n.Lit }
+func (n *Name) DeclName() string { return n.Lit }
 
 // ------------------------------------------------------------------ ArrayType
 
@@ -47,7 +47,7 @@ type BinOp struct {
 type ConstDecl struct {
 	pos
 	Iota int
-	Name *Ident
+	*Name
 	Type Node
 	Expr Node
 }
@@ -67,7 +67,7 @@ func newConstDecls(y yyLexer, lst []Node) (r []Node) {
 
 		for j, nm := range v.Names[:mathutil.Min(len(v.Names), len(v.Expr))] {
 			id := nm.(*Ident)
-			d := &ConstDecl{pos(nm.Pos()), v.Iota, id, v.Type, v.Expr[j]}
+			d := &ConstDecl{pos(nm.Pos()), v.Iota, (*Name)(id), v.Type, v.Expr[j]}
 			r = append(r, d)
 		}
 	}
@@ -104,19 +104,20 @@ type Field struct {
 	Embedded bool
 	Type     Node
 	Tag      *Literal
+	Scope    *Scope
 }
 
 // --------------------------------------------------------------------- fields
 type fields struct {
 	pos
-	Names    []*Ident
+	Names    []Node
 	Embedded bool
 	Type     Node
 	Tag      *Literal
 }
 
 func newFields(l []Node, emb bool, typ, tag Node) *fields {
-	return &fields{Names: idList(l), Embedded: emb, Type: typ, Tag: tag.(*Literal)}
+	return &fields{Names: l, Embedded: emb, Type: typ, Tag: tag.(*Literal)}
 }
 
 // ---------------------------------------------------------------------- Ident
@@ -169,8 +170,9 @@ func newLiteral(lit tkn) *Literal {
 // ------------------------------------------------------------------ NamedType
 type NamedType struct {
 	pos
-	Name *QualifiedIdent
-	Type Node // resolved type
+	Name  *QualifiedIdent
+	Type  Node // resolved type
+	Scope *Scope
 }
 
 // -------------------------------------------------------------------- Package
@@ -201,17 +203,23 @@ type StructType struct {
 	Fields []*Field
 }
 
-func newStructType(n tkn, l []Node) (r *StructType) {
+func newStructType(y yyLexer, n tkn, l []Node) (r *StructType) {
+	ps := yy(y)
 	r = &StructType{pos: n.pos}
+	cs := ps.currentScope
+	ns := cs.New()
 	for _, v := range l {
 		fields := v.(*fields)
 		for _, v := range fields.Names {
+			id := v.(*Ident)
+			ns.declare(ps, id.Lit, id)
 			r.Fields = append(r.Fields, &Field{
-				pos:      v.pos,
-				Name:     v,
+				pos:      pos(v.Pos()),
+				Name:     id,
 				Embedded: fields.Embedded,
 				Type:     fields.Type,
 				Tag:      fields.Tag,
+				Scope:    cs,
 			})
 		}
 	}
@@ -222,7 +230,7 @@ func newStructType(n tkn, l []Node) (r *StructType) {
 
 type TypeDecl struct {
 	pos
-	Name *Ident
+	*Name
 	Type Node
 }
 

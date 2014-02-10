@@ -239,14 +239,6 @@ func (p *parser) Lex(lval *yySymType) (r int) {
 	}
 }
 
-func idList(l []Node) (r []*Ident) {
-	r = make([]*Ident, len(l))
-	for i, v := range l {
-		r[i] = v.(*Ident)
-	}
-	return
-}
-
 const dlrPkgName = "$pkgName"
 
 // Special name(s):

@@ -29,11 +29,11 @@ import (
 %type	<node>
 	constdcl constdcl1
 	dcl_name dotname
-	expr
+	embed expr
 	import_stmt
 	name new_name ntype
 	oexpr oliteral othertype
-	package pexpr pexpr_no_paren ptrtype
+	package packname pexpr pexpr_no_paren ptrtype
 	structdcl structtype sym
 	typedcl typedclname
 	uexpr
@@ -234,7 +234,7 @@ typedclname:
 typedcl:
 	typedclname ntype
 	{ //230
-		$$ = &TypeDecl{pos($1.Pos()), $1.(*Ident), $2}
+		$$ = &TypeDecl{pos($1.Pos()), (*Name)($1.(*Ident)), $2}
 	}
 
 simple_stmt:
@@ -706,7 +706,7 @@ ntype:
 |	ptrtype
 |	dotname
 	{
-		$$ = &NamedType{pos($1.Pos()), $1.(*QualifiedIdent), nil}
+		$$ = &NamedType{pos($1.Pos()), $1.(*QualifiedIdent), nil, yyScope(yylex)}
 	}
 |	'(' ntype ')'
 	{ //731
@@ -801,7 +801,7 @@ dotname:
 othertype:
 	'[' oexpr ']' ntype
 	{ //825
-		switch {
+		switch { //TODO + resolve scope
 		case $2 != nil:
 			$$ = &ArrayType{$1.pos, $2, $4}
 		default:
@@ -845,7 +845,7 @@ recvchantype:
 structtype:
 	_STRUCT lbrace structdcl_list osemi '}'
 	{ //867
-		$$ = newStructType($1, $3)
+		$$ = newStructType(yylex, $1, $3)
 	}
 |	_STRUCT lbrace '}'
 	{ //871
@@ -983,7 +983,8 @@ structdcl:
 	}
 |	embed oliteral
 	{ //1011
-		panic(".y:1012")
+		q := $1.(*QualifiedIdent)
+		$$ = newFields([]Node{q.I}, true, &NamedType{pos($1.Pos()), q, nil, yyScope(yylex)}, $2)
 	}
 |	'(' embed ')' oliteral
 	{ //1015
@@ -1005,18 +1006,15 @@ structdcl:
 packname:
 	_NAME
 	{ //1033
-		panic(".y:1034")
+		$$ = &QualifiedIdent{$1.pos, nil, &Ident{$1.pos, $1.lit}}
 	}
 |	_NAME '.' sym
 	{ //1037
-		panic(".y:1038")
+		$$ = &QualifiedIdent{$1.pos, &Ident{$1.pos, $1.lit}, $3.(*Ident)}
 	}
 
 embed:
 	packname
-	{ //1043
-		panic(".y:1044")
-	}
 
 interfacedcl:
 	new_name indcl
@@ -1285,13 +1283,22 @@ func yyErr(y yyLexer, msg string)            { yy(y).Error(msg) }
 func yyErrPos(y yyLexer, n Node, msg string) { yy(y).errPos(n.Pos(), msg) }
 func yyFset(y yyLexer) *token.FileSet        { return yy(y).fset }
 func yyFScope(y yyLexer) *Scope              { return yy(y).pkgScope }
+func yyScope(y yyLexer) *Scope               { return yy(y).currentScope }
 
 func yyTLD(y yyLexer, n Node) {
 	p := yy(y)
 	p.ast = append(p.ast, n)
+	if d, ok := n.(Declaration); ok {
+		p.pkgScope.declare(p, d.DeclName(), n)
+	}
 }
 
 func yyTLDs(y yyLexer, l []Node) {
 	p := yy(y)
+	for _, v := range l {
+		if d, ok := v.(Declaration); ok {
+			p.pkgScope.declare(p, d.DeclName(), v)
+		}
+	}
 	p.ast = append(p.ast, l...)
 }
