@@ -190,7 +190,7 @@ common_dcl:
 	}
 |	_TYPE '(' ')'
 	{ //174
-		panic(".y:175")
+		$$ = nil
 	}
 
 lconst:
@@ -798,7 +798,7 @@ dotname:
 	}
 |	name '.' sym
 	{ //819
-		panic(".y:820")
+		$$ = &QualifiedIdent{pos($1.Pos()), $1.(*Ident), $3.(*Ident)}
 	}
 
 othertype:

@@ -1055,7 +1055,7 @@ yydefault:
 		}
 	case 29:
 		{ //174
-			panic(".y:175")
+			yyVAL.list = nil
 		}
 	case 30:
 		{ //180
@@ -1578,7 +1578,7 @@ yydefault:
 		}
 	case 167:
 		{ //819
-			panic(".y:820")
+			yyVAL.node = &QualifiedIdent{pos(yyS[yypt-2].node.Pos()), yyS[yypt-2].node.(*Ident), yyS[yypt-0].node.(*Ident)}
 		}
 	case 168:
 		{ //825

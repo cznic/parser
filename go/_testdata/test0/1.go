@@ -178,14 +178,14 @@ var re112, im112 = complexSqrt(-1)
 var _, found113 = entries[name]  // map lookup; only interested in "found"
 
 // ============================================================================
-//TODOtype u77 uint;
-//TODOtype u78 uint
-//TODOtype t78 u
-//TODOtype t79 u;
-//TODOtype u_V int;
-//TODOtype t80 u.V
-//TODOtype t81 u.V;
-//TODOtype ()
+type u77 uint;
+type u78 uint
+type t78 u
+type t79 u;
+type u_V int;
+type t80 u.V
+type t81 u.V;
+type ()
 //TODOtype ( t85 u )
 //TODOtype ( t86 u; )
 //TODOtype w88 int
