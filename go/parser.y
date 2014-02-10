@@ -16,6 +16,7 @@ import (
 	token  tkn
 	node   Node
 	list   []Node
+	param  *Param
 	params []*Param
 }
 
@@ -33,7 +34,7 @@ import (
 	embed expr
 	fnret_type
 	import_stmt indcl interfacedcl interfacetype
-	name new_name ntype
+	name name_or_type new_name ntype
 	oexpr oliteral othertype
 	package packname pexpr pexpr_no_paren ptrtype
 	structdcl structtype sym
@@ -49,7 +50,11 @@ import (
 	structdcl_list
 	typedcl_list
 
+%type	<param>
+	arg_type
+
 %type	<params>
+	arg_type_list
 	fnres
 	oarg_type_list_ocomma
 
@@ -642,9 +647,6 @@ expr_or_type:
 
 name_or_type:
 	ntype
-	{ //646
-		panic(".y:647")
-	}
 
 lbrace:
 	_BODY
@@ -692,6 +694,7 @@ dotdotdot:
 	_DDD
 	{ //701
 		panic(".y:702")
+		//yy(yylex).errPos($1.tpos, "final argument in variadic function missing type")
 	}
 |	_DDD ntype
 	{ //705
@@ -813,7 +816,7 @@ othertype:
 		case $2 != nil:
 			$$ = &ArrayType{$1.pos, $2, $4}
 		default:
-			panic(".y824:")
+			$$ = &SliceType{$1.pos, $4}
 		}
 	}
 |	'[' _DDD ']' ntype
@@ -903,7 +906,7 @@ fnbody:
 fnres:
 	%prec notParen
 	{ //918
-		panic(".y:919")
+		$$ = nil
 	}
 |	fnret_type
 	{ //922
@@ -1047,11 +1050,11 @@ indcl:
 arg_type:
 	name_or_type
 	{ //1069
-		panic(".y:1070")
+		$$ = &Param{pos: pos($1.Pos()), Type: $1}
 	}
 |	sym name_or_type
 	{ //1073
-		panic(".y:1074")
+		$$ = &Param{pos: pos($1.Pos()), Name: $1.(*Ident), Type: $2}
 	}
 |	sym dotdotdot
 	{ //1077
@@ -1065,11 +1068,11 @@ arg_type:
 arg_type_list:
 	arg_type
 	{ //1087
-		panic(".y:1088")
+		$$ = []*Param{$1}
 	}
 |	arg_type_list ',' arg_type
 	{ //1091
-		panic(".y:1092")
+		$$ = append($1, $3)
 	}
 
 oarg_type_list_ocomma:
@@ -1077,8 +1080,8 @@ oarg_type_list_ocomma:
 		$$ = nil
 	}
 |	arg_type_list ocomma
-	{ //1100
-		panic(".y:1101")
+	{
+		$$ = $1
 	}
 
 stmt:
@@ -1243,9 +1246,6 @@ osemi:
 |	';'
 
 ocomma:
-	{ //1270
-		panic(".y:1271")
-	}
 |	','
 	{ //1274
 		panic(".y:1275")
@@ -1253,7 +1253,7 @@ ocomma:
 
 oexpr:
 	{ //1279
-		panic(".y:1280")
+		$$ = nil
 	}
 |	expr
 

@@ -26,7 +26,6 @@ func String(fs *token.FileSet, v interface{}) (r string) {
 		}
 	}()
 
-	visited := map[uintptr]bool{}
 	var s func(string, reflect.Value)
 	s = func(pre string, rv reflect.Value) {
 		v := rv.Interface()
@@ -55,12 +54,6 @@ func String(fs *token.FileSet, v interface{}) (r string) {
 				return
 			}
 
-			p := rv.Pointer()
-			if visited[p] {
-				return
-			}
-
-			visited[p] = true
 			s(fmt.Sprintf("%s*", pre), rv.Elem())
 		case reflect.Slice:
 			n := rv.Len()

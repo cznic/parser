@@ -271,31 +271,26 @@ func newParams(y yyLexer, pos pos, a []*Param) (ddd bool) { //TODO proper scope
 		return
 	}
 
-	li := 0
-	for _, i := range p {
-		ai := a[i]
-		t := ai.Type
-		for j := li; j < i; j++ {
-			aj := a[j]
-			if ai.Ddd && li < i {
-				yyErrPos(y, aj, "can only use ... as final argument in list")
-				continue
-			}
-
-			nm, ok := aj.Type.(*NamedType)
-			if !ok {
-				yyErrPos(y, aj, "mixed named and unnamed function parameters")
-				continue
-			}
-
-			if nm.Name.Q != nil {
-				yyErrPos(y, aj, "mixed named and unnamed function parameters")
-				continue
-			}
-
-			a[j].Name, a[j].Type = nm.Name.I, t
+	for pi, ai := range p { // a[i] is (name, type)
+		from := 0
+		if pi != 0 {
+			from = p[pi-1] + 1
 		}
-		li = i + 1
+		typ := a[ai].Type
+		for i := from; i < ai; i++ {
+			id, ok := a[i].Type.(*NamedType)
+			if !ok {
+				yyErrPos(y, a[i], "mixed named and unnamed function parameters")
+				continue
+			}
+
+			if id.Name.Q != nil {
+				yyErrPos(y, id, "mixed named and unnamed function parameters")
+				continue
+			}
+
+			a[i].Name, a[i].Type = id.Name.I, typ
+		}
 	}
 	return
 }
@@ -312,6 +307,13 @@ type PtrType struct {
 type QualifiedIdent struct {
 	pos
 	Q, I *Ident
+}
+
+// ------------------------------------------------------------------ SliceType
+
+type SliceType struct {
+	pos
+	Type Node
 }
 
 // ----------------------------------------------------------------- StructType
