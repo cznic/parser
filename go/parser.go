@@ -1322,7 +1322,7 @@ yydefault:
 		yyVAL.node = yyS[yypt-0].node
 	case 96:
 		{ //489
-			panic(".y:490")
+			yyVAL.node = &UnOp{yyS[yypt-1].token.pos, token.MUL, yyS[yypt-0].node}
 		}
 	case 97:
 		{ //493
@@ -1354,7 +1354,7 @@ yydefault:
 		}
 	case 104:
 		{ //523
-			panic(".y:524")
+			yyVAL.node = &CallOp{yyS[yypt-1].token.pos, yyS[yypt-2].node, nil}
 		}
 	case 105:
 		{ //527
@@ -1943,10 +1943,6 @@ yydefault:
 	case 260:
 		{ //1256
 			yyVAL.list = yyS[yypt-1].list
-		}
-	case 264:
-		{ //1274
-			panic(".y:1275")
 		}
 	case 265:
 		{ //1279

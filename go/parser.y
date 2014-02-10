@@ -499,7 +499,7 @@ uexpr:
 	pexpr
 |	'*' uexpr
 	{ //489
-		panic(".y:490")
+		$$ = &UnOp{$1.pos, token.MUL, $2}
 	}
 |	'&' uexpr
 	{ //493
@@ -533,7 +533,7 @@ uexpr:
 pseudocall:
 	pexpr '(' ')'
 	{ //523
-		panic(".y:524")
+		$$ = &CallOp{$2.pos, $1, nil}
 	}
 |	pexpr '(' expr_or_type_list ocomma ')'
 	{ //527
@@ -1229,9 +1229,6 @@ osemi:
 
 ocomma:
 |	','
-	{ //1274
-		panic(".y:1275")
-	}
 
 oexpr:
 	{ //1279

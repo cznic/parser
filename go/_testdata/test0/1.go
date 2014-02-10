@@ -498,18 +498,18 @@ func f403() {
 		w = 314
 	}
 }
-//TODOvar v410 = f()
-//TODOvar v411 = f(1)
-//TODOvar v412 = f(1,)
-//TODOvar v416 = f(
-//TODO	1,
-//TODO)
-//TODOvar v419 = uint(3)
-//TODOvar v420 = (uint)(3)
-//TODOvar v421 = *uint(3)
-//TODOvar v422 = (*uint)(3)
-//TODOvar v423 = **uint(3)
-//TODOvar v424 = (**uint)(3)
+var v410 = f()
+var v411 = f(1)
+var v412 = f(1,)
+var v416 = f(
+	1,
+)
+var v419 = uint(3)
+var v420 = (uint)(3)
+var v421 = *uint(3)
+var v422 = (*uint)(3)
+var v423 = **uint(3)
+var v424 = (**uint)(3)
 //TODOvar v425 = 3.(uint) // callOp{float_lit: 3, args{"uint"}}
 //TODOvar v426 *int32
 //TODOvar w427, x427, y427 = uint(*a), *(*uint)(b), (uint)(*c)
