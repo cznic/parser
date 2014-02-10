@@ -335,6 +335,14 @@ type QualifiedIdent struct {
 	Q, I *Ident
 }
 
+// ------------------------------------------------------------------- SelectOp
+
+type SelectOp struct {
+	pos
+	Expr     Node
+	Selector *Ident
+}
+
 // ------------------------------------------------------------------ SliceType
 
 type SliceType struct {

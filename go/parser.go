@@ -1365,7 +1365,7 @@ yydefault:
 		yyVAL.node = yyS[yypt-0].node
 	case 109:
 		{ //545
-			panic(".y:546")
+			yyVAL.node = &SelectOp{yyS[yypt-1].token.pos, yyS[yypt-2].node, yyS[yypt-0].node.(*Ident)}
 		}
 	case 110:
 		{ //549
@@ -1417,7 +1417,9 @@ yydefault:
 			yyVAL.node = &Element{pos(yyS[yypt-2].node.Pos()), yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 123:
-		yyVAL.node = yyS[yypt-0].node
+		{ //609
+			yyVAL.node = &Element{pos(yyS[yypt-0].node.Pos()), nil, yyS[yypt-0].node}
+		}
 	case 124:
 		{ //610
 			panic(".y:611")
@@ -1915,23 +1917,23 @@ yydefault:
 		}
 	case 255:
 		{ //1235
-			yyVAL.list = []Node{yyS[yypt-0].node.(*Element)}
+			yyVAL.list = []Node{yyS[yypt-0].node}
 		}
 	case 256:
-		{ //1239
-			yyVAL.list = []Node{&Element{pos(yyS[yypt-0].node.Pos()), nil, yyS[yypt-0].node}}
+		{
+			yyVAL.list = []Node{yyS[yypt-0].node}
 		}
 	case 257:
 		{ //1243
-			panic(".y:1244")
+			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
 		}
 	case 258:
 		{ //1247
-			panic(".y:1248")
+			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
 		}
 	case 259:
 		{ //1252
-			panic(".y:1253")
+			yyVAL.list = nil
 		}
 	case 260:
 		{ //1256

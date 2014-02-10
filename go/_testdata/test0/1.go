@@ -407,20 +407,20 @@ var v311 = [1][3]int{2}
 var v312 = [1]struct{}{2}
 var v313 = [1]struct{i int}{2}
 var v314 = [2]int{1: 3}
-//TODOvar v315 = [2]int{1: 3, 2: 4}
-//TODOvar v316 = [2]int{1+2: 3}
-//TODOvar v317 = [2]int{"bad": 3}
-//TODOvar v318 = [2]int{ident: 3}
-//TODOvar v319 = struct{}{}
-//TODOvar v320 = struct{in, out int}{}
-//TODOvar v321 = struct{in, out int}{1, 2}
-//TODOvar v322 = struct{in, out int}{in: 1}
-//TODOvar v323 = [2]struct{in, out int}{in: 1}[0]
-//TODOvar a324, b324, c324 = d, e+1, f-2
-//TODOvar v325 = [3]int{4, 5}
-//TODOvar v326 = [3]int{4, 5}[1]
-//TODOvar v327 = struct{in, out int}{1, 2}.in
-//TODO
+var v315 = [2]int{1: 3, 2: 4}
+var v316 = [2]int{1+2: 3}
+var v317 = [2]int{"bad": 3}
+var v318 = [2]int{ident: 3}
+var v319 = struct{}{}
+var v320 = struct{in, out int}{}
+var v321 = struct{in, out int}{1, 2}
+var v322 = struct{in, out int}{in: 1}
+var v323 = [2]struct{in, out int}{in: 1}[0]
+var a324, b324, c324 = d, e+1, f-2
+var v325 = [3]int{4, 5}
+var v326 = [3]int{4, 5}[1]
+var v327 = struct{in, out int}{1, 2}.in
+
 //TODOfunc f329()
 //TODOfunc f330() x
 //TODOfunc f331() (x)

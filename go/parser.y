@@ -550,7 +550,7 @@ pexpr_no_paren:
 |	name
 |	pexpr '.' sym
 	{ //545
-		panic(".y:546")
+		$$ = &SelectOp{$2.pos, $1, $3.(*Ident)}
 	}
 |	pexpr '.' '(' expr_or_type ')'
 	{ //549
@@ -606,6 +606,9 @@ keyval:
 
 bare_complitexpr:
 	expr
+	{ //609
+		$$ = &Element{pos($1.Pos()), nil, $1}
+	}
 |	'{' start_complit braced_keyval_list '}'
 	{ //610
 		panic(".y:611")
@@ -1199,24 +1202,24 @@ expr_or_type_list:
 keyval_list:
 	keyval
 	{ //1235
-		$$ = []Node{$1.(*Element)}
+		$$ = []Node{$1}
 	}
 |	bare_complitexpr
-	{ //1239
-		$$ = []Node{&Element{pos($1.Pos()), nil, $1}}
+	{
+		$$ = []Node{$1}
 	}
 |	keyval_list ',' keyval
 	{ //1243
-		panic(".y:1244")
+		$$ = append($1, $3)
 	}
 |	keyval_list ',' bare_complitexpr
 	{ //1247
-		panic(".y:1248")
+		$$ = append($1, $3)
 	}
 
 braced_keyval_list:
 	{ //1252
-		panic(".y:1253")
+		$$ = nil
 	}
 |	keyval_list ocomma
 	{ //1256
