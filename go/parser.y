@@ -33,7 +33,7 @@ import (
 	complitexpr comptype constdcl constdcl1
 	dcl_name dotname
 	embed expr expr_or_type
-	fnret_type fntype
+	fndcl fnret_type fntype
 	import_stmt indcl interfacedcl interfacetype
 	keyval
 	name name_or_type new_name ntype non_dcl_stmt
@@ -42,16 +42,18 @@ import (
 	simple_stmt structdcl structtype sym
 	typedcl typedclname
 	uexpr
+	xfndcl
 
 %type	<list>
 	braced_keyval_list
 	common_dcl constdcl_list
 	dcl_name_list
 	expr_list expr_or_type_list
+	fnbody
 	import_stmt_list interfacedcl_list
 	keyval_list
 	new_name_list
-	structdcl_list
+	stmt stmt_list structdcl_list
 	typedcl_list
 	vardcl vardcl_list
 
@@ -148,7 +150,7 @@ xdcl:
 	}
 |	xfndcl
 	{ //124
-		panic(".y:125")
+		yyTLD(yylex, $1)
 	}
 |	non_dcl_stmt
 	{ //128
@@ -862,13 +864,15 @@ interfacetype:
 xfndcl:
 	_FUNC fndcl fnbody
 	{ //887
-		panic(".y:888")
+		x := $2.(*FuncDecl)
+		x.pos, x.Body = $1.pos, $3
+		$$ = x
 	}
 
 fndcl:
 	sym '(' oarg_type_list_ocomma ')' fnres
 	{ //893
-		panic(".y:894")
+		$$ = &FuncDecl{Name:(*Name)($1.(*Ident)), Type: newFuncType(yylex, $2.pos, $3, $5)}
 	}
 |	'(' oarg_type_list_ocomma ')' sym '(' oarg_type_list_ocomma ')' fnres
 	{ //897
@@ -883,11 +887,11 @@ fntype:
 
 fnbody:
 	{ //908
-		panic(".y:909")
+		$$ = nil
 	}
 |	'{' stmt_list '}'
 	{ //912
-		panic(".y:913")
+		$$ = $2
 	}
 
 fnres:
@@ -1073,7 +1077,7 @@ oarg_type_list_ocomma:
 
 stmt:
 	{ //1105
-		panic(".y:1106")
+		$$ = nil
 	}
 |	compound_stmt
 	{ //1109
@@ -1085,7 +1089,7 @@ stmt:
 	}
 |	non_dcl_stmt
 	{ //1117
-		panic(".y:1118")
+		$$ = []Node{$1}
 	}
 |	error
 	{ //1121
@@ -1149,12 +1153,9 @@ non_dcl_stmt:
 
 stmt_list:
 	stmt
-	{ //1185
-		panic(".y:1186")
-	}
 |	stmt_list ';' stmt
 	{ //1189
-		panic(".y:1190")
+		$$ = append($1, $3...)
 	}
 
 // field names of a struct type definition

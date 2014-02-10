@@ -144,6 +144,16 @@ func newFields(l []Node, emb bool, typ, tag Node) *fields {
 	return &fields{Names: l, Embedded: emb, Type: typ, Tag: tag.(*Literal)}
 }
 
+// ------------------------------------------------------------------- FuncDecl
+type FuncDecl struct {
+	pos
+	*Name
+	RxName *Ident
+	RxType Node
+	Type   *FuncType
+	Body   []Node
+}
+
 // ------------------------------------------------------------------- FuncType
 type FuncType struct {
 	pos

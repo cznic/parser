@@ -421,37 +421,37 @@ var v325 = [3]int{4, 5}
 var v326 = [3]int{4, 5}[1]
 var v327 = struct{in, out int}{1, 2}.in
 
-//TODOfunc f329()
-//TODOfunc f330() x
-//TODOfunc f331() (x)
-//TODOfunc f332() (x y)
-//TODOfunc f333(int)
-//TODOfunc f334(int, int)
-//TODOfunc f335(...int)
-//TODOfunc f336(int, ...int)
-//TODOfunc f337(int, int, ...int)
-//TODOfunc f338(x int)
-//TODOfunc f339(x ...int)
-//TODOfunc f340(x int, y int)
-//TODOfunc f341(x, y int)
-//TODOfunc f343(x, y int, z ...int)
-//TODOfunc f344() {}
-//TODOfunc f345() {;}
-//TODOfunc f346() {2}
-//TODOfunc f347() {2;}
-//TODOfunc f348() {;}
-//TODOfunc f349() {;;}
-//TODOfunc f350() {;2}
-//TODOfunc f351() {;2;}
-//TODOfunc f352() {1}
-//TODOfunc f353() {1;}
-//TODOfunc f354() {12}
-//TODOfunc f355() {12;}
-//TODOfunc f356() {1;}
-//TODOfunc f357() {1;;}
-//TODOfunc f358() {1;2}
-//TODOfunc f359() {1;2;}
-//TODOfunc f360() {;1;2;}
+func f329()
+func f330() x
+func f331() (x)
+func f332() (x y)
+func f333(int)
+func f334(int, int)
+func f335(...int)
+func f336(int, ...int)
+func f337(int, int, ...int)
+func f338(x int)
+func f339(x ...int)
+func f340(x int, y int)
+func f341(x, y int)
+func f343(x, y int, z ...int)
+func f344() {}
+func f345() {;}
+func f346() {2}
+func f347() {2;}
+func f348() {;}
+func f349() {;;}
+func f350() {;2}
+func f351() {;2;}
+func f352() {1}
+func f353() {1;}
+func f354() {12}
+func f355() {12;}
+func f356() {1;}
+func f357() {1;;}
+func f358() {1;2}
+func f359() {1;2;}
+func f360() {;1;2;}
 //TODOfunc f361() { a = 1 }
 //TODOfunc f364() { a, b = 1, 2 }
 //TODOfunc f365() { a += 1 }
