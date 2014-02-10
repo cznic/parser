@@ -50,6 +50,14 @@ type CallOp struct {
 	Args  []Node
 }
 
+// -------------------------------------------------------------------- CompLit
+
+type CompLit struct {
+	pos
+	Type Node
+	Val  []*Element
+}
+
 // ------------------------------------------------------------------ ConstDecl
 
 type ConstDecl struct {
@@ -102,6 +110,14 @@ func newConstSpec(y yyLexer, names []Node, typ Node, expr []Node) (c *constSpec)
 	}
 	p.constIota++
 	return
+}
+
+// -------------------------------------------------------------------- Element
+
+type Element struct {
+	pos
+	Key Node
+	Val Node
 }
 
 // ---------------------------------------------------------------------- Field

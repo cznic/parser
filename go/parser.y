@@ -29,11 +29,13 @@ import (
 	'.' '-' '*' '[' '(' '+'
 
 %type	<node>
-	constdcl constdcl1
+	bare_complitexpr
+	complitexpr comptype constdcl constdcl1
 	dcl_name dotname
 	embed expr expr_or_type
 	fnret_type fntype
 	import_stmt indcl interfacedcl interfacetype
+	keyval
 	name name_or_type new_name ntype non_dcl_stmt
 	oexpr oliteral othertype
 	package packname pexpr pexpr_no_paren pseudocall ptrtype
@@ -42,10 +44,12 @@ import (
 	uexpr
 
 %type	<list>
+	braced_keyval_list
 	common_dcl constdcl_list
 	dcl_name_list
 	expr_list expr_or_type_list
 	import_stmt_list interfacedcl_list
+	keyval_list
 	new_name_list
 	structdcl_list
 	typedcl_list
@@ -575,7 +579,7 @@ pexpr_no_paren:
 	}
 |	comptype lbrace start_complit braced_keyval_list '}'
 	{ //577
-		panic(".y:578")
+		$$ = &CompLit{pos($1.Pos()), $1, elements($4)}
 	}
 |	pexpr_no_paren '{' start_complit braced_keyval_list '}'
 	{ //581
@@ -592,20 +596,16 @@ pexpr_no_paren:
 
 start_complit:
 	{ //594
-		panic(".y:595")
 	}
 
 keyval:
 	expr ':' complitexpr
 	{ //600
-		panic(".y:601")
+		$$ = &Element{pos($1.Pos()), $1, $3}
 	}
 
 bare_complitexpr:
 	expr
-	{ //606
-		panic(".y:607")
-	}
 |	'{' start_complit braced_keyval_list '}'
 	{ //610
 		panic(".y:611")
@@ -614,7 +614,7 @@ bare_complitexpr:
 complitexpr:
 	expr
 	{ //616
-		panic(".y:617")
+		$$ = &Element{pos($1.Pos()), nil, $1}
 	}
 |	'{' start_complit braced_keyval_list '}'
 	{ //620
@@ -760,9 +760,6 @@ convtype:
 
 comptype:
 	othertype
-	{ //787
-		panic(".y:788")
-	}
 
 fnret_type:
 	recvchantype
@@ -1202,11 +1199,11 @@ expr_or_type_list:
 keyval_list:
 	keyval
 	{ //1235
-		panic(".y:1236")
+		$$ = []Node{$1.(*Element)}
 	}
 |	bare_complitexpr
 	{ //1239
-		panic(".y:1240")
+		$$ = []Node{&Element{pos($1.Pos()), nil, $1}}
 	}
 |	keyval_list ',' keyval
 	{ //1243
@@ -1223,7 +1220,7 @@ braced_keyval_list:
 	}
 |	keyval_list ocomma
 	{ //1256
-		panic(".y:1257")
+		$$ = $1
 	}
 
 osemi:

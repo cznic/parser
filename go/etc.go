@@ -266,3 +266,11 @@ func (s *Scope) declare(p *parser, nm string, n Node) {
 
 	s.Names[nm] = n
 }
+
+func elements(l []Node) []*Element {
+	r := make([]*Element, len(l))
+	for i, v := range l {
+		r[i] = v.(*Element)
+	}
+	return r
+}

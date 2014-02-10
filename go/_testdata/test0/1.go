@@ -402,11 +402,11 @@ var (
 	w307 *[3]int
 	w308 *[3]*int
 )
-//TODOvar v310 = [1]int{2}
-//TODOvar v311 = [1][3]int{2}
-//TODOvar v312 = [1]struct{}{2}
-//TODOvar v313 = [1]struct{i int}{2}
-//TODOvar v314 = [2]int{1: 3}
+var v310 = [1]int{2}
+var v311 = [1][3]int{2}
+var v312 = [1]struct{}{2}
+var v313 = [1]struct{i int}{2}
+var v314 = [2]int{1: 3}
 //TODOvar v315 = [2]int{1: 3, 2: 4}
 //TODOvar v316 = [2]int{1+2: 3}
 //TODOvar v317 = [2]int{"bad": 3}
