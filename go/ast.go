@@ -238,20 +238,18 @@ func newParams(y yyLexer, pos pos, a []*Param) (ddd bool) { //TODO proper scope
 		return
 	}
 
-	//TODO defer func() {
-	//TODO 	sc := yyScope(y)
-	//TODO 	for _, p := range a {
-	//TODO 		id := p.Name
-	//TODO 		if id == nil {
-	//TODO 			continue
-	//TODO 		}
+	ps := yy(y)
+	defer func() {
+		sc := yyScope(y)
+		for _, p := range a {
+			id := p.Name
+			if id == nil {
+				continue
+			}
 
-	//TODO 		d := &varSpec{sc, id, p.Type, nil}
-	//TODO 		if err := sc.declare(d); err != nil {
-	//TODO 			yyErr(y, d, err.Error())
-	//TODO 		}
-	//TODO 	}
-	//TODO }()
+			sc.declare(ps, id.Lit, id)
+		}
+	}()
 
 	p := []int{}
 	for i, v := range a {

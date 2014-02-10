@@ -980,7 +980,7 @@ interfacedcl_list:
 	}
 |	interfacedcl_list ';' interfacedcl
 	{ //1001
-		panic(".y:1002")
+		$$ = append($1, $3)
 	}
 
 structdcl:

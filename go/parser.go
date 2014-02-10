@@ -1729,7 +1729,7 @@ yydefault:
 		}
 	case 204:
 		{ //1001
-			panic(".y:1002")
+			yyVAL.list = append(yyS[yypt-2].list, yyS[yypt-0].node)
 		}
 	case 205:
 		{ //1007
