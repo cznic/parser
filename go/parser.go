@@ -1072,7 +1072,7 @@ yydefault:
 		}
 	case 32:
 		{ //190
-			panic(".y:191")
+			yyVAL.list = newVarDecls(yyS[yypt-3].list, yyS[yypt-2].node, yyS[yypt-0].list)
 		}
 	case 33:
 		{ //194

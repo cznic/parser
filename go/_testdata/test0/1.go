@@ -104,7 +104,7 @@ const (
 var i104 int
 var U105, V105, W105 float64
 var k106 = 0
-//var x107, y107 float32 = -1, -2
+var x107, y107 float32 = -1, -2
 //var (
 //	i109       int
 //	u110, v110, s110 = 2.0, 3.0, "bar"

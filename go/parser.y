@@ -210,7 +210,7 @@ vardcl:
 	}
 |	dcl_name_list ntype '=' expr_list
 	{ //190
-		panic(".y:191")
+		$$ = newVarDecls($1, $2, $4)
 	}
 |	dcl_name_list '=' expr_list
 	{ //194
