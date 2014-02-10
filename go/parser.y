@@ -150,9 +150,6 @@ xdcl:
 		panic(".y:129")
 	}
 |	error
-	{ //132
-		panic(".y:137")
-	}
 
 common_dcl:
 	_VAR vardcl

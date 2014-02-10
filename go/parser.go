@@ -1017,10 +1017,6 @@ yydefault:
 		{ //128
 			panic(".y:129")
 		}
-	case 19:
-		{ //132
-			panic(".y:137")
-		}
 	case 20:
 		{ //138
 			yyVAL.list = yyS[yypt-0].list

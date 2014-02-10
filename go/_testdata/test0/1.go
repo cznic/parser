@@ -14,6 +14,71 @@ import (
 	_ "foo11"
 )
 
+import "x"
+import "y"
+import `z`
+import ()
+import ( "x16" )
+import ( "x17"; )
+import ( "x18"; "y18" )
+import ( "x19"; "y19"; )
+import (
+)
+import (
+	"x23"
+)
+import (
+	"x26";
+)
+import (
+	"x29"
+	"y30"
+)
+import (
+	"x33"
+	"y34";
+)
+import (
+	"x37";
+	"y38"
+)
+import (
+	"x41";
+	"y42";
+)
+import a44 "x"
+import a45 "y"
+import a46_ `z`
+import ()
+import ( a48 "x" )
+import ( a49 "x"; )
+import ( a50 "x"; a50b "y" )
+import ( a51 "x"; a51b "y"; )
+import (
+)
+import (
+	a55 "x"
+)
+import (
+	a58 "x";
+)
+import (
+	a61 "x"
+	a62 "y"
+)
+import (
+	a65 "x"
+	a66 "y";
+)
+import (
+	a69 "x";
+	a70 "y"
+)
+import (
+	a73 "x";
+	a74 "y";
+)
+
 // ------------------------------------------------------------------ ConstDecl
 const ()
 const c16 = 3e8
@@ -111,3 +176,760 @@ var (
 )
 var re112, im112 = complexSqrt(-1)
 var _, found113 = entries[name]  // map lookup; only interested in "found"
+
+// ============================================================================
+//TODOtype u77 uint;
+//TODOtype u78 uint
+//TODOtype t78 u
+//TODOtype t79 u;
+//TODOtype u_V int;
+//TODOtype t80 u.V
+//TODOtype t81 u.V;
+//TODOtype ()
+//TODOtype ( t85 u )
+//TODOtype ( t86 u; )
+//TODOtype w88 int
+//TODOtype ( t87 u; v87 w )
+//TODOtype ( t89 u; v89 w; )
+//TODOtype (
+//TODO	t92 u
+//TODO)
+//TODOtype (
+//TODO	t95 u;
+//TODO)
+//TODOtype (
+//TODO	t98 u
+//TODO	v99 w
+//TODO)
+//TODOtype (
+//TODO	t102 u
+//TODO	v103 w;
+//TODO)
+//TODOtype (
+//TODO	t106 u;
+//TODO	v107 w
+//TODO)
+//TODOtype (
+//TODO	t110 u;
+//TODO	v111 w;
+//TODO)
+//TODOtype t113 (u)
+//TODOtype t114 *u
+//TODOtype t115 (*u)
+//TODOtype t116 *(u)
+//TODOtype t118 struct{}
+//TODOtype t119 struct{ u }
+//TODOtype t119a struct{ *u }
+//TODOtype t119b struct{ int }
+//TODOtype t119c struct{ *int }
+//TODOtype t120 struct{ u; }
+//TODOtype t121 struct{
+//TODO	u
+//TODO}
+//TODOtype t124 struct{
+//TODO	u;
+//TODO}
+//TODOtype t127 struct{
+//TODO	u.V
+//TODO}
+//TODOtype t130 struct{ // typedef struct{ u *u } (t130);
+//TODO	*u
+//TODO}
+//TODOtype t133 struct{
+//TODO	*u.V
+//TODO}
+//TODOtype X int
+//TODOtype y_Z int
+//TODOtype t136 struct{ // typedef struct{int i; uint j; ...} (t136);
+//TODO	i int
+//TODO	j, k uint
+//TODO	l,
+//TODO	m,
+//TODO	n *uint
+//TODO	o struct{
+//TODO		p, q bool
+//TODO		*X
+//TODO		*y.Z
+//TODO	}
+//TODO}
+//TODOtype t136b *struct{
+//TODO	i int
+//TODO	j, k uint
+//TODO	l,
+//TODO	m,
+//TODO	n *uint
+//TODO	o struct{
+//TODO		p, q bool
+//TODO		*X
+//TODO		*y.Z
+//TODO	}
+//TODO}
+//TODOtype t136c **struct{
+//TODO	i int
+//TODO	j, k uint
+//TODO	l,
+//TODO	m,
+//TODO	n *uint
+//TODO	o struct{
+//TODO		p, q bool
+//TODO		*X
+//TODO		*y.Z
+//TODO	}
+//TODO}
+//TODOtype t140 int		// typedef int (t140);		t140: int
+//TODOtype t141 *int		// typedef int (*t141);		t141: ptr{int}
+//TODOtype t142 **int		// typedef int (**t142);	t142: ptr{ptr{int}}
+//TODO
+//TODOtype t150 [3]int	// typedef int (t150)[10];	t150: array{10, int}
+//TODOtype t151 [3]*int	// typedef int *(t151)[10];	t151: array{10, ptr{int}}
+//TODOtype t152 [3]**int	// typedef int **(t152)[10];	t152: array{10, ptr{ptr{int}}}
+//TODOtype t153 *[3]int	// typedef int (*tx153)[10];	t153: ptr{array{10, int}}
+//TODOtype t154 *[3]*int	// typedef int *(*tx154)[10];	t154: ptr{array{10, ptr{int}}}
+//TODOtype t155 *[3]**int	// typedef int **(*tx155)[10];	t155: ptr{array{10, ptr{ptr{int}}}}
+//TODOtype t156 **[3]int	// typedef int (**t156)[10];	t156: ptr{ptr{array{10, int}}}
+//TODOtype t157 **[3]*int	// typedef int *(**t157)[10];	t157: ptr{ptr{array{10, ptr{int}}}}
+//TODOtype t158 **[3]**int	// typedef int **(**t158)[10];	t158: ptr{ptr{array{10, ptr{ptr{int}}}}}
+//TODO
+//TODOtype t188 bool;
+//TODOtype t189 int8;
+//TODOtype t190 int16;
+//TODOtype t191 int32;
+//TODOtype t192 int64;
+//TODOtype t193 int;
+//TODOtype t194 uint8;
+//TODOtype t195 uint16;
+//TODOtype t196 uint32;
+//TODOtype t197 uint64;
+//TODOtype t198 uint;
+//TODOtype t199 float32;
+//TODOtype t200 float64;
+//TODOtype t201 complex64;
+//TODOtype t202 complex128;
+//TODO
+//TODOtype t188_b *bool;
+//TODOtype t189_b *int8;
+//TODOtype t190_b *int16;
+//TODOtype t191_b *int32;
+//TODOtype t192_b *int64;
+//TODOtype t193_b *int;
+//TODOtype t194_b *uint8;
+//TODOtype t195_b *uint16;
+//TODOtype t196_b *uint32;
+//TODOtype t197_b *uint64;
+//TODOtype t198_b *uint;
+//TODOtype t199_b *float32;
+//TODOtype t200_b *float64;
+//TODOtype t201_b *complex64;
+//TODOtype t202_b *complex128;
+//TODO
+//TODOtype t188_c **bool;
+//TODOtype t189_c **int8;
+//TODOtype t190_c **int16;
+//TODOtype t191_c **int32;
+//TODOtype t192_c **int64;
+//TODOtype t193_c **int;
+//TODOtype t194_c **uint8;
+//TODOtype t195_c **uint16;
+//TODOtype t196_c **uint32;
+//TODOtype t197_c **uint64;
+//TODOtype t198_c **uint;
+//TODOtype t199_c **float32;
+//TODOtype t200_c **float64;
+//TODOtype t201_c **complex64;
+//TODOtype t202_c **complex128;
+//TODO
+//TODOtype t236 func()			// typedef void (*t)();
+//TODOtype t237 func() x			// typedef x (*t)();
+//TODOtype t238 func() (x)			// typedef x (*t)();
+//TODOtype t239 func() (x y)			// typedef y (*t)();
+//TODOtype t240 func(int)			// typedef void (*t)(int);
+//TODOtype t241 func(int, uint)		// typedef void (*t)(int, int);
+//TODOtype t242 func(...int)			// typedef void (*t)(int n$, int *p);
+//TODOtype t243 func(int, ...int)		// typedef void (*t)(int, int, int*);
+//TODOtype t244 func(int, int, ...int)	// typedef void (*t)(int, int, int, int*);
+//TODOtype t245 func(x int)			// typedef void (*t)(int x);
+//TODOtype t246 func(x ...int)		// typedef void (*t)(int n$, int* x);
+//TODOtype t247 func(x int, y uint)		// typedef void (*t)(int x, int y);
+//TODOtype t248 func(x, y int)		// typedef void (*t)(int x, int y);
+//TODOtype t250 func(x, y int, z ...uint)	// typedef void (*t)(int x, int y, int n$, int *z);
+//TODO
+//TODOtype t255 func()()
+//TODOtype t256 func() int
+//TODO
+//TODOconst c258 = 3
+//TODOconst c259 = 3;
+//TODOconst c260 t = 3
+//TODOconst c261 t = 3;
+//TODOconst ()
+//TODOconst (
+//TODO	_ = 1 << iota
+//TODO	a268
+//TODO	b269
+//TODO	c270
+//TODO)
+//TODOconst (
+//TODO	bit0, mask0 = 1 << iota, 1<<iota - 1  // bit0 == 1, mask0 == 0
+//TODO	bit1, mask1                           // bit1 == 2, mask1 == 1
+//TODO	_, _                                  // skips iota == 2
+//TODO	bit3, mask3                           // bit3 == 8, mask3 == 7
+//TODO)
+//TODO
+//TODOvar v279 t
+//TODOvar v280 t;
+//TODOvar v283 = 3
+//TODOvar v284 = 3;
+//TODOvar v285 t = 3
+//TODOvar v286 t = 3;
+//TODOvar ()
+//TODOvar ( v289 t )
+//TODOvar ( v290 t; )
+//TODOvar ( v291 = 3 )
+//TODOvar ( v292 = 3; )
+//TODOvar ( v293 t = 3 )
+//TODOvar ( v294 t = 3; )
+//TODOvar (
+//TODO	v296 t
+//TODO)
+//TODOvar (
+//TODO	v299 t;
+//TODO	u300 *struct{
+//TODO		bar
+//TODO		baz.Q
+//TODO		*int
+//TODO	}
+//TODO	w305 [3]int
+//TODO	w306 [3]*int
+//TODO	w307 *[3]int
+//TODO	w308 *[3]*int
+//TODO)
+//TODOvar v310 = [1]int{2}
+//TODOvar v311 = [1][3]int{2}
+//TODOvar v312 = [1]struct{}{2}
+//TODOvar v313 = [1]struct{i int}{2}
+//TODOvar v314 = [2]int{1: 3}
+//TODOvar v315 = [2]int{1: 3, 2: 4}
+//TODOvar v316 = [2]int{1+2: 3}
+//TODOvar v317 = [2]int{"bad": 3}
+//TODOvar v318 = [2]int{ident: 3}
+//TODOvar v319 = struct{}{}
+//TODOvar v320 = struct{in, out int}{}
+//TODOvar v321 = struct{in, out int}{1, 2}
+//TODOvar v322 = struct{in, out int}{in: 1}
+//TODOvar v323 = [2]struct{in, out int}{in: 1}[0]
+//TODOvar a324, b324, c324 = d, e+1, f-2
+//TODOvar v325 = [3]int{4, 5}
+//TODOvar v326 = [3]int{4, 5}[1]
+//TODOvar v327 = struct{in, out int}{1, 2}.in
+//TODO
+//TODOfunc f329()
+//TODOfunc f330() x
+//TODOfunc f331() (x)
+//TODOfunc f332() (x y)
+//TODOfunc f333(int)
+//TODOfunc f334(int, int)
+//TODOfunc f335(...int)
+//TODOfunc f336(int, ...int)
+//TODOfunc f337(int, int, ...int)
+//TODOfunc f338(x int)
+//TODOfunc f339(x ...int)
+//TODOfunc f340(x int, y int)
+//TODOfunc f341(x, y int)
+//TODOfunc f343(x, y int, z ...int)
+//TODOfunc f344() {}
+//TODOfunc f345() {;}
+//TODOfunc f346() {2}
+//TODOfunc f347() {2;}
+//TODOfunc f348() {;}
+//TODOfunc f349() {;;}
+//TODOfunc f350() {;2}
+//TODOfunc f351() {;2;}
+//TODOfunc f352() {1}
+//TODOfunc f353() {1;}
+//TODOfunc f354() {12}
+//TODOfunc f355() {12;}
+//TODOfunc f356() {1;}
+//TODOfunc f357() {1;;}
+//TODOfunc f358() {1;2}
+//TODOfunc f359() {1;2;}
+//TODOfunc f360() {;1;2;}
+//TODOfunc f361() { a = 1 }
+//TODOfunc f364() { a, b = 1, 2 }
+//TODOfunc f365() { a += 1 }
+//TODOfunc f366() { a -= 1 }
+//TODOfunc f367() { a *= 1 }
+//TODOfunc f368() { a /= 1 }
+//TODOfunc f369() { a %= 1 }
+//TODOfunc f370() { a >>= 1 }
+//TODOfunc f371() { a <<= 1 }
+//TODOfunc f372() { a &= 1 }
+//TODOfunc f373() { a &^= 1 }
+//TODOfunc f374() { a ^= 1 }
+//TODOfunc f375() { v = 42 }
+//TODOfunc f376() {
+//TODO	v = 42
+//TODO}
+//TODOfunc f379() {
+//TODO	v = 42
+//TODO	var ()
+//TODO}
+//TODOfunc f383() {
+//TODO	v = 42
+//TODO	var (x int)
+//TODO}
+//TODOfunc f387() {
+//TODO	v = 42
+//TODO	var (x int; y bool)
+//TODO}
+//TODOfunc f391() {
+//TODO	var ()
+//TODO	v = 42
+//TODO}
+//TODOfunc f395() {
+//TODO	var (x int)
+//TODO	v = 42
+//TODO}
+//TODOfunc f399() {
+//TODO	var (x int; y bool)
+//TODO	v = 42
+//TODO}
+//TODOfunc f403() {
+//TODO	v = 42
+//TODO	{
+//TODO		w = 314
+//TODO	}
+//TODO}
+//TODOvar v410 = f()
+//TODOvar v411 = f(1)
+//TODOvar v412 = f(1,)
+//TODOvar v416 = f(
+//TODO	1,
+//TODO)
+//TODOvar v419 = uint(3)
+//TODOvar v420 = (uint)(3)
+//TODOvar v421 = *uint(3)
+//TODOvar v422 = (*uint)(3)
+//TODOvar v423 = **uint(3)
+//TODOvar v424 = (**uint)(3)
+//TODOvar v425 = 3.(uint) // callOp{float_lit: 3, args{"uint"}}
+//TODOvar v426 *int32
+//TODOvar w427, x427, y427 = uint(*a), *(*uint)(b), (uint)(*c)
+//TODO
+//TODOvar v429 = (int)(x)
+//TODOvar v430 = int(x)
+//TODO
+//TODOvar v432 = (*int)(x)
+//TODOvar v433 = *(int)(x)
+//TODOvar v434 = *int(x)
+//TODO
+//TODOvar v436 = (**int)(x)
+//TODOvar v437 = *(*int)(x)
+//TODOvar v438 = **int(x)
+//TODO
+//TODOfunc f423() {
+//TODO	a++
+//TODO	b--
+//TODO	a++;
+//TODO	b--;
+//TODO	a = b
+//TODO	c, d *= 2, 4
+//TODO	f, err := open(name)
+//TODO	f, err = open(name)
+//TODO	var f432, err432 = open(name)
+//TODO	return
+//TODO	return;
+//TODO	return foo
+//TODO	return foo;
+//TODO	return foo, bar, 3
+//TODO	return foo, bar, 3;
+//TODO	return 42, "blah", 3.14
+//TODO	return 42, "blah", 3.14;
+//TODO	break
+//TODO	break;
+//TODO	break loop
+//TODO	break loop2;
+//TODO	continue
+//TODO	continue;
+//TODO	continue loop
+//TODO	continue loop2;
+//TODO	goto ident
+//TODO	goto ident2;
+//TODO	fallthrough
+//TODO	fallthrough;
+//TODO	if 1 {
+//TODO		println(42)
+//TODO	}
+//TODO	if (1) {
+//TODO		println(42)
+//TODO	}
+//TODO	if x {
+//TODO		println(42)
+//TODO	}
+//TODO	if (x) {
+//TODO		println(42)
+//TODO	}
+//TODO	if x.y {}
+//TODO	if (x.y) {}
+//TODO	if (x{}) {
+//TODO		println(42)
+//TODO	}
+//TODO	if (int{}) {
+//TODO		println(42)
+//TODO	}
+//TODO	if (int{1}) {
+//TODO		println(42)
+//TODO	}
+//TODO	if ([...]int{1}) {
+//TODO		println(42)
+//TODO	}
+//TODO	if ([...]int{1}[0]) {
+//TODO		println(42)
+//TODO	}
+//TODO	if ([...]int{1}[0] == 0) {
+//TODO		println(42)
+//TODO	}
+//TODO	if ([...]int{1}[0]) == 0 {
+//TODO		println(42)
+//TODO	}
+//TODO	if ([1]int{1}) {
+//TODO	     println(42)
+//TODO	}
+//TODO	if ([1]int{1}[0]) {
+//TODO	     println(42)
+//TODO	}
+//TODO	if ([1]int{1}[0] == 0) {
+//TODO	     println(42)
+//TODO	}
+//TODO	if ([1]int{1}[0]) == 0 {
+//TODO		println(42)
+//TODO	}
+//TODO	if x == (T{a,b,c}[i]) {
+//TODO		println(42)
+//TODO	}
+//TODO	if (x == T{a,b,c}[i]) {
+//TODO		println(42)
+//TODO	}
+//TODO	if (x.y{false, true}[0]) {}
+//TODO	if x == (p.T{a,b,c}[i]) {
+//TODO		println(42)
+//TODO	}
+//TODO	if (x == p.T{a,b,c}[i]) {
+//TODO		println(42)
+//TODO	}
+//TODO	if n = len(l.stack); n != 0 {
+//TODO		l.stack[n-1]++
+//TODO	}
+//TODO	if (func() bool { return true }()) { //LATER lift parens requirement in this special case (?)
+//TODO		fmt.Println("Hello, playground")
+//TODO	}
+//TODO}
+//TODO
+//TODOvar v = func() bool {}
+//TODO
+//TODOfunc f521() {
+//TODO	for {}
+//TODO	for x {}
+//TODO	for x > 0 {}
+//TODO	for (x{1}[0]) != 0 {}
+//TODO	for (x{1}[0] != 0) {}
+//TODO	for ; ; {}
+//TODO	for ; ; i++ {}
+//TODO	for ; i < 10 ; {}
+//TODO	for ; i < 10 ; i++ {}
+//TODO	for i = 0 ; ; {}
+//TODO	for i = 0 ; ; i++ {}
+//TODO	for i = 0 ; i < 10 ; {}
+//TODO	for i = 0 ; i < 10 ; i++ {}
+//TODO	a = b
+//TODO	a := b
+//TODO	for i = range x {}
+//TODO	for i, v = range x {}
+//TODO	for *p = range x {}
+//TODO	for *p, l.x = range x {}
+//TODO	for i := range x {}
+//TODO	for i, v := range x {}
+//TODO	for i := 0; i < 10; i++ {}
+//TODO}
+//TODO
+//TODOfunc f547() {
+//TODO	switch{}
+//TODO	switch x {}
+//TODO	switch (x{1})[0] {}
+//TODO	switch (x{1}[0]) {}
+//TODO	switch n := 2*m; {}
+//TODO
+//TODO	switch n := 2*m; {
+//TODO	case n > b:
+//TODO		break
+//TODO	case n <= c:
+//TODO		f()
+//TODO		fallthrough
+//TODO	default:
+//TODO		fmt.Println(42)
+//TODO	}
+//TODO
+//TODO	switch n := 2*m; n+3 {
+//TODO	case 42:
+//TODO		break
+//TODO	case 255:
+//TODO		float32(f(int64(n)))
+//TODO		fallthrough
+//TODO	default:
+//TODO		fmt.Println(42)
+//TODO	}
+//TODOlabel:;
+//TODOlabel2:
+//TODOloop:
+//TODO	for x {
+//TODO		if y {
+//TODO			break loop
+//TODO		}
+//TODO	}
+//TODO
+//TODO	f := float64(3.14)
+//TODO	i := int16(f) // conversion, i == 3
+//TODO	bits := *(*uint64)(&f) // cast, bits == IEE754 pattern for 64bit 3.14
+//TODO	half := *(*uint32)(&f) // ugly cast
+//TODO
+//TODO	var arr [32]byte
+//TODO	a591 := [math.MaxInt64]byte(arr)
+//TODO	a592 := ([math.MaxInt64]byte(arr))
+//TODO	a593 := *([math.MaxInt64]byte(arr))
+//TODO	a594 := *[math.MaxInt64]byte(arr)
+//TODO	a595 := (*[math.MaxInt64]byte(arr))
+//TODO	a596 := *(*[math.MaxInt64]byte(arr))
+//TODO	a597 := **[math.MaxInt64]byte(arr)
+//TODO	a598 := (**[math.MaxInt64]byte(arr))
+//TODO	a599 := *(**[math.MaxInt64]byte(arr))
+//TODO}
+//TODO
+//TODO// Go
+//TODOfunc Float32bits603(f float32) uint32 { return *(*uint32)(unsafe.Pointer(&f)) }
+//TODOfunc Float32bits604(f float32) uint32 { return *(*uint32(unsafe.Pointer(&f))) }
+//TODOfunc Float32frombits605(b uint32) float32 { return *(*float32)(unsafe.Pointer(&b)) }
+//TODOfunc Float32frombits606(b uint32) float32 { return *(*float32(unsafe.Pointer(&b))) }
+//TODOfunc Float64bits607(f float64) uint64 { return *(*uint64)(unsafe.Pointer(&f)) }
+//TODOfunc Float64bits608(f float64) uint64 { return *(*uint64(unsafe.Pointer(&f))) }
+//TODOfunc Float64frombits609(b uint64) float64 { return *(*float64)(unsafe.Pointer(&b)) }
+//TODOfunc Float64frombits610(b uint64) float64 { return *(*float64(unsafe.Pointer(&b))) }
+//TODO// Run
+//TODOfunc Float32bits612(f float32) uint32 { return *(*uint32(&f)) }
+//TODOfunc Float32bits613(f float32) uint32 { return *(*uint32)(&f) }
+//TODOfunc Float32frombits614(b uint32) float32 { return *(*float32(&b)) }
+//TODOfunc Float32frombits615(b uint32) float32 { return *(*float32)(&b) }
+//TODOfunc Float64bits616(f float64) uint64 { return *(*uint64)(&f) }
+//TODOfunc Float64bits617(f float64) uint64 { return *(*uint64(&f)) }
+//TODOfunc Float64frombits618(b uint64) float64 { return *(*float64)(&b) }
+//TODOfunc Float64frombits619(b uint64) float64 { return *(*float64(&b)) }
+//TODO
+//TODOvar (
+//TODO	fp622 *float64
+//TODO	up623 *uint64 = *uint64(fp)
+//TODO	up624 = *uint64(fp)
+//TODO	v625 [n]t
+//TODO	v626 = struct{
+//TODO		u, v struct{
+//TODO			int
+//TODO		}
+//TODO	}{
+//TODO		u: {3},
+//TODO	}
+//TODO	v633 = struct{
+//TODO		u struct{
+//TODO			int
+//TODO		}
+//TODO	}{
+//TODO		{3},
+//TODO	}
+//TODO)
+//TODOfunc f641() {
+//TODO	i := a || b && c
+//TODO	j := a && b || c
+//TODO	k := struct{int}(x)
+//TODO	l := (struct{int}(y))
+//TODO	m := (*[math.MaxInt64]byte(p))
+//TODO	n := (*(struct{int}(z)))
+//TODO	o := (*struct{int}(z))
+//TODO	p := *(struct{int}(z))
+//TODO	q := a >= b
+//TODO}
+//TODO
+//TODOfunc (t) f653()
+//TODOfunc (*t) f654()
+//TODOfunc (x t) f655()
+//TODOfunc (x *t) f656()
+//TODOfunc f657() {
+//TODO	if x {
+//TODO		a
+//TODO	} else if y {
+//TODO		b
+//TODO	}
+//TODO	if x {
+//TODO		a
+//TODO	} else {
+//TODO		b
+//TODO	}
+//TODO	i := 1i
+//TODO	nl := '\n'
+//TODO	v := [...]int{1, 2, 3}
+//TODO	a = b ^ c
+//TODO	a = b | c
+//TODO	a = b &^ c
+//TODO	a = b & c
+//TODO	a = b >> c
+//TODO	a = b % c
+//TODO	a = b / c
+//TODO	a |= b
+//TODO}
+//TODOfunc f680() t
+//TODOfunc f681() *t
+//TODOfunc f682() [3]int
+//TODOfunc f683() *[3]int
+//TODOfunc f684() func(int) bool
+//TODOfunc f685() *func(int) bool
+//TODOfunc f686() q.I
+//TODOfunc f687() *q.I
+//TODOfunc f688() struct{i int}
+//TODOfunc f689() *struct{i int}
+//TODO
+//TODOfunc f691() (t)
+//TODOfunc f692() (*t)
+//TODOfunc f693() ([3]int)
+//TODOfunc f694() (*[3]int)
+//TODOfunc f695() (func(int) bool)
+//TODOfunc f696() (*func(int) bool)
+//TODOfunc f697() (q.I)
+//TODOfunc f698() (*q.I)
+//TODOfunc f699() (struct{i int})
+//TODOfunc f700() (*struct{i int})
+//TODO
+//TODOfunc f714() (r t)
+//TODOfunc f715() (r *t)
+//TODOfunc f716() (r [3]int)
+//TODOfunc f717() (r *[3]int)
+//TODOfunc f718() (r func(int) bool)
+//TODOfunc f719() (r *func(int) bool)
+//TODOfunc f720() (r q.I)
+//TODOfunc f721() (r *q.I)
+//TODOfunc f722() (r struct{i int})
+//TODOfunc f723() (r *struct{i int})
+//TODO
+//TODOfunc f737() (r t, err error)
+//TODOfunc f738() (r *t, err error)
+//TODOfunc f739() (r [3]int, err error)
+//TODOfunc f740() (r *[3]int, err error)
+//TODOfunc f741() (r func(int) bool, err error)
+//TODOfunc f742() (r *func(int) bool, err error)
+//TODOfunc f743() (r q.I, err error)
+//TODOfunc f744() (r *q.I, err error)
+//TODOfunc f745() (r struct{i int}, err error)
+//TODOfunc f746() (r *struct{i int}, err error)
+//TODO
+//TODOfunc f748() {
+//TODO	a = ^b
+//TODO	a = ^b ^ c
+//TODO	a = !b && !c
+//TODO	a = -b + -c
+//TODO	a = +b - +c
+//TODO	g()
+//TODO	g(42)
+//TODO	g(42, 314)
+//TODO}
+//TODO
+//TODOconst (
+//TODO	a760 = 1
+//TODO	b761, c761 = 2, 3
+//TODO	d762, e762, f762 = 4, 5, 6
+//TODO)
+//TODO
+//TODOfunc f765() {
+//TODO	v := union{ u uint64; f float64 }{f: 3.14}.u // poor man's bits from float64
+//TODO	v741 := union{ uint64; float64 }{float64: 3.14}.uint64
+//TODO	var v742 union{
+//TODO		u uint64
+//TODO		f float64
+//TODO	}
+//TODO	type t union{
+//TODO		u uint64
+//TODO		f float64
+//TODO	}
+//TODO	type g func() union{a b; c d}
+//TODO	v = (union{u uint64; f float64}(x)).u
+//TODO	v = (*union{u uint64; f float64}(x)).u
+//TODO	v753 := [3]int(x)
+//TODO	v754 := *[3]int(x)
+//TODO	v755 := ([3]int(x))
+//TODO	v756 := (*[3]int(x))
+//TODO	v757 := *([3]int(x))
+//TODO	v758 :=  (struct{i int}(x))
+//TODO	v759 := (*struct{i int}(x))
+//TODO	v760 := *(struct{i int}(x))
+//TODO	v761 :=  (union{i int; u uint}(x))
+//TODO	v762 := (*union{i int; u uint}(x))
+//TODO	v763 := *(union{i int; u uint}(x))
+//TODO	v764 := t{1}(x) //LATER invalid
+//TODO	v765 := int(x)
+//TODO	v766 := *int(x)
+//TODO	v767 := (*int)(x)
+//TODO	v768 := [3]int(x)
+//TODO	v769 := *[3]int(x)
+//TODO	v770 := (*[3]int(x))
+//TODO	v771 := struct{int}(x)
+//TODO	v772 := *struct{int}(x)
+//TODO	v773 := (*struct{int}(x))
+//TODO	v774 := union{int}(x)
+//TODO	v775 := *union{int}(x)
+//TODO	v776 := (*union{int}(x))
+//TODO
+//TODO	v778 := func()()(x)
+//TODO	v779 := (func()()(x))
+//TODO
+//TODO	v781 := func()()(c)
+//TODO	v782 := func()(b)(c)
+//TODO	v783 := func(a)()(c)
+//TODO	v784 := func(a)(b)(c)
+//TODO
+//TODO	v786 := func(a)(b)(c)()  // call
+//TODO	v787 := func(a)(b)(c)(d) // call
+//TODO	v788 := func(a)()(c)()   // call
+//TODO	v789 := func()(b)(c)()   // call
+//TODO	v790 := func()()(o)()    // call
+//TODO	v791 := func()(func())(o)()
+//TODO	v = 1
+//TODO}
+//TODO
+//TODOtype t827 union{}
+//TODO
+//TODOvar v797 int
+//TODOfunc f798() {
+//TODO	var v797 int
+//TODO	{
+//TODO		var v797 int
+//TODO	}
+//TODO}
+//TODO
+//TODO
+//TODO//DONE scpecial scoping of ELSE
+//TODO//	Turns out there's nothing special: http://play.golang.org/p/imXmTYTlEl
+//TODO//	and: http://play.golang.org/p/IHTOPj0IYK
+//TODOfunc f807() {
+//TODO	if a := true; a {
+//TODO		a := 42
+//TODO	} else {
+//TODO		a := "foo"
+//TODO	}
+//TODO}
+//TODOfunc f818() {
+//TODO	if a := 42; a != 42 {
+//TODO		_ = a + 1
+//TODO	} else {
+//TODO		_ = a - 1
+//TODO	}
+//TODO}
+//TODO
+//TODOfunc (r) f826(r)
+//TODO
+//TODOtype t828 int
+//TODOtype u829 uint
+//TODO
+//TODOfunc (t828) f()
+//TODOfunc (t829) f()
