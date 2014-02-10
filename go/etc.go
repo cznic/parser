@@ -27,7 +27,7 @@ import (
 //
 // If the source couldn't be read, the returned AST is nil and the error
 // indicates the specific failure.
-func ParseFile(fset *token.FileSet, filename string, src interface{} /*TODO Opts*/) (ast []Node, err error) {
+func ParseFile(fset *token.FileSet, filename string, src interface{}, fileScope *Scope /*MAYBE Opts*/) (ast []Node, err error) {
 	var bsrc []byte
 	switch x := src.(type) {
 	case nil:
@@ -49,8 +49,11 @@ func ParseFile(fset *token.FileSet, filename string, src interface{} /*TODO Opts
 
 	file := fset.AddFile(filename, -1, len(bsrc))
 	p := &parser{
-		file: file,
-		fset: fset,
+		currentScope: fileScope,
+		file:         file,
+		fileScope:    fileScope,
+		fset:         fset,
+		pkgScope:     fileScope.Parent,
 	}
 	p.sc.Init(
 		file,
@@ -68,16 +71,19 @@ func ParseFile(fset *token.FileSet, filename string, src interface{} /*TODO Opts
 }
 
 type parser struct {
-	ast       []Node
-	constExpr []Node
-	constIota int
-	constType Node
-	errors    scanner.ErrorList
-	file      *token.File
-	fset      *token.FileSet
-	pos       token.Pos
-	sc        scanner.Scanner
-	stack     []int
+	ast          []Node
+	constExpr    []Node
+	constIota    int
+	constType    Node
+	currentScope *Scope
+	errors       scanner.ErrorList
+	file         *token.File
+	fileScope    *Scope
+	fset         *token.FileSet
+	pkgScope     *Scope
+	pos          token.Pos
+	sc           scanner.Scanner
+	stack        []int
 }
 
 func (p *parser) Error(e string) {

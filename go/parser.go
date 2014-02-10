@@ -140,6 +140,7 @@ func yy(y yyLexer) *parser                   { return y.(*parser) }
 func yyErr(y yyLexer, msg string)            { yy(y).Error(msg) }
 func yyErrPos(y yyLexer, n Node, msg string) { yy(y).errPos(n.Pos(), msg) }
 func yyFset(y yyLexer) *token.FileSet        { return yy(y).fset }
+func yyFScope(y yyLexer) *Scope              { return yy(y).pkgScope }
 
 func yyTLD(y yyLexer, n Node) {
 	p := yy(y)

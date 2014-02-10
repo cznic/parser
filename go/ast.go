@@ -136,6 +136,13 @@ func newImport(y yyLexer, id Node, pth *Literal) (r *Import) {
 	case pth.Lit == `""`:
 		ps.errPos(pth.Pos(), "import path is empty")
 	}
+
+	if ident != nil {
+		nm := ident.Lit
+		if nm != "." {
+			ps.pkgScope.declare(ps, nm, id)
+		}
+	}
 	return
 }
 
