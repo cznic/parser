@@ -36,7 +36,7 @@ import (
 	import_stmt indcl interfacedcl interfacetype
 	name name_or_type new_name ntype
 	oexpr oliteral othertype
-	package packname pexpr pexpr_no_paren ptrtype
+	package packname pexpr pexpr_no_paren pseudocall ptrtype
 	structdcl structtype sym
 	typedcl typedclname
 	uexpr
@@ -44,12 +44,12 @@ import (
 %type	<list>
 	common_dcl constdcl_list
 	dcl_name_list
-	expr_list
+	expr_list expr_or_type_list
 	import_stmt_list interfacedcl_list
 	new_name_list
 	structdcl_list
 	typedcl_list
-	vardcl
+	vardcl vardcl_list
 
 %type	<param>
 	arg_type
@@ -161,7 +161,7 @@ common_dcl:
 	}
 |	_VAR '(' vardcl_list osemi ')'
 	{ //142
-		panic(".y:143")
+		$$ = $3
 	}
 |	_VAR '(' ')'
 	{ //146
@@ -536,7 +536,7 @@ pseudocall:
 	}
 |	pexpr '(' expr_or_type_list ocomma ')'
 	{ //527
-		panic(".y:528")
+		$$ = &CallOp{$2.pos, $1, $3}
 	}
 |	pexpr '(' expr_or_type_list _DDD ocomma ')'
 	{ //531
@@ -574,9 +574,6 @@ pexpr_no_paren:
 		panic(".y:566")
 	}
 |	pseudocall
-	{ //569
-		panic(".y:570")
-	}
 |	convtype '(' expr ocomma ')'
 	{ //573
 		panic(".y:574")
@@ -937,11 +934,11 @@ xdcl_list:
 vardcl_list:
 	vardcl
 	{ //957
-		panic(".y:958")
+		$$ = $1
 	}
 |	vardcl_list ';' vardcl
 	{ //961
-		panic(".y:962")
+		$$ = append($1, $3...)
 	}
 
 constdcl_list:
@@ -1206,7 +1203,7 @@ expr_list:
 expr_or_type_list:
 	expr_or_type
 	{ //1225
-		panic(".y:1226")
+		$$ = []Node{$1}
 	}
 |	expr_or_type_list ',' expr_or_type
 	{ //1229

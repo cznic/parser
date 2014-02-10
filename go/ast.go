@@ -42,6 +42,14 @@ type BinOp struct {
 	L, R Node
 }
 
+// --------------------------------------------------------------------- CallOp
+
+type CallOp struct {
+	pos
+	Calee Node
+	Args  []Node
+}
+
 // ------------------------------------------------------------------ ConstDecl
 
 type ConstDecl struct {
