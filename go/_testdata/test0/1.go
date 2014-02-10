@@ -452,19 +452,19 @@ func f357() {1;;}
 func f358() {1;2}
 func f359() {1;2;}
 func f360() {;1;2;}
-//TODOfunc f361() { a = 1 }
-//TODOfunc f364() { a, b = 1, 2 }
-//TODOfunc f365() { a += 1 }
-//TODOfunc f366() { a -= 1 }
-//TODOfunc f367() { a *= 1 }
-//TODOfunc f368() { a /= 1 }
-//TODOfunc f369() { a %= 1 }
-//TODOfunc f370() { a >>= 1 }
-//TODOfunc f371() { a <<= 1 }
-//TODOfunc f372() { a &= 1 }
-//TODOfunc f373() { a &^= 1 }
-//TODOfunc f374() { a ^= 1 }
-//TODOfunc f375() { v = 42 }
+func f361() { a = 1 }
+func f364() { a, b = 1, 2 }
+func f365() { a += 1 }
+func f366() { a -= 1 }
+func f367() { a *= 1 }
+func f368() { a /= 1 }
+func f369() { a %= 1 }
+func f370() { a >>= 1 }
+func f371() { a <<= 1 }
+func f372() { a &= 1 }
+func f373() { a &^= 1 }
+func f374() { a ^= 1 }
+func f375() { v = 42 }
 //TODOfunc f376() {
 //TODO	v = 42
 //TODO}

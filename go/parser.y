@@ -26,7 +26,7 @@ import (
 	_GOTO _GT _IF _IGNORE _IMPORT _INC _INTERFACE _LE _LITERAL _LSH _LT
 	_MAP _NAME _NE _OROR _PACKAGE _RANGE _RETURN _RSH _SELECT _STRUCT
 	_SWITCH _TYPE _VAR
-	'.' '-' '*' '[' '(' '+'
+	'.' '-' '*' '[' '(' '+' '='
 
 %type	<node>
 	bare_complitexpr
@@ -256,11 +256,11 @@ simple_stmt:
 	expr
 |	expr _ASOP expr
 	{ //240
-		panic(".y:241")
+		$$ = &Assignment{$2.pos, $2.tok, []Node{$1}, []Node{$3}}
 	}
 |	expr_list '=' expr_list
 	{ //244
-		panic(".y:245")
+		$$ = &Assignment{$2.pos, $2.tok, $1, $3}
 	}
 |	expr_list _COLAS expr_list
 	{ //248

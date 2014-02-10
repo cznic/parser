@@ -34,6 +34,13 @@ type ArrayType struct {
 	Type Node
 }
 
+// ----------------------------------------------------------------- Assignment
+type Assignment struct {
+	pos
+	Op   token.Token
+	L, R []Node
+}
+
 // ---------------------------------------------------------------------- BinOp
 
 type BinOp struct {
