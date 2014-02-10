@@ -355,3 +355,24 @@ type UnOp struct {
 	Op token.Token
 	R  Node
 }
+
+// -------------------------------------------------------------------- VarDecl
+
+type VarDecl struct {
+	pos
+	*Name
+	Type Node
+	Expr Node
+}
+
+func newVarDecls(ids []Node, t Node, expr []Node) (r []Node) {
+	for _, v := range ids {
+		id := v.(*Ident)
+		d := &VarDecl{pos(id.Pos()), (*Name)(id), t, nil}
+		r = append(r, d)
+	}
+	for i, v := range expr[:mathutil.Min(len(ids), len(expr))] {
+		r[i].(*VarDecl).Expr = v
+	}
+	return
+}

@@ -99,3 +99,15 @@ const (
 	MST99
 	PST100
 )
+
+// -------------------------------------------------------------------- VarDecl
+var i104 int
+//var U105, V105, W105 float64
+//var k106 = 0
+//var x107, y107 float32 = -1, -2
+//var (
+//	i109       int
+//	u110, v110, s110 = 2.0, 3.0, "bar"
+//)
+//var re112, im112 = complexSqrt(-1)
+//var _, found113 = entries[name]  // map lookup; only interested in "found"

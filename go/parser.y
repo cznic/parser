@@ -49,6 +49,7 @@ import (
 	new_name_list
 	structdcl_list
 	typedcl_list
+	vardcl
 
 %type	<param>
 	arg_type
@@ -156,7 +157,7 @@ xdcl:
 common_dcl:
 	_VAR vardcl
 	{ //138
-		panic(".y:139")
+		$$ = $2
 	}
 |	_VAR '(' vardcl_list osemi ')'
 	{ //142
@@ -205,7 +206,7 @@ lconst:
 vardcl:
 	dcl_name_list ntype
 	{ //186
-		panic(".y:187")
+		$$ = newVarDecls($1, $2, nil)
 	}
 |	dcl_name_list ntype '=' expr_list
 	{ //190
