@@ -110,4 +110,4 @@ var (
 	u110, v110, s110 = 2.0, 3.0, "bar"
 )
 var re112, im112 = complexSqrt(-1)
-//var _, found113 = entries[name]  // map lookup; only interested in "found"
+var _, found113 = entries[name]  // map lookup; only interested in "found"

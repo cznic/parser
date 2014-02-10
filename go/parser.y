@@ -563,7 +563,7 @@ pexpr_no_paren:
 	}
 |	pexpr '[' expr ']'
 	{ //557
-		panic(".y:558")
+		$$ = &IndexOp{$2.pos, $1, $3}
 	}
 |	pexpr '[' oexpr ':' oexpr ']'
 	{ //561

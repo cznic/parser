@@ -1383,7 +1383,7 @@ yydefault:
 		}
 	case 112:
 		{ //557
-			panic(".y:558")
+			yyVAL.node = &IndexOp{yyS[yypt-2].token.pos, yyS[yypt-3].node, yyS[yypt-1].node}
 		}
 	case 113:
 		{ //561

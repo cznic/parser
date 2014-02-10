@@ -180,6 +180,14 @@ func newImport(y yyLexer, id Node, pth *Literal) (r *Import) {
 	return
 }
 
+// -------------------------------------------------------------------- IndexOp
+
+type IndexOp struct {
+	pos
+	Expr  Node
+	Index Node
+}
+
 // -------------------------------------------------------------- InterfaceType
 type InterfaceType struct {
 	pos
