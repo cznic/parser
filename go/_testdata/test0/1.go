@@ -526,23 +526,22 @@ var v437 = *(*int)(x)
 var v438 = **int(x)
 
 func f423() {
-//TODO	a++
-//TODO	b--
-//TODO	a++;
-//TODO	b--;
-//TODO	a = b
-//TODO	c, d *= 2, 4
-//TODO	f, err := open(name)
-//TODO	f, err = open(name)
-//TODO	var f432, err432 = open(name)
-//TODO	return
-//TODO	return;
-//TODO	return foo
-//TODO	return foo;
-//TODO	return foo, bar, 3
-//TODO	return foo, bar, 3;
-//TODO	return 42, "blah", 3.14
-//TODO	return 42, "blah", 3.14;
+	a++
+	b--
+	a++;
+	b--;
+	a = b
+	f, err := open(name)
+	f, err = open(name)
+	var f432, err432 = open(name)
+	return
+	return;
+	return foo
+	return foo;
+	return foo, bar, 3
+	return foo, bar, 3;
+	return 42, "blah", 3.14
+	return 42, "blah", 3.14;
 //TODO	break
 //TODO	break;
 //TODO	break loop

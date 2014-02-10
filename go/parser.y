@@ -53,6 +53,7 @@ import (
 	import_stmt_list interfacedcl_list
 	keyval_list
 	new_name_list
+	oexpr_list
 	stmt stmt_list structdcl_list
 	typedcl_list
 	vardcl vardcl_list
@@ -264,15 +265,15 @@ simple_stmt:
 	}
 |	expr_list _COLAS expr_list
 	{ //248
-		panic(".y:249")
+		$$ = &ShortVarDecl{$2.pos, $1, $3}
 	}
 |	expr _INC
 	{ //252
-		panic(".y:253")
+		$$ = &IncDecStmt{$2.pos, $1, $2.tok}
 	}
 |	expr _DEC
 	{ //256
-		panic(".y:257")
+		$$ = &IncDecStmt{$2.pos, $1, $2.tok}
 	}
 
 case:
@@ -1090,7 +1091,7 @@ stmt:
 	}
 |	error
 	{ //1121
-		panic(".y:1122")
+		$$ = nil
 	}
 
 non_dcl_stmt:
@@ -1145,7 +1146,7 @@ non_dcl_stmt:
 	}
 |	_RETURN oexpr_list
 	{ //1179
-		panic(".y:1180")
+		$$ = &ReturnStmt{$1.pos, $2}
 	}
 
 stmt_list:
@@ -1238,12 +1239,9 @@ oexpr:
 
 oexpr_list:
 	{ //1288
-		panic(".y:1289")
+		$$ = nil
 	}
 |	expr_list
-	{ //1292
-		panic(".y:1293")
-	}
 
 osimple_stmt:
 	{ //1297

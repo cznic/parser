@@ -220,6 +220,14 @@ func newImport(y yyLexer, id Node, pth *Literal) (r *Import) {
 	return
 }
 
+// ----------------------------------------------------------------- IncDecStmt
+
+type IncDecStmt struct {
+	pos
+	Expr Node
+	Op   token.Token
+}
+
 // -------------------------------------------------------------------- IndexOp
 
 type IndexOp struct {
@@ -359,12 +367,27 @@ type QualifiedIdent struct {
 	Q, I *Ident
 }
 
+// ----------------------------------------------------------------- ReturnStmt
+
+type ReturnStmt struct {
+	pos
+	Expr []Node
+}
+
 // ------------------------------------------------------------------- SelectOp
 
 type SelectOp struct {
 	pos
 	Expr     Node
 	Selector *Ident
+}
+
+// --------------------------------------------------------------- ShortVarDecl
+
+type ShortVarDecl struct {
+	pos
+	Names []Node
+	Expr  []Node
 }
 
 // ------------------------------------------------------------------ SliceType
