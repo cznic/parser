@@ -18,6 +18,14 @@ type pos token.Pos
 
 func (p pos) Pos() token.Pos { return token.Pos(p) }
 
+type declaration interface {
+	declName() string
+}
+
+type Name Ident
+
+func (n *Name) declName() string { return n.Lit }
+
 // ------------------------------------------------------------------ ArrayType
 
 type ArrayType struct {

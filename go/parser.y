@@ -124,6 +124,7 @@ import_stmt_list:
 		$$ = append($1, $3)
 	}
 
+// TLD
 xdcl:
 |	common_dcl
 	{ //120
