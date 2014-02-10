@@ -233,23 +233,10 @@ type Param struct {
 	Scope *Scope
 }
 
-func newParams(y yyLexer, pos pos, a []*Param) (ddd bool) { //TODO proper scope
+func newParams(y yyLexer, pos pos, a []*Param) (ddd bool) {
 	if len(a) == 0 {
 		return
 	}
-
-	ps := yy(y)
-	defer func() {
-		sc := yyScope(y)
-		for _, p := range a {
-			id := p.Name
-			if id == nil {
-				continue
-			}
-
-			sc.declare(ps, id.Lit, id)
-		}
-	}()
 
 	p := []int{}
 	for i, v := range a {

@@ -857,7 +857,7 @@ structtype:
 	}
 |	_STRUCT lbrace '}'
 	{ //871
-		panic(".y:872")
+		$$ = newStructType(yylex, $1, nil)
 	}
 
 interfacetype:

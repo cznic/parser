@@ -1631,7 +1631,7 @@ yydefault:
 		}
 	case 178:
 		{ //871
-			panic(".y:872")
+			yyVAL.node = newStructType(yylex, yyS[yypt-2].token, nil)
 		}
 	case 179:
 		{ //877

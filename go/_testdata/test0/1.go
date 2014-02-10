@@ -82,10 +82,9 @@ type TreeNode78 struct {
 type Block82 interface {
 	BlockSize() int
 	Encrypt(src, dst []byte)
-//	Decrypt(src, dst []byte)
+	Decrypt(src, dst []byte)
 }
-
-//type Mutex87 struct         { /* Mutex fields */ }
+type Mutex87 struct         { /* Mutex fields */ }
 //type NewMutex88 Mutex
 //type PtrMutex89 *Mutex
 //type PrintableMutex90 struct {
