@@ -65,6 +65,13 @@ type CompLit struct {
 	Val  []*Element
 }
 
+// ------------------------------------------------------------ CompoundStament
+
+type CompoundStament struct {
+	pos
+	Stmts []Node
+}
+
 // ------------------------------------------------------------------ ConstDecl
 
 type ConstDecl struct {

@@ -465,39 +465,39 @@ func f372() { a &= 1 }
 func f373() { a &^= 1 }
 func f374() { a ^= 1 }
 func f375() { v = 42 }
-//TODOfunc f376() {
-//TODO	v = 42
-//TODO}
-//TODOfunc f379() {
-//TODO	v = 42
-//TODO	var ()
-//TODO}
-//TODOfunc f383() {
-//TODO	v = 42
-//TODO	var (x int)
-//TODO}
-//TODOfunc f387() {
-//TODO	v = 42
-//TODO	var (x int; y bool)
-//TODO}
-//TODOfunc f391() {
-//TODO	var ()
-//TODO	v = 42
-//TODO}
-//TODOfunc f395() {
-//TODO	var (x int)
-//TODO	v = 42
-//TODO}
-//TODOfunc f399() {
-//TODO	var (x int; y bool)
-//TODO	v = 42
-//TODO}
-//TODOfunc f403() {
-//TODO	v = 42
-//TODO	{
-//TODO		w = 314
-//TODO	}
-//TODO}
+func f376() {
+	v = 42
+}
+func f379() {
+	v = 42
+	var ()
+}
+func f383() {
+	v = 42
+	var (x int)
+}
+func f387() {
+	v = 42
+	var (x int; y bool)
+}
+func f391() {
+	var ()
+	v = 42
+}
+func f395() {
+	var (x int)
+	v = 42
+}
+func f399() {
+	var (x int; y bool)
+	v = 42
+}
+func f403() {
+	v = 42
+	{
+		w = 314
+	}
+}
 //TODOvar v410 = f()
 //TODOvar v411 = f(1)
 //TODOvar v412 = f(1,)

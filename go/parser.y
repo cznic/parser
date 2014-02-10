@@ -26,11 +26,11 @@ import (
 	_GOTO _GT _IF _IGNORE _IMPORT _INC _INTERFACE _LE _LITERAL _LSH _LT
 	_MAP _NAME _NE _OROR _PACKAGE _RANGE _RETURN _RSH _SELECT _STRUCT
 	_SWITCH _TYPE _VAR
-	'.' '-' '*' '[' '(' '+' '='
+	'.' '-' '*' '[' '(' '+' '=' '{'
 
 %type	<node>
 	bare_complitexpr
-	complitexpr comptype constdcl constdcl1
+	complitexpr comptype compound_stmt constdcl constdcl1
 	dcl_name dotname
 	embed expr expr_or_type
 	fndcl fnret_type fntype
@@ -296,7 +296,7 @@ case:
 compound_stmt:
 	'{' stmt_list '}'
 	{ //280
-		panic(".y:281")
+		$$ = &CompoundStament{$1.pos, $2}
 	}
 
 caseblock:
@@ -1081,12 +1081,9 @@ stmt:
 	}
 |	compound_stmt
 	{ //1109
-		panic(".y:1110")
+		$$ = []Node{$1}
 	}
 |	common_dcl
-	{ //1113
-		panic(".y:1114")
-	}
 |	non_dcl_stmt
 	{ //1117
 		$$ = []Node{$1}
