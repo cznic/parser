@@ -710,7 +710,7 @@ ntype:
 	}
 |	'(' ntype ')'
 	{ //731
-		panic(".y:732")
+		$$ = &Paren{$1.pos, $2}
 	}
 
 non_expr_type:

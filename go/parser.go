@@ -1502,7 +1502,7 @@ yydefault:
 		}
 	case 148:
 		{ //731
-			panic(".y:732")
+			yyVAL.node = &Paren{yyS[yypt-2].token.pos, yyS[yypt-1].node}
 		}
 	case 149:
 		{ //737

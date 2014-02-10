@@ -186,37 +186,37 @@ type u_V int;
 type t80 u.V
 type t81 u.V;
 type ()
-//TODOtype ( t85 u )
-//TODOtype ( t86 u; )
-//TODOtype w88 int
-//TODOtype ( t87 u; v87 w )
-//TODOtype ( t89 u; v89 w; )
-//TODOtype (
-//TODO	t92 u
-//TODO)
-//TODOtype (
-//TODO	t95 u;
-//TODO)
-//TODOtype (
-//TODO	t98 u
-//TODO	v99 w
-//TODO)
-//TODOtype (
-//TODO	t102 u
-//TODO	v103 w;
-//TODO)
-//TODOtype (
-//TODO	t106 u;
-//TODO	v107 w
-//TODO)
-//TODOtype (
-//TODO	t110 u;
-//TODO	v111 w;
-//TODO)
-//TODOtype t113 (u)
-//TODOtype t114 *u
-//TODOtype t115 (*u)
-//TODOtype t116 *(u)
+type ( t85 u )
+type ( t86 u; )
+type w88 int
+type ( t87 u; v87 w )
+type ( t89 u; v89 w; )
+type (
+	t92 u
+)
+type (
+	t95 u;
+)
+type (
+	t98 u
+	v99 w
+)
+type (
+	t102 u
+	v103 w;
+)
+type (
+	t106 u;
+	v107 w
+)
+type (
+	t110 u;
+	v111 w;
+)
+type t113 (u)
+type t114 *u
+type t115 (*u)
+type t116 *(u)
 //TODOtype t118 struct{}
 //TODOtype t119 struct{ u }
 //TODOtype t119a struct{ *u }
