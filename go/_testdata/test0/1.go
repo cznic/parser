@@ -356,52 +356,52 @@ type t250 func(x, y int, z ...uint)
 type t255 func()()
 type t256 func() int
 
-//TODOconst c258 = 3
-//TODOconst c259 = 3;
-//TODOconst c260 t = 3
-//TODOconst c261 t = 3;
-//TODOconst ()
-//TODOconst (
-//TODO	_ = 1 << iota
-//TODO	a268
-//TODO	b269
-//TODO	c270
-//TODO)
-//TODOconst (
-//TODO	bit0, mask0 = 1 << iota, 1<<iota - 1  // bit0 == 1, mask0 == 0
-//TODO	bit1, mask1                           // bit1 == 2, mask1 == 1
-//TODO	_, _                                  // skips iota == 2
-//TODO	bit3, mask3                           // bit3 == 8, mask3 == 7
-//TODO)
-//TODO
-//TODOvar v279 t
-//TODOvar v280 t;
-//TODOvar v283 = 3
-//TODOvar v284 = 3;
-//TODOvar v285 t = 3
-//TODOvar v286 t = 3;
-//TODOvar ()
-//TODOvar ( v289 t )
-//TODOvar ( v290 t; )
-//TODOvar ( v291 = 3 )
-//TODOvar ( v292 = 3; )
-//TODOvar ( v293 t = 3 )
-//TODOvar ( v294 t = 3; )
-//TODOvar (
-//TODO	v296 t
-//TODO)
-//TODOvar (
-//TODO	v299 t;
-//TODO	u300 *struct{
-//TODO		bar
-//TODO		baz.Q
-//TODO		*int
-//TODO	}
-//TODO	w305 [3]int
-//TODO	w306 [3]*int
-//TODO	w307 *[3]int
-//TODO	w308 *[3]*int
-//TODO)
+const c258 = 3
+const c259 = 3;
+const c260 t = 3
+const c261 t = 3;
+const ()
+const (
+	_ = 1 << iota
+	a268
+	b269
+	c270
+)
+const (
+	bit0371, mask0371 = 1 << iota, 1<<iota - 1  // bit0 == 1, mask0 == 0
+	bit1372, mask1372                           // bit1 == 2, mask1 == 1
+	_, _                                  // skips iota == 2
+	bit3374, mask3374                           // bit3 == 8, mask3 == 7
+)
+
+var v279 t
+var v280 t;
+var v283 = 3
+var v284 = 3;
+var v285 t = 3
+var v286 t = 3;
+var ()
+var ( v289 t )
+var ( v290 t; )
+var ( v291 = 3 )
+var ( v292 = 3; )
+var ( v293 t = 3 )
+var ( v294 t = 3; )
+var (
+	v296 t
+)
+var (
+	v299 t;
+	u300 *struct{
+		bar
+		baz.Q
+		*int
+	}
+	w305 [3]int
+	w306 [3]*int
+	w307 *[3]int
+	w308 *[3]*int
+)
 //TODOvar v310 = [1]int{2}
 //TODOvar v311 = [1][3]int{2}
 //TODOvar v312 = [1]struct{}{2}

@@ -1027,7 +1027,7 @@ yydefault:
 		}
 	case 22:
 		{ //146
-			panic(".y:147")
+			yyVAL.list = nil
 		}
 	case 23:
 		{ //150

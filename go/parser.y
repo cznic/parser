@@ -163,7 +163,7 @@ common_dcl:
 	}
 |	_VAR '(' ')'
 	{ //146
-		panic(".y:147")
+		$$ = nil
 	}
 |	lconst constdcl
 	{ //150
