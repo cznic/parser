@@ -59,6 +59,36 @@ type CallOp struct {
 	pos
 	Calee Node
 	Args  []Node
+	Ddd   bool
+}
+
+// ---------------------------------------------------------------- ChannelType
+
+type ChannelKind int
+
+const (
+	_ ChannelKind = iota
+	BidirectionalChannel
+	ReadOnlyChannel
+	SendOnlyChannel
+)
+
+func (i ChannelKind) String() string {
+	switch i {
+	case BidirectionalChannel:
+		return "BidirectionalChannel"
+	case SendOnlyChannel:
+		return "SendOnlyChannel"
+	case ReadOnlyChannel:
+		return "ReadOnlyChannel"
+	}
+	return "<invalid ChannelKind>"
+}
+
+type ChannelType struct {
+	pos
+	Kind ChannelKind
+	Type Node // chan T
 }
 
 // ------------------------------------------------------------------- CommCase
@@ -387,6 +417,14 @@ type Literal struct {
 
 func newLiteral(lit tkn) *Literal {
 	return &Literal{lit.pos, lit.tok, lit.lit}
+}
+
+// -------------------------------------------------------------------- MapType
+
+type MapType struct {
+	pos
+	Key Node
+	Val Node
 }
 
 // ----------------------------------------------------------------- MethodSpec

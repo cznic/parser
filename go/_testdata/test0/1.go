@@ -972,4 +972,23 @@ func f952() {
 	case b := <-c3:
 	case d <- c4:
 	}
+	f(a)
+	g(h...)
+	var v <-chan int
+	var v2 chan<- int32
+	var w chan byte
 }
+
+func f982() <-chan int {}
+
+type (
+	t984 map[k]v
+	t986 interface{}
+	t struct{
+		//invalid (int)
+		//invalid (*int)
+		//invalid *(int)
+	}
+)
+
+var v989 = func(int){}

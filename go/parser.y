@@ -31,7 +31,8 @@ import (
 
 %type	<node>
 	bare_complitexpr
-	case caseblock complitexpr comptype compound_stmt constdcl constdcl1 convtype
+	case caseblock complitexpr comptype compound_stmt constdcl constdcl1
+	convtype
 	dcl_name dotname
 	else elseif embed expr expr_or_type
 	fndcl fnlitdcl fnliteral fnret_type fntype for_body for_header for_stmt
@@ -39,9 +40,10 @@ import (
 	keyval
 	labelname lbrace
 	name name_or_type new_name ntype non_dcl_stmt non_expr_type
+	non_recvchantype
 	oexpr oliteral onew_name osimple_stmt othertype
 	package packname pexpr pexpr_no_paren pseudocall ptrtype
-	range_stmt
+	range_stmt recvchantype
 	select_stmt simple_stmt structdcl structtype switch_stmt sym
 	typedcl typedclname
 	uexpr
@@ -588,15 +590,15 @@ uexpr:
 pseudocall:
 	pexpr '(' ')'
 	{ //523
-		$$ = &CallOp{$2.pos, $1, nil}
+		$$ = &CallOp{$2.pos, $1, nil, false}
 	}
 |	pexpr '(' expr_or_type_list ocomma ')'
 	{ //527
-		$$ = &CallOp{$2.pos, $1, $3}
+		$$ = &CallOp{$2.pos, $1, $3, false}
 	}
 |	pexpr '(' expr_or_type_list _DDD ocomma ')'
 	{ //531
-		panic(".y:532")
+		$$ = &CallOp{$2.pos, $1, $3, true}
 	}
 
 pexpr_no_paren:
@@ -750,9 +752,6 @@ dotdotdot:
 
 ntype:
 	recvchantype
-	{ //711
-		panic(".y:712")
-	}
 |	fntype
 |	othertype
 |	ptrtype
@@ -794,9 +793,6 @@ non_recvchantype:
 		panic(".y:764")
 	}
 |	dotname
-	{ //767
-		panic(".y:768")
-	}
 |	'(' ntype ')'
 	{ //771
 		panic(".y:772")
@@ -811,9 +807,6 @@ comptype:
 
 fnret_type:
 	recvchantype
-	{ //793
-		panic(".y:794")
-	}
 |	fntype
 |	othertype
 |	ptrtype
@@ -848,15 +841,15 @@ othertype:
 	}
 |	_CHAN non_recvchantype
 	{ //833
-		panic(".y:834")
+		$$ = &ChannelType{$1.pos, BidirectionalChannel, $2}
 	}
 |	_CHAN _COMM ntype
 	{ //837
-		panic(".y:838")
+		$$ = &ChannelType{$2.pos, SendOnlyChannel, $3}
 	}
 |	_MAP '[' ntype ']' ntype
 	{ //841
-		panic(".y:842")
+		$$ = &MapType{$1.pos, $3, $5}
 	}
 |	structtype
 |	interfacetype
@@ -870,7 +863,7 @@ ptrtype:
 recvchantype:
 	_COMM _CHAN ntype
 	{ //861
-		panic(".y:862")
+		$$ = &ChannelType{$1.pos, ReadOnlyChannel, $3}
 	}
 
 structtype:
@@ -892,7 +885,7 @@ interfacetype:
 	}
 |	_INTERFACE lbrace '}'
 	{ //881
-		panic(".y:882")
+		$$ = &InterfaceType{pos: $1.pos}
 	}
 
 xfndcl:
@@ -952,9 +945,6 @@ fnliteral:
 		$$ = &FuncLit{x.pos, x, $3}
 	}
 |	fnlitdcl error
-	{ //942
-		panic(".y:943")
-	}
 
 xdcl_list:
 |	xdcl_list xdcl ';'
@@ -1021,7 +1011,8 @@ structdcl:
 	}
 |	'(' embed ')' oliteral
 	{ //1015
-		panic(".y:1016")
+		yyErrPos(yylex, $1.pos, "cannot parenthesize embedded type")
+		$$ = &fields{}
 	}
 |	'*' embed oliteral
 	{ //1019
@@ -1030,11 +1021,13 @@ structdcl:
 	}
 |	'(' '*' embed ')' oliteral
 	{ //1023
-		panic(".y:1024")
+		yyErrPos(yylex, $1.pos, "cannot parenthesize embedded type")
+		$$ = &fields{}
 	}
 |	'*' '(' embed ')' oliteral
 	{ //1027
-		panic(".y:1028")
+		yyErrPos(yylex, $1.pos, "cannot parenthesize embedded type")
+		$$ = &fields{}
 	}
 
 packname:
