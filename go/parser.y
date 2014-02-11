@@ -21,24 +21,25 @@ import (
 }
 
 %token	<token>
+	'(' '*' '+' '-' '.' '=' '[' '{' '>' '<'
 	_ANDAND _ANDNOT _ASOP _BODY _BREAK _CASE _CHAN _COLAS _COMM _CONST
 	_CONTINUE _DDD _DEC _DEFAULT _DEFER _ELSE _EQ _FALL _FOR _FUNC _GE _GO
-	_GOTO _GT _IF _IGNORE _IMPORT _INC _INTERFACE _LE _LITERAL _LSH _LT
-	_MAP _NAME _NE _OROR _PACKAGE _RANGE _RETURN _RSH _SELECT _STRUCT
-	_SWITCH _TYPE _VAR
-	'.' '-' '*' '[' '(' '+' '=' '{'
+	_GOTO _IF _IGNORE _IMPORT _INC _INTERFACE _LE _LITERAL _LSH _MAP _NAME
+	_NE _OROR _PACKAGE _RANGE _RETURN _RSH _SELECT _STRUCT _SWITCH _TYPE
+	_VAR
 
 %type	<node>
 	bare_complitexpr
 	complitexpr comptype compound_stmt constdcl constdcl1
 	dcl_name dotname
 	else elseif embed expr expr_or_type
-	fndcl fnlitdcl fnliteral fnret_type fntype
+	fndcl fnlitdcl fnliteral fnret_type fntype for_body for_header for_stmt
 	if_header if_stmt import_stmt indcl interfacedcl interfacetype
 	keyval
 	name name_or_type new_name ntype non_dcl_stmt
 	oexpr oliteral onew_name osimple_stmt othertype
 	package packname pexpr pexpr_no_paren pseudocall ptrtype
+	range_stmt
 	simple_stmt structdcl structtype sym
 	typedcl typedclname
 	uexpr
@@ -72,7 +73,7 @@ import (
 
 %left	_OROR
 %left	_ANDAND
-%left	_EQ _NE _LE _GE _LT _GT
+%left	_EQ _NE _LE _GE '<' '>'
 %left	'+' '-' '|' '^'
 %left	'*' '/' '%' '&' _LSH _RSH _ANDNOT
 
@@ -329,37 +330,36 @@ loop_body:
 range_stmt:
 	expr_list '=' _RANGE expr
 	{ //311
-		panic(".y:312")
+		$$ = &ForStmt{Range: &Assignment{$2.pos, token.ASSIGN, $1, []Node{$4}}}
 	}
 |	expr_list _COLAS _RANGE expr
 	{ //315
-		panic(".y:316")
+		$$ = &ForStmt{Range: &Assignment{$2.pos, token.DEFINE, $1, []Node{$4}}}
 	}
 
 for_header:
 	osimple_stmt ';' osimple_stmt ';' osimple_stmt
 	{ //321
-		panic(".y:322")
+		$$ = &ForStmt{Init: $1, Cond: $3, Post: $5}
 	}
 |	osimple_stmt
 	{ //325
-		panic(".y:326")
+		$$ = &ForStmt{Cond: $1}
 	}
 |	range_stmt
-	{ //329
-		panic(".y:330")
-	}
 
 for_body:
 	for_header loop_body
 	{ //335
-		panic(".y:336")
+		$1.(*ForStmt).Body = $2
+		$$ = $1
 	}
 
 for_stmt:
 	_FOR for_body
 	{ //341
-		panic(".y:342")
+		$2.(*ForStmt).pos = $1.pos
+		$$ = $2
 	}
 
 if_header:
@@ -440,9 +440,9 @@ expr:
 	{ //415
 		$$ = &BinOp{$2.pos, token.NEQ, $1, $3}
 	}
-|	expr _LT expr
+|	expr '<' expr
 	{ //419
-		panic(".y:420")
+		$$ = &BinOp{$2.pos, token.LSS, $1, $3}
 	}
 |	expr _LE expr
 	{ //423
@@ -452,9 +452,9 @@ expr:
 	{ //427
 		panic(".y:428")
 	}
-|	expr _GT expr
+|	expr '>' expr
 	{ //431
-		panic(".y:432")
+		$$ = &BinOp{$2.pos, token.GTR, $1, $3}
 	}
 |	expr '+' expr
 	{ //435
@@ -1095,9 +1095,6 @@ stmt:
 non_dcl_stmt:
 	simple_stmt
 |	for_stmt
-	{ //1131
-		panic(".y:1132")
-	}
 |	switch_stmt
 	{ //1135
 		panic(".y:1136")
@@ -1240,7 +1237,7 @@ oexpr_list:
 
 osimple_stmt:
 	{ //1297
-		panic(".y:1298")
+		$$ = nil
 	}
 |	simple_stmt
 

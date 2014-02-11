@@ -178,6 +178,17 @@ func newFields(l []Node, emb bool, typ, tag Node) *fields {
 	return &fields{Names: l, Embedded: emb, Type: typ, Tag: tag.(*Literal)}
 }
 
+// -------------------------------------------------------------------- ForStmt
+
+type ForStmt struct {
+	pos
+	Init  Node
+	Cond  Node
+	Post  Node
+	Range *Assignment
+	Body  []Node
+}
+
 // ------------------------------------------------------------------- FuncDecl
 type FuncDecl struct {
 	pos

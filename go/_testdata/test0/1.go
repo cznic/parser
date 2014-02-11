@@ -636,33 +636,33 @@ func f423() {
 	}
 }
 
-//TODOvar v = func() bool {}
-//TODO
-//TODOfunc f521() {
-//TODO	for {}
-//TODO	for x {}
-//TODO	for x > 0 {}
-//TODO	for (x{1}[0]) != 0 {}
-//TODO	for (x{1}[0] != 0) {}
-//TODO	for ; ; {}
-//TODO	for ; ; i++ {}
-//TODO	for ; i < 10 ; {}
-//TODO	for ; i < 10 ; i++ {}
-//TODO	for i = 0 ; ; {}
-//TODO	for i = 0 ; ; i++ {}
-//TODO	for i = 0 ; i < 10 ; {}
-//TODO	for i = 0 ; i < 10 ; i++ {}
-//TODO	a = b
-//TODO	a := b
-//TODO	for i = range x {}
-//TODO	for i, v = range x {}
-//TODO	for *p = range x {}
-//TODO	for *p, l.x = range x {}
-//TODO	for i := range x {}
-//TODO	for i, v := range x {}
-//TODO	for i := 0; i < 10; i++ {}
-//TODO}
-//TODO
+var v = func() bool {}
+
+func f521() {
+	for {}
+	for x {}
+	for x > 0 {}
+	for (x{1}[0]) != 0 {}
+	for (x{1}[0] != 0) {}
+	for ; ; {}
+	for ; ; i++ {}
+	for ; i < 10 ; {}
+	for ; i < 10 ; i++ {}
+	for i = 0 ; ; {}
+	for i = 0 ; ; i++ {}
+	for i = 0 ; i < 10 ; {}
+	for i = 0 ; i < 10 ; i++ {}
+	a = b
+	a := b
+	for i = range x {}
+	for i, v = range x {}
+	for *p = range x {}
+	for *p, l.x = range x {}
+	for i := range x {}
+	for i, v := range x {}
+	for i := 0; i < 10; i++ {}
+}
+
 //TODOfunc f547() {
 //TODO	switch{}
 //TODO	switch x {}
