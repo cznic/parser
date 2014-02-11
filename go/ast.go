@@ -311,6 +311,13 @@ func newInterfaceType(y yyLexer, l []Node) *InterfaceType {
 	return i
 }
 
+// ---------------------------------------------------------------- LabeledStmt
+type LabeledStmt struct {
+	pos
+	Label *Ident
+	Stmt  []Node //TODO stmt should be node, not list
+}
+
 // --------------------------------------------------------------------- Literal
 
 type Literal struct {

@@ -21,7 +21,7 @@ import (
 }
 
 %token	<token>
-	'(' '*' '+' '-' '.' '=' '[' '{' '>' '<'
+	'(' '*' '+' '-' '.' '=' '[' '{' '>' '<' ':'
 	_ANDAND _ANDNOT _ASOP _BODY _BREAK _CASE _CHAN _COLAS _COMM _CONST
 	_CONTINUE _DDD _DEC _DEFAULT _DEFER _ELSE _EQ _FALL _FOR _FUNC _GE _GO
 	_GOTO _IF _IGNORE _IMPORT _INC _INTERFACE _LE _LITERAL _LSH _MAP _NAME
@@ -36,6 +36,7 @@ import (
 	fndcl fnlitdcl fnliteral fnret_type fntype for_body for_header for_stmt
 	if_header if_stmt import_stmt indcl interfacedcl interfacetype
 	keyval
+	labelname
 	name name_or_type new_name ntype non_dcl_stmt
 	oexpr oliteral onew_name osimple_stmt othertype
 	package packname pexpr pexpr_no_paren pseudocall ptrtype
@@ -684,9 +685,6 @@ name:
 
 labelname:
 	new_name
-	{ //695
-		panic(".y:696")
-	}
 
 dotdotdot:
 	_DDD
@@ -1103,13 +1101,9 @@ non_dcl_stmt:
 		panic(".y:1140")
 	}
 |	if_stmt
-|	labelname ':'
-	{ //1147
-		panic(".y:1148")
-	}
-	stmt
+|	labelname ':' stmt
 	{ //1151
-		panic(".y:1152")
+		$$ = &LabeledStmt{$2.pos, $1.(*Ident), $3}
 	}
 |	_FALL
 	{ //1155
@@ -1186,7 +1180,7 @@ expr_or_type_list:
 	}
 |	expr_or_type_list ',' expr_or_type
 	{ //1229
-		panic(".y:1230")
+		$$ = append($1, $3)
 	}
 
 keyval_list:

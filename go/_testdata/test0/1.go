@@ -679,25 +679,27 @@ func f547() {
 	default:
 		fmt.Println(42)
 	}
-//TODO
-//TODO	switch n := 2*m; n+3 {
-//TODO	case 42:
-//TODO		break
-//TODO	case 255:
-//TODO		float32(f(int64(n)))
-//TODO		fallthrough
-//TODO	default:
-//TODO		fmt.Println(42)
-//TODO	}
-//TODOlabel:;
-//TODOlabel2:
-//TODOloop:
-//TODO	for x {
-//TODO		if y {
-//TODO			break loop
-//TODO		}
-//TODO	}
-//TODO
+
+	switch n := 2*m; n+3 {
+	case 42, 314:
+		break
+	case 255:
+		float32(f(int64(n)))
+		fallthrough
+	default:
+		fmt.Println(42)
+	}
+label:;
+label2:
+loop:
+	for x {
+		if y {
+			break loop
+		}
+	}
+xxx:
+	var a, b int
+
 //TODO	f := float64(3.14)
 //TODO	i := int16(f) // conversion, i == 3
 //TODO	bits := *(*uint64)(&f) // cast, bits == IEE754 pattern for 64bit 3.14
