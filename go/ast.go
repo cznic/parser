@@ -49,6 +49,13 @@ type BinOp struct {
 	L, R Node
 }
 
+// ------------------------------------------------------------------ BreakStmt
+
+type BreakStmt struct {
+	pos
+	Label *Ident
+}
+
 // --------------------------------------------------------------------- CallOp
 
 type CallOp struct {
@@ -124,6 +131,13 @@ func newConstSpec(y yyLexer, names []Node, typ Node, expr []Node) (c *constSpec)
 	}
 	p.constIota++
 	return
+}
+
+// --------------------------------------------------------------- ContinueStmt
+
+type ContinueStmt struct {
+	pos
+	Label *Ident
 }
 
 // -------------------------------------------------------------------- Element

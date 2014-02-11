@@ -37,7 +37,7 @@ import (
 	import_stmt indcl interfacedcl interfacetype
 	keyval
 	name name_or_type new_name ntype non_dcl_stmt
-	oexpr oliteral othertype
+	oexpr oliteral onew_name othertype
 	package packname pexpr pexpr_no_paren pseudocall ptrtype
 	simple_stmt structdcl structtype sym
 	typedcl typedclname
@@ -664,12 +664,9 @@ dcl_name:
 
 onew_name:
 	{ //673
-		panic(".y:674")
+		$$ = (*Ident)(nil)
 	}
 |	new_name
-	{ //677
-		panic(".y:678")
-	}
 
 sym:
 	_NAME
@@ -1126,11 +1123,11 @@ non_dcl_stmt:
 	}
 |	_BREAK onew_name
 	{ //1159
-		panic(".y:1160")
+		$$ = &BreakStmt{$1.pos, $2.(*Ident)}
 	}
 |	_CONTINUE onew_name
 	{ //1163
-		panic(".y:1164")
+		$$ = &ContinueStmt{$1.pos, $2.(*Ident)}
 	}
 |	_GO pseudocall
 	{ //1167

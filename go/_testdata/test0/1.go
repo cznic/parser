@@ -541,15 +541,15 @@ func f423() {
 	return foo, bar, 3
 	return foo, bar, 3;
 	return 42, "blah", 3.14
-	return 42, "blah", 3.14;
-//TODO	break
-//TODO	break;
-//TODO	break loop
-//TODO	break loop2;
-//TODO	continue
-//TODO	continue;
-//TODO	continue loop
-//TODO	continue loop2;
+	return 42, "blah", 3.14, 'A';
+	break
+	break;
+	break loop
+	break loop2;
+	continue
+	continue;
+	continue loop
+	continue loop2;
 //TODO	goto ident
 //TODO	goto ident2;
 //TODO	fallthrough
