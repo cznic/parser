@@ -914,39 +914,32 @@ func f765() {
 	v = 1
 }
 
-//TODOtype t827 union{}
-//TODO
-//TODOvar v797 int
-//TODOfunc f798() {
-//TODO	var v797 int
-//TODO	{
-//TODO		var v797 int
-//TODO	}
-//TODO}
-//TODO
-//TODO
-//TODO//DONE scpecial scoping of ELSE
-//TODO//	Turns out there's nothing special: http://play.golang.org/p/imXmTYTlEl
-//TODO//	and: http://play.golang.org/p/IHTOPj0IYK
-//TODOfunc f807() {
-//TODO	if a := true; a {
-//TODO		a := 42
-//TODO	} else {
-//TODO		a := "foo"
-//TODO	}
-//TODO}
-//TODOfunc f818() {
-//TODO	if a := 42; a != 42 {
-//TODO		_ = a + 1
-//TODO	} else {
-//TODO		_ = a - 1
-//TODO	}
-//TODO}
-//TODO
-//TODOfunc (r) f826(r)
-//TODO
-//TODOtype t828 int
-//TODOtype u829 uint
-//TODO
-//TODOfunc (t828) f()
-//TODOfunc (t829) f()
+var v797 int
+func f798() {
+	var v797 int
+	{
+		var v797 int
+	}
+}
+func f807() {
+	if a := true; a {
+		a := 42
+	} else {
+		a := "foo"
+	}
+}
+func f818() {
+	if a := 42; a != 42 {
+		_ = a + 1
+	} else {
+		_ = a - 1
+	}
+}
+
+func (r) f826(r)
+
+type t828 int
+type u829 uint
+
+func (t828) f944()
+func (t829) f945()
