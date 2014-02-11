@@ -550,8 +550,8 @@ func f423() {
 	continue;
 	continue loop
 	continue loop2;
-//TODO	goto ident
-//TODO	goto ident2;
+	goto ident
+	goto ident2;
 //TODO	fallthrough
 //TODO	fallthrough;
 //TODO	if 1 {

@@ -1139,7 +1139,7 @@ non_dcl_stmt:
 	}
 |	_GOTO new_name
 	{ //1175
-		panic(".y:1176")
+		$$ = &GotoStmt{$1.pos, $2.(*Ident)}
 	}
 |	_RETURN oexpr_list
 	{ //1179

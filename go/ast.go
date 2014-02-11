@@ -199,6 +199,13 @@ func newFuncType(y yyLexer, pos pos, in, out []*Param) (r *FuncType) {
 	return
 }
 
+// ------------------------------------------------------------------- GotoStmt
+
+type GotoStmt struct {
+	pos
+	Label *Ident
+}
+
 // ---------------------------------------------------------------------- Ident
 
 type Ident struct {

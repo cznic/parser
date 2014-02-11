@@ -1874,7 +1874,7 @@ yydefault:
 		}
 	case 243:
 		{ //1175
-			panic(".y:1176")
+			yyVAL.node = &GotoStmt{yyS[yypt-1].token.pos, yyS[yypt-0].node.(*Ident)}
 		}
 	case 244:
 		{ //1179
