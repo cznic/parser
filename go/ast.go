@@ -35,6 +35,7 @@ type ArrayType struct {
 }
 
 // ----------------------------------------------------------------- Assignment
+
 type Assignment struct {
 	pos
 	Op   token.Token
@@ -140,6 +141,14 @@ type ContinueStmt struct {
 	Label *Ident
 }
 
+// --------------------------------------------------------------------- ConvOp
+
+type ConvOp struct {
+	pos
+	Type Node
+	Expr Node
+}
+
 // -------------------------------------------------------------------- Element
 
 type Element struct {
@@ -190,6 +199,7 @@ type ForStmt struct {
 }
 
 // ------------------------------------------------------------------- FuncDecl
+
 type FuncDecl struct {
 	pos
 	*Name
@@ -208,6 +218,7 @@ type FuncLit struct {
 }
 
 // ------------------------------------------------------------------- FuncType
+
 type FuncType struct {
 	pos
 	Ddd     bool // in
@@ -294,6 +305,7 @@ type IndexOp struct {
 }
 
 // -------------------------------------------------------------- InterfaceType
+
 type InterfaceType struct {
 	pos
 	Methods []*MethodSpec
@@ -312,6 +324,7 @@ func newInterfaceType(y yyLexer, l []Node) *InterfaceType {
 }
 
 // ---------------------------------------------------------------- LabeledStmt
+
 type LabeledStmt struct {
 	pos
 	Label *Ident
@@ -331,6 +344,7 @@ func newLiteral(lit tkn) *Literal {
 }
 
 // ----------------------------------------------------------------- MethodSpec
+
 type MethodSpec struct {
 	pos
 	Name *Ident
@@ -338,6 +352,7 @@ type MethodSpec struct {
 }
 
 // ------------------------------------------------------------------ NamedType
+
 type NamedType struct {
 	pos
 	Name  *QualifiedIdent
@@ -353,6 +368,7 @@ type Package struct {
 }
 
 // ---------------------------------------------------------------------- Param
+
 type Param struct {
 	pos
 	Name  *Ident

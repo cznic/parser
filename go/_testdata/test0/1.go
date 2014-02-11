@@ -700,13 +700,15 @@ loop:
 xxx:
 	var a, b int
 
-//TODO	f := float64(3.14)
-//TODO	i := int16(f) // conversion, i == 3
-//TODO	bits := *(*uint64)(&f) // cast, bits == IEE754 pattern for 64bit 3.14
-//TODO	half := *(*uint32)(&f) // ugly cast
-//TODO
-//TODO	var arr [32]byte
-//TODO	a591 := [math.MaxInt64]byte(arr)
+	f := float64(3.14)
+	i := int16(f) // conversion, i == 3
+	bits := *(*uint64)(&f) // cast, bits == IEE754 pattern for 64bit 3.14, not valid Go
+	half := *(*uint32)(&f) // ugly cast, not valid Go
+
+	var arr [32]byte
+	var arr = [...]byte{1, 2, 3}
+	// var arr [...]byte = {1, 2, 3} //invalid
+	a591 := [math.MaxInt64]byte(arr)
 //TODO	a592 := ([math.MaxInt64]byte(arr))
 //TODO	a593 := *([math.MaxInt64]byte(arr))
 //TODO	a594 := *[math.MaxInt64]byte(arr)

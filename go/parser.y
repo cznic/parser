@@ -21,7 +21,7 @@ import (
 }
 
 %token	<token>
-	'(' '*' '+' '-' '.' '=' '[' '{' '>' '<' ':'
+	'(' '*' '+' '-' '.' '=' '[' '{' '>' '<' ':' '&'
 	_ANDAND _ANDNOT _ASOP _BODY _BREAK _CASE _CHAN _COLAS _COMM _CONST
 	_CONTINUE _DDD _DEC _DEFAULT _DEFER _ELSE _EQ _FALL _FOR _FUNC _GE _GO
 	_GOTO _IF _IGNORE _IMPORT _INC _INTERFACE _LE _LITERAL _LSH _MAP _NAME
@@ -516,7 +516,7 @@ uexpr:
 	}
 |	'&' uexpr
 	{ //493
-		panic(".y:494")
+		$$ = &UnOp{$1.pos, token.AND, $2}
 	}
 |	'+' uexpr
 	{ //497
@@ -760,9 +760,6 @@ convtype:
 		panic(".y:778")
 	}
 |	othertype
-	{ //781
-		panic(".y:782")
-	}
 
 comptype:
 	othertype
