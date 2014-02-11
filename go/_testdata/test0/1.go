@@ -774,29 +774,29 @@ func (t) f653()
 func (*t) f654()
 func (x t) f655()
 func (x *t) f656()
-//func f657() {
-//	if x {
-//		a
-//	} else if y {
-//		b
-//	}
-//	if x {
-//		a
-//	} else {
-//		b
-//	}
-//	i := 1i
-//	nl := '\n'
-//	v := [...]int{1, 2, 3}
-//	a = b ^ c
-//	a = b | c
-//	a = b &^ c
-//	a = b & c
-//	a = b >> c
-//	a = b % c
-//	a = b / c
-//	a |= b
-//}
+func f657() {
+	if x {
+		a
+	} else if y {
+		b
+	}
+	if x {
+		a
+	} else {
+		b
+	}
+	i := 1i
+	nl := '\n'
+	v := [...]int{1, 2, 3}
+	a = b ^ c
+	a = b | c
+	a = b &^ c
+	a = b & c
+	a = b >> c
+	a = b % c
+	a = b / c
+	a |= b
+}
 //TODOfunc f680() t
 //TODOfunc f681() *t
 //TODOfunc f682() [3]int

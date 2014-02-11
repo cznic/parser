@@ -22,7 +22,7 @@ import (
 }
 
 %token	<token>
-	'(' '*' '+' '-' '.' '=' '[' '{' '>' '<' ':' '&'
+	'!' '%' '&' '(' '*' '+' '-' '.' '/' ':' '<' '=' '>' '[' '^' '{' '|' '~'
 	_ANDAND _ANDNOT _ASOP _BODY _BREAK _CASE _CHAN _COLAS _COMM _CONST
 	_CONTINUE _DDD _DEC _DEFAULT _DEFER _ELSE _EQ _FALL _FOR _FUNC _GE _GO
 	_GOTO _IF _IGNORE _IMPORT _INC _INTERFACE _LE _LITERAL _LSH _MAP _NAME
@@ -329,11 +329,11 @@ loop_body:
 range_stmt:
 	expr_list '=' _RANGE expr
 	{ //311
-		$$ = &ForStmt{Range: &Assignment{$2.pos, token.ASSIGN, $1, []Node{$4}}}
+		$$ = &ForStmt{Range: &Assignment{$2.pos, $2.tok, $1, []Node{$4}}}
 	}
 |	expr_list _COLAS _RANGE expr
 	{ //315
-		$$ = &ForStmt{Range: &Assignment{$2.pos, token.DEFINE, $1, []Node{$4}}}
+		$$ = &ForStmt{Range: &Assignment{$2.pos, $2.tok, $1, []Node{$4}}}
 	}
 
 for_header:
@@ -430,79 +430,79 @@ expr:
 	uexpr
 |	expr _OROR expr
 	{ //403
-		$$ = &BinOp{$2.pos, token.LOR, $1, $3}
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr _ANDAND expr
 	{ //407
-		$$ = &BinOp{$2.pos, token.LAND, $1, $3}
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr _EQ expr
 	{ //411
-		$$ = &BinOp{$2.pos, token.EQL, $1, $3}
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr _NE expr
 	{ //415
-		$$ = &BinOp{$2.pos, token.NEQ, $1, $3}
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr '<' expr
 	{ //419
-		$$ = &BinOp{$2.pos, token.LSS, $1, $3}
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr _LE expr
 	{ //423
-		$$ = &BinOp{$2.pos, token.LEQ, $1, $3}
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr _GE expr
 	{ //427
-		$$ = &BinOp{$2.pos, token.GEQ, $1, $3}
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr '>' expr
 	{ //431
-		$$ = &BinOp{$2.pos, token.GTR, $1, $3}
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr '+' expr
 	{ //435
-		$$ = &BinOp{$2.pos, token.ADD, $1, $3}
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr '-' expr
 	{ //439
-		$$ = &BinOp{$2.pos, token.SUB, $1, $3}
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr '|' expr
 	{ //443
-		panic(".y:444")
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr '^' expr
 	{ //447
-		panic(".y:448")
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr '*' expr
 	{ //451
-		$$ = &BinOp{$2.pos, token.MUL, $1, $3}
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr '/' expr
 	{ //455
-		panic(".y:456")
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr '%' expr
 	{ //459
-		panic(".y:460")
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr '&' expr
 	{ //463
-		panic(".y:464")
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr _ANDNOT expr
 	{ //467
-		panic(".y:468")
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr _LSH expr
 	{ //471
-		$$ = &BinOp{$2.pos, token.SHL, $1, $3}
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr _RSH expr
 	{ //475
-		panic(".y:476")
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 |	expr _COMM expr
 	{ //479
@@ -513,35 +513,35 @@ uexpr:
 	pexpr
 |	'*' uexpr
 	{ //489
-		$$ = &UnOp{$1.pos, token.MUL, $2}
+		$$ = &UnOp{$1.pos, $1.tok, $2}
 	}
 |	'&' uexpr
 	{ //493
-		$$ = &UnOp{$1.pos, token.AND, $2}
+		$$ = &UnOp{$1.pos, $1.tok, $2}
 	}
 |	'+' uexpr
 	{ //497
-		panic(".y:498")
+		$$ = &UnOp{$1.pos, $1.tok, $2}
 	}
 |	'-' uexpr
 	{ //501
-		$$ = &UnOp{$1.pos, token.SUB, $2}
+		$$ = &UnOp{$1.pos, $1.tok, $2}
 	}
 |	'!' uexpr
 	{ //505
-		panic(".y:506")
+		$$ = &UnOp{$1.pos, $1.tok, $2}
 	}
 |	'~' uexpr
 	{ //509
-		panic(".y:510")
+		$$ = &UnOp{$1.pos, $1.tok, $2}
 	}
 |	'^' uexpr
 	{ //513
-		panic(".y:514")
+		$$ = &UnOp{$1.pos, $1.tok, $2}
 	}
 |	_COMM uexpr
 	{ //517
-		panic(".y:518")
+		$$ = &UnOp{$1.pos, $1.tok, $2}
 	}
 
 pseudocall:
