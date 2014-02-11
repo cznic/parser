@@ -984,10 +984,13 @@ func f982() <-chan int {}
 type (
 	t984 map[k]v
 	t986 interface{}
-	t struct{
+	t987 struct{
 		//invalid (int)
 		//invalid (*int)
 		//invalid *(int)
+	}
+	t992 interface{
+		//fmt.Stringer
 	}
 )
 
