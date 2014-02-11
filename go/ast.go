@@ -220,12 +220,25 @@ type FuncType struct {
 	In, Out  []*Param
 }
 
-func newFuncType(y yyLexer, pos pos, in, out []*Param) (r *FuncType) {
+func newFuncType(y yyLexer, p pos, rx, in, out []*Param) (r *FuncType) {
 	ps := yy(y)
-	r = &FuncType{pos: pos, In: in, Out: out}
-	r.Ddd = newParams(ps, pos, in)
-	if newParams(ps, pos, out) {
-		ps.errPos(token.Pos(pos), "cannot use ... in output argument list")
+	r = &FuncType{pos: p, In: in, Out: out}
+	if len(rx) != 0 {
+		r.Receiver = rx[0]
+	}
+	switch len(rx) {
+	case 0: // func
+		// nop
+	case 1: // method
+		if newParams(ps, pos(rx[0].Type.Pos()), rx) {
+			ps.errPos(rx[0].Type.Pos(), "cannot use ... in output argument list")
+		}
+	default:
+		ps.errPos(rx[1].Pos(), "method has multiple receivers")
+	}
+	r.Ddd = newParams(ps, p, in)
+	if newParams(ps, p, out) {
+		ps.errPos(token.Pos(p), "cannot use ... in output argument list")
 	}
 	return
 }

@@ -770,10 +770,10 @@ func f641() {
 	q := a >= b
 }
 
-//func (t) f653()
-//func (*t) f654()
-//func (x t) f655()
-//func (x *t) f656()
+func (t) f653()
+func (*t) f654()
+func (x t) f655()
+func (x *t) f656()
 //func f657() {
 //	if x {
 //		a

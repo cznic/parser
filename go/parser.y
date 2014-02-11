@@ -871,17 +871,17 @@ xfndcl:
 fndcl:
 	sym '(' oarg_type_list_ocomma ')' fnres
 	{ //893
-		$$ = &FuncDecl{Name: $1.(*Ident), Type: newFuncType(yylex, $2.pos, $3, $5)}
+		$$ = &FuncDecl{Name: $1.(*Ident), Type: newFuncType(yylex, $2.pos, nil, $3, $5)}
 	}
 |	'(' oarg_type_list_ocomma ')' sym '(' oarg_type_list_ocomma ')' fnres
 	{ //897
-		panic(".y:898")
+		$$ = &FuncDecl{Name: $4.(*Ident), Type: newFuncType(yylex, $1.pos, $2, $6, $8)}
 	}
 
 fntype:
 	_FUNC '(' oarg_type_list_ocomma ')' fnres
 	{ //903
-		$$ = newFuncType(yylex, $1.pos, $3, $5)
+		$$ = newFuncType(yylex, $1.pos, nil, $3, $5)
 	}
 
 fnbody:
@@ -1033,7 +1033,7 @@ interfacedcl:
 indcl:
 	'(' oarg_type_list_ocomma ')' fnres
 	{ //1063
-		$$ = newFuncType(yylex, $1.pos, $2, $4)
+		$$ = newFuncType(yylex, $1.pos, nil, $2, $4)
 	}
 
 arg_type:

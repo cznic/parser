@@ -1668,15 +1668,15 @@ yydefault:
 		}
 	case 181:
 		{ //893
-			yyVAL.node = &FuncDecl{Name: yyS[yypt-4].node.(*Ident), Type: newFuncType(yylex, yyS[yypt-3].token.pos, yyS[yypt-2].params, yyS[yypt-0].params)}
+			yyVAL.node = &FuncDecl{Name: yyS[yypt-4].node.(*Ident), Type: newFuncType(yylex, yyS[yypt-3].token.pos, nil, yyS[yypt-2].params, yyS[yypt-0].params)}
 		}
 	case 182:
 		{ //897
-			panic(".y:898")
+			yyVAL.node = &FuncDecl{Name: yyS[yypt-4].node.(*Ident), Type: newFuncType(yylex, yyS[yypt-7].token.pos, yyS[yypt-6].params, yyS[yypt-2].params, yyS[yypt-0].params)}
 		}
 	case 183:
 		{ //903
-			yyVAL.node = newFuncType(yylex, yyS[yypt-4].token.pos, yyS[yypt-2].params, yyS[yypt-0].params)
+			yyVAL.node = newFuncType(yylex, yyS[yypt-4].token.pos, nil, yyS[yypt-2].params, yyS[yypt-0].params)
 		}
 	case 184:
 		{ //908
@@ -1800,7 +1800,7 @@ yydefault:
 		}
 	case 216:
 		{ //1063
-			yyVAL.node = newFuncType(yylex, yyS[yypt-3].token.pos, yyS[yypt-2].params, yyS[yypt-0].params)
+			yyVAL.node = newFuncType(yylex, yyS[yypt-3].token.pos, nil, yyS[yypt-2].params, yyS[yypt-0].params)
 		}
 	case 217:
 		{ //1069
