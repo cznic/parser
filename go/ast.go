@@ -22,10 +22,6 @@ type Declaration interface {
 	DeclName() string
 }
 
-type Name Ident
-
-func (n *Name) DeclName() string { return n.Lit }
-
 // ------------------------------------------------------------------ ArrayType
 
 type ArrayType struct {
@@ -85,7 +81,7 @@ type CompoundStament struct {
 type ConstDecl struct {
 	pos
 	Iota int
-	*Name
+	Name *Ident
 	Type Node
 	Expr Node
 }
@@ -105,7 +101,7 @@ func newConstDecls(y yyLexer, lst []Node) (r []Node) {
 
 		for j, nm := range v.Names[:mathutil.Min(len(v.Names), len(v.Expr))] {
 			id := nm.(*Ident)
-			d := &ConstDecl{pos(nm.Pos()), v.Iota, (*Name)(id), v.Type, v.Expr[j]}
+			d := &ConstDecl{pos(nm.Pos()), v.Iota, id, v.Type, v.Expr[j]}
 			r = append(r, d)
 		}
 	}
@@ -202,7 +198,7 @@ type ForStmt struct {
 
 type FuncDecl struct {
 	pos
-	*Name
+	Name   *Ident
 	RxName *Ident
 	RxType Node
 	Type   *FuncType
@@ -282,6 +278,9 @@ func newImport(y yyLexer, id Node, pth *Literal) (r *Import) {
 	if ident != nil {
 		nm := ident.Lit
 		if nm != "." {
+			// ...no identifier may be declared in both the file and package block.
+			// src: http://golang.org/ref/spec#Declarations_and_scope
+			ps.fileScope.declare(ps, nm, id)
 			ps.pkgScope.declare(ps, nm, id)
 		}
 	}
@@ -528,7 +527,7 @@ type SwitchStmt struct {
 
 type TypeDecl struct {
 	pos
-	*Name
+	Name *Ident
 	Type Node
 }
 
@@ -544,7 +543,7 @@ type UnOp struct {
 
 type VarDecl struct {
 	pos
-	*Name
+	Name *Ident
 	Type Node
 	Expr Node
 }
@@ -552,7 +551,7 @@ type VarDecl struct {
 func newVarDecls(ids []Node, t Node, expr []Node) (r []Node) {
 	for _, v := range ids {
 		id := v.(*Ident)
-		d := &VarDecl{pos(id.Pos()), (*Name)(id), t, nil}
+		d := &VarDecl{pos(id.Pos()), id, t, nil}
 		r = append(r, d)
 	}
 	for i, v := range expr[:mathutil.Min(len(ids), len(expr))] {

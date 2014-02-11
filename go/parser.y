@@ -7,6 +7,7 @@
 package parser
 
 import (
+	"fmt"
 	"go/token"
 )
 
@@ -30,7 +31,7 @@ import (
 
 %type	<node>
 	bare_complitexpr
-	case caseblock complitexpr comptype compound_stmt constdcl constdcl1
+	case caseblock complitexpr comptype compound_stmt constdcl constdcl1 convtype
 	dcl_name dotname
 	else elseif embed expr expr_or_type
 	fndcl fnlitdcl fnliteral fnret_type fntype for_body for_header for_stmt
@@ -253,7 +254,7 @@ typedclname:
 typedcl:
 	typedclname ntype
 	{ //230
-		$$ = &TypeDecl{pos($1.Pos()), (*Name)($1.(*Ident)), $2}
+		$$ = &TypeDecl{pos($1.Pos()), $1.(*Ident), $2}
 	}
 
 simple_stmt:
@@ -590,7 +591,7 @@ pexpr_no_paren:
 |	pseudocall
 |	convtype '(' expr ocomma ')'
 	{ //573
-		panic(".y:574")
+		$$ = &ConvOp{$2.pos, $1, $3}
 	}
 |	comptype lbrace start_complit braced_keyval_list '}'
 	{ //577
@@ -870,7 +871,7 @@ xfndcl:
 fndcl:
 	sym '(' oarg_type_list_ocomma ')' fnres
 	{ //893
-		$$ = &FuncDecl{Name:(*Name)($1.(*Ident)), Type: newFuncType(yylex, $2.pos, $3, $5)}
+		$$ = &FuncDecl{Name:$1.(*Ident), Type: newFuncType(yylex, $2.pos, $3, $5)}
 	}
 |	'(' oarg_type_list_ocomma ')' sym '(' oarg_type_list_ocomma ')' fnres
 	{ //897
@@ -1252,17 +1253,36 @@ func yyScope(y yyLexer) *Scope               { return yy(y).currentScope }
 func yyTLD(y yyLexer, n Node) {
 	p := yy(y)
 	p.ast = append(p.ast, n)
-	if d, ok := n.(Declaration); ok {
-		p.pkgScope.declare(p, d.DeclName(), n)
+	switch x := n.(type) {
+	case *ConstDecl:
+		p.pkgScope.declare(p, x.Name.Lit, n)
+	case *VarDecl:
+		p.pkgScope.declare(p, x.Name.Lit, n)
+	case *TypeDecl:
+		p.pkgScope.declare(p, x.Name.Lit, n)
+	case *FuncDecl:
+		p.pkgScope.declare(p, x.Name.Lit, n)
+	case *Package:
+		switch ex0, ok := p.pkgScope.Names[dlrPkgName]; {
+		case ok:
+			ex := ex0.(*Package)
+			if ex.Name.Lit == x.Name.Lit {
+				break
+			}
+
+			p.errPos(n.Pos(), fmt.Sprintf("%s redeclared, previous declaration at %s", x.Name.Lit, p.fset.Position(ex.Pos())))
+		default:
+			p.pkgScope.declare(p, dlrPkgName, n)
+		}
+	case *Import:
+		// not handled here
+	default:
+		panic("internal error")
 	}
 }
 
 func yyTLDs(y yyLexer, l []Node) {
-	p := yy(y)
 	for _, v := range l {
-		if d, ok := v.(Declaration); ok {
-			p.pkgScope.declare(p, d.DeclName(), v)
-		}
+		yyTLD(y, v)
 	}
-	p.ast = append(p.ast, l...)
 }

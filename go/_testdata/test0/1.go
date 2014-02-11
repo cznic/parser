@@ -709,14 +709,14 @@ xxx:
 	var arr = [...]byte{1, 2, 3}
 	// var arr [...]byte = {1, 2, 3} //invalid
 	a591 := [math.MaxInt64]byte(arr)
-//TODO	a592 := ([math.MaxInt64]byte(arr))
-//TODO	a593 := *([math.MaxInt64]byte(arr))
-//TODO	a594 := *[math.MaxInt64]byte(arr)
-//TODO	a595 := (*[math.MaxInt64]byte(arr))
-//TODO	a596 := *(*[math.MaxInt64]byte(arr))
-//TODO	a597 := **[math.MaxInt64]byte(arr)
-//TODO	a598 := (**[math.MaxInt64]byte(arr))
-//TODO	a599 := *(**[math.MaxInt64]byte(arr))
+	a592 := ([math.MaxInt64]byte(arr))
+	a593 := *([math.MaxInt64]byte(arr))
+	a594 := *[math.MaxInt64]byte(arr)
+	a595 := (*[math.MaxInt64]byte(arr))
+	a596 := *(*[math.MaxInt64]byte(arr))
+	a597 := **[math.MaxInt64]byte(arr)
+	a598 := (**[math.MaxInt64]byte(arr))
+	a599 := *(**[math.MaxInt64]byte(arr))
 }
 
 // Go

@@ -73,9 +73,6 @@ func String(fs *token.FileSet, v interface{}) (r string) {
 			case "Literal":
 				id := rv.Interface().(Literal)
 				f.Format("%s%T{%s %s %q}\n", pre, v, fs.Position(id.Pos()), id.Kind, id.Lit)
-			case "Name":
-				id := rv.Interface().(Name)
-				f.Format("%s%T{%s %q}\n", pre, v, fs.Position(id.Pos()), id.Lit)
 			case "QualifiedIdent":
 				id := rv.Interface().(QualifiedIdent)
 				switch {
