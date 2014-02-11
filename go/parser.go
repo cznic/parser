@@ -1277,11 +1277,11 @@ yydefault:
 		yyVAL.node = yyS[yypt-0].node
 	case 74:
 		{ //403
-			panic(".y:404")
+			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, token.LOR, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 75:
 		{ //407
-			panic(".y:408")
+			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, token.LAND, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 76:
 		{ //411
@@ -1301,7 +1301,7 @@ yydefault:
 		}
 	case 80:
 		{ //427
-			panic(".y:428")
+			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, token.GEQ, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 81:
 		{ //431

@@ -430,11 +430,11 @@ expr:
 	uexpr
 |	expr _OROR expr
 	{ //403
-		panic(".y:404")
+		$$ = &BinOp{$2.pos, token.LOR, $1, $3}
 	}
 |	expr _ANDAND expr
 	{ //407
-		panic(".y:408")
+		$$ = &BinOp{$2.pos, token.LAND, $1, $3}
 	}
 |	expr _EQ expr
 	{ //411
@@ -454,7 +454,7 @@ expr:
 	}
 |	expr _GE expr
 	{ //427
-		panic(".y:428")
+		$$ = &BinOp{$2.pos, token.GEQ, $1, $3}
 	}
 |	expr '>' expr
 	{ //431
@@ -871,7 +871,7 @@ xfndcl:
 fndcl:
 	sym '(' oarg_type_list_ocomma ')' fnres
 	{ //893
-		$$ = &FuncDecl{Name:$1.(*Ident), Type: newFuncType(yylex, $2.pos, $3, $5)}
+		$$ = &FuncDecl{Name: $1.(*Ident), Type: newFuncType(yylex, $2.pos, $3, $5)}
 	}
 |	'(' oarg_type_list_ocomma ')' sym '(' oarg_type_list_ocomma ')' fnres
 	{ //897

@@ -198,11 +198,9 @@ type ForStmt struct {
 
 type FuncDecl struct {
 	pos
-	Name   *Ident
-	RxName *Ident
-	RxType Node
-	Type   *FuncType
-	Body   []Node
+	Name *Ident
+	Type *FuncType
+	Body []Node
 }
 
 // -------------------------------------------------------------------- FuncLit
@@ -217,8 +215,9 @@ type FuncLit struct {
 
 type FuncType struct {
 	pos
-	Ddd     bool // in
-	In, Out []*Param
+	Receiver *Param
+	Ddd      bool // in
+	In, Out  []*Param
 }
 
 func newFuncType(y yyLexer, pos pos, in, out []*Param) (r *FuncType) {

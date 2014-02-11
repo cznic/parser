@@ -758,45 +758,45 @@ var (
 		{3},
 	}
 )
-//TODOfunc f641() {
-//TODO	i := a || b && c
-//TODO	j := a && b || c
-//TODO	k := struct{int}(x)
-//TODO	l := (struct{int}(y))
-//TODO	m := (*[math.MaxInt64]byte(p))
-//TODO	n := (*(struct{int}(z)))
-//TODO	o := (*struct{int}(z))
-//TODO	p := *(struct{int}(z))
-//TODO	q := a >= b
-//TODO}
-//TODO
-//TODOfunc (t) f653()
-//TODOfunc (*t) f654()
-//TODOfunc (x t) f655()
-//TODOfunc (x *t) f656()
-//TODOfunc f657() {
-//TODO	if x {
-//TODO		a
-//TODO	} else if y {
-//TODO		b
-//TODO	}
-//TODO	if x {
-//TODO		a
-//TODO	} else {
-//TODO		b
-//TODO	}
-//TODO	i := 1i
-//TODO	nl := '\n'
-//TODO	v := [...]int{1, 2, 3}
-//TODO	a = b ^ c
-//TODO	a = b | c
-//TODO	a = b &^ c
-//TODO	a = b & c
-//TODO	a = b >> c
-//TODO	a = b % c
-//TODO	a = b / c
-//TODO	a |= b
-//TODO}
+func f641() {
+	i := a || b && c
+	j := a && b || c
+	k := struct{int}(x)
+	l := (struct{int}(y))
+	m := (*[math.MaxInt64]byte(p))
+	n := (*(struct{int}(z)))
+	o := (*struct{int}(z))
+	p := *(struct{int}(z))
+	q := a >= b
+}
+
+//func (t) f653()
+//func (*t) f654()
+//func (x t) f655()
+//func (x *t) f656()
+//func f657() {
+//	if x {
+//		a
+//	} else if y {
+//		b
+//	}
+//	if x {
+//		a
+//	} else {
+//		b
+//	}
+//	i := 1i
+//	nl := '\n'
+//	v := [...]int{1, 2, 3}
+//	a = b ^ c
+//	a = b | c
+//	a = b &^ c
+//	a = b & c
+//	a = b >> c
+//	a = b % c
+//	a = b / c
+//	a |= b
+//}
 //TODOfunc f680() t
 //TODOfunc f681() *t
 //TODOfunc f682() [3]int
