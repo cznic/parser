@@ -624,7 +624,7 @@ bare_complitexpr:
 	}
 |	'{' start_complit braced_keyval_list '}'
 	{ //610
-		panic(".y:611")
+		$$ = &Element{$1.pos, nil, &CompLit{$1.pos, nil, elements($3)}}
 	}
 
 complitexpr:
@@ -634,7 +634,7 @@ complitexpr:
 	}
 |	'{' start_complit braced_keyval_list '}'
 	{ //620
-		panic(".y:621")
+		$$ = &Element{$1.pos, nil, &CompLit{$1.pos, nil, elements($3)}}
 	}
 
 pexpr:

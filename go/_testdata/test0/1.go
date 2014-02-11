@@ -720,44 +720,44 @@ xxx:
 }
 
 // Go
-//TODOfunc Float32bits603(f float32) uint32 { return *(*uint32)(unsafe.Pointer(&f)) }
-//TODOfunc Float32bits604(f float32) uint32 { return *(*uint32(unsafe.Pointer(&f))) }
-//TODOfunc Float32frombits605(b uint32) float32 { return *(*float32)(unsafe.Pointer(&b)) }
-//TODOfunc Float32frombits606(b uint32) float32 { return *(*float32(unsafe.Pointer(&b))) }
-//TODOfunc Float64bits607(f float64) uint64 { return *(*uint64)(unsafe.Pointer(&f)) }
-//TODOfunc Float64bits608(f float64) uint64 { return *(*uint64(unsafe.Pointer(&f))) }
-//TODOfunc Float64frombits609(b uint64) float64 { return *(*float64)(unsafe.Pointer(&b)) }
-//TODOfunc Float64frombits610(b uint64) float64 { return *(*float64(unsafe.Pointer(&b))) }
-//TODO// Run
-//TODOfunc Float32bits612(f float32) uint32 { return *(*uint32(&f)) }
-//TODOfunc Float32bits613(f float32) uint32 { return *(*uint32)(&f) }
-//TODOfunc Float32frombits614(b uint32) float32 { return *(*float32(&b)) }
-//TODOfunc Float32frombits615(b uint32) float32 { return *(*float32)(&b) }
-//TODOfunc Float64bits616(f float64) uint64 { return *(*uint64)(&f) }
-//TODOfunc Float64bits617(f float64) uint64 { return *(*uint64(&f)) }
-//TODOfunc Float64frombits618(b uint64) float64 { return *(*float64)(&b) }
-//TODOfunc Float64frombits619(b uint64) float64 { return *(*float64(&b)) }
-//TODO
-//TODOvar (
-//TODO	fp622 *float64
-//TODO	up623 *uint64 = *uint64(fp)
-//TODO	up624 = *uint64(fp)
-//TODO	v625 [n]t
-//TODO	v626 = struct{
-//TODO		u, v struct{
-//TODO			int
-//TODO		}
-//TODO	}{
-//TODO		u: {3},
-//TODO	}
-//TODO	v633 = struct{
-//TODO		u struct{
-//TODO			int
-//TODO		}
-//TODO	}{
-//TODO		{3},
-//TODO	}
-//TODO)
+func Float32bits603(f float32) uint32 { return *(*uint32)(unsafe.Pointer(&f)) }
+func Float32bits604(f float32) uint32 { return *(*uint32(unsafe.Pointer(&f))) }
+func Float32frombits605(b uint32) float32 { return *(*float32)(unsafe.Pointer(&b)) }
+func Float32frombits606(b uint32) float32 { return *(*float32(unsafe.Pointer(&b))) }
+func Float64bits607(f float64) uint64 { return *(*uint64)(unsafe.Pointer(&f)) }
+func Float64bits608(f float64) uint64 { return *(*uint64(unsafe.Pointer(&f))) }
+func Float64frombits609(b uint64) float64 { return *(*float64)(unsafe.Pointer(&b)) }
+func Float64frombits610(b uint64) float64 { return *(*float64(unsafe.Pointer(&b))) }
+// Invalid Go
+func Float32bits612(f float32) uint32 { return *(*uint32(&f)) }
+func Float32bits613(f float32) uint32 { return *(*uint32)(&f) }
+func Float32frombits614(b uint32) float32 { return *(*float32(&b)) }
+func Float32frombits615(b uint32) float32 { return *(*float32)(&b) }
+func Float64bits616(f float64) uint64 { return *(*uint64)(&f) }
+func Float64bits617(f float64) uint64 { return *(*uint64(&f)) }
+func Float64frombits618(b uint64) float64 { return *(*float64)(&b) }
+func Float64frombits619(b uint64) float64 { return *(*float64(&b)) }
+
+var (
+	fp622 *float64
+	up623 *uint64 = *uint64(fp)
+	up624 = *uint64(fp)
+	v625 [n]t
+	v626 = struct{
+		u, v struct{
+			int
+		}
+	}{
+		u: {3},
+	}
+	v633 = struct{
+		u struct{
+			int
+		}
+	}{
+		{3},
+	}
+)
 //TODOfunc f641() {
 //TODO	i := a || b && c
 //TODO	j := a && b || c

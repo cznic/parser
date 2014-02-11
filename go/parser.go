@@ -1464,7 +1464,7 @@ yydefault:
 		}
 	case 123:
 		{ //610
-			panic(".y:611")
+			yyVAL.node = &Element{yyS[yypt-3].token.pos, nil, &CompLit{yyS[yypt-3].token.pos, nil, elements(yyS[yypt-1].list)}}
 		}
 	case 124:
 		{ //616
@@ -1472,7 +1472,7 @@ yydefault:
 		}
 	case 125:
 		{ //620
-			panic(".y:621")
+			yyVAL.node = &Element{yyS[yypt-3].token.pos, nil, &CompLit{yyS[yypt-3].token.pos, nil, elements(yyS[yypt-1].list)}}
 		}
 	case 126:
 		yyVAL.node = yyS[yypt-0].node
