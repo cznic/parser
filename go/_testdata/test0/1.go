@@ -943,3 +943,33 @@ type u829 uint
 
 func (t828) f944()
 func (t829) f945()
+
+type t947 struct {
+	x y "z"
+	i j `k`
+}
+
+func f952() {
+	defer f()
+	go f()
+	switch x := v.(type) {
+	case int, bool:
+	case a.B:
+	}
+	a = b.(T)
+	x = y[:]
+	x = y[:h]
+	x = y[l:]
+	x = y[l:h]
+	x = y[:i:j]
+	x = y[i:j:k]
+	x = ([]int){1}
+	select {
+	}
+	select {
+	case <-c1:
+	case a = <-c2:
+	case b := <-c3:
+	case d <- c4:
+	}
+}

@@ -37,12 +37,12 @@ import (
 	fndcl fnlitdcl fnliteral fnret_type fntype for_body for_header for_stmt
 	if_header if_stmt import_stmt indcl interfacedcl interfacetype
 	keyval
-	labelname
-	name name_or_type new_name ntype non_dcl_stmt
+	labelname lbrace
+	name name_or_type new_name ntype non_dcl_stmt non_expr_type
 	oexpr oliteral onew_name osimple_stmt othertype
 	package packname pexpr pexpr_no_paren pseudocall ptrtype
 	range_stmt
-	simple_stmt structdcl structtype switch_stmt sym
+	select_stmt simple_stmt structdcl structtype switch_stmt sym
 	typedcl typedclname
 	uexpr
 	xfndcl
@@ -240,7 +240,7 @@ constdcl1:
 	constdcl
 |	dcl_name_list ntype
 	{ //214
-		panic(".y:215")
+		panic(".y:215") //TODO ???
 		//yyErrPos(yylex, $2, "const declaration cannot have type without expression")
 	}
 |	dcl_name_list
@@ -287,11 +287,11 @@ case:
 	}
 |	_CASE expr_or_type_list '=' expr ':'
 	{ //266
-		panic(".y:267")
+		$$ = &SwitchCase{$1.pos, []Node{&Assignment{$3.pos, $3.tok, $2, []Node{$4}}}, nil}
 	}
 |	_CASE expr_or_type_list _COLAS expr ':'
 	{ //270
-		panic(".y:271")
+		$$ = &SwitchCase{$1.pos, []Node{&Assignment{$3.pos, $3.tok, $2, []Node{$4}}}, nil}
 	}
 |	_DEFAULT ':'
 	{ //274
@@ -421,9 +421,50 @@ switch_stmt:
 	}
 
 select_stmt:
-	_SELECT _BODY caseblock_list '}'
+	//_SELECT _BODY caseblock_list '}'
+	_SELECT '{' caseblock_list '}'
 	{ //393
-		panic(".y:394")
+		x := &SelectStmt{pos: $1.pos}
+		for _, v := range $3 {
+			l := v.(*SwitchCase).Expr
+			if len(l) != 1 {
+				yyErrPos(yylex, l[1], "select cases cannot be lists")
+				continue
+			}
+
+			v0 := l[0]
+			switch t := v0.(type) {
+			case *Assignment:
+				if t.Op != token.ASSIGN && t.Op != token.DEFINE {
+					break
+				}
+
+				if len(t.L) > 2 || len(t.R) != 1 {
+					break
+				}
+
+				if y, ok := t.R[0].(*UnOp); ok && y.Op == token.ARROW {
+					x.Cases = append(x.Cases, &CommCase{pos(v0.Pos()), v0})
+					continue
+				}
+			case *BinOp:
+				if t.Op != token.ARROW {
+					break
+				}
+
+				x.Cases = append(x.Cases, &CommCase{pos(v0.Pos()), v0})
+				continue
+			case *UnOp:
+				if t.Op != token.ARROW {
+					break
+				}
+
+				x.Cases = append(x.Cases, &CommCase{pos(v0.Pos()), v0})
+				continue
+			}
+			yyErrPos(yylex, v0, "select case must be receive, send or assign recv")
+		}
+		$$ = x
 	}
 
 expr:
@@ -506,7 +547,7 @@ expr:
 	}
 |	expr _COMM expr
 	{ //479
-		panic(".y:480")
+		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
 	}
 
 uexpr:
@@ -570,11 +611,11 @@ pexpr_no_paren:
 	}
 |	pexpr '.' '(' expr_or_type ')'
 	{ //549
-		panic(".y:550")
+		$$ = &TypeAssertion{$3.pos, $1, $4}
 	}
 |	pexpr '.' '(' _TYPE ')'
 	{ //553
-		panic(".y:554")
+		$$ = &TypeSwitch{$4.pos, $1}
 	}
 |	pexpr '[' expr ']'
 	{ //557
@@ -582,11 +623,17 @@ pexpr_no_paren:
 	}
 |	pexpr '[' oexpr ':' oexpr ']'
 	{ //561
-		panic(".y:562")
+		$$ = &SliceOp{$2.pos, $1, $3, $5, nil}
 	}
 |	pexpr '[' oexpr ':' oexpr ':' oexpr ']'
 	{ //565
-		panic(".y:566")
+		if $5 == nil {
+			yyErrPos(yylex, $4, "middle index required in 3-index slice")
+		}
+		if $7 == nil {
+			yyErrPos(yylex, $6, "final index required in 3-index slice")
+		}
+		$$ = &SliceOp{$2.pos, $1, $3, $5, $7}
 	}
 |	pseudocall
 |	convtype '(' expr ocomma ')'
@@ -595,15 +642,15 @@ pexpr_no_paren:
 	}
 |	comptype lbrace start_complit braced_keyval_list '}'
 	{ //577
-		$$ = &CompLit{pos($1.Pos()), $1, elements($4)}
+		$$ = &CompLit{pos($2.Pos()), $1, elements($4)}
 	}
 |	pexpr_no_paren '{' start_complit braced_keyval_list '}'
 	{ //581
-		$$ = &CompLit{pos($1.Pos()), $1, elements($4)}
+		$$ = &CompLit{$2.pos, $1, elements($4)}
 	}
 |	'(' expr_or_type ')' '{' start_complit braced_keyval_list '}'
 	{ //585
-		panic(".y:586")
+		$$ = &CompLit{$4.pos, $2, elements($6)}
 	}
 |	fnliteral
 
@@ -647,16 +694,19 @@ pexpr:
 expr_or_type:
 	expr
 |	non_expr_type	%prec preferToRightParen
-	{ //640
-		panic(".y:641")
-	}
 
 name_or_type:
 	ntype
 
 lbrace:
 	_BODY
+	{
+		$$ = Node($1)
+	}
 |	'{'
+	{
+		$$ = Node($1)
+	}
 
 // - field name of a struct type definition
 // - label name declaration/reference
@@ -725,9 +775,6 @@ non_expr_type:
 		panic(".y:742")
 	}
 |	othertype
-	{ //745
-		panic(".y:746")
-	}
 |	'*' non_expr_type
 	{ //749
 		panic(".y:750")
@@ -1083,9 +1130,6 @@ non_dcl_stmt:
 |	for_stmt
 |	switch_stmt
 |	select_stmt
-	{ //1139
-		panic(".y:1140")
-	}
 |	if_stmt
 |	labelname ':' stmt
 	{ //1151
@@ -1105,11 +1149,11 @@ non_dcl_stmt:
 	}
 |	_GO pseudocall
 	{ //1167
-		panic(".y:1168")
+		$$ = &GoStmt{$1.pos, $2.(*CallOp)}
 	}
 |	_DEFER pseudocall
 	{ //1171
-		panic(".y:1172")
+		$$ = &DeferStmt{$1.pos, $2.(*CallOp)}
 	}
 |	_GOTO new_name
 	{ //1175
@@ -1225,8 +1269,8 @@ oliteral:
 		$$ = (*Literal)(nil)
 	}
 |	_LITERAL
-	{ //1310
-		panic(".y:1311")
+	{
+		$$ = newLiteral($1)
 	}
 
 %%

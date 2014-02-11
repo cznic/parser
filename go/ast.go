@@ -61,6 +61,27 @@ type CallOp struct {
 	Args  []Node
 }
 
+// ------------------------------------------------------------------- CommCase
+
+// Stmt:
+// ----
+//
+// "case" send:
+//	BinOp{expr, "<-", expr}
+//
+// "case" receive:
+//	Unop{"<-", expr}
+// or
+//	Assignment{exprList, "=" | ":=", Unop{"<-", expr}}
+//
+// "default":
+//	nil
+
+type CommCase struct {
+	pos
+	Stmt Node
+}
+
 // -------------------------------------------------------------------- CompLit
 
 type CompLit struct {
@@ -143,6 +164,13 @@ type ConvOp struct {
 	pos
 	Type Node
 	Expr Node
+}
+
+// ------------------------------------------------------------------ DeferStmt
+
+type DeferStmt struct {
+	pos
+	Expr *CallOp
 }
 
 // -------------------------------------------------------------------- Element
@@ -241,6 +269,13 @@ func newFuncType(y yyLexer, p pos, rx, in, out []*Param) (r *FuncType) {
 		ps.errPos(token.Pos(p), "cannot use ... in output argument list")
 	}
 	return
+}
+
+// --------------------------------------------------------------------- GoStmt
+
+type GoStmt struct {
+	pos
+	Expr *CallOp
 }
 
 // ------------------------------------------------------------------- GotoStmt
@@ -473,12 +508,29 @@ type SelectOp struct {
 	Selector *Ident
 }
 
+// ----------------------------------------------------------------- SelectStmt
+
+type SelectStmt struct {
+	pos
+	Cases []*CommCase
+}
+
 // --------------------------------------------------------------- ShortVarDecl
 
 type ShortVarDecl struct {
 	pos
 	Names []Node
 	Expr  []Node
+}
+
+// -------------------------------------------------------------------- SliceOp
+
+type SliceOp struct {
+	pos
+	Expr Node
+	Low  Node
+	High Node
+	Max  Node
 }
 
 // ------------------------------------------------------------------ SliceType
@@ -535,12 +587,27 @@ type SwitchStmt struct {
 	Cases []*SwitchCase
 }
 
+// -------------------------------------------------------------- TypeAssertion
+
+type TypeAssertion struct { // expr.(T)
+	pos
+	Expr Node
+	Type Node
+}
+
 // ------------------------------------------------------------------- TypeDecl
 
 type TypeDecl struct {
 	pos
 	Name *Ident
 	Type Node
+}
+
+// ----------------------------------------------------------------- TypeSwitch
+
+type TypeSwitch struct { // expr.(type)
+	pos
+	Expr Node
 }
 
 // ----------------------------------------------------------------------- UnOp
