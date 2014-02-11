@@ -554,72 +554,86 @@ func f423() {
 	goto ident2;
 	fallthrough
 	fallthrough;
-//TODO	if 1 {
-//TODO		println(42)
-//TODO	}
-//TODO	if (1) {
-//TODO		println(42)
-//TODO	}
-//TODO	if x {
-//TODO		println(42)
-//TODO	}
-//TODO	if (x) {
-//TODO		println(42)
-//TODO	}
-//TODO	if x.y {}
-//TODO	if (x.y) {}
-//TODO	if (x{}) {
-//TODO		println(42)
-//TODO	}
-//TODO	if (int{}) {
-//TODO		println(42)
-//TODO	}
-//TODO	if (int{1}) {
-//TODO		println(42)
-//TODO	}
-//TODO	if ([...]int{1}) {
-//TODO		println(42)
-//TODO	}
-//TODO	if ([...]int{1}[0]) {
-//TODO		println(42)
-//TODO	}
-//TODO	if ([...]int{1}[0] == 0) {
-//TODO		println(42)
-//TODO	}
-//TODO	if ([...]int{1}[0]) == 0 {
-//TODO		println(42)
-//TODO	}
-//TODO	if ([1]int{1}) {
-//TODO	     println(42)
-//TODO	}
-//TODO	if ([1]int{1}[0]) {
-//TODO	     println(42)
-//TODO	}
-//TODO	if ([1]int{1}[0] == 0) {
-//TODO	     println(42)
-//TODO	}
-//TODO	if ([1]int{1}[0]) == 0 {
-//TODO		println(42)
-//TODO	}
-//TODO	if x == (T{a,b,c}[i]) {
-//TODO		println(42)
-//TODO	}
-//TODO	if (x == T{a,b,c}[i]) {
-//TODO		println(42)
-//TODO	}
-//TODO	if (x.y{false, true}[0]) {}
-//TODO	if x == (p.T{a,b,c}[i]) {
-//TODO		println(42)
-//TODO	}
-//TODO	if (x == p.T{a,b,c}[i]) {
-//TODO		println(42)
-//TODO	}
-//TODO	if n = len(l.stack); n != 0 {
-//TODO		l.stack[n-1]++
-//TODO	}
-//TODO	if (func() bool { return true }()) { //LATER lift parens requirement in this special case (?)
-//TODO		fmt.Println("Hello, playground")
-//TODO	}
+	if 1 {
+		println(42)
+	}
+	if 1; 2 {
+		println(42)
+	} else if 3 {
+		println(43)
+	}
+	if 1; 2 {
+		println(42)
+	} else if 3 {
+		println(43)
+	} else if 4 {
+		println(44)
+	} else {
+		println(45)
+	}
+	if (1) {
+		println(42)
+	}
+	if x {
+		println(42)
+	}
+	if (x) {
+		println(42)
+	}
+	if x.y {}
+	if (x.y) {}
+	if (x{}) {
+		println(42)
+	}
+	if (int{}) {
+		println(42)
+	}
+	if (int{1}) {
+		println(42)
+	}
+	if ([...]int{1}) {
+		println(42)
+	}
+	if ([...]int{1}[0]) {
+		println(42)
+	}
+	if ([...]int{1}[0] == 0) {
+		println(42)
+	}
+	if ([...]int{1}[0]) == 0 {
+		println(42)
+	}
+	if ([1]int{1}) {
+	     println(42)
+	}
+	if ([1]int{1}[0]) {
+	     println(42)
+	}
+	if ([1]int{1}[0] == 0) {
+	     println(42)
+	}
+	if ([1]int{1}[0]) == 0 {
+		println(42)
+	}
+	if x == (T{a,b,c}[i]) {
+		println(42)
+	}
+	if (x == T{a,b,c}[i]) {
+		println(42)
+	}
+	if (x.y{false, true}[0]) {}
+	if x == (p.T{a,b,c}[i]) {
+		println(42)
+	}
+	if (x == p.T{a,b,c}[i]) {
+		println(42)
+	}
+	if n = len(l.stack); n != 0 {
+		l.stack[n-1]++
+	}
+	if (func() bool { return true }()) {
+		fmt.Println("Hello, playground")
+	}
 }
 
 //TODOvar v = func() bool {}

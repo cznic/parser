@@ -32,12 +32,12 @@ import (
 	bare_complitexpr
 	complitexpr comptype compound_stmt constdcl constdcl1
 	dcl_name dotname
-	embed expr expr_or_type
-	fndcl fnret_type fntype
-	import_stmt indcl interfacedcl interfacetype
+	else elseif embed expr expr_or_type
+	fndcl fnlitdcl fnliteral fnret_type fntype
+	if_header if_stmt import_stmt indcl interfacedcl interfacetype
 	keyval
 	name name_or_type new_name ntype non_dcl_stmt
-	oexpr oliteral onew_name othertype
+	oexpr oliteral onew_name osimple_stmt othertype
 	package packname pexpr pexpr_no_paren pseudocall ptrtype
 	simple_stmt structdcl structtype sym
 	typedcl typedclname
@@ -48,10 +48,11 @@ import (
 	braced_keyval_list
 	common_dcl constdcl_list
 	dcl_name_list
-	expr_list expr_or_type_list
+	elseif_list expr_list expr_or_type_list
 	fnbody
 	import_stmt_list interfacedcl_list
 	keyval_list
+	loop_body
 	new_name_list
 	oexpr_list
 	stmt stmt_list structdcl_list
@@ -322,7 +323,7 @@ caseblock_list:
 loop_body:
 	_BODY stmt_list '}'
 	{ //305
-		panic(".y:306")
+		$$ = $2
 	}
 
 range_stmt:
@@ -364,41 +365,49 @@ for_stmt:
 if_header:
 	osimple_stmt
 	{ //347
-		panic(".y:348")
+		$$ = &IfStmt{Cond: $1}
 	}
 |	osimple_stmt ';' osimple_stmt
 	{ //351
-		panic(".y:352")
+		$$ = &IfStmt{Init: $1, Cond: $3}
 	}
 
 if_stmt:
 	_IF if_header loop_body elseif_list else
 	{ //357
-		panic(".y:358")
+		x := $2.(*IfStmt)
+		l := make([]*IfStmt, len($4))
+		for i, v := range $4 {
+			l[i] = v.(*IfStmt)
+		}
+		x.pos, x.Body, x.Elif, x.Else = $1.pos, $3, l, $5.(*CompoundStament)
+		$$ = x
 	}
 
 elseif:
 	_ELSE _IF if_header loop_body
 	{ //363
-		panic(".y:364")
+		x := $3.(*IfStmt)
+		x.pos, x.Body = $2.pos, $4
+		$$ = x
 	}
 
 elseif_list:
 	{ //368
-		panic(".y:369")
+		$$ = nil
 	}
 |	elseif_list elseif
 	{ //372
-		panic(".y:373")
+		$$ = append($1, $2)
 	}
 
 else:
 	{ //377
-		panic(".y:378")
+		$$ = (*CompoundStament)(nil)
 	}
 |	_ELSE compound_stmt
 	{ //381
-		panic(".y:382")
+		$$ = $2
 	}
 
 switch_stmt:
@@ -425,11 +434,11 @@ expr:
 	}
 |	expr _EQ expr
 	{ //411
-		panic(".y:412")
+		$$ = &BinOp{$2.pos, token.EQL, $1, $3}
 	}
 |	expr _NE expr
 	{ //415
-		panic(".y:416")
+		$$ = &BinOp{$2.pos, token.NEQ, $1, $3}
 	}
 |	expr _LT expr
 	{ //419
@@ -586,16 +595,13 @@ pexpr_no_paren:
 	}
 |	pexpr_no_paren '{' start_complit braced_keyval_list '}'
 	{ //581
-		panic(".y:582")
+		$$ = &CompLit{pos($1.Pos()), $1, elements($4)}
 	}
 |	'(' expr_or_type ')' '{' start_complit braced_keyval_list '}'
 	{ //585
 		panic(".y:586")
 	}
 |	fnliteral
-	{ //589
-		panic(".y:590")
-	}
 
 start_complit:
 	{ //594
@@ -646,9 +652,6 @@ name_or_type:
 
 lbrace:
 	_BODY
-	{ //652
-		panic(".y:653")
-	}
 |	'{'
 
 // - field name of a struct type definition
@@ -799,7 +802,7 @@ dotname:
 othertype:
 	'[' oexpr ']' ntype
 	{ //825
-		switch { //TODO + resolve scope
+		switch {
 		case $2 != nil:
 			$$ = &ArrayType{$1.pos, $2, $4}
 		default:
@@ -808,7 +811,7 @@ othertype:
 	}
 |	'[' _DDD ']' ntype
 	{ //829
-		panic(".y:830")
+		$$ = &ArrayType{$1.pos, nil, $4}
 	}
 |	_CHAN non_recvchantype
 	{ //833
@@ -908,14 +911,12 @@ fnres:
 
 fnlitdcl:
 	fntype
-	{ //932
-		panic(".y:933")
-	}
 
 fnliteral:
 	fnlitdcl lbrace stmt_list '}'
 	{ //938
-		panic(".y:939")
+		x := $1.(*FuncType)
+		$$ = &FuncLit{x.pos, x, $3}
 	}
 |	fnlitdcl error
 	{ //942
@@ -1106,9 +1107,6 @@ non_dcl_stmt:
 		panic(".y:1140")
 	}
 |	if_stmt
-	{ //1143
-		panic(".y:1144")
-	}
 |	labelname ':'
 	{ //1147
 		panic(".y:1148")
@@ -1245,9 +1243,6 @@ osimple_stmt:
 		panic(".y:1298")
 	}
 |	simple_stmt
-	{ //1301
-		panic(".y:1302")
-	}
 
 oliteral:
 	{ //1306

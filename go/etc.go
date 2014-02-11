@@ -213,6 +213,8 @@ func (p *parser) Lex(lval *yySymType) (r int) {
 		}
 
 		switch r {
+		case _IF, _FOR, _SWITCH:
+			p.stack = append(p.stack, 0)
 		case '(':
 			n := len(p.stack)
 			if n == 0 {

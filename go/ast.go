@@ -188,6 +188,14 @@ type FuncDecl struct {
 	Body   []Node
 }
 
+// -------------------------------------------------------------------- FuncLit
+
+type FuncLit struct {
+	pos
+	Type *FuncType
+	Body []Node
+}
+
 // ------------------------------------------------------------------- FuncType
 type FuncType struct {
 	pos
@@ -217,6 +225,17 @@ type GotoStmt struct {
 type Ident struct {
 	pos
 	Lit string
+}
+
+// --------------------------------------------------------------------- IfStmt
+
+type IfStmt struct {
+	pos
+	Init Node
+	Cond Node
+	Body []Node
+	Elif []*IfStmt
+	Else *CompoundStament
 }
 
 // --------------------------------------------------------------------- Import
