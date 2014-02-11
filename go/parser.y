@@ -771,17 +771,8 @@ fnret_type:
 		panic(".y:794")
 	}
 |	fntype
-	{ //797
-		panic(".y:798")
-	}
 |	othertype
-	{ //801
-		panic(".y:802")
-	}
 |	ptrtype
-	{ //805
-		panic(".y:806")
-	}
 |	dotname
 	{ //790
 		$$ = &NamedType{pos($1.Pos()), $1.(*QualifiedIdent), nil, yyScope(yylex)}

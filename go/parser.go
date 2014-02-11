@@ -1560,17 +1560,11 @@ yydefault:
 			panic(".y:794")
 		}
 	case 161:
-		{ //797
-			panic(".y:798")
-		}
+		yyVAL.node = yyS[yypt-0].node
 	case 162:
-		{ //801
-			panic(".y:802")
-		}
+		yyVAL.node = yyS[yypt-0].node
 	case 163:
-		{ //805
-			panic(".y:806")
-		}
+		yyVAL.node = yyS[yypt-0].node
 	case 164:
 		{ //790
 			yyVAL.node = &NamedType{pos(yyS[yypt-0].node.Pos()), yyS[yypt-0].node.(*QualifiedIdent), nil, yyScope(yylex)}

@@ -797,50 +797,50 @@ func f657() {
 	a = b / c
 	a |= b
 }
-//TODOfunc f680() t
-//TODOfunc f681() *t
-//TODOfunc f682() [3]int
-//TODOfunc f683() *[3]int
-//TODOfunc f684() func(int) bool
-//TODOfunc f685() *func(int) bool
-//TODOfunc f686() q.I
-//TODOfunc f687() *q.I
-//TODOfunc f688() struct{i int}
-//TODOfunc f689() *struct{i int}
-//TODO
-//TODOfunc f691() (t)
-//TODOfunc f692() (*t)
-//TODOfunc f693() ([3]int)
-//TODOfunc f694() (*[3]int)
-//TODOfunc f695() (func(int) bool)
-//TODOfunc f696() (*func(int) bool)
-//TODOfunc f697() (q.I)
-//TODOfunc f698() (*q.I)
-//TODOfunc f699() (struct{i int})
-//TODOfunc f700() (*struct{i int})
-//TODO
-//TODOfunc f714() (r t)
-//TODOfunc f715() (r *t)
-//TODOfunc f716() (r [3]int)
-//TODOfunc f717() (r *[3]int)
-//TODOfunc f718() (r func(int) bool)
-//TODOfunc f719() (r *func(int) bool)
-//TODOfunc f720() (r q.I)
-//TODOfunc f721() (r *q.I)
-//TODOfunc f722() (r struct{i int})
-//TODOfunc f723() (r *struct{i int})
-//TODO
-//TODOfunc f737() (r t, err error)
-//TODOfunc f738() (r *t, err error)
-//TODOfunc f739() (r [3]int, err error)
-//TODOfunc f740() (r *[3]int, err error)
-//TODOfunc f741() (r func(int) bool, err error)
-//TODOfunc f742() (r *func(int) bool, err error)
-//TODOfunc f743() (r q.I, err error)
-//TODOfunc f744() (r *q.I, err error)
-//TODOfunc f745() (r struct{i int}, err error)
-//TODOfunc f746() (r *struct{i int}, err error)
-//TODO
+func f680() t
+func f681() *t
+func f682() [3]int
+func f683() *[3]int
+func f684() func(int) bool
+func f685() *func(int) bool
+func f686() q.I
+func f687() *q.I
+func f688() struct{i int}
+func f689() *struct{i int}
+
+func f691() (t)
+func f692() (*t)
+func f693() ([3]int)
+func f694() (*[3]int)
+func f695() (func(int) bool)
+func f696() (*func(int) bool)
+func f697() (q.I)
+func f698() (*q.I)
+func f699() (struct{i int})
+func f700() (*struct{i int})
+
+func f714() (r t)
+func f715() (r *t)
+func f716() (r [3]int)
+func f717() (r *[3]int)
+func f718() (r func(int) bool)
+func f719() (r *func(int) bool)
+func f720() (r q.I)
+func f721() (r *q.I)
+func f722() (r struct{i int})
+func f723() (r *struct{i int})
+
+func f737() (r t, err error)
+func f738() (r *t, err error)
+func f739() (r [3]int, err error)
+func f740() (r *[3]int, err error)
+func f741() (r func(int) bool, err error)
+func f742() (r *func(int) bool, err error)
+func f743() (r q.I, err error)
+func f744() (r *q.I, err error)
+func f745() (r struct{i int}, err error)
+func f746() (r *struct{i int}, err error)
+
 //TODOfunc f748() {
 //TODO	a = ^b
 //TODO	a = ^b ^ c
