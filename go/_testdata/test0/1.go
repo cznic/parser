@@ -663,22 +663,22 @@ func f521() {
 	for i := 0; i < 10; i++ {}
 }
 
-//TODOfunc f547() {
-//TODO	switch{}
-//TODO	switch x {}
-//TODO	switch (x{1})[0] {}
-//TODO	switch (x{1}[0]) {}
-//TODO	switch n := 2*m; {}
-//TODO
-//TODO	switch n := 2*m; {
-//TODO	case n > b:
-//TODO		break
-//TODO	case n <= c:
-//TODO		f()
-//TODO		fallthrough
-//TODO	default:
-//TODO		fmt.Println(42)
-//TODO	}
+func f547() {
+	switch{}
+	switch x {}
+	switch (x{1})[0] {}
+	switch (x{1}[0]) {}
+	switch n := 2*m; {}
+
+	switch n := 2*m; {
+	case n > b:
+		break
+	case n <= c:
+		f()
+		fallthrough
+	default:
+		fmt.Println(42)
+	}
 //TODO
 //TODO	switch n := 2*m; n+3 {
 //TODO	case 42:
@@ -713,9 +713,9 @@ func f521() {
 //TODO	a597 := **[math.MaxInt64]byte(arr)
 //TODO	a598 := (**[math.MaxInt64]byte(arr))
 //TODO	a599 := *(**[math.MaxInt64]byte(arr))
-//TODO}
-//TODO
-//TODO// Go
+}
+
+// Go
 //TODOfunc Float32bits603(f float32) uint32 { return *(*uint32)(unsafe.Pointer(&f)) }
 //TODOfunc Float32bits604(f float32) uint32 { return *(*uint32(unsafe.Pointer(&f))) }
 //TODOfunc Float32frombits605(b uint32) float32 { return *(*float32)(unsafe.Pointer(&b)) }

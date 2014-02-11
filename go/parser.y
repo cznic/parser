@@ -30,7 +30,7 @@ import (
 
 %type	<node>
 	bare_complitexpr
-	complitexpr comptype compound_stmt constdcl constdcl1
+	case caseblock complitexpr comptype compound_stmt constdcl constdcl1
 	dcl_name dotname
 	else elseif embed expr expr_or_type
 	fndcl fnlitdcl fnliteral fnret_type fntype for_body for_header for_stmt
@@ -40,14 +40,14 @@ import (
 	oexpr oliteral onew_name osimple_stmt othertype
 	package packname pexpr pexpr_no_paren pseudocall ptrtype
 	range_stmt
-	simple_stmt structdcl structtype sym
+	simple_stmt structdcl structtype switch_stmt sym
 	typedcl typedclname
 	uexpr
 	xfndcl
 
 %type	<list>
 	braced_keyval_list
-	common_dcl constdcl_list
+	caseblock_list common_dcl constdcl_list
 	dcl_name_list
 	elseif_list expr_list expr_or_type_list
 	fnbody
@@ -281,7 +281,7 @@ simple_stmt:
 case:
 	_CASE expr_or_type_list ':'
 	{ //262
-		panic(".y:263")
+		$$ = &SwitchCase{$1.pos, $2, nil}
 	}
 |	_CASE expr_or_type_list '=' expr ':'
 	{ //266
@@ -293,7 +293,7 @@ case:
 	}
 |	_DEFAULT ':'
 	{ //274
-		panic(".y:275")
+		$$ = &SwitchCase{pos: $1.pos}
 	}
 
 compound_stmt:
@@ -303,22 +303,19 @@ compound_stmt:
 	}
 
 caseblock:
-	case
-	{ //286
-		panic(".y:287")
-	}
-	stmt_list
+	case stmt_list
 	{ //290
-		panic(".y:291")
+		$1.(*SwitchCase).Body = $2
+		$$ = $1
 	}
 
 caseblock_list:
 	{ //295
-		panic(".y:296")
+		$$ = nil
 	}
 |	caseblock_list caseblock
 	{ //299
-		panic(".y:300")
+		$$ = append($1, $2)
 	}
 
 loop_body:
@@ -413,7 +410,12 @@ else:
 switch_stmt:
 	_SWITCH if_header _BODY caseblock_list '}'
 	{ //387
-		panic(".y:388")
+		l := make([]*SwitchCase, len($4))
+		for i, v := range $4 {
+			l[i] = v.(*SwitchCase)
+		}
+		x := $2.(*IfStmt)
+		$$ = &SwitchStmt{$1.pos, x.Init, x.Cond, l}
 	}
 
 select_stmt:
@@ -446,7 +448,7 @@ expr:
 	}
 |	expr _LE expr
 	{ //423
-		panic(".y:424")
+		$$ = &BinOp{$2.pos, token.LEQ, $1, $3}
 	}
 |	expr _GE expr
 	{ //427
@@ -1096,9 +1098,6 @@ non_dcl_stmt:
 	simple_stmt
 |	for_stmt
 |	switch_stmt
-	{ //1135
-		panic(".y:1136")
-	}
 |	select_stmt
 	{ //1139
 		panic(".y:1140")

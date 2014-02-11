@@ -484,6 +484,23 @@ func newStructType(y yyLexer, n tkn, l []Node) (r *StructType) {
 	return
 }
 
+// ----------------------------------------------------------------- SwitchCase
+
+type SwitchCase struct {
+	pos
+	Expr []Node
+	Body []Node
+}
+
+// ----------------------------------------------------------------- SwitchStmt
+
+type SwitchStmt struct {
+	pos
+	Init  Node
+	Expr  Node
+	Cases []*SwitchCase
+}
+
 // ------------------------------------------------------------------- TypeDecl
 
 type TypeDecl struct {
