@@ -148,6 +148,12 @@ type Element struct {
 	Val Node
 }
 
+// ------------------------------------------------------------ FallthroughStmt
+
+type FallthroughStmt struct {
+	pos
+}
+
 // ---------------------------------------------------------------------- Field
 
 type Field struct {

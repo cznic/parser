@@ -552,8 +552,8 @@ func f423() {
 	continue loop2;
 	goto ident
 	goto ident2;
-//TODO	fallthrough
-//TODO	fallthrough;
+	fallthrough
+	fallthrough;
 //TODO	if 1 {
 //TODO		println(42)
 //TODO	}

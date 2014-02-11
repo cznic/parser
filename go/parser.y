@@ -1119,7 +1119,7 @@ non_dcl_stmt:
 	}
 |	_FALL
 	{ //1155
-		panic(".y:1156")
+		$$ = &FallthroughStmt{$1.pos}
 	}
 |	_BREAK onew_name
 	{ //1159

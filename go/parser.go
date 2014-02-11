@@ -1854,7 +1854,7 @@ yydefault:
 		}
 	case 238:
 		{ //1155
-			panic(".y:1156")
+			yyVAL.node = &FallthroughStmt{yyS[yypt-0].token.pos}
 		}
 	case 239:
 		{ //1159
