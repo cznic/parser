@@ -1548,9 +1548,7 @@ yydefault:
 			panic(".y:772")
 		}
 	case 157:
-		{ //777
-			panic(".y:778")
-		}
+		yyVAL.node = yyS[yypt-0].node
 	case 158:
 		yyVAL.node = yyS[yypt-0].node
 	case 159:

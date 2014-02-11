@@ -757,9 +757,6 @@ non_recvchantype:
 
 convtype:
 	fntype
-	{ //777
-		panic(".y:778")
-	}
 |	othertype
 
 comptype:

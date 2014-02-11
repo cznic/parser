@@ -841,79 +841,79 @@ func f744() (r *q.I, err error)
 func f745() (r struct{i int}, err error)
 func f746() (r *struct{i int}, err error)
 
-//TODOfunc f748() {
-//TODO	a = ^b
-//TODO	a = ^b ^ c
-//TODO	a = !b && !c
-//TODO	a = -b + -c
-//TODO	a = +b - +c
-//TODO	g()
-//TODO	g(42)
-//TODO	g(42, 314)
-//TODO}
-//TODO
-//TODOconst (
-//TODO	a760 = 1
-//TODO	b761, c761 = 2, 3
-//TODO	d762, e762, f762 = 4, 5, 6
-//TODO)
-//TODO
-//TODOfunc f765() {
-//TODO	v := union{ u uint64; f float64 }{f: 3.14}.u // poor man's bits from float64
-//TODO	v741 := union{ uint64; float64 }{float64: 3.14}.uint64
-//TODO	var v742 union{
-//TODO		u uint64
-//TODO		f float64
-//TODO	}
-//TODO	type t union{
-//TODO		u uint64
-//TODO		f float64
-//TODO	}
-//TODO	type g func() union{a b; c d}
-//TODO	v = (union{u uint64; f float64}(x)).u
-//TODO	v = (*union{u uint64; f float64}(x)).u
-//TODO	v753 := [3]int(x)
-//TODO	v754 := *[3]int(x)
-//TODO	v755 := ([3]int(x))
-//TODO	v756 := (*[3]int(x))
-//TODO	v757 := *([3]int(x))
-//TODO	v758 :=  (struct{i int}(x))
-//TODO	v759 := (*struct{i int}(x))
-//TODO	v760 := *(struct{i int}(x))
-//TODO	v761 :=  (union{i int; u uint}(x))
-//TODO	v762 := (*union{i int; u uint}(x))
-//TODO	v763 := *(union{i int; u uint}(x))
-//TODO	v764 := t{1}(x) //LATER invalid
-//TODO	v765 := int(x)
-//TODO	v766 := *int(x)
-//TODO	v767 := (*int)(x)
-//TODO	v768 := [3]int(x)
-//TODO	v769 := *[3]int(x)
-//TODO	v770 := (*[3]int(x))
-//TODO	v771 := struct{int}(x)
-//TODO	v772 := *struct{int}(x)
-//TODO	v773 := (*struct{int}(x))
-//TODO	v774 := union{int}(x)
-//TODO	v775 := *union{int}(x)
-//TODO	v776 := (*union{int}(x))
-//TODO
-//TODO	v778 := func()()(x)
-//TODO	v779 := (func()()(x))
-//TODO
-//TODO	v781 := func()()(c)
-//TODO	v782 := func()(b)(c)
-//TODO	v783 := func(a)()(c)
-//TODO	v784 := func(a)(b)(c)
-//TODO
-//TODO	v786 := func(a)(b)(c)()  // call
-//TODO	v787 := func(a)(b)(c)(d) // call
-//TODO	v788 := func(a)()(c)()   // call
-//TODO	v789 := func()(b)(c)()   // call
-//TODO	v790 := func()()(o)()    // call
-//TODO	v791 := func()(func())(o)()
-//TODO	v = 1
-//TODO}
-//TODO
+func f748() {
+	a = ^b
+	a = ^b ^ c
+	a = !b && !c
+	a = -b + -c
+	a = +b - +c
+	g()
+	g(42)
+	g(42, 314)
+}
+
+const (
+	a760 = 1
+	b761, c761 = 2, 3
+	d762, e762, f762 = 4, 5, 6
+)
+
+func f765() {
+	// invalid Go: v := union{ u uint64; f float64 }{f: 3.14}.u // poor man's bits from float64
+	// invalid Go: v741 := union{ uint64; float64 }{float64: 3.14}.uint64
+	// invalid Go: var v742 union{
+	// invalid Go: 	u uint64
+	// invalid Go: 	f float64
+	// invalid Go: }
+	// invalid Go: type t union{
+	// invalid Go: 	u uint64
+	// invalid Go: 	f float64
+	// invalid Go: }
+	// invalid Go: type g func() union{a b; c d}
+	// invalid Go: v = (union{u uint64; f float64}(x)).u
+	// invalid Go: v = (*union{u uint64; f float64}(x)).u
+	v753 := [3]int(x)
+	v754 := *[3]int(x)
+	v755 := ([3]int(x))
+	v756 := (*[3]int(x))
+	v757 := *([3]int(x))
+	v758 :=  (struct{i int}(x))
+	v759 := (*struct{i int}(x))
+	v760 := *(struct{i int}(x))
+	// invalid Go: v761 :=  (union{i int; u uint}(x))
+	// invalid Go: v762 := (*union{i int; u uint}(x))
+	// invalid Go: v763 := *(union{i int; u uint}(x))
+	v764 := t{1}(x) //LATER invalid
+	v765 := int(x)
+	v766 := *int(x)
+	v767 := (*int)(x)
+	v768 := [3]int(x)
+	v769 := *[3]int(x)
+	v770 := (*[3]int(x))
+	v771 := struct{int}(x)
+	v772 := *struct{int}(x)
+	v773 := (*struct{int}(x))
+	v774 := union{int}(x)
+	v775 := *union{int}(x)
+	v776 := (*union{int}(x))
+
+	v778 := func()()(x)
+	v779 := (func()()(x))
+
+	v781 := func()()(c)
+	v782 := func()(b)(c)
+	v783 := func(a)()(c)
+	v784 := func(a)(b)(c)
+
+	v786 := func(a)(b)(c)()  // call
+	v787 := func(a)(b)(c)(d) // call
+	v788 := func(a)()(c)()   // call
+	v789 := func()(b)(c)()   // call
+	v790 := func()()(o)()    // call
+	v791 := func()(func())(o)()
+	v = 1
+}
+
 //TODOtype t827 union{}
 //TODO
 //TODOvar v797 int
