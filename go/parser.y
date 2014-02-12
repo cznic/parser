@@ -765,17 +765,11 @@ ntype:
 
 non_expr_type:
 	recvchantype
-	{ //737
-		panic(".y:738")
-	}
 |	fntype
-	{ //741
-		panic(".y:742")
-	}
 |	othertype
 |	'*' non_expr_type
 	{ //749
-		panic(".y:750")
+		$$ = &PtrType{$1.p(), $2}
 	}
 
 non_recvchantype:

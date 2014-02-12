@@ -995,4 +995,13 @@ type (
 	}
 )
 
-var v989 = func(int){}
+var (
+	v989 = func(int){}
+)
+
+func f1002() {
+	x = (<-chan int)(c)
+	x = (func())(c)
+	x = (func()())(c)
+	x = (*func())(p)
+}

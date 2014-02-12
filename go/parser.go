@@ -1561,18 +1561,14 @@ yydefault:
 			yyVAL.node = &Paren{yyS[yypt-2].token.p(), yyS[yypt-1].node}
 		}
 	case 148:
-		{ //737
-			panic(".y:738")
-		}
+		yyVAL.node = yyS[yypt-0].node
 	case 149:
-		{ //741
-			panic(".y:742")
-		}
+		yyVAL.node = yyS[yypt-0].node
 	case 150:
 		yyVAL.node = yyS[yypt-0].node
 	case 151:
 		{ //749
-			panic(".y:750")
+			yyVAL.node = &PtrType{yyS[yypt-1].token.p(), yyS[yypt-0].node}
 		}
 	case 152:
 		{ //755
