@@ -1004,4 +1004,10 @@ func f1002() {
 	x = (func())(c)
 	x = (func()())(c)
 	x = (*func())(p)
+	var (
+		v chan func()
+		v chan []int
+		v chan *int
+		v chan (int)
+	)
 }

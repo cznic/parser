@@ -774,21 +774,12 @@ non_expr_type:
 
 non_recvchantype:
 	fntype
-	{ //755
-		panic(".y:756")
-	}
 |	othertype
-	{ //759
-		panic(".y:760")
-	}
 |	ptrtype
-	{ //763
-		panic(".y:764")
-	}
 |	dotname
 |	'(' ntype ')'
 	{ //771
-		panic(".y:772")
+		$$ = &Paren{$1.p(), $2}
 	}
 
 convtype:
