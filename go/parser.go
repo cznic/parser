@@ -1097,8 +1097,8 @@ yydefault:
 		yyVAL.node = yyS[yypt-0].node
 	case 37:
 		{ //214
-			panic(".y:215") //TODO ???
-			//yyErrPos(yylex, $2, "const declaration cannot have type without expression")
+			yyVAL.node = newConstSpec(yylex, yyS[yypt-1].list, nil, nil)
+			yyErrPos(yylex, yyS[yypt-0].node, "const declaration cannot have type without expression")
 		}
 	case 38:
 		{ //218

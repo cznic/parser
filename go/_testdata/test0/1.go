@@ -1010,4 +1010,8 @@ func f1002() {
 		v chan *int
 		v chan (int)
 	)
+	const (
+		v t = x
+		//invalid w u
+	)
 }

@@ -241,8 +241,8 @@ constdcl1:
 	constdcl
 |	dcl_name_list ntype
 	{ //214
-		panic(".y:215") //TODO ???
-		//yyErrPos(yylex, $2, "const declaration cannot have type without expression")
+		$$ = newConstSpec(yylex, $1, nil, nil)
+		yyErrPos(yylex, $2, "const declaration cannot have type without expression")
 	}
 |	dcl_name_list
 	{ //218
