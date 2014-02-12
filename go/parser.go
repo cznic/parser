@@ -1109,7 +1109,7 @@ yydefault:
 		yyVAL.node = yyS[yypt-0].node
 	case 40:
 		{ //230
-			yyVAL.node = &TypeDecl{pos(yyS[yypt-1].node.Pos()), yyS[yypt-1].node.(*Ident), yyS[yypt-0].node}
+			yyVAL.node = &TypeDecl{yyS[yypt-1].node.p(), yyS[yypt-1].node.(*Ident), yyS[yypt-0].node}
 		}
 	case 41:
 		yyVAL.node = yyS[yypt-0].node
@@ -1269,7 +1269,7 @@ yydefault:
 					}
 
 					if y, ok := t.R[0].(*UnOp); ok && y.Op == token.ARROW {
-						x.Cases = append(x.Cases, &CommCase{pos(v0.Pos()), v0})
+						x.Cases = append(x.Cases, &CommCase{v0.p(), v0})
 						continue
 					}
 				case *BinOp:
@@ -1277,14 +1277,14 @@ yydefault:
 						break
 					}
 
-					x.Cases = append(x.Cases, &CommCase{pos(v0.Pos()), v0})
+					x.Cases = append(x.Cases, &CommCase{v0.p(), v0})
 					continue
 				case *UnOp:
 					if t.Op != token.ARROW {
 						break
 					}
 
-					x.Cases = append(x.Cases, &CommCase{pos(v0.Pos()), v0})
+					x.Cases = append(x.Cases, &CommCase{v0.p(), v0})
 					continue
 				}
 				yyErrPos(yylex, v0, "select case must be receive, send or assign recv")
@@ -1463,7 +1463,7 @@ yydefault:
 		}
 	case 116:
 		{ //577
-			yyVAL.node = &CompLit{pos(yyS[yypt-3].node.Pos()), yyS[yypt-4].node, elements(yyS[yypt-1].list)}
+			yyVAL.node = &CompLit{yyS[yypt-3].node.p(), yyS[yypt-4].node, elements(yyS[yypt-1].list)}
 		}
 	case 117:
 		{ //581
@@ -1480,11 +1480,11 @@ yydefault:
 		}
 	case 121:
 		{ //600
-			yyVAL.node = &Element{pos(yyS[yypt-2].node.Pos()), yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &Element{yyS[yypt-2].node.p(), yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 122:
 		{ //609
-			yyVAL.node = &Element{pos(yyS[yypt-0].node.Pos()), nil, yyS[yypt-0].node}
+			yyVAL.node = &Element{yyS[yypt-0].node.p(), nil, yyS[yypt-0].node}
 		}
 	case 123:
 		{ //610
@@ -1492,7 +1492,7 @@ yydefault:
 		}
 	case 124:
 		{ //616
-			yyVAL.node = &Element{pos(yyS[yypt-0].node.Pos()), nil, yyS[yypt-0].node}
+			yyVAL.node = &Element{yyS[yypt-0].node.p(), nil, yyS[yypt-0].node}
 		}
 	case 125:
 		{ //620
@@ -1555,7 +1555,7 @@ yydefault:
 		yyVAL.node = yyS[yypt-0].node
 	case 146:
 		{
-			yyVAL.node = &NamedType{pos(yyS[yypt-0].node.Pos()), yyS[yypt-0].node.(*QualifiedIdent), nil, yyScope(yylex)}
+			yyVAL.node = &NamedType{yyS[yypt-0].node.p(), yyS[yypt-0].node.(*QualifiedIdent), nil, yyScope(yylex)}
 		}
 	case 147:
 		{ //731
@@ -1609,15 +1609,15 @@ yydefault:
 		yyVAL.node = yyS[yypt-0].node
 	case 164:
 		{ //790
-			yyVAL.node = &NamedType{pos(yyS[yypt-0].node.Pos()), yyS[yypt-0].node.(*QualifiedIdent), nil, yyScope(yylex)}
+			yyVAL.node = &NamedType{yyS[yypt-0].node.p(), yyS[yypt-0].node.(*QualifiedIdent), nil, yyScope(yylex)}
 		}
 	case 165:
 		{ //815
-			yyVAL.node = &QualifiedIdent{pos(yyS[yypt-0].node.Pos()), nil, yyS[yypt-0].node.(*Ident)}
+			yyVAL.node = &QualifiedIdent{yyS[yypt-0].node.p(), nil, yyS[yypt-0].node.(*Ident)}
 		}
 	case 166:
 		{ //819
-			yyVAL.node = &QualifiedIdent{pos(yyS[yypt-2].node.Pos()), yyS[yypt-2].node.(*Ident), yyS[yypt-0].node.(*Ident)}
+			yyVAL.node = &QualifiedIdent{yyS[yypt-2].node.p(), yyS[yypt-2].node.(*Ident), yyS[yypt-0].node.(*Ident)}
 		}
 	case 167:
 		{ //825
@@ -1706,7 +1706,7 @@ yydefault:
 		}
 	case 187:
 		{ //922
-			yyVAL.params = []*Param{{pos: pos(yyS[yypt-0].node.Pos()), Type: yyS[yypt-0].node}}
+			yyVAL.params = []*Param{{pos: yyS[yypt-0].node.p(), Type: yyS[yypt-0].node}}
 		}
 	case 188:
 		{ //926
@@ -1802,15 +1802,15 @@ yydefault:
 		yyVAL.node = yyS[yypt-0].node
 	case 213:
 		{ //1049
-			yyVAL.node = &MethodSpec{pos(yyS[yypt-1].node.Pos()), &QualifiedIdent{pos(yyS[yypt-1].node.Pos()), nil, yyS[yypt-1].node.(*Ident)}, yyS[yypt-0].node.(*FuncType)}
+			yyVAL.node = &MethodSpec{yyS[yypt-1].node.p(), &QualifiedIdent{yyS[yypt-1].node.p(), nil, yyS[yypt-1].node.(*Ident)}, yyS[yypt-0].node.(*FuncType)}
 		}
 	case 214:
 		{ //1053
-			yyVAL.node = &MethodSpec{pos(yyS[yypt-0].node.Pos()), yyS[yypt-0].node.(*QualifiedIdent), nil}
+			yyVAL.node = &MethodSpec{yyS[yypt-0].node.p(), yyS[yypt-0].node.(*QualifiedIdent), nil}
 		}
 	case 215:
 		{ //1057
-			yyVAL.node = &MethodSpec{pos(yyS[yypt-1].node.Pos()), yyS[yypt-1].node.(*QualifiedIdent), nil}
+			yyVAL.node = &MethodSpec{yyS[yypt-1].node.p(), yyS[yypt-1].node.(*QualifiedIdent), nil}
 			yyErrPos(yylex, yyS[yypt-1].node, "cannot parenthesize embedded type")
 		}
 	case 216:
@@ -1819,11 +1819,11 @@ yydefault:
 		}
 	case 217:
 		{ //1069
-			yyVAL.param = &Param{pos: pos(yyS[yypt-0].node.Pos()), Type: yyS[yypt-0].node}
+			yyVAL.param = &Param{pos: yyS[yypt-0].node.p(), Type: yyS[yypt-0].node}
 		}
 	case 218:
 		{ //1073
-			yyVAL.param = &Param{pos: pos(yyS[yypt-1].node.Pos()), Name: yyS[yypt-1].node.(*Ident), Type: yyS[yypt-0].node}
+			yyVAL.param = &Param{pos: yyS[yypt-1].node.p(), Name: yyS[yypt-1].node.(*Ident), Type: yyS[yypt-0].node}
 		}
 	case 219:
 		{ //1077

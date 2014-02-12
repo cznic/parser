@@ -256,7 +256,7 @@ typedclname:
 typedcl:
 	typedclname ntype
 	{ //230
-		$$ = &TypeDecl{pos($1.Pos()), $1.(*Ident), $2}
+		$$ = &TypeDecl{$1.p(), $1.(*Ident), $2}
 	}
 
 simple_stmt:
@@ -446,7 +446,7 @@ select_stmt:
 				}
 
 				if y, ok := t.R[0].(*UnOp); ok && y.Op == token.ARROW {
-					x.Cases = append(x.Cases, &CommCase{pos(v0.Pos()), v0})
+					x.Cases = append(x.Cases, &CommCase{v0.p(), v0})
 					continue
 				}
 			case *BinOp:
@@ -454,14 +454,14 @@ select_stmt:
 					break
 				}
 
-				x.Cases = append(x.Cases, &CommCase{pos(v0.Pos()), v0})
+				x.Cases = append(x.Cases, &CommCase{v0.p(), v0})
 				continue
 			case *UnOp:
 				if t.Op != token.ARROW {
 					break
 				}
 
-				x.Cases = append(x.Cases, &CommCase{pos(v0.Pos()), v0})
+				x.Cases = append(x.Cases, &CommCase{v0.p(), v0})
 				continue
 			}
 			yyErrPos(yylex, v0, "select case must be receive, send or assign recv")
@@ -644,7 +644,7 @@ pexpr_no_paren:
 	}
 |	comptype lbrace start_complit braced_keyval_list '}'
 	{ //577
-		$$ = &CompLit{pos($2.Pos()), $1, elements($4)}
+		$$ = &CompLit{$2.p(), $1, elements($4)}
 	}
 |	pexpr_no_paren '{' start_complit braced_keyval_list '}'
 	{ //581
@@ -663,13 +663,13 @@ start_complit:
 keyval:
 	expr ':' complitexpr
 	{ //600
-		$$ = &Element{pos($1.Pos()), $1, $3}
+		$$ = &Element{$1.p(), $1, $3}
 	}
 
 bare_complitexpr:
 	expr
 	{ //609
-		$$ = &Element{pos($1.Pos()), nil, $1}
+		$$ = &Element{$1.p(), nil, $1}
 	}
 |	'{' start_complit braced_keyval_list '}'
 	{ //610
@@ -679,7 +679,7 @@ bare_complitexpr:
 complitexpr:
 	expr
 	{ //616
-		$$ = &Element{pos($1.Pos()), nil, $1}
+		$$ = &Element{$1.p(), nil, $1}
 	}
 |	'{' start_complit braced_keyval_list '}'
 	{ //620
@@ -757,7 +757,7 @@ ntype:
 |	ptrtype
 |	dotname
 	{
-		$$ = &NamedType{pos($1.Pos()), $1.(*QualifiedIdent), nil, yyScope(yylex)}
+		$$ = &NamedType{$1.p(), $1.(*QualifiedIdent), nil, yyScope(yylex)}
 	}
 |	'(' ntype ')'
 	{ //731
@@ -812,17 +812,17 @@ fnret_type:
 |	ptrtype
 |	dotname
 	{ //790
-		$$ = &NamedType{pos($1.Pos()), $1.(*QualifiedIdent), nil, yyScope(yylex)}
+		$$ = &NamedType{$1.p(), $1.(*QualifiedIdent), nil, yyScope(yylex)}
 	}
 
 dotname:
 	name
 	{ //815
-		$$ = &QualifiedIdent{pos($1.Pos()), nil, $1.(*Ident)}
+		$$ = &QualifiedIdent{$1.p(), nil, $1.(*Ident)}
 	}
 |	name '.' sym
 	{ //819
-		$$ = &QualifiedIdent{pos($1.Pos()), $1.(*Ident), $3.(*Ident)}
+		$$ = &QualifiedIdent{$1.p(), $1.(*Ident), $3.(*Ident)}
 	}
 
 othertype:
@@ -928,7 +928,7 @@ fnres:
 	}
 |	fnret_type
 	{ //922
-		$$ = []*Param{{pos: pos($1.Pos()), Type: $1}}
+		$$ = []*Param{{pos: $1.p(), Type: $1}}
 	}
 |	'(' oarg_type_list_ocomma ')'
 	{ //926
@@ -1046,15 +1046,15 @@ embed:
 interfacedcl:
 	new_name indcl
 	{ //1049
-		$$ = &MethodSpec{pos($1.Pos()), &QualifiedIdent{pos($1.Pos()), nil, $1.(*Ident)}, $2.(*FuncType)}
+		$$ = &MethodSpec{$1.p(), &QualifiedIdent{$1.p(), nil, $1.(*Ident)}, $2.(*FuncType)}
 	}
 |	packname
 	{ //1053
-		$$ = &MethodSpec{pos($1.Pos()), $1.(*QualifiedIdent), nil}
+		$$ = &MethodSpec{$1.p(), $1.(*QualifiedIdent), nil}
 	}
 |	'(' packname ')'
 	{ //1057
-		$$ = &MethodSpec{pos($2.Pos()), $2.(*QualifiedIdent), nil}
+		$$ = &MethodSpec{$2.p(), $2.(*QualifiedIdent), nil}
 		yyErrPos(yylex, $2, "cannot parenthesize embedded type");
 	}
 
@@ -1067,11 +1067,11 @@ indcl:
 arg_type:
 	name_or_type
 	{ //1069
-		$$ = &Param{pos: pos($1.Pos()), Type: $1}
+		$$ = &Param{pos: $1.p(), Type: $1}
 	}
 |	sym name_or_type
 	{ //1073
-		$$ = &Param{pos: pos($1.Pos()), Name: $1.(*Ident), Type: $2}
+		$$ = &Param{pos: $1.p(), Name: $1.(*Ident), Type: $2}
 	}
 |	sym dotdotdot
 	{ //1077

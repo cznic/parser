@@ -12,11 +12,13 @@ import (
 
 type Node interface {
 	Pos() token.Pos
+	p() pos
 }
 
 type pos token.Pos
 
 func (p pos) Pos() token.Pos { return token.Pos(p) }
+func (p pos) p() pos         { return p }
 
 type Declaration interface {
 	DeclName() string

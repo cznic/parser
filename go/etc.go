@@ -206,6 +206,7 @@ type tkn struct {
 }
 
 func (t tkn) Pos() token.Pos { return t.tpos }
+func (t tkn) p() pos         { return t.pos }
 
 func (p *parser) Lex(lval *yySymType) (r int) {
 	for {
