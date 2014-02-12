@@ -352,7 +352,8 @@ func newImport(y yyLexer, id Node, pth *Literal) (r *Import) {
 		ps.errPos(pth.Pos(), "import path is empty")
 	}
 
-	if ident != nil {
+	switch {
+	case ident != nil:
 		nm := ident.Lit
 		if nm != "." {
 			// ...no identifier may be declared in both the file and package block.
@@ -360,6 +361,9 @@ func newImport(y yyLexer, id Node, pth *Literal) (r *Import) {
 			ps.fileScope.declare(ps, nm, id)
 			ps.pkgScope.declare(ps, nm, id)
 		}
+	default:
+		//TODO at static checks declare the actual package name, which
+		// can differ from the import path basename.
 	}
 	return
 }
@@ -394,7 +398,14 @@ func newInterfaceType(y yyLexer, l []Node) *InterfaceType {
 	for j, v := range l {
 		m := v.(*MethodSpec)
 		i.Methods[j] = m
-		sc.declare(ps, m.Name.Lit, m)
+		switch {
+		case m.Type != nil:
+			sc.declare(ps, m.Name.I.Lit, m)
+		default:
+			//TODO at static checks declare the actual methods of
+			// the inherited interface
+
+		}
 	}
 	return i
 }
@@ -431,7 +442,7 @@ type MapType struct {
 
 type MethodSpec struct {
 	pos
-	Name *Ident
+	Name *QualifiedIdent
 	Type *FuncType
 }
 

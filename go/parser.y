@@ -1046,16 +1046,16 @@ embed:
 interfacedcl:
 	new_name indcl
 	{ //1049
-		$$ = &MethodSpec{pos($1.Pos()), $1.(*Ident), $2.(*FuncType)}
+		$$ = &MethodSpec{pos($1.Pos()), &QualifiedIdent{pos($1.Pos()), nil, $1.(*Ident)}, $2.(*FuncType)}
 	}
 |	packname
 	{ //1053
-		panic(".y:1054")
+		$$ = &MethodSpec{pos($1.Pos()), $1.(*QualifiedIdent), nil}
 	}
 |	'(' packname ')'
 	{ //1057
-		panic(".y:1058")
-		//yyErrPos(yylex, $2, "cannot parenthesize embedded type");
+		$$ = &MethodSpec{pos($2.Pos()), $2.(*QualifiedIdent), nil}
+		yyErrPos(yylex, $2, "cannot parenthesize embedded type");
 	}
 
 indcl:

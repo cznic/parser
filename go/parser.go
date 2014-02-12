@@ -1802,16 +1802,16 @@ yydefault:
 		yyVAL.node = yyS[yypt-0].node
 	case 213:
 		{ //1049
-			yyVAL.node = &MethodSpec{pos(yyS[yypt-1].node.Pos()), yyS[yypt-1].node.(*Ident), yyS[yypt-0].node.(*FuncType)}
+			yyVAL.node = &MethodSpec{pos(yyS[yypt-1].node.Pos()), &QualifiedIdent{pos(yyS[yypt-1].node.Pos()), nil, yyS[yypt-1].node.(*Ident)}, yyS[yypt-0].node.(*FuncType)}
 		}
 	case 214:
 		{ //1053
-			panic(".y:1054")
+			yyVAL.node = &MethodSpec{pos(yyS[yypt-0].node.Pos()), yyS[yypt-0].node.(*QualifiedIdent), nil}
 		}
 	case 215:
 		{ //1057
-			panic(".y:1058")
-			//yyErrPos(yylex, $2, "cannot parenthesize embedded type");
+			yyVAL.node = &MethodSpec{pos(yyS[yypt-1].node.Pos()), yyS[yypt-1].node.(*QualifiedIdent), nil}
+			yyErrPos(yylex, yyS[yypt-1].node, "cannot parenthesize embedded type")
 		}
 	case 216:
 		{ //1063

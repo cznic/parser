@@ -990,7 +990,8 @@ type (
 		//invalid *(int)
 	}
 	t992 interface{
-		//fmt.Stringer
+		fmt.Stringer
+		//invalid (fmt.Stringer)
 	}
 )
 
