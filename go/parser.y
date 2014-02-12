@@ -7,7 +7,6 @@
 package parser
 
 import (
-	"fmt"
 	"go/token"
 )
 
@@ -108,7 +107,7 @@ package:
 	}
 |	_PACKAGE sym ';'
 	{ //64
-		$$ = &Package{$1.pos, $2.(*Ident)}
+		$$ = &Package{$1.p(), $2.(*Ident)}
 	}
 
 imports:
@@ -136,7 +135,7 @@ import_stmt:
 	}
 |	'.' _LITERAL
 	{ //101
-		$$ = newImport(yylex, &Ident{$1.pos, "."}, newLiteral($2))
+		$$ = newImport(yylex, &Ident{$1.p(), "."}, newLiteral($2))
 	}
 
 import_stmt_list:
@@ -263,47 +262,47 @@ simple_stmt:
 	expr
 |	expr _ASOP expr
 	{ //240
-		$$ = &Assignment{$2.pos, $2.tok, []Node{$1}, []Node{$3}}
+		$$ = &Assignment{$2.p(), $2.tok, []Node{$1}, []Node{$3}}
 	}
 |	expr_list '=' expr_list
 	{ //244
-		$$ = &Assignment{$2.pos, $2.tok, $1, $3}
+		$$ = &Assignment{$2.p(), $2.tok, $1, $3}
 	}
 |	expr_list _COLAS expr_list
 	{ //248
-		$$ = &ShortVarDecl{$2.pos, $1, $3}
+		$$ = &ShortVarDecl{$2.p(), $1, $3}
 	}
 |	expr _INC
 	{ //252
-		$$ = &IncDecStmt{$2.pos, $1, $2.tok}
+		$$ = &IncDecStmt{$2.p(), $1, $2.tok}
 	}
 |	expr _DEC
 	{ //256
-		$$ = &IncDecStmt{$2.pos, $1, $2.tok}
+		$$ = &IncDecStmt{$2.p(), $1, $2.tok}
 	}
 
 case:
 	_CASE expr_or_type_list ':'
 	{ //262
-		$$ = &SwitchCase{$1.pos, $2, nil}
+		$$ = &SwitchCase{$1.p(), $2, nil}
 	}
 |	_CASE expr_or_type_list '=' expr ':'
 	{ //266
-		$$ = &SwitchCase{$1.pos, []Node{&Assignment{$3.pos, $3.tok, $2, []Node{$4}}}, nil}
+		$$ = &SwitchCase{$1.p(), []Node{&Assignment{$3.p(), $3.tok, $2, []Node{$4}}}, nil}
 	}
 |	_CASE expr_or_type_list _COLAS expr ':'
 	{ //270
-		$$ = &SwitchCase{$1.pos, []Node{&Assignment{$3.pos, $3.tok, $2, []Node{$4}}}, nil}
+		$$ = &SwitchCase{$1.p(), []Node{&Assignment{$3.p(), $3.tok, $2, []Node{$4}}}, nil}
 	}
 |	_DEFAULT ':'
 	{ //274
-		$$ = &SwitchCase{pos: $1.pos}
+		$$ = &SwitchCase{pos: $1.p()}
 	}
 
 compound_stmt:
 	'{' stmt_list '}'
 	{ //280
-		$$ = &CompoundStament{$1.pos, $2}
+		$$ = &CompoundStament{$1.p(), $2}
 	}
 
 caseblock:
@@ -331,11 +330,11 @@ loop_body:
 range_stmt:
 	expr_list '=' _RANGE expr
 	{ //311
-		$$ = &ForStmt{Range: &Assignment{$2.pos, $2.tok, $1, []Node{$4}}}
+		$$ = &ForStmt{Range: &Assignment{$2.p(), $2.tok, $1, []Node{$4}}}
 	}
 |	expr_list _COLAS _RANGE expr
 	{ //315
-		$$ = &ForStmt{Range: &Assignment{$2.pos, $2.tok, $1, []Node{$4}}}
+		$$ = &ForStmt{Range: &Assignment{$2.p(), $2.tok, $1, []Node{$4}}}
 	}
 
 for_header:
@@ -359,7 +358,7 @@ for_body:
 for_stmt:
 	_FOR for_body
 	{ //341
-		$2.(*ForStmt).pos = $1.pos
+		$2.(*ForStmt).pos = $1.p()
 		$$ = $2
 	}
 
@@ -381,7 +380,7 @@ if_stmt:
 		for i, v := range $4 {
 			l[i] = v.(*IfStmt)
 		}
-		x.pos, x.Body, x.Elif, x.Else = $1.pos, $3, l, $5.(*CompoundStament)
+		x.pos, x.Body, x.Elif, x.Else = $1.p(), $3, l, $5.(*CompoundStament)
 		$$ = x
 	}
 
@@ -389,7 +388,7 @@ elseif:
 	_ELSE _IF if_header loop_body
 	{ //363
 		x := $3.(*IfStmt)
-		x.pos, x.Body = $2.pos, $4
+		x.pos, x.Body = $2.p(), $4
 		$$ = x
 	}
 
@@ -419,14 +418,14 @@ switch_stmt:
 			l[i] = v.(*SwitchCase)
 		}
 		x := $2.(*IfStmt)
-		$$ = &SwitchStmt{$1.pos, x.Init, x.Cond, l}
+		$$ = &SwitchStmt{$1.p(), x.Init, x.Cond, l}
 	}
 
 select_stmt:
 	//_SELECT _BODY caseblock_list '}'
 	_SELECT '{' caseblock_list '}'
 	{ //393
-		x := &SelectStmt{pos: $1.pos}
+		x := &SelectStmt{pos: $1.p()}
 		for _, v := range $3 {
 			l := v.(*SwitchCase).Expr
 			if len(l) != 1 {
@@ -473,159 +472,159 @@ expr:
 	uexpr
 |	expr _OROR expr
 	{ //403
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr _ANDAND expr
 	{ //407
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr _EQ expr
 	{ //411
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr _NE expr
 	{ //415
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr '<' expr
 	{ //419
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr _LE expr
 	{ //423
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr _GE expr
 	{ //427
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr '>' expr
 	{ //431
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr '+' expr
 	{ //435
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr '-' expr
 	{ //439
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr '|' expr
 	{ //443
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr '^' expr
 	{ //447
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr '*' expr
 	{ //451
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr '/' expr
 	{ //455
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr '%' expr
 	{ //459
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr '&' expr
 	{ //463
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr _ANDNOT expr
 	{ //467
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr _LSH expr
 	{ //471
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr _RSH expr
 	{ //475
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 |	expr _COMM expr
 	{ //479
-		$$ = &BinOp{$2.pos, $2.tok, $1, $3}
+		$$ = &BinOp{$2.p(), $2.tok, $1, $3}
 	}
 
 uexpr:
 	pexpr
 |	'*' uexpr
 	{ //489
-		$$ = &UnOp{$1.pos, $1.tok, $2}
+		$$ = &UnOp{$1.p(), $1.tok, $2}
 	}
 |	'&' uexpr
 	{ //493
-		$$ = &UnOp{$1.pos, $1.tok, $2}
+		$$ = &UnOp{$1.p(), $1.tok, $2}
 	}
 |	'+' uexpr
 	{ //497
-		$$ = &UnOp{$1.pos, $1.tok, $2}
+		$$ = &UnOp{$1.p(), $1.tok, $2}
 	}
 |	'-' uexpr
 	{ //501
-		$$ = &UnOp{$1.pos, $1.tok, $2}
+		$$ = &UnOp{$1.p(), $1.tok, $2}
 	}
 |	'!' uexpr
 	{ //505
-		$$ = &UnOp{$1.pos, $1.tok, $2}
+		$$ = &UnOp{$1.p(), $1.tok, $2}
 	}
 |	'~' uexpr
 	{ //509
-		$$ = &UnOp{$1.pos, $1.tok, $2}
+		$$ = &UnOp{$1.p(), $1.tok, $2}
 	}
 |	'^' uexpr
 	{ //513
-		$$ = &UnOp{$1.pos, $1.tok, $2}
+		$$ = &UnOp{$1.p(), $1.tok, $2}
 	}
 |	_COMM uexpr
 	{ //517
-		$$ = &UnOp{$1.pos, $1.tok, $2}
+		$$ = &UnOp{$1.p(), $1.tok, $2}
 	}
 
 pseudocall:
 	pexpr '(' ')'
 	{ //523
-		$$ = &CallOp{$2.pos, $1, nil, false}
+		$$ = &CallOp{$2.p(), $1, nil, false}
 	}
 |	pexpr '(' expr_or_type_list ocomma ')'
 	{ //527
-		$$ = &CallOp{$2.pos, $1, $3, false}
+		$$ = &CallOp{$2.p(), $1, $3, false}
 	}
 |	pexpr '(' expr_or_type_list _DDD ocomma ')'
 	{ //531
-		$$ = &CallOp{$2.pos, $1, $3, true}
+		$$ = &CallOp{$2.p(), $1, $3, true}
 	}
 
 pexpr_no_paren:
 	_LITERAL
 	{ //537
-		$$ = &Literal{$1.pos, $1.tok, $1.lit}
+		$$ = &Literal{$1.p(), $1.tok, $1.lit}
 	}
 |	name
 |	pexpr '.' sym
 	{ //545
-		$$ = &SelectOp{$2.pos, $1, $3.(*Ident)}
+		$$ = &SelectOp{$2.p(), $1, $3.(*Ident)}
 	}
 |	pexpr '.' '(' expr_or_type ')'
 	{ //549
-		$$ = &TypeAssertion{$3.pos, $1, $4}
+		$$ = &TypeAssertion{$3.p(), $1, $4}
 	}
 |	pexpr '.' '(' _TYPE ')'
 	{ //553
-		$$ = &TypeSwitch{$4.pos, $1}
+		$$ = &TypeSwitch{$4.p(), $1}
 	}
 |	pexpr '[' expr ']'
 	{ //557
-		$$ = &IndexOp{$2.pos, $1, $3}
+		$$ = &IndexOp{$2.p(), $1, $3}
 	}
 |	pexpr '[' oexpr ':' oexpr ']'
 	{ //561
-		$$ = &SliceOp{$2.pos, $1, $3, $5, nil}
+		$$ = &SliceOp{$2.p(), $1, $3, $5, nil}
 	}
 |	pexpr '[' oexpr ':' oexpr ':' oexpr ']'
 	{ //565
@@ -635,12 +634,12 @@ pexpr_no_paren:
 		if $7 == nil {
 			yyErrPos(yylex, $6, "final index required in 3-index slice")
 		}
-		$$ = &SliceOp{$2.pos, $1, $3, $5, $7}
+		$$ = &SliceOp{$2.p(), $1, $3, $5, $7}
 	}
 |	pseudocall
 |	convtype '(' expr ocomma ')'
 	{ //573
-		$$ = &ConvOp{$2.pos, $1, $3}
+		$$ = &ConvOp{$2.p(), $1, $3}
 	}
 |	comptype lbrace start_complit braced_keyval_list '}'
 	{ //577
@@ -648,11 +647,11 @@ pexpr_no_paren:
 	}
 |	pexpr_no_paren '{' start_complit braced_keyval_list '}'
 	{ //581
-		$$ = &CompLit{$2.pos, $1, elements($4)}
+		$$ = &CompLit{$2.p(), $1, elements($4)}
 	}
 |	'(' expr_or_type ')' '{' start_complit braced_keyval_list '}'
 	{ //585
-		$$ = &CompLit{$4.pos, $2, elements($6)}
+		$$ = &CompLit{$4.p(), $2, elements($6)}
 	}
 |	fnliteral
 
@@ -673,7 +672,7 @@ bare_complitexpr:
 	}
 |	'{' start_complit braced_keyval_list '}'
 	{ //610
-		$$ = &Element{$1.pos, nil, &CompLit{$1.pos, nil, elements($3)}}
+		$$ = &Element{$1.p(), nil, &CompLit{$1.p(), nil, elements($3)}}
 	}
 
 complitexpr:
@@ -683,14 +682,14 @@ complitexpr:
 	}
 |	'{' start_complit braced_keyval_list '}'
 	{ //620
-		$$ = &Element{$1.pos, nil, &CompLit{$1.pos, nil, elements($3)}}
+		$$ = &Element{$1.p(), nil, &CompLit{$1.p(), nil, elements($3)}}
 	}
 
 pexpr:
 	pexpr_no_paren
 |	'(' expr_or_type ')'
 	{ //630
-		$$ = &Paren{$1.pos, $2}
+		$$ = &Paren{$1.p(), $2}
 	}
 
 expr_or_type:
@@ -730,7 +729,7 @@ onew_name:
 sym:
 	_NAME
 	{ //683
-		$$ = &Ident{$1.pos, $1.lit}
+		$$ = &Ident{$1.p(), $1.lit}
 	}
 
 name:
@@ -743,11 +742,11 @@ dotdotdot:
 	_DDD
 	{ //701
 		yy(yylex).errPos($1.tpos, "final argument in variadic function missing type")
-		$$ = &Param{pos: $1.pos, Ddd: true}
+		$$ = &Param{pos: $1.p(), Ddd: true}
 	}
 |	_DDD ntype
 	{ //705
-		$$ = &Param{pos: $1.pos, Ddd: true, Type: $2}
+		$$ = &Param{pos: $1.p(), Ddd: true, Type: $2}
 	}
 
 ntype:
@@ -761,7 +760,7 @@ ntype:
 	}
 |	'(' ntype ')'
 	{ //731
-		$$ = &Paren{$1.pos, $2}
+		$$ = &Paren{$1.p(), $2}
 	}
 
 non_expr_type:
@@ -830,26 +829,26 @@ othertype:
 	{ //825
 		switch {
 		case $2 != nil:
-			$$ = &ArrayType{$1.pos, $2, $4}
+			$$ = &ArrayType{$1.p(), $2, $4}
 		default:
-			$$ = &SliceType{$1.pos, $4}
+			$$ = &SliceType{$1.p(), $4}
 		}
 	}
 |	'[' _DDD ']' ntype
 	{ //829
-		$$ = &ArrayType{$1.pos, nil, $4}
+		$$ = &ArrayType{$1.p(), nil, $4}
 	}
 |	_CHAN non_recvchantype
 	{ //833
-		$$ = &ChannelType{$1.pos, BidirectionalChannel, $2}
+		$$ = &ChannelType{$1.p(), BidirectionalChannel, $2}
 	}
 |	_CHAN _COMM ntype
 	{ //837
-		$$ = &ChannelType{$2.pos, SendOnlyChannel, $3}
+		$$ = &ChannelType{$2.p(), SendOnlyChannel, $3}
 	}
 |	_MAP '[' ntype ']' ntype
 	{ //841
-		$$ = &MapType{$1.pos, $3, $5}
+		$$ = &MapType{$1.p(), $3, $5}
 	}
 |	structtype
 |	interfacetype
@@ -857,13 +856,13 @@ othertype:
 ptrtype:
 	'*' ntype
 	{ //855
-		$$ = &PtrType{$1.pos, $2}
+		$$ = &PtrType{$1.p(), $2}
 	}
 
 recvchantype:
 	_COMM _CHAN ntype
 	{ //861
-		$$ = &ChannelType{$1.pos, ReadOnlyChannel, $3}
+		$$ = &ChannelType{$1.p(), ReadOnlyChannel, $3}
 	}
 
 structtype:
@@ -880,36 +879,36 @@ interfacetype:
 	_INTERFACE lbrace interfacedcl_list osemi '}'
 	{ //877
 		x := newInterfaceType(yylex, $3)
-		x.pos = $1.pos
+		x.pos = $1.p()
 		$$ = x
 	}
 |	_INTERFACE lbrace '}'
 	{ //881
-		$$ = &InterfaceType{pos: $1.pos}
+		$$ = &InterfaceType{pos: $1.p()}
 	}
 
 xfndcl:
 	_FUNC fndcl fnbody
 	{ //887
 		x := $2.(*FuncDecl)
-		x.pos, x.Body = $1.pos, $3
+		x.pos, x.Body = $1.p(), $3
 		$$ = x
 	}
 
 fndcl:
 	sym '(' oarg_type_list_ocomma ')' fnres
 	{ //893
-		$$ = &FuncDecl{Name: $1.(*Ident), Type: newFuncType(yylex, $2.pos, nil, $3, $5)}
+		$$ = &FuncDecl{Name: $1.(*Ident), Type: newFuncType(yylex, $2.p(), nil, $3, $5)}
 	}
 |	'(' oarg_type_list_ocomma ')' sym '(' oarg_type_list_ocomma ')' fnres
 	{ //897
-		$$ = &FuncDecl{Name: $4.(*Ident), Type: newFuncType(yylex, $1.pos, $2, $6, $8)}
+		$$ = &FuncDecl{Name: $4.(*Ident), Type: newFuncType(yylex, $1.p(), $2, $6, $8)}
 	}
 
 fntype:
 	_FUNC '(' oarg_type_list_ocomma ')' fnres
 	{ //903
-		$$ = newFuncType(yylex, $1.pos, nil, $3, $5)
+		$$ = newFuncType(yylex, $1.p(), nil, $3, $5)
 	}
 
 fnbody:
@@ -942,7 +941,7 @@ fnliteral:
 	fnlitdcl lbrace stmt_list '}'
 	{ //938
 		x := $1.(*FuncType)
-		$$ = &FuncLit{x.pos, x, $3}
+		$$ = &FuncLit{x.p(), x, $3}
 	}
 |	fnlitdcl error
 
@@ -1007,37 +1006,37 @@ structdcl:
 |	embed oliteral
 	{ //1011
 		q := $1.(*QualifiedIdent)
-		$$ = newFields([]Node{q.I}, true, &NamedType{q.pos, q, nil, yyScope(yylex)}, $2)
+		$$ = newFields([]Node{q.I}, true, &NamedType{q.p(), q, nil, yyScope(yylex)}, $2)
 	}
 |	'(' embed ')' oliteral
 	{ //1015
-		yyErrPos(yylex, $1.pos, "cannot parenthesize embedded type")
+		yyErrPos(yylex, $1.p(), "cannot parenthesize embedded type")
 		$$ = &fields{}
 	}
 |	'*' embed oliteral
 	{ //1019
 		q := $2.(*QualifiedIdent)
-		$$ = newFields([]Node{q.I}, true, &PtrType{$1.pos, &NamedType{q.pos, q, nil, yyScope(yylex)}}, $3)
+		$$ = newFields([]Node{q.I}, true, &PtrType{$1.p(), &NamedType{q.p(), q, nil, yyScope(yylex)}}, $3)
 	}
 |	'(' '*' embed ')' oliteral
 	{ //1023
-		yyErrPos(yylex, $1.pos, "cannot parenthesize embedded type")
+		yyErrPos(yylex, $1.p(), "cannot parenthesize embedded type")
 		$$ = &fields{}
 	}
 |	'*' '(' embed ')' oliteral
 	{ //1027
-		yyErrPos(yylex, $1.pos, "cannot parenthesize embedded type")
+		yyErrPos(yylex, $1.p(), "cannot parenthesize embedded type")
 		$$ = &fields{}
 	}
 
 packname:
 	_NAME
 	{ //1033
-		$$ = &QualifiedIdent{$1.pos, nil, &Ident{$1.pos, $1.lit}}
+		$$ = &QualifiedIdent{$1.p(), nil, &Ident{$1.p(), $1.lit}}
 	}
 |	_NAME '.' sym
 	{ //1037
-		$$ = &QualifiedIdent{$1.pos, &Ident{$1.pos, $1.lit}, $3.(*Ident)}
+		$$ = &QualifiedIdent{$1.p(), &Ident{$1.p(), $1.lit}, $3.(*Ident)}
 	}
 
 embed:
@@ -1061,7 +1060,7 @@ interfacedcl:
 indcl:
 	'(' oarg_type_list_ocomma ')' fnres
 	{ //1063
-		$$ = newFuncType(yylex, $1.pos, nil, $2, $4)
+		$$ = newFuncType(yylex, $1.p(), nil, $2, $4)
 	}
 
 arg_type:
@@ -1126,35 +1125,35 @@ non_dcl_stmt:
 |	if_stmt
 |	labelname ':' stmt
 	{ //1151
-		$$ = &LabeledStmt{$2.pos, $1.(*Ident), $3}
+		$$ = &LabeledStmt{$2.p(), $1.(*Ident), $3}
 	}
 |	_FALL
 	{ //1155
-		$$ = &FallthroughStmt{$1.pos}
+		$$ = &FallthroughStmt{$1.p()}
 	}
 |	_BREAK onew_name
 	{ //1159
-		$$ = &BreakStmt{$1.pos, $2.(*Ident)}
+		$$ = &BreakStmt{$1.p(), $2.(*Ident)}
 	}
 |	_CONTINUE onew_name
 	{ //1163
-		$$ = &ContinueStmt{$1.pos, $2.(*Ident)}
+		$$ = &ContinueStmt{$1.p(), $2.(*Ident)}
 	}
 |	_GO pseudocall
 	{ //1167
-		$$ = &GoStmt{$1.pos, $2.(*CallOp)}
+		$$ = &GoStmt{$1.p(), $2.(*CallOp)}
 	}
 |	_DEFER pseudocall
 	{ //1171
-		$$ = &DeferStmt{$1.pos, $2.(*CallOp)}
+		$$ = &DeferStmt{$1.p(), $2.(*CallOp)}
 	}
 |	_GOTO new_name
 	{ //1175
-		$$ = &GotoStmt{$1.pos, $2.(*Ident)}
+		$$ = &GotoStmt{$1.p(), $2.(*Ident)}
 	}
 |	_RETURN oexpr_list
 	{ //1179
-		$$ = &ReturnStmt{$1.pos, $2}
+		$$ = &ReturnStmt{$1.p(), $2}
 	}
 
 stmt_list:
@@ -1295,7 +1294,7 @@ func yyTLD(y yyLexer, n Node) {
 				break
 			}
 
-			p.errPos(n.Pos(), fmt.Sprintf("%s redeclared, previous declaration at %s", x.Name.Lit, p.fset.Position(ex.Pos())))
+			p.errPos(n.Pos(), "%s redeclared, previous declaration at %s", x.Name.Lit, p.fset.Position(ex.Pos()))
 		default:
 			p.pkgScope.declare(p, dlrPkgName, n)
 		}

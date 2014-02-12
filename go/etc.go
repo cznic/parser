@@ -90,8 +90,8 @@ func (p *parser) Error(e string) {
 	p.errPos(p.pos, e)
 }
 
-func (p *parser) errPos(pos token.Pos, e string) {
-	p.errors.Add(p.file.Position(pos), e)
+func (p *parser) errPos(pos token.Pos, e string, arg ...interface{}) {
+	p.errors.Add(p.file.Position(pos), fmt.Sprintf(e, arg...))
 }
 
 var xlat = map[token.Token]int{
@@ -265,7 +265,7 @@ func (s *Scope) declare(p *parser, nm string, n Node) {
 	}
 
 	if ex := s.Names[nm]; ex != nil {
-		p.errPos(n.Pos(), fmt.Sprintf("%s redeclared, previous declaration at %s", nm, p.fset.Position(ex.Pos())))
+		p.errPos(n.Pos(), "%s redeclared, previous declaration at %s", nm, p.fset.Position(ex.Pos()))
 		return
 	}
 

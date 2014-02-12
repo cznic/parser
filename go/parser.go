@@ -7,7 +7,6 @@ package parser
 import __yyfmt__ "fmt"
 
 import (
-	"fmt"
 	"go/token"
 )
 
@@ -169,7 +168,7 @@ func yyTLD(y yyLexer, n Node) {
 				break
 			}
 
-			p.errPos(n.Pos(), fmt.Sprintf("%s redeclared, previous declaration at %s", x.Name.Lit, p.fset.Position(ex.Pos())))
+			p.errPos(n.Pos(), "%s redeclared, previous declaration at %s", x.Name.Lit, p.fset.Position(ex.Pos()))
 		default:
 			p.pkgScope.declare(p, dlrPkgName, n)
 		}
@@ -987,7 +986,7 @@ yydefault:
 		}
 	case 4:
 		{ //64
-			yyVAL.node = &Package{yyS[yypt-2].token.pos, yyS[yypt-1].node.(*Ident)}
+			yyVAL.node = &Package{yyS[yypt-2].token.p(), yyS[yypt-1].node.(*Ident)}
 		}
 	case 7:
 		{
@@ -1007,7 +1006,7 @@ yydefault:
 		}
 	case 12:
 		{ //101
-			yyVAL.node = newImport(yylex, &Ident{yyS[yypt-1].token.pos, "."}, newLiteral(yyS[yypt-0].token))
+			yyVAL.node = newImport(yylex, &Ident{yyS[yypt-1].token.p(), "."}, newLiteral(yyS[yypt-0].token))
 		}
 	case 13:
 		{ //107
@@ -1115,43 +1114,43 @@ yydefault:
 		yyVAL.node = yyS[yypt-0].node
 	case 42:
 		{ //240
-			yyVAL.node = &Assignment{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, []Node{yyS[yypt-2].node}, []Node{yyS[yypt-0].node}}
+			yyVAL.node = &Assignment{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, []Node{yyS[yypt-2].node}, []Node{yyS[yypt-0].node}}
 		}
 	case 43:
 		{ //244
-			yyVAL.node = &Assignment{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].list, yyS[yypt-0].list}
+			yyVAL.node = &Assignment{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].list, yyS[yypt-0].list}
 		}
 	case 44:
 		{ //248
-			yyVAL.node = &ShortVarDecl{yyS[yypt-1].token.pos, yyS[yypt-2].list, yyS[yypt-0].list}
+			yyVAL.node = &ShortVarDecl{yyS[yypt-1].token.p(), yyS[yypt-2].list, yyS[yypt-0].list}
 		}
 	case 45:
 		{ //252
-			yyVAL.node = &IncDecStmt{yyS[yypt-0].token.pos, yyS[yypt-1].node, yyS[yypt-0].token.tok}
+			yyVAL.node = &IncDecStmt{yyS[yypt-0].token.p(), yyS[yypt-1].node, yyS[yypt-0].token.tok}
 		}
 	case 46:
 		{ //256
-			yyVAL.node = &IncDecStmt{yyS[yypt-0].token.pos, yyS[yypt-1].node, yyS[yypt-0].token.tok}
+			yyVAL.node = &IncDecStmt{yyS[yypt-0].token.p(), yyS[yypt-1].node, yyS[yypt-0].token.tok}
 		}
 	case 47:
 		{ //262
-			yyVAL.node = &SwitchCase{yyS[yypt-2].token.pos, yyS[yypt-1].list, nil}
+			yyVAL.node = &SwitchCase{yyS[yypt-2].token.p(), yyS[yypt-1].list, nil}
 		}
 	case 48:
 		{ //266
-			yyVAL.node = &SwitchCase{yyS[yypt-4].token.pos, []Node{&Assignment{yyS[yypt-2].token.pos, yyS[yypt-2].token.tok, yyS[yypt-3].list, []Node{yyS[yypt-1].node}}}, nil}
+			yyVAL.node = &SwitchCase{yyS[yypt-4].token.p(), []Node{&Assignment{yyS[yypt-2].token.p(), yyS[yypt-2].token.tok, yyS[yypt-3].list, []Node{yyS[yypt-1].node}}}, nil}
 		}
 	case 49:
 		{ //270
-			yyVAL.node = &SwitchCase{yyS[yypt-4].token.pos, []Node{&Assignment{yyS[yypt-2].token.pos, yyS[yypt-2].token.tok, yyS[yypt-3].list, []Node{yyS[yypt-1].node}}}, nil}
+			yyVAL.node = &SwitchCase{yyS[yypt-4].token.p(), []Node{&Assignment{yyS[yypt-2].token.p(), yyS[yypt-2].token.tok, yyS[yypt-3].list, []Node{yyS[yypt-1].node}}}, nil}
 		}
 	case 50:
 		{ //274
-			yyVAL.node = &SwitchCase{pos: yyS[yypt-1].token.pos}
+			yyVAL.node = &SwitchCase{pos: yyS[yypt-1].token.p()}
 		}
 	case 51:
 		{ //280
-			yyVAL.node = &CompoundStament{yyS[yypt-2].token.pos, yyS[yypt-1].list}
+			yyVAL.node = &CompoundStament{yyS[yypt-2].token.p(), yyS[yypt-1].list}
 		}
 	case 52:
 		{ //290
@@ -1172,11 +1171,11 @@ yydefault:
 		}
 	case 56:
 		{ //311
-			yyVAL.node = &ForStmt{Range: &Assignment{yyS[yypt-2].token.pos, yyS[yypt-2].token.tok, yyS[yypt-3].list, []Node{yyS[yypt-0].node}}}
+			yyVAL.node = &ForStmt{Range: &Assignment{yyS[yypt-2].token.p(), yyS[yypt-2].token.tok, yyS[yypt-3].list, []Node{yyS[yypt-0].node}}}
 		}
 	case 57:
 		{ //315
-			yyVAL.node = &ForStmt{Range: &Assignment{yyS[yypt-2].token.pos, yyS[yypt-2].token.tok, yyS[yypt-3].list, []Node{yyS[yypt-0].node}}}
+			yyVAL.node = &ForStmt{Range: &Assignment{yyS[yypt-2].token.p(), yyS[yypt-2].token.tok, yyS[yypt-3].list, []Node{yyS[yypt-0].node}}}
 		}
 	case 58:
 		{ //321
@@ -1195,7 +1194,7 @@ yydefault:
 		}
 	case 62:
 		{ //341
-			yyS[yypt-0].node.(*ForStmt).pos = yyS[yypt-1].token.pos
+			yyS[yypt-0].node.(*ForStmt).pos = yyS[yypt-1].token.p()
 			yyVAL.node = yyS[yypt-0].node
 		}
 	case 63:
@@ -1213,13 +1212,13 @@ yydefault:
 			for i, v := range yyS[yypt-1].list {
 				l[i] = v.(*IfStmt)
 			}
-			x.pos, x.Body, x.Elif, x.Else = yyS[yypt-4].token.pos, yyS[yypt-2].list, l, yyS[yypt-0].node.(*CompoundStament)
+			x.pos, x.Body, x.Elif, x.Else = yyS[yypt-4].token.p(), yyS[yypt-2].list, l, yyS[yypt-0].node.(*CompoundStament)
 			yyVAL.node = x
 		}
 	case 66:
 		{ //363
 			x := yyS[yypt-1].node.(*IfStmt)
-			x.pos, x.Body = yyS[yypt-2].token.pos, yyS[yypt-0].list
+			x.pos, x.Body = yyS[yypt-2].token.p(), yyS[yypt-0].list
 			yyVAL.node = x
 		}
 	case 67:
@@ -1245,11 +1244,11 @@ yydefault:
 				l[i] = v.(*SwitchCase)
 			}
 			x := yyS[yypt-3].node.(*IfStmt)
-			yyVAL.node = &SwitchStmt{yyS[yypt-4].token.pos, x.Init, x.Cond, l}
+			yyVAL.node = &SwitchStmt{yyS[yypt-4].token.p(), x.Init, x.Cond, l}
 		}
 	case 72:
 		{ //393
-			x := &SelectStmt{pos: yyS[yypt-3].token.pos}
+			x := &SelectStmt{pos: yyS[yypt-3].token.p()}
 			for _, v := range yyS[yypt-1].list {
 				l := v.(*SwitchCase).Expr
 				if len(l) != 1 {
@@ -1295,155 +1294,155 @@ yydefault:
 		yyVAL.node = yyS[yypt-0].node
 	case 74:
 		{ //403
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 75:
 		{ //407
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 76:
 		{ //411
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 77:
 		{ //415
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 78:
 		{ //419
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 79:
 		{ //423
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 80:
 		{ //427
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 81:
 		{ //431
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 82:
 		{ //435
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 83:
 		{ //439
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 84:
 		{ //443
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 85:
 		{ //447
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 86:
 		{ //451
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 87:
 		{ //455
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 88:
 		{ //459
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 89:
 		{ //463
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 90:
 		{ //467
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 91:
 		{ //471
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 92:
 		{ //475
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 93:
 		{ //479
-			yyVAL.node = &BinOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &BinOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 94:
 		yyVAL.node = yyS[yypt-0].node
 	case 95:
 		{ //489
-			yyVAL.node = &UnOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-0].node}
+			yyVAL.node = &UnOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-0].node}
 		}
 	case 96:
 		{ //493
-			yyVAL.node = &UnOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-0].node}
+			yyVAL.node = &UnOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-0].node}
 		}
 	case 97:
 		{ //497
-			yyVAL.node = &UnOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-0].node}
+			yyVAL.node = &UnOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-0].node}
 		}
 	case 98:
 		{ //501
-			yyVAL.node = &UnOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-0].node}
+			yyVAL.node = &UnOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-0].node}
 		}
 	case 99:
 		{ //505
-			yyVAL.node = &UnOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-0].node}
+			yyVAL.node = &UnOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-0].node}
 		}
 	case 100:
 		{ //509
-			yyVAL.node = &UnOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-0].node}
+			yyVAL.node = &UnOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-0].node}
 		}
 	case 101:
 		{ //513
-			yyVAL.node = &UnOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-0].node}
+			yyVAL.node = &UnOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-0].node}
 		}
 	case 102:
 		{ //517
-			yyVAL.node = &UnOp{yyS[yypt-1].token.pos, yyS[yypt-1].token.tok, yyS[yypt-0].node}
+			yyVAL.node = &UnOp{yyS[yypt-1].token.p(), yyS[yypt-1].token.tok, yyS[yypt-0].node}
 		}
 	case 103:
 		{ //523
-			yyVAL.node = &CallOp{yyS[yypt-1].token.pos, yyS[yypt-2].node, nil, false}
+			yyVAL.node = &CallOp{yyS[yypt-1].token.p(), yyS[yypt-2].node, nil, false}
 		}
 	case 104:
 		{ //527
-			yyVAL.node = &CallOp{yyS[yypt-3].token.pos, yyS[yypt-4].node, yyS[yypt-2].list, false}
+			yyVAL.node = &CallOp{yyS[yypt-3].token.p(), yyS[yypt-4].node, yyS[yypt-2].list, false}
 		}
 	case 105:
 		{ //531
-			yyVAL.node = &CallOp{yyS[yypt-4].token.pos, yyS[yypt-5].node, yyS[yypt-3].list, true}
+			yyVAL.node = &CallOp{yyS[yypt-4].token.p(), yyS[yypt-5].node, yyS[yypt-3].list, true}
 		}
 	case 106:
 		{ //537
-			yyVAL.node = &Literal{yyS[yypt-0].token.pos, yyS[yypt-0].token.tok, yyS[yypt-0].token.lit}
+			yyVAL.node = &Literal{yyS[yypt-0].token.p(), yyS[yypt-0].token.tok, yyS[yypt-0].token.lit}
 		}
 	case 107:
 		yyVAL.node = yyS[yypt-0].node
 	case 108:
 		{ //545
-			yyVAL.node = &SelectOp{yyS[yypt-1].token.pos, yyS[yypt-2].node, yyS[yypt-0].node.(*Ident)}
+			yyVAL.node = &SelectOp{yyS[yypt-1].token.p(), yyS[yypt-2].node, yyS[yypt-0].node.(*Ident)}
 		}
 	case 109:
 		{ //549
-			yyVAL.node = &TypeAssertion{yyS[yypt-2].token.pos, yyS[yypt-4].node, yyS[yypt-1].node}
+			yyVAL.node = &TypeAssertion{yyS[yypt-2].token.p(), yyS[yypt-4].node, yyS[yypt-1].node}
 		}
 	case 110:
 		{ //553
-			yyVAL.node = &TypeSwitch{yyS[yypt-1].token.pos, yyS[yypt-4].node}
+			yyVAL.node = &TypeSwitch{yyS[yypt-1].token.p(), yyS[yypt-4].node}
 		}
 	case 111:
 		{ //557
-			yyVAL.node = &IndexOp{yyS[yypt-2].token.pos, yyS[yypt-3].node, yyS[yypt-1].node}
+			yyVAL.node = &IndexOp{yyS[yypt-2].token.p(), yyS[yypt-3].node, yyS[yypt-1].node}
 		}
 	case 112:
 		{ //561
-			yyVAL.node = &SliceOp{yyS[yypt-4].token.pos, yyS[yypt-5].node, yyS[yypt-3].node, yyS[yypt-1].node, nil}
+			yyVAL.node = &SliceOp{yyS[yypt-4].token.p(), yyS[yypt-5].node, yyS[yypt-3].node, yyS[yypt-1].node, nil}
 		}
 	case 113:
 		{ //565
@@ -1453,13 +1452,13 @@ yydefault:
 			if yyS[yypt-1].node == nil {
 				yyErrPos(yylex, yyS[yypt-2].token, "final index required in 3-index slice")
 			}
-			yyVAL.node = &SliceOp{yyS[yypt-6].token.pos, yyS[yypt-7].node, yyS[yypt-5].node, yyS[yypt-3].node, yyS[yypt-1].node}
+			yyVAL.node = &SliceOp{yyS[yypt-6].token.p(), yyS[yypt-7].node, yyS[yypt-5].node, yyS[yypt-3].node, yyS[yypt-1].node}
 		}
 	case 114:
 		yyVAL.node = yyS[yypt-0].node
 	case 115:
 		{ //573
-			yyVAL.node = &ConvOp{yyS[yypt-3].token.pos, yyS[yypt-4].node, yyS[yypt-2].node}
+			yyVAL.node = &ConvOp{yyS[yypt-3].token.p(), yyS[yypt-4].node, yyS[yypt-2].node}
 		}
 	case 116:
 		{ //577
@@ -1467,11 +1466,11 @@ yydefault:
 		}
 	case 117:
 		{ //581
-			yyVAL.node = &CompLit{yyS[yypt-3].token.pos, yyS[yypt-4].node, elements(yyS[yypt-1].list)}
+			yyVAL.node = &CompLit{yyS[yypt-3].token.p(), yyS[yypt-4].node, elements(yyS[yypt-1].list)}
 		}
 	case 118:
 		{ //585
-			yyVAL.node = &CompLit{yyS[yypt-3].token.pos, yyS[yypt-5].node, elements(yyS[yypt-1].list)}
+			yyVAL.node = &CompLit{yyS[yypt-3].token.p(), yyS[yypt-5].node, elements(yyS[yypt-1].list)}
 		}
 	case 119:
 		yyVAL.node = yyS[yypt-0].node
@@ -1488,7 +1487,7 @@ yydefault:
 		}
 	case 123:
 		{ //610
-			yyVAL.node = &Element{yyS[yypt-3].token.pos, nil, &CompLit{yyS[yypt-3].token.pos, nil, elements(yyS[yypt-1].list)}}
+			yyVAL.node = &Element{yyS[yypt-3].token.p(), nil, &CompLit{yyS[yypt-3].token.p(), nil, elements(yyS[yypt-1].list)}}
 		}
 	case 124:
 		{ //616
@@ -1496,13 +1495,13 @@ yydefault:
 		}
 	case 125:
 		{ //620
-			yyVAL.node = &Element{yyS[yypt-3].token.pos, nil, &CompLit{yyS[yypt-3].token.pos, nil, elements(yyS[yypt-1].list)}}
+			yyVAL.node = &Element{yyS[yypt-3].token.p(), nil, &CompLit{yyS[yypt-3].token.p(), nil, elements(yyS[yypt-1].list)}}
 		}
 	case 126:
 		yyVAL.node = yyS[yypt-0].node
 	case 127:
 		{ //630
-			yyVAL.node = &Paren{yyS[yypt-2].token.pos, yyS[yypt-1].node}
+			yyVAL.node = &Paren{yyS[yypt-2].token.p(), yyS[yypt-1].node}
 		}
 	case 128:
 		yyVAL.node = yyS[yypt-0].node
@@ -1530,7 +1529,7 @@ yydefault:
 		yyVAL.node = yyS[yypt-0].node
 	case 137:
 		{ //683
-			yyVAL.node = &Ident{yyS[yypt-0].token.pos, yyS[yypt-0].token.lit}
+			yyVAL.node = &Ident{yyS[yypt-0].token.p(), yyS[yypt-0].token.lit}
 		}
 	case 138:
 		yyVAL.node = yyS[yypt-0].node
@@ -1539,11 +1538,11 @@ yydefault:
 	case 140:
 		{ //701
 			yy(yylex).errPos(yyS[yypt-0].token.tpos, "final argument in variadic function missing type")
-			yyVAL.param = &Param{pos: yyS[yypt-0].token.pos, Ddd: true}
+			yyVAL.param = &Param{pos: yyS[yypt-0].token.p(), Ddd: true}
 		}
 	case 141:
 		{ //705
-			yyVAL.param = &Param{pos: yyS[yypt-1].token.pos, Ddd: true, Type: yyS[yypt-0].node}
+			yyVAL.param = &Param{pos: yyS[yypt-1].token.p(), Ddd: true, Type: yyS[yypt-0].node}
 		}
 	case 142:
 		yyVAL.node = yyS[yypt-0].node
@@ -1559,7 +1558,7 @@ yydefault:
 		}
 	case 147:
 		{ //731
-			yyVAL.node = &Paren{yyS[yypt-2].token.pos, yyS[yypt-1].node}
+			yyVAL.node = &Paren{yyS[yypt-2].token.p(), yyS[yypt-1].node}
 		}
 	case 148:
 		{ //737
@@ -1623,26 +1622,26 @@ yydefault:
 		{ //825
 			switch {
 			case yyS[yypt-2].node != nil:
-				yyVAL.node = &ArrayType{yyS[yypt-3].token.pos, yyS[yypt-2].node, yyS[yypt-0].node}
+				yyVAL.node = &ArrayType{yyS[yypt-3].token.p(), yyS[yypt-2].node, yyS[yypt-0].node}
 			default:
-				yyVAL.node = &SliceType{yyS[yypt-3].token.pos, yyS[yypt-0].node}
+				yyVAL.node = &SliceType{yyS[yypt-3].token.p(), yyS[yypt-0].node}
 			}
 		}
 	case 168:
 		{ //829
-			yyVAL.node = &ArrayType{yyS[yypt-3].token.pos, nil, yyS[yypt-0].node}
+			yyVAL.node = &ArrayType{yyS[yypt-3].token.p(), nil, yyS[yypt-0].node}
 		}
 	case 169:
 		{ //833
-			yyVAL.node = &ChannelType{yyS[yypt-1].token.pos, BidirectionalChannel, yyS[yypt-0].node}
+			yyVAL.node = &ChannelType{yyS[yypt-1].token.p(), BidirectionalChannel, yyS[yypt-0].node}
 		}
 	case 170:
 		{ //837
-			yyVAL.node = &ChannelType{yyS[yypt-1].token.pos, SendOnlyChannel, yyS[yypt-0].node}
+			yyVAL.node = &ChannelType{yyS[yypt-1].token.p(), SendOnlyChannel, yyS[yypt-0].node}
 		}
 	case 171:
 		{ //841
-			yyVAL.node = &MapType{yyS[yypt-4].token.pos, yyS[yypt-2].node, yyS[yypt-0].node}
+			yyVAL.node = &MapType{yyS[yypt-4].token.p(), yyS[yypt-2].node, yyS[yypt-0].node}
 		}
 	case 172:
 		yyVAL.node = yyS[yypt-0].node
@@ -1650,11 +1649,11 @@ yydefault:
 		yyVAL.node = yyS[yypt-0].node
 	case 174:
 		{ //855
-			yyVAL.node = &PtrType{yyS[yypt-1].token.pos, yyS[yypt-0].node}
+			yyVAL.node = &PtrType{yyS[yypt-1].token.p(), yyS[yypt-0].node}
 		}
 	case 175:
 		{ //861
-			yyVAL.node = &ChannelType{yyS[yypt-2].token.pos, ReadOnlyChannel, yyS[yypt-0].node}
+			yyVAL.node = &ChannelType{yyS[yypt-2].token.p(), ReadOnlyChannel, yyS[yypt-0].node}
 		}
 	case 176:
 		{ //867
@@ -1667,30 +1666,30 @@ yydefault:
 	case 178:
 		{ //877
 			x := newInterfaceType(yylex, yyS[yypt-2].list)
-			x.pos = yyS[yypt-4].token.pos
+			x.pos = yyS[yypt-4].token.p()
 			yyVAL.node = x
 		}
 	case 179:
 		{ //881
-			yyVAL.node = &InterfaceType{pos: yyS[yypt-2].token.pos}
+			yyVAL.node = &InterfaceType{pos: yyS[yypt-2].token.p()}
 		}
 	case 180:
 		{ //887
 			x := yyS[yypt-1].node.(*FuncDecl)
-			x.pos, x.Body = yyS[yypt-2].token.pos, yyS[yypt-0].list
+			x.pos, x.Body = yyS[yypt-2].token.p(), yyS[yypt-0].list
 			yyVAL.node = x
 		}
 	case 181:
 		{ //893
-			yyVAL.node = &FuncDecl{Name: yyS[yypt-4].node.(*Ident), Type: newFuncType(yylex, yyS[yypt-3].token.pos, nil, yyS[yypt-2].params, yyS[yypt-0].params)}
+			yyVAL.node = &FuncDecl{Name: yyS[yypt-4].node.(*Ident), Type: newFuncType(yylex, yyS[yypt-3].token.p(), nil, yyS[yypt-2].params, yyS[yypt-0].params)}
 		}
 	case 182:
 		{ //897
-			yyVAL.node = &FuncDecl{Name: yyS[yypt-4].node.(*Ident), Type: newFuncType(yylex, yyS[yypt-7].token.pos, yyS[yypt-6].params, yyS[yypt-2].params, yyS[yypt-0].params)}
+			yyVAL.node = &FuncDecl{Name: yyS[yypt-4].node.(*Ident), Type: newFuncType(yylex, yyS[yypt-7].token.p(), yyS[yypt-6].params, yyS[yypt-2].params, yyS[yypt-0].params)}
 		}
 	case 183:
 		{ //903
-			yyVAL.node = newFuncType(yylex, yyS[yypt-4].token.pos, nil, yyS[yypt-2].params, yyS[yypt-0].params)
+			yyVAL.node = newFuncType(yylex, yyS[yypt-4].token.p(), nil, yyS[yypt-2].params, yyS[yypt-0].params)
 		}
 	case 184:
 		{ //908
@@ -1717,7 +1716,7 @@ yydefault:
 	case 190:
 		{ //938
 			x := yyS[yypt-3].node.(*FuncType)
-			yyVAL.node = &FuncLit{x.pos, x, yyS[yypt-1].list}
+			yyVAL.node = &FuncLit{x.p(), x, yyS[yypt-1].list}
 		}
 	case 191:
 		yyVAL.node = yyS[yypt-0].node
@@ -1768,35 +1767,35 @@ yydefault:
 	case 205:
 		{ //1011
 			q := yyS[yypt-1].node.(*QualifiedIdent)
-			yyVAL.node = newFields([]Node{q.I}, true, &NamedType{q.pos, q, nil, yyScope(yylex)}, yyS[yypt-0].node)
+			yyVAL.node = newFields([]Node{q.I}, true, &NamedType{q.p(), q, nil, yyScope(yylex)}, yyS[yypt-0].node)
 		}
 	case 206:
 		{ //1015
-			yyErrPos(yylex, yyS[yypt-3].token.pos, "cannot parenthesize embedded type")
+			yyErrPos(yylex, yyS[yypt-3].token.p(), "cannot parenthesize embedded type")
 			yyVAL.node = &fields{}
 		}
 	case 207:
 		{ //1019
 			q := yyS[yypt-1].node.(*QualifiedIdent)
-			yyVAL.node = newFields([]Node{q.I}, true, &PtrType{yyS[yypt-2].token.pos, &NamedType{q.pos, q, nil, yyScope(yylex)}}, yyS[yypt-0].node)
+			yyVAL.node = newFields([]Node{q.I}, true, &PtrType{yyS[yypt-2].token.p(), &NamedType{q.p(), q, nil, yyScope(yylex)}}, yyS[yypt-0].node)
 		}
 	case 208:
 		{ //1023
-			yyErrPos(yylex, yyS[yypt-4].token.pos, "cannot parenthesize embedded type")
+			yyErrPos(yylex, yyS[yypt-4].token.p(), "cannot parenthesize embedded type")
 			yyVAL.node = &fields{}
 		}
 	case 209:
 		{ //1027
-			yyErrPos(yylex, yyS[yypt-4].token.pos, "cannot parenthesize embedded type")
+			yyErrPos(yylex, yyS[yypt-4].token.p(), "cannot parenthesize embedded type")
 			yyVAL.node = &fields{}
 		}
 	case 210:
 		{ //1033
-			yyVAL.node = &QualifiedIdent{yyS[yypt-0].token.pos, nil, &Ident{yyS[yypt-0].token.pos, yyS[yypt-0].token.lit}}
+			yyVAL.node = &QualifiedIdent{yyS[yypt-0].token.p(), nil, &Ident{yyS[yypt-0].token.p(), yyS[yypt-0].token.lit}}
 		}
 	case 211:
 		{ //1037
-			yyVAL.node = &QualifiedIdent{yyS[yypt-2].token.pos, &Ident{yyS[yypt-2].token.pos, yyS[yypt-2].token.lit}, yyS[yypt-0].node.(*Ident)}
+			yyVAL.node = &QualifiedIdent{yyS[yypt-2].token.p(), &Ident{yyS[yypt-2].token.p(), yyS[yypt-2].token.lit}, yyS[yypt-0].node.(*Ident)}
 		}
 	case 212:
 		yyVAL.node = yyS[yypt-0].node
@@ -1815,7 +1814,7 @@ yydefault:
 		}
 	case 216:
 		{ //1063
-			yyVAL.node = newFuncType(yylex, yyS[yypt-3].token.pos, nil, yyS[yypt-2].params, yyS[yypt-0].params)
+			yyVAL.node = newFuncType(yylex, yyS[yypt-3].token.p(), nil, yyS[yypt-2].params, yyS[yypt-0].params)
 		}
 	case 217:
 		{ //1069
@@ -1879,35 +1878,35 @@ yydefault:
 		yyVAL.node = yyS[yypt-0].node
 	case 235:
 		{ //1151
-			yyVAL.node = &LabeledStmt{yyS[yypt-1].token.pos, yyS[yypt-2].node.(*Ident), yyS[yypt-0].list}
+			yyVAL.node = &LabeledStmt{yyS[yypt-1].token.p(), yyS[yypt-2].node.(*Ident), yyS[yypt-0].list}
 		}
 	case 236:
 		{ //1155
-			yyVAL.node = &FallthroughStmt{yyS[yypt-0].token.pos}
+			yyVAL.node = &FallthroughStmt{yyS[yypt-0].token.p()}
 		}
 	case 237:
 		{ //1159
-			yyVAL.node = &BreakStmt{yyS[yypt-1].token.pos, yyS[yypt-0].node.(*Ident)}
+			yyVAL.node = &BreakStmt{yyS[yypt-1].token.p(), yyS[yypt-0].node.(*Ident)}
 		}
 	case 238:
 		{ //1163
-			yyVAL.node = &ContinueStmt{yyS[yypt-1].token.pos, yyS[yypt-0].node.(*Ident)}
+			yyVAL.node = &ContinueStmt{yyS[yypt-1].token.p(), yyS[yypt-0].node.(*Ident)}
 		}
 	case 239:
 		{ //1167
-			yyVAL.node = &GoStmt{yyS[yypt-1].token.pos, yyS[yypt-0].node.(*CallOp)}
+			yyVAL.node = &GoStmt{yyS[yypt-1].token.p(), yyS[yypt-0].node.(*CallOp)}
 		}
 	case 240:
 		{ //1171
-			yyVAL.node = &DeferStmt{yyS[yypt-1].token.pos, yyS[yypt-0].node.(*CallOp)}
+			yyVAL.node = &DeferStmt{yyS[yypt-1].token.p(), yyS[yypt-0].node.(*CallOp)}
 		}
 	case 241:
 		{ //1175
-			yyVAL.node = &GotoStmt{yyS[yypt-1].token.pos, yyS[yypt-0].node.(*Ident)}
+			yyVAL.node = &GotoStmt{yyS[yypt-1].token.p(), yyS[yypt-0].node.(*Ident)}
 		}
 	case 242:
 		{ //1179
-			yyVAL.node = &ReturnStmt{yyS[yypt-1].token.pos, yyS[yypt-0].list}
+			yyVAL.node = &ReturnStmt{yyS[yypt-1].token.p(), yyS[yypt-0].list}
 		}
 	case 243:
 		yyVAL.list = yyS[yypt-0].list
