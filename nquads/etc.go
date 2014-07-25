@@ -20,6 +20,7 @@ type lexer struct {
 func (l *lexer) Lex(lval *yySymType) int {
 	tok, val := l.Scan()
 	lval.pos, lval.val = Pos{l.Line, l.Col}, val
+	//dbg("%s:%d:%d %v %q", l.Fname, l.Line, l.Col, tok, val)
 	switch tok {
 	case scanner.EOF:
 		return 0

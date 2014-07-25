@@ -18,12 +18,22 @@ package parser
 %}
 
 %union {
-	pos  Pos
-	val  string
-	item interface{} //TODO insert real field(s)
+	glabel    *GraphLabel
+	object    *Object
+	pos       Pos
+	predicate *Predicate
+	subject   *Subject
+	val       string
 }
 
 %token	daccent dot eol iriref label langtag str
+
+%type	<val>	iriref label langtag str
+
+%type	<glabel>	GraphLabel Statement1
+%type	<object>	Object
+%type	<predicate>	Predicate
+%type	<subject>	Subject
 
 %start	Start
 
@@ -32,7 +42,7 @@ package parser
 GraphLabel:
 	iriref
 	{
-		panic("$$ = $1 //TODO 1")
+		$$ = &GraphLabel{$<pos>1, IRIRef, $1}
 	}
 |	label
 	{
@@ -68,7 +78,7 @@ Literal11:
 Object:
 	iriref
 	{
-		panic("$$ = $1 //TODO 8")
+		$$ = &Object{Pos: $<pos>1, Tag: IRIRef, Value: $1}
 	}
 |	label
 	{
@@ -82,34 +92,20 @@ Object:
 Predicate:
 	iriref
 	{
-		panic("$$ = $1 //TODO 11")
+		$$ = &Predicate{$<pos>1, $1}
 	}
 
 SourceFile:
 	SourceFile1 SourceFile2 SourceFile3
-	{
-		panic("$$ = []SourceFile{$1, $2, $3} //TODO 12")
-	}
 
 SourceFile1:
-	/* EMPTY */
-	{
-		panic("$$ = nil //TODO 13")
-	}
 |	Statement
 	{
 		panic("$$ = $1 //TODO 14")
 	}
 
 SourceFile2:
-	/* EMPTY */
-	{
-		panic("$$ = []SourceFile2(nil) //TODO 15")
-	}
 |	SourceFile2 eol Statement
-	{
-		panic("$$ = append($1.([]SourceFile2), $2, $3) //TODO 16")
-	}
 
 SourceFile3:
 	/* EMPTY */
@@ -117,20 +113,15 @@ SourceFile3:
 		panic("$$ = nil //TODO 17")
 	}
 |	eol
-	{
-		panic("$$ = $1 //TODO 18")
-	}
 
 Start:
 	SourceFile
-	{
-		panic("_parserResult = $1 //TODO 19")
-	}
 
 Statement:
 	Subject Predicate Object Statement1 dot
 	{
-		panic("$$ = []Statement{$1, $2, $3, $4, $5} //TODO 20")
+		lx := yylex.(*lexer)
+		lx.ast = append(lx.ast, &Statement{$1.Pos, $1, $2, $3, $4})
 	}
 
 Statement1:
@@ -139,14 +130,11 @@ Statement1:
 		panic("$$ = nil //TODO 21")
 	}
 |	GraphLabel
-	{
-		panic("$$ = $1 //TODO 22")
-	}
 
 Subject:
 	iriref
 	{
-		panic("$$ = $1 //TODO 23")
+		$$ = &Subject{$<pos>1, IRIRef, $1}
 	}
 |	label
 	{
