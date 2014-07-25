@@ -31,7 +31,7 @@ package parser
 %type	<val>	iriref label langtag str
 
 %type	<glabel>	GraphLabel Statement1
-%type	<object>	Object
+%type	<object>	Literal Literal1 Literal11 Object
 %type	<predicate>	Predicate
 %type	<subject>	Subject
 
@@ -46,33 +46,36 @@ GraphLabel:
 	}
 |	label
 	{
-		panic("$$ = $1 //TODO 2")
+		$$ = &GraphLabel{$<pos>1, BlankNodeLabel, $1}
 	}
 
 Literal:
 	str Literal1
 	{
-		panic("$$ = []Literal{$1, $2} //TODO 3")
+		switch {
+		case $2 == nil:
+			$$ = &Object{Pos: $<pos>1, Tag: Literal, Value: $1}
+		default:
+			x := $2
+			x.Pos, x.Tag, x.Value = $<pos>1, Literal, $1
+			$$ = x
+		}
 	}
 
 Literal1:
-	/* EMPTY */
 	{
-		panic("$$ = nil //TODO 4")
+		$$ = nil
 	}
 |	Literal11
-	{
-		panic("$$ = $1 //TODO 5")
-	}
 
 Literal11:
 	daccent iriref
 	{
-		panic("$$ = []Literal11{$1, $2} //TODO 6")
+		$$ = &Object{Pos: $<pos>2, Tag2: IRIRef, Value2: $2}
 	}
 |	langtag
 	{
-		panic("$$ = $1 //TODO 7")
+		$$ = &Object{Pos: $<pos>1, Tag2: LangTag, Value2: $1}
 	}
 
 Object:
@@ -82,12 +85,9 @@ Object:
 	}
 |	label
 	{
-		panic("$$ = $1 //TODO 9")
+		$$ = &Object{Pos: $<pos>1, Tag: BlankNodeLabel, Value: $1}
 	}
 |	Literal
-	{
-		panic("$$ = $1 //TODO 10")
-	}
 
 Predicate:
 	iriref
@@ -100,18 +100,11 @@ SourceFile:
 
 SourceFile1:
 |	Statement
-	{
-		panic("$$ = $1 //TODO 14")
-	}
 
 SourceFile2:
 |	SourceFile2 eol Statement
 
 SourceFile3:
-	/* EMPTY */
-	{
-		panic("$$ = nil //TODO 17")
-	}
 |	eol
 
 Start:
@@ -125,9 +118,8 @@ Statement:
 	}
 
 Statement1:
-	/* EMPTY */
 	{
-		panic("$$ = nil //TODO 21")
+		$$ = nil
 	}
 |	GraphLabel
 
@@ -138,7 +130,7 @@ Subject:
 	}
 |	label
 	{
-		panic("$$ = $1 //TODO 24")
+		$$ = &Subject{$<pos>1, BlankNodeLabel, $1}
 	}
 
 %%

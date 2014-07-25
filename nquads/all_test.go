@@ -42,18 +42,48 @@ func use(...interface{}) {}
 // ============================================================================
 
 func Test(t *testing.T) {
-	ast, err := Parse("test", []byte(`
-<s1> <p1> <o1> <g1> . # comments here
+	_, err := Parse("test", []byte(`
+<a> <b> <c> <d> . # comments here
 # or on a line by themselves
-#_:subject1 <http://an.example/predicate1> "object\u00411" "cafe\u0301 \'time" <http://example.org/graph1> .
-#_:subject2 <http://an.example/predicate2> "object\U000000422"  ^^ <http://example.com/literal> <http://example.org/graph5> .
-
+<e> <f> <g> .
+_:0 <h> <i> .
+<j> <k> <l> _:1 .
+<m> <n> "A" .
+<m> <n> "A" ^^ <x> .
+<m> <n> "A" @en-US .
+<e> <f> _:2 .
 `))
 	if err != nil {
 		t.Fatal(err)
 	}
+}
+
+func ExampleParse() {
+	ast, err := Parse("test", []byte(`# L 1
+<a> <b> <c> <d> . # L2 comments here
+# L3 or on a line by themselves
+<e> <f> <g> .        # L 4
+_:0 <h> <i> .        # L 5
+<j> <k> <l> _:1 .    # L 6
+<m> <n> "A" .        # L 7
+<m> <n> "A" ^^ <x> . # L 8
+<m> <n> "A" @en-US . # L 9
+<e> <f> _:2 .        # L 10
+`))
+	if err != nil {
+		panic(err)
+	}
 
 	for i, v := range ast {
-		dbg("%2d: %v\n", i, v)
+		fmt.Printf("%d: %v\n", i, v)
 	}
+	// Output:
+	// 0: stmt@2:1{subj@2:1{IRIRef="a"}, pred@2:5{"b"}, obj@2:9{IRIRef="c"}, graph@2:13{IRIRef="d"}}
+	// 1: stmt@4:1{subj@4:1{IRIRef="e"}, pred@4:5{"f"}, obj@4:9{IRIRef="g"}}
+	// 2: stmt@5:1{subj@5:1{BlankNodeLabel="0"}, pred@5:5{"h"}, obj@5:9{IRIRef="i"}}
+	// 3: stmt@6:1{subj@6:1{IRIRef="j"}, pred@6:5{"k"}, obj@6:9{IRIRef="l"}, graph@6:13{BlankNodeLabel="1"}}
+	// 4: stmt@7:1{subj@7:1{IRIRef="m"}, pred@7:5{"n"}, obj@7:9{Literal="A"}}
+	// 5: stmt@8:1{subj@8:1{IRIRef="m"}, pred@8:5{"n"}, obj@8:9{Literal="A", IRIRef="x"}}
+	// 6: stmt@9:1{subj@9:1{IRIRef="m"}, pred@9:5{"n"}, obj@9:9{Literal="A", LangTag="en-US"}}
+	// 7: stmt@10:1{subj@10:1{IRIRef="e"}, pred@10:5{"f"}, obj@10:9{BlankNodeLabel="2"}}
 }

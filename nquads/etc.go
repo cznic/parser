@@ -2,7 +2,22 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package scanner implements a scanner for N-Quads[0] source text.
+// Package parser implements a parser for N-Quads[0] source text.
+//
+// Links
+//
+// Referenced from elsewhere.
+//
+//  [0]: http://www.w3.org/TR/n-quads/
+//  [1]: http://www.w3.org/TR/n-quads/#grammar-production-statement
+//  [2]: http://www.w3.org/TR/n-quads/#grammar-production-IRIREF
+//  [3]: http://www.w3.org/TR/n-quads/#grammar-production-BLANK_NODE_LABEL
+//  [4]: http://www.w3.org/TR/n-quads/#grammar-production-literal
+//  [5]: http://www.w3.org/TR/n-quads/#grammar-production-LANGTAG
+//  [6]: http://www.w3.org/TR/n-quads/#grammar-production-subject
+//  [7]: http://www.w3.org/TR/n-quads/#grammar-production-predicate
+//  [8]: http://www.w3.org/TR/n-quads/#grammar-production-object
+//  [9]: http://www.w3.org/TR/n-quads/#grammar-production-graphLabel
 package parser
 
 import (
@@ -50,6 +65,7 @@ again:
 	}
 }
 
+// Pos describes a position within the parsed source.
 type Pos struct {
 	Line int
 	Col  int
@@ -57,16 +73,19 @@ type Pos struct {
 
 func (p Pos) String() string { return fmt.Sprintf("%d:%d", p.Line, p.Col) }
 
+// Tag is a kind of the Value field of Subject, Predicate, Object or GraphLabel.
 type Tag int
 
+// Values of type Tag.
 const (
-	_ Tag = iota
-	IRIRef
-	BlankNodeLabel
-	Literal
-	LangTag
+	_              Tag = iota
+	IRIRef             // [2]
+	BlankNodeLabel     // [3]
+	Literal            // [4]
+	LangTag            // [5]
 )
 
+// String implements fmt.Stringer()
 func (t Tag) String() string {
 	switch t {
 	case 0:
@@ -84,14 +103,16 @@ func (t Tag) String() string {
 	}
 }
 
+// Statement describes a parsed statement[1].
 type Statement struct {
 	Pos
 	*Subject
 	*Predicate
 	*Object
-	*GraphLabel
+	*GraphLabel // GraphLabel might be nil.
 }
 
+// String implements fmt.Stringer()
 func (s *Statement) String() string {
 	switch {
 	case s.GraphLabel == nil:
@@ -101,29 +122,35 @@ func (s *Statement) String() string {
 	}
 }
 
+// Subject describes a parsed subject[6].
 type Subject struct {
 	Pos
 	Tag
 	Value string
 }
 
+// String implements fmt.Stringer()
 func (s *Subject) String() string { return fmt.Sprintf("subj@%v{%v=%q}", s.Pos, s.Tag, s.Value) }
 
+// Predicate describes a parser perdicate[7].
 type Predicate struct {
 	Pos
 	Value string
 }
 
+// String implements fmt.Stringer()
 func (p *Predicate) String() string { return fmt.Sprintf("pred@%v{%q}", p.Pos, p.Value) }
 
+// Object describes a parsed object[8].
 type Object struct {
 	Pos
 	Tag
 	Value  string
-	Tag2   Tag
+	Tag2   Tag // Tag2 is nonzero iff Tag == Literal and the literal has the optional IRIREF or LANGTAG value present.
 	Value2 string
 }
 
+// String implements fmt.Stringer()
 func (o *Object) String() string {
 	switch {
 	case o.Tag2 == 0:
@@ -133,12 +160,14 @@ func (o *Object) String() string {
 	}
 }
 
+// GraphLabel describes a parsed graphLabel[9].
 type GraphLabel struct {
 	Pos
 	Tag
 	Value string
 }
 
+// String implements fmt.Stringer()
 func (g *GraphLabel) String() string { return fmt.Sprintf("graph@%v{%v=%q}", g.Pos, g.Tag, g.Value) }
 
 // Parse parses src as a single N-Quads source file fname and returns the

@@ -1,6 +1,6 @@
 .PHONY: all clean editor todo cover nuke
 
-grep=--include=*.go *.l
+grep=--include=*.go *.y
 
 all: editor
 	go vet || true
