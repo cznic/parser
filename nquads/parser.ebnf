@@ -1,0 +1,17 @@
+daccent = "^^" .
+dot = "." .
+eol = .
+iriref = .
+label = .
+langtag = .
+string = .
+
+GraphLabel = iriref | label .
+Literal = string [ daccent iriref | langtag ] .
+Object = iriref
+	| label
+	| Literal .
+Predicate = iriref .
+SourceFile = [ Statement ] { eol Statement } [ eol ] .
+Statement = Subject Predicate Object [ GraphLabel ] dot .
+Subject = iriref | label .
