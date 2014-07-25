@@ -42,5 +42,15 @@ func use(...interface{}) {}
 // ============================================================================
 
 func Test(t *testing.T) {
-	//TODO
+	_, err := Parse("test", []byte(`
+
+<http://one.example/subject1> <http://one.example/predicate1> <http://one.example/object1> <http://example.org/graph3> . # comments here
+# or on a line by themselves
+#_:subject1 <http://an.example/predicate1> "object\u00411" "cafe\u0301 \'time" <http://example.org/graph1> .
+#_:subject2 <http://an.example/predicate2> "object\U000000422"  ^^ <http://example.com/literal> <http://example.org/graph5> .
+
+`))
+	if err != nil {
+		t.Fatal(err)
+	}
 }

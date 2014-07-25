@@ -19,6 +19,7 @@ editor: parser.go
 
 parser.go: parser.y
 	go tool yacc -o $@ -v /dev/null $<
+	sed -i -e 's|//line.*||' -e 's/yyEofCode/yyEOFCode/' $@
 
 todo:
 	@grep -n ^[[:space:]]*_[[:space:]]*=[[:space:]][[:alpha:]][[:alnum:]]* $(grep) || true

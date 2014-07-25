@@ -18,6 +18,8 @@ package parser
 %}
 
 %union {
+	pos  Pos
+	val  string
 	item interface{} //TODO insert real field(s)
 }
 
@@ -30,125 +32,125 @@ package parser
 GraphLabel:
 	iriref
 	{
-		panic(TODO("$$ = $1 //TODO 1"))
+		panic("$$ = $1 //TODO 1")
 	}
 |	label
 	{
-		panic(TODO("$$ = $1 //TODO 2"))
+		panic("$$ = $1 //TODO 2")
 	}
 
 Literal:
 	str Literal1
 	{
-		panic(TODO("$$ = []Literal{$1, $2} //TODO 3"))
+		panic("$$ = []Literal{$1, $2} //TODO 3")
 	}
 
 Literal1:
 	/* EMPTY */
 	{
-		panic(TODO("$$ = nil //TODO 4"))
+		panic("$$ = nil //TODO 4")
 	}
 |	Literal11
 	{
-		panic(TODO("$$ = $1 //TODO 5"))
+		panic("$$ = $1 //TODO 5")
 	}
 
 Literal11:
 	daccent iriref
 	{
-		panic(TODO("$$ = []Literal11{$1, $2} //TODO 6"))
+		panic("$$ = []Literal11{$1, $2} //TODO 6")
 	}
 |	langtag
 	{
-		panic(TODO("$$ = $1 //TODO 7"))
+		panic("$$ = $1 //TODO 7")
 	}
 
 Object:
 	iriref
 	{
-		panic(TODO("$$ = $1 //TODO 8"))
+		panic("$$ = $1 //TODO 8")
 	}
 |	label
 	{
-		panic(TODO("$$ = $1 //TODO 9"))
+		panic("$$ = $1 //TODO 9")
 	}
 |	Literal
 	{
-		panic(TODO("$$ = $1 //TODO 10"))
+		panic("$$ = $1 //TODO 10")
 	}
 
 Predicate:
 	iriref
 	{
-		panic(TODO("$$ = $1 //TODO 11"))
+		panic("$$ = $1 //TODO 11")
 	}
 
 SourceFile:
 	SourceFile1 SourceFile2 SourceFile3
 	{
-		panic(TODO("$$ = []SourceFile{$1, $2, $3} //TODO 12"))
+		panic("$$ = []SourceFile{$1, $2, $3} //TODO 12")
 	}
 
 SourceFile1:
 	/* EMPTY */
 	{
-		panic(TODO("$$ = nil //TODO 13"))
+		panic("$$ = nil //TODO 13")
 	}
 |	Statement
 	{
-		panic(TODO("$$ = $1 //TODO 14"))
+		panic("$$ = $1 //TODO 14")
 	}
 
 SourceFile2:
 	/* EMPTY */
 	{
-		panic(TODO("$$ = []SourceFile2(nil) //TODO 15"))
+		panic("$$ = []SourceFile2(nil) //TODO 15")
 	}
 |	SourceFile2 eol Statement
 	{
-		panic(TODO("$$ = append($1.([]SourceFile2), $2, $3) //TODO 16"))
+		panic("$$ = append($1.([]SourceFile2), $2, $3) //TODO 16")
 	}
 
 SourceFile3:
 	/* EMPTY */
 	{
-		panic(TODO("$$ = nil //TODO 17"))
+		panic("$$ = nil //TODO 17")
 	}
 |	eol
 	{
-		panic(TODO("$$ = $1 //TODO 18"))
+		panic("$$ = $1 //TODO 18")
 	}
 
 Start:
 	SourceFile
 	{
-		panic(TODO("_parserResult = $1 //TODO 19"))
+		panic("_parserResult = $1 //TODO 19")
 	}
 
 Statement:
 	Subject Predicate Object Statement1 dot
 	{
-		panic(TODO("$$ = []Statement{$1, $2, $3, $4, $5} //TODO 20"))
+		panic("$$ = []Statement{$1, $2, $3, $4, $5} //TODO 20")
 	}
 
 Statement1:
 	/* EMPTY */
 	{
-		panic(TODO("$$ = nil //TODO 21"))
+		panic("$$ = nil //TODO 21")
 	}
 |	GraphLabel
 	{
-		panic(TODO("$$ = $1 //TODO 22"))
+		panic("$$ = $1 //TODO 22")
 	}
 
 Subject:
 	iriref
 	{
-		panic(TODO("$$ = $1 //TODO 23"))
+		panic("$$ = $1 //TODO 23")
 	}
 |	label
 	{
-		panic(TODO("$$ = $1 //TODO 24"))
+		panic("$$ = $1 //TODO 24")
 	}
 
 %%
