@@ -160,6 +160,15 @@ Subject:
 	iriref
 	{
 		$$ = &Subject{$<pos>1, IRIRef, $1}
+		u, err := url.Parse($1)
+		if err != nil {
+			yylex.(*lexer).error($<pos>1.Line, $<pos>1.Col, err.Error())
+			break
+		}
+
+		if !u.IsAbs() {
+			yylex.(*lexer).error($<pos>1.Line, $<pos>1.Col, "bad IRI : relative IRI not allowed in subject")
+		}
 	}
 |	label
 	{

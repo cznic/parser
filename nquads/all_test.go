@@ -52,7 +52,7 @@ func Test(t *testing.T) {
 
 		if err != nil {
 			if g, e := err.Error(), test.emsg; g != e {
-				t.Errorf("%d: %q %q", i, g, e)
+				t.Errorf("%d:\n%s\n%q vs %q", i, test.src, g, e)
 			}
 		}
 	}
@@ -479,6 +479,9 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bnode-01.nq> ;
 	//    .
+
+	{`_:a  <http://example/p> <http://example/o> .`, ""}, // 30
+
 	//
 	// <#nt-syntax-bnode-02> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-bnode-02" ;
@@ -486,6 +489,10 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bnode-02.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> _:a .
+_:a  <http://example/p> <http://example/o> .`, ""}, // 31
+
 	//
 	// <#nt-syntax-bnode-03> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-bnode-03" ;
@@ -493,6 +500,10 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bnode-03.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> _:1a .
+_:1a  <http://example/p> <http://example/o> .`, ""}, // 32
+
 	//
 	// <#nt-syntax-datatypes-01> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-datatypes-01" ;
@@ -500,6 +511,9 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-datatypes-01.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> "123"^^<http://www.w3.org/2001/XMLSchema#byte> .`, ""}, // 33
+
 	//
 	// <#nt-syntax-datatypes-02> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-datatypes-02" ;
@@ -507,6 +521,9 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-datatypes-02.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> "123"^^<http://www.w3.org/2001/XMLSchema#string> .`, ""}, // 34
+
 	//
 	// <#nt-syntax-bad-uri-01> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-uri-01" ;
@@ -514,6 +531,11 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-uri-01.nq> ;
 	//    .
+
+	{`# Bad IRI : space.
+<http://example/ space> <http://example/p> <http://example/o> .`,
+		":2:1 bad IRI : space"}, //TODO 35
+
 	//
 	// <#nt-syntax-bad-uri-02> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-uri-02" ;
@@ -521,6 +543,11 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-uri-02.nq> ;
 	//    .
+
+	{`# Bad IRI : bad escape
+<http://example/\u00ZZ11> <http://example/p> <http://example/o> .`,
+		":2:1 bad IRI : bad escape"}, //TODO 36
+
 	//
 	// <#nt-syntax-bad-uri-03> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-uri-03" ;
@@ -528,6 +555,11 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-uri-03.nq> ;
 	//    .
+
+	{`# Bad IRI : bad escape
+<http://example/\U00ZZ1111> <http://example/p> <http://example/o> .`,
+		":2:1 bad IRI : bad long escape"}, // 37
+
 	//
 	// <#nt-syntax-bad-uri-04> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-uri-04" ;
@@ -535,6 +567,11 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-uri-04.nq> ;
 	//    .
+
+	{`# Bad IRI : character escapes not allowed.
+<http://example/\n> <http://example/p> <http://example/o> .`,
+		":2:1 bad IRI : character escapes not allowed"}, // 38
+
 	//
 	// <#nt-syntax-bad-uri-05> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-uri-05" ;
@@ -542,6 +579,11 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-uri-05.nq> ;
 	//    .
+
+	{`# Bad IRI : character escapes not allowed.
+<http://example/\/> <http://example/p> <http://example/o> .`,
+		":2:1 bad IRI : character escapes not allowed"}, // 39
+
 	//
 	// <#nt-syntax-bad-uri-06> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-uri-06" ;
@@ -549,6 +591,10 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-uri-06.nq> ;
 	//    .
+
+	{`# No relative IRIs in N-Triples
+<s> <http://example/p> <http://example/o> .`,
+		":2:1 bad IRI : relative IRI not allowed in subject"}, // 40
 	//
 	// <#nt-syntax-bad-uri-07> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-uri-07" ;

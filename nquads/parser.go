@@ -453,6 +453,15 @@ yydefault:
 
 		{
 			yyVAL.subject = &Subject{yyS[yypt-0].pos, IRIRef, yyS[yypt-0].val}
+			u, err := url.Parse(yyS[yypt-0].val)
+			if err != nil {
+				yylex.(*lexer).error(yyS[yypt-0].pos.Line, yyS[yypt-0].pos.Col, err.Error())
+				break
+			}
+
+			if !u.IsAbs() {
+				yylex.(*lexer).error(yyS[yypt-0].pos.Line, yyS[yypt-0].pos.Col, "bad IRI : relative IRI not allowed in subject")
+			}
 		}
 	case 28:
 

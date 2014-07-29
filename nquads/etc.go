@@ -64,6 +64,8 @@ again:
 		return langtag
 	case scanner.STRING:
 		return str
+	case scanner.ILLEGAL:
+		return int([]rune(val)[0])
 	default:
 		panic("internal error")
 	}
