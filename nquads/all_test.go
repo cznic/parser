@@ -376,6 +376,9 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-uri-01.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> <http://example/o> .`, ""}, // 20
+
 	//
 	// <#nt-syntax-uri-02> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-uri-02" ;
@@ -383,6 +386,10 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-uri-02.nq> ;
 	//    .
+
+	{`# x53 is capital S
+<http://example/\u0053> <http://example/p> <http://example/o> .`, ""}, // 21
+
 	//
 	// <#nt-syntax-uri-03> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-uri-03" ;
@@ -390,6 +397,10 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-uri-03.nq> ;
 	//    .
+
+	{`# x53 is capital S
+<http://example/\U00000053> <http://example/p> <http://example/o> .`, ""}, // 22
+
 	//
 	// <#nt-syntax-uri-04> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-uri-04" ;
@@ -397,6 +408,10 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-uri-04.nq> ;
 	//    .
+
+	{`# IRI with all chars in it.
+<http://example/s> <http://example/p> <scheme:!$%25&'()*+,-./0123456789:/@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~?#> .`, ""}, // 23
+
 	//
 	// <#nt-syntax-string-01> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-string-01" ;
@@ -404,6 +419,9 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-string-01.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> "string" .`, ""}, // 24
+
 	//
 	// <#nt-syntax-string-02> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-string-02" ;
@@ -411,6 +429,9 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-string-02.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> "string"@en .`, ""}, // 25
+
 	//
 	// <#nt-syntax-string-03> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-string-03" ;
@@ -418,6 +439,9 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-string-03.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> "string"@en-uk .`, ""}, // 26
+
 	//
 	// <#nt-syntax-str-esc-01> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-str-esc-01" ;
@@ -425,6 +449,9 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-str-esc-01.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> "a\n" .`, ""}, // 27
+
 	//
 	// <#nt-syntax-str-esc-02> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-str-esc-02" ;
@@ -432,6 +459,9 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-str-esc-02.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> "a\u0020b" .`, ""}, // 28
+
 	//
 	// <#nt-syntax-str-esc-03> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-str-esc-03" ;
@@ -439,6 +469,9 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-str-esc-03.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> "a\U00000020b" .`, ""}, // 29
+
 	//
 	// <#nt-syntax-bnode-01> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-bnode-01" ;
