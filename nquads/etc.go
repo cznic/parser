@@ -132,7 +132,7 @@ type Subject struct {
 // String implements fmt.Stringer()
 func (s *Subject) String() string { return fmt.Sprintf("subj@%v{%v=%q}", s.Pos, s.Tag, s.Value) }
 
-// Predicate describes a parser perdicate[7].
+// Predicate describes a parser predicate[7].
 type Predicate struct {
 	Pos
 	Value string
