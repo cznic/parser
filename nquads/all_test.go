@@ -333,6 +333,11 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nq-syntax-bad-quint-01.nq> ;
 	//    .
+
+	{`# N-Quads rejects a quint
+<http://example/s> <http://example/p> <http://example/o> <http://example/g> <http://example/n> .`,
+		":2:77 n-quads does not have a fifth element"}, // 16
+
 	//
 	// <#nt-syntax-file-01> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-file-01" ;
@@ -340,6 +345,9 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-file-01.nq> ;
 	//    .
+
+	{``, ""}, // 17
+
 	//
 	// <#nt-syntax-file-02> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-file-02" ;
@@ -347,6 +355,9 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-file-02.nq> ;
 	//    .
+
+	{`#Empty file.`, ""}, // 18
+
 	//
 	// <#nt-syntax-file-03> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-file-03" ;
@@ -354,6 +365,10 @@ var testSuite = []struct {
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-file-03.nq> ;
 	//    .
+
+	{`#One comment, one empty line.
+`, ""}, // 19
+
 	//
 	// <#nt-syntax-uri-01> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-uri-01" ;

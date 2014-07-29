@@ -144,6 +144,11 @@ Statement:
 		lx := yylex.(*lexer)
 		lx.ast = append(lx.ast, &Statement{$1.Pos, $1, $2, $3, $4})
 	}
+|	Subject Predicate Object Statement1 iriref
+	{
+		yylex.(*lexer).error($<pos>5.Line, $<pos>5.Col, "n-quads does not have a fifth element")
+		return 1
+	}
 
 Statement1:
 	{
