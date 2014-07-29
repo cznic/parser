@@ -33,15 +33,17 @@ type yySymType struct {
 const daccent = 57346
 const dot = 57347
 const eol = 57348
-const iriref = 57349
-const label = 57350
-const langtag = 57351
-const str = 57352
+const illegal = 57349
+const iriref = 57350
+const label = 57351
+const langtag = 57352
+const str = 57353
 
 var yyToknames = []string{
 	"daccent",
 	"dot",
 	"eol",
+	"illegal",
 	"iriref",
 	"label",
 	"langtag",
@@ -69,22 +71,22 @@ const yyLast = 32
 
 var yyAct = []int{
 
-	4, 21, 22, 32, 23, 14, 15, 31, 17, 26,
-	11, 10, 30, 18, 27, 6, 7, 28, 8, 29,
-	12, 3, 2, 1, 5, 9, 13, 25, 24, 16,
+	21, 22, 4, 23, 14, 15, 31, 17, 26, 6,
+	7, 32, 30, 28, 27, 18, 29, 10, 12, 11,
+	8, 3, 2, 1, 5, 9, 13, 25, 24, 16,
 	19, 20,
 }
 var yyPact = []int{
 
-	8, -1000, -1000, -1000, -1000, 4, -1000, -1000, 14, -2,
-	-1000, -1000, 8, -6, -1000, -1000, -1000, 5, -1000, 12,
-	-1000, -1000, -1000, 3, -1000, -1000, -4, -1000, -1000, -1000,
+	1, -1000, -1000, -1000, -1000, 9, -1000, -1000, 12, -4,
+	-1000, -1000, 1, -8, -1000, -1000, -1000, 4, -1000, 8,
+	-1000, -1000, -1000, 2, -1000, -1000, 3, -1000, -1000, -1000,
 	-1000, -1000, -1000,
 }
 var yyPgo = []int{
 
 	0, 31, 30, 29, 28, 27, 26, 25, 24, 23,
-	22, 21, 18, 10, 0,
+	22, 21, 20, 19, 2,
 }
 var yyR1 = []int{
 
@@ -100,10 +102,10 @@ var yyR2 = []int{
 }
 var yyChk = []int{
 
-	-1000, -9, -10, -11, -14, -8, 7, 8, -12, -7,
-	7, -13, 6, -6, 7, 8, -3, 10, -14, -2,
-	-1, 7, 8, 10, -4, -5, 4, 9, 5, 7,
-	9, 4, 7,
+	-1000, -9, -10, -11, -14, -8, 8, 9, -12, -7,
+	8, -13, 6, -6, 8, 9, -3, 11, -14, -2,
+	-1, 8, 9, 11, -4, -5, 4, 10, 5, 8,
+	10, 4, 8,
 }
 var yyDef = []int{
 
@@ -118,7 +120,7 @@ var yyTok1 = []int{
 }
 var yyTok2 = []int{
 
-	2, 3, 4, 5, 6, 7, 8, 9, 10,
+	2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 }
 var yyTok3 = []int{
 	0,
@@ -407,6 +409,15 @@ yydefault:
 
 		{
 			yyVAL.object = &Object{Pos: yyS[yypt-0].pos, Tag2: IRIRef, Value2: yyS[yypt-0].val}
+			u, err := url.Parse(yyS[yypt-0].val)
+			if err != nil {
+				yylex.(*lexer).error(yyS[yypt-0].pos.Line, yyS[yypt-0].pos.Col, err.Error())
+				break
+			}
+
+			if !u.IsAbs() {
+				yylex.(*lexer).error(yyS[yypt-0].pos.Line, yyS[yypt-0].pos.Col, "bad IRI : relative IRI not allowed in datatype")
+			}
 		}
 	case 10:
 
@@ -417,6 +428,15 @@ yydefault:
 
 		{
 			yyVAL.object = &Object{Pos: yyS[yypt-0].pos, Tag: IRIRef, Value: yyS[yypt-0].val}
+			u, err := url.Parse(yyS[yypt-0].val)
+			if err != nil {
+				yylex.(*lexer).error(yyS[yypt-0].pos.Line, yyS[yypt-0].pos.Col, err.Error())
+				break
+			}
+
+			if !u.IsAbs() {
+				yylex.(*lexer).error(yyS[yypt-0].pos.Line, yyS[yypt-0].pos.Col, "bad IRI : relative IRI not allowed in object")
+			}
 		}
 	case 12:
 
@@ -429,12 +449,21 @@ yydefault:
 
 		{
 			yyVAL.predicate = &Predicate{yyS[yypt-0].pos, yyS[yypt-0].val}
+			u, err := url.Parse(yyS[yypt-0].val)
+			if err != nil {
+				yylex.(*lexer).error(yyS[yypt-0].pos.Line, yyS[yypt-0].pos.Col, err.Error())
+				break
+			}
+
+			if !u.IsAbs() {
+				yylex.(*lexer).error(yyS[yypt-0].pos.Line, yyS[yypt-0].pos.Col, "bad IRI : relative IRI not allowed in predicate")
+			}
 		}
 	case 23:
 
 		{
-			lx := yylex.(*lexer)
-			lx.ast = append(lx.ast, &Statement{yyS[yypt-4].subject.Pos, yyS[yypt-4].subject, yyS[yypt-3].predicate, yyS[yypt-2].object, yyS[yypt-1].glabel})
+			x := yylex.(*lexer)
+			x.ast = append(x.ast, &Statement{yyS[yypt-4].subject.Pos, yyS[yypt-4].subject, yyS[yypt-3].predicate, yyS[yypt-2].object, yyS[yypt-1].glabel})
 		}
 	case 24:
 

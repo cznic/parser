@@ -534,7 +534,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 
 	{`# Bad IRI : space.
 <http://example/ space> <http://example/p> <http://example/o> .`,
-		":2:1 bad IRI : space"}, //TODO 35
+		":2:17 lexical grammar error"}, // 35
 
 	//
 	// <#nt-syntax-bad-uri-02> a rdft:TestNQuadsNegativeSyntax ;
@@ -546,7 +546,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 
 	{`# Bad IRI : bad escape
 <http://example/\u00ZZ11> <http://example/p> <http://example/o> .`,
-		":2:1 bad IRI : bad escape"}, //TODO 36
+		":2:21 lexical grammar error"}, // 36
 
 	//
 	// <#nt-syntax-bad-uri-03> a rdft:TestNQuadsNegativeSyntax ;
@@ -558,7 +558,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 
 	{`# Bad IRI : bad escape
 <http://example/\U00ZZ1111> <http://example/p> <http://example/o> .`,
-		":2:1 bad IRI : bad long escape"}, // 37
+		":2:21 lexical grammar error"}, // 37
 
 	//
 	// <#nt-syntax-bad-uri-04> a rdft:TestNQuadsNegativeSyntax ;
@@ -570,7 +570,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 
 	{`# Bad IRI : character escapes not allowed.
 <http://example/\n> <http://example/p> <http://example/o> .`,
-		":2:1 bad IRI : character escapes not allowed"}, // 38
+		":2:18 lexical grammar error"}, // 38
 
 	//
 	// <#nt-syntax-bad-uri-05> a rdft:TestNQuadsNegativeSyntax ;
@@ -582,7 +582,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 
 	{`# Bad IRI : character escapes not allowed.
 <http://example/\/> <http://example/p> <http://example/o> .`,
-		":2:1 bad IRI : character escapes not allowed"}, // 39
+		":2:18 lexical grammar error"}, // 39
 
 	//
 	// <#nt-syntax-bad-uri-06> a rdft:TestNQuadsNegativeSyntax ;
@@ -595,6 +595,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	{`# No relative IRIs in N-Triples
 <s> <http://example/p> <http://example/o> .`,
 		":2:1 bad IRI : relative IRI not allowed in subject"}, // 40
+
 	//
 	// <#nt-syntax-bad-uri-07> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-uri-07" ;
@@ -602,6 +603,11 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-uri-07.nq> ;
 	//    .
+
+	{`# No relative IRIs in N-Triples
+<http://example/s> <p> <http://example/o> .`,
+		":2:20 bad IRI : relative IRI not allowed in predicate"}, // 41
+
 	//
 	// <#nt-syntax-bad-uri-08> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-uri-08" ;
@@ -609,6 +615,11 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-uri-08.nq> ;
 	//    .
+
+	{`# No relative IRIs in N-Triples
+<http://example/s> <http://example/p> <o> .`,
+		":2:39 bad IRI : relative IRI not allowed in object"}, // 42
+
 	//
 	// <#nt-syntax-bad-uri-09> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-uri-09" ;
@@ -616,6 +627,11 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-uri-09.nq> ;
 	//    .
+
+	{`# No relative IRIs in N-Triples
+<http://example/s> <http://example/p> "foo"^^<dt> .`,
+		":2:46 bad IRI : relative IRI not allowed in datatype"}, // 43
+
 	//
 	// <#nt-syntax-bad-prefix-01> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-prefix-01" ;
@@ -623,6 +639,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-prefix-01.nq> ;
 	//    .
+
+	{`@prefix : <http://example/> .`, ":1:1 syntax error"}, // 44
+
 	//
 	// <#nt-syntax-bad-base-01> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-base-01" ;
@@ -630,6 +649,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-base-01.nq> ;
 	//    .
+
+	{`@base <http://example/> .`, ":1:1 syntax error"}, // 45
+
 	//
 	// <#nt-syntax-bad-struct-01> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-struct-01" ;
@@ -637,6 +659,10 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-struct-01.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> <http://example/o>, <http://example/o2> .`,
+		":1:57 lexical grammar error"}, // 46
+
 	//
 	// <#nt-syntax-bad-struct-02> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-struct-02" ;
@@ -644,6 +670,10 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-struct-02.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> <http://example/o>; <http://example/p2>, <http://example/o2> .`,
+		":1:57 lexical grammar error"}, // 47
+
 	//
 	// <#nt-syntax-bad-lang-01> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-lang-01" ;
@@ -651,6 +681,10 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-lang-01.nq> ;
 	//    .
+
+	{`# Bad lang tag
+<http://example/s> <http://example/p> "string"@1 .`,
+		":2:48 lexical grammar error"}, // 48
 	//
 	// <#nt-syntax-bad-esc-01> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-esc-01" ;
@@ -658,6 +692,10 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-esc-01.nq> ;
 	//    .
+
+	{`# Bad string escape
+<http://example/s> <http://example/p> "a\zb" .`,
+		":2:42 lexical grammar error"}, // 49
 	//
 	// <#nt-syntax-bad-esc-02> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-esc-02" ;
@@ -665,6 +703,11 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-esc-02.nq> ;
 	//    .
+
+	{`# Bad string escape
+<http://example/s> <http://example/p> "\uWXYZ" .`,
+		":2:42 lexical grammar error"}, // 50
+
 	//
 	// <#nt-syntax-bad-esc-03> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-esc-03" ;

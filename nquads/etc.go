@@ -65,7 +65,8 @@ again:
 	case scanner.STRING:
 		return str
 	case scanner.ILLEGAL:
-		return int([]rune(val)[0])
+		l.error(l.NLine, l.NCol-1, "lexical grammar error")
+		panic(nil)
 	default:
 		panic("internal error")
 	}
@@ -186,6 +187,11 @@ func Parse(fname string, src []byte) (ast []*Statement, err error) {
 	defer func() {
 		if e := recover(); e != nil {
 			l.Error(fmt.Sprintf("%v", e))
+			ast, err = nil, errList(l.Errors)
+			return
+		}
+
+		if len(l.Errors) != 0 {
 			ast, err = nil, errList(l.Errors)
 		}
 	}()

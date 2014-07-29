@@ -30,7 +30,7 @@ import (
 	val       string
 }
 
-%token	daccent dot eol iriref label langtag str
+%token	daccent dot eol illegal iriref label langtag str
 
 %type	<val>	iriref label langtag str
 
@@ -100,6 +100,15 @@ Literal11:
 	daccent iriref
 	{
 		$$ = &Object{Pos: $<pos>2, Tag2: IRIRef, Value2: $2}
+		u, err := url.Parse($2)
+		if err != nil {
+			yylex.(*lexer).error($<pos>2.Line, $<pos>2.Col, err.Error())
+			break
+		}
+
+		if !u.IsAbs() {
+			yylex.(*lexer).error($<pos>2.Line, $<pos>2.Col, "bad IRI : relative IRI not allowed in datatype")
+		}
 	}
 |	langtag
 	{
@@ -110,6 +119,15 @@ Object:
 	iriref
 	{
 		$$ = &Object{Pos: $<pos>1, Tag: IRIRef, Value: $1}
+		u, err := url.Parse($1)
+		if err != nil {
+			yylex.(*lexer).error($<pos>1.Line, $<pos>1.Col, err.Error())
+			break
+		}
+
+		if !u.IsAbs() {
+			yylex.(*lexer).error($<pos>1.Line, $<pos>1.Col, "bad IRI : relative IRI not allowed in object")
+		}
 	}
 |	label
 	{
@@ -121,6 +139,15 @@ Predicate:
 	iriref
 	{
 		$$ = &Predicate{$<pos>1, $1}
+		u, err := url.Parse($1)
+		if err != nil {
+			yylex.(*lexer).error($<pos>1.Line, $<pos>1.Col, err.Error())
+			break
+		}
+
+		if !u.IsAbs() {
+			yylex.(*lexer).error($<pos>1.Line, $<pos>1.Col, "bad IRI : relative IRI not allowed in predicate")
+		}
 	}
 
 SourceFile:
@@ -141,8 +168,8 @@ Start:
 Statement:
 	Subject Predicate Object Statement1 dot
 	{
-		lx := yylex.(*lexer)
-		lx.ast = append(lx.ast, &Statement{$1.Pos, $1, $2, $3, $4})
+		x := yylex.(*lexer)
+		x.ast = append(x.ast, &Statement{$1.Pos, $1, $2, $3, $4})
 	}
 |	Subject Predicate Object Statement1 iriref
 	{
