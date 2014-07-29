@@ -715,6 +715,11 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-esc-03.nq> ;
 	//    .
+
+	{`# Bad string escape
+<http://example/s> <http://example/p> "\U0000WXYZ" .`,
+		":2:46 lexical grammar error"}, // 51
+
 	//
 	// <#nt-syntax-bad-string-01> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-string-01" ;
@@ -722,6 +727,10 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-string-01.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> "abc' .`,
+		":1:44 lexical grammar error"}, // 52
+
 	//
 	// <#nt-syntax-bad-string-02> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-string-02" ;
@@ -729,6 +738,10 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-string-02.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> 1.0 .`,
+		":1:39 lexical grammar error"}, // 53
+
 	//
 	// <#nt-syntax-bad-string-03> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-string-03" ;
@@ -736,6 +749,10 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-string-03.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> 1.0e1 .`,
+		":1:39 lexical grammar error"}, // 54
+
 	//
 	// <#nt-syntax-bad-string-04> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-string-04" ;
@@ -743,6 +760,10 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-string-04.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> '''abc''' .`,
+		":1:39 lexical grammar error"}, // 55
+
 	//
 	// <#nt-syntax-bad-string-05> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-string-05" ;
@@ -750,6 +771,10 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-string-05.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> """abc""" .`,
+		":1:40 lexical grammar error"}, // 56
+
 	//
 	// <#nt-syntax-bad-string-06> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-string-06" ;
@@ -757,6 +782,10 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-string-06.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> "abc .`,
+		":1:43 lexical grammar error"}, // 57
+
 	//
 	// <#nt-syntax-bad-string-07> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-string-07" ;
@@ -764,6 +793,10 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-string-07.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> abc" .`,
+		":1:39 lexical grammar error"}, // 58
+
 	//
 	// <#nt-syntax-bad-num-01> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-num-01" ;
@@ -771,6 +804,10 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-num-01.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> 1 .`,
+		":1:39 lexical grammar error"}, // 59
+
 	//
 	// <#nt-syntax-bad-num-02> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-num-02" ;
@@ -778,6 +815,10 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-num-02.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> 1.0 .`,
+		":1:39 lexical grammar error"}, // 60
+
 	//
 	// <#nt-syntax-bad-num-03> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-num-03" ;
