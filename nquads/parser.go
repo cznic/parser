@@ -16,6 +16,10 @@ package parser
 
 import __yyfmt__ "fmt"
 
+import (
+	"net/url"
+)
+
 type yySymType struct {
 	yys       int
 	glabel    *GraphLabel
@@ -55,54 +59,58 @@ var yyExca = []int{
 	-2, 0,
 }
 
-const yyNprod = 25
+const yyNprod = 28
 const yyPrivate = 57344
 
 var yyTokenNames []string
 var yyStates []string
 
-const yyLast = 28
+const yyLast = 31
 
 var yyAct = []int{
 
-	4, 14, 15, 25, 17, 21, 22, 28, 26, 6,
-	7, 10, 12, 18, 27, 11, 8, 3, 2, 1,
-	5, 9, 13, 24, 23, 16, 19, 20,
+	4, 21, 22, 31, 23, 14, 15, 30, 17, 26,
+	11, 10, 29, 18, 27, 6, 7, 12, 28, 8,
+	3, 2, 1, 5, 9, 13, 25, 24, 16, 19,
+	20,
 }
 var yyPact = []int{
 
-	2, -1000, -1000, -1000, -1000, 4, -1000, -1000, 6, -6,
-	-1000, -1000, 2, -2, -1000, -1000, -1000, -1, -1000, 9,
-	-1000, -1000, -1000, -1000, -1000, 0, -1000, -1000, -1000,
+	8, -1000, -1000, -1000, -1000, 4, -1000, -1000, 11, -2,
+	-1000, -1000, 8, -6, -1000, -1000, -1000, 5, -1000, 13,
+	-1000, -1000, -1000, 3, -1000, -1000, -4, -1000, -1000, -1000,
+	-1000, -1000,
 }
 var yyPgo = []int{
 
-	0, 27, 26, 25, 24, 23, 22, 21, 20, 19,
-	18, 17, 16, 15, 0,
+	0, 30, 29, 28, 27, 26, 25, 24, 23, 22,
+	21, 20, 19, 10, 0,
 }
 var yyR1 = []int{
 
-	0, 1, 1, 3, 4, 4, 5, 5, 6, 6,
-	6, 7, 10, 11, 11, 12, 12, 13, 13, 9,
-	14, 2, 2, 8, 8,
+	0, 1, 1, 1, 1, 1, 3, 4, 4, 5,
+	5, 6, 6, 6, 7, 10, 11, 11, 12, 12,
+	13, 13, 9, 14, 2, 2, 8, 8,
 }
 var yyR2 = []int{
 
-	0, 1, 1, 2, 0, 1, 2, 1, 1, 1,
-	1, 1, 3, 0, 1, 0, 3, 0, 1, 1,
-	5, 0, 1, 1, 1,
+	0, 1, 1, 1, 2, 2, 2, 0, 1, 2,
+	1, 1, 1, 1, 1, 3, 0, 1, 0, 3,
+	0, 1, 1, 5, 0, 1, 1, 1,
 }
 var yyChk = []int{
 
 	-1000, -9, -10, -11, -14, -8, 7, 8, -12, -7,
 	7, -13, 6, -6, 7, 8, -3, 10, -14, -2,
-	-1, 7, 8, -4, -5, 4, 9, 5, 7,
+	-1, 7, 8, 10, -4, -5, 4, 9, 5, 9,
+	4, 7,
 }
 var yyDef = []int{
 
-	13, -2, 19, 15, 14, 0, 23, 24, 17, 0,
-	11, 12, 18, 21, 8, 9, 10, 4, 16, 0,
-	22, 1, 2, 3, 5, 0, 7, 20, 6,
+	16, -2, 22, 18, 17, 0, 26, 27, 20, 0,
+	14, 15, 21, 24, 11, 12, 13, 7, 19, 0,
+	25, 1, 2, 3, 6, 8, 0, 10, 23, 4,
+	5, 9,
 }
 var yyTok1 = []int{
 
@@ -343,6 +351,15 @@ yydefault:
 
 		{
 			yyVAL.glabel = &GraphLabel{yyS[yypt-0].pos, IRIRef, yyS[yypt-0].val}
+			u, err := url.Parse(yyS[yypt-0].val)
+			if err != nil {
+				yylex.(*lexer).error(yyS[yypt-0].pos.Line, yyS[yypt-0].pos.Col, err.Error())
+				break
+			}
+
+			if !u.IsAbs() {
+				yylex.(*lexer).error(yyS[yypt-0].pos.Line, yyS[yypt-0].pos.Col, "graph name URI must be absolute")
+			}
 		}
 	case 2:
 
@@ -350,6 +367,24 @@ yydefault:
 			yyVAL.glabel = &GraphLabel{yyS[yypt-0].pos, BlankNodeLabel, yyS[yypt-0].val}
 		}
 	case 3:
+
+		{
+			yylex.(*lexer).error(yyS[yypt-0].pos.Line, yyS[yypt-0].pos.Col, "graph name may not be a simple literal")
+			return 1
+		}
+	case 4:
+
+		{
+			yylex.(*lexer).error(yyS[yypt-1].pos.Line, yyS[yypt-1].pos.Col, "graph name may not be a language tagged literal")
+			return 1
+		}
+	case 5:
+
+		{
+			yylex.(*lexer).error(yyS[yypt-1].pos.Line, yyS[yypt-1].pos.Col, "graph name may not be a datatyped literal")
+			return 1
+		}
+	case 6:
 
 		{
 			switch {
@@ -361,59 +396,59 @@ yydefault:
 				yyVAL.object = x
 			}
 		}
-	case 4:
+	case 7:
 
 		{
 			yyVAL.object = nil
 		}
-	case 5:
+	case 8:
 		yyVAL.object = yyS[yypt-0].object
-	case 6:
+	case 9:
 
 		{
 			yyVAL.object = &Object{Pos: yyS[yypt-0].pos, Tag2: IRIRef, Value2: yyS[yypt-0].val}
 		}
-	case 7:
+	case 10:
 
 		{
 			yyVAL.object = &Object{Pos: yyS[yypt-0].pos, Tag2: LangTag, Value2: yyS[yypt-0].val}
 		}
-	case 8:
+	case 11:
 
 		{
 			yyVAL.object = &Object{Pos: yyS[yypt-0].pos, Tag: IRIRef, Value: yyS[yypt-0].val}
 		}
-	case 9:
+	case 12:
 
 		{
 			yyVAL.object = &Object{Pos: yyS[yypt-0].pos, Tag: BlankNodeLabel, Value: yyS[yypt-0].val}
 		}
-	case 10:
+	case 13:
 		yyVAL.object = yyS[yypt-0].object
-	case 11:
+	case 14:
 
 		{
 			yyVAL.predicate = &Predicate{yyS[yypt-0].pos, yyS[yypt-0].val}
 		}
-	case 20:
+	case 23:
 
 		{
 			lx := yylex.(*lexer)
 			lx.ast = append(lx.ast, &Statement{yyS[yypt-4].subject.Pos, yyS[yypt-4].subject, yyS[yypt-3].predicate, yyS[yypt-2].object, yyS[yypt-1].glabel})
 		}
-	case 21:
+	case 24:
 
 		{
 			yyVAL.glabel = nil
 		}
-	case 22:
+	case 25:
 		yyVAL.glabel = yyS[yypt-0].glabel
-	case 23:
+	case 26:
 
 		{
 			yyVAL.subject = &Subject{yyS[yypt-0].pos, IRIRef, yyS[yypt-0].val}
 		}
-	case 24:
+	case 27:
 
 		{
 			yyVAL.subject = &Subject{yyS[yypt-0].pos, BlankNodeLabel, yyS[yypt-0].val}

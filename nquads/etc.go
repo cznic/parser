@@ -33,6 +33,10 @@ type lexer struct {
 	prev scanner.Token
 }
 
+func (l *lexer) error(line, col int, msg string) {
+	l.Error(fmt.Sprintf("%s:%d:%d %s", l.Fname, line, col, msg))
+}
+
 func (l *lexer) Lex(lval *yySymType) int {
 again:
 	tok, val := l.Scan()
@@ -183,7 +187,7 @@ func Parse(fname string, src []byte) (ast []*Statement, err error) {
 			ast, err = nil, errList(l.Errors)
 		}
 	}()
-	if yyParse(&l) != 0 {
+	if yyParse(&l) != 0 || len(l.Errors) != 0 {
 		return nil, errList(l.Errors)
 	}
 

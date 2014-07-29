@@ -15,6 +15,10 @@
 
 package parser
 
+import (
+	"net/url"
+)
+
 %}
 
 %union {
@@ -43,10 +47,34 @@ GraphLabel:
 	iriref
 	{
 		$$ = &GraphLabel{$<pos>1, IRIRef, $1}
+		u, err := url.Parse($1)
+		if err != nil {
+			yylex.(*lexer).error($<pos>1.Line, $<pos>1.Col, err.Error())
+			break
+		}
+
+		if !u.IsAbs() {
+			yylex.(*lexer).error($<pos>1.Line, $<pos>1.Col, "graph name URI must be absolute")
+		}
 	}
 |	label
 	{
 		$$ = &GraphLabel{$<pos>1, BlankNodeLabel, $1}
+	}
+|	str
+	{
+		yylex.(*lexer).error($<pos>1.Line, $<pos>1.Col, "graph name may not be a simple literal")
+		return 1
+	}
+|	str langtag
+	{
+		yylex.(*lexer).error($<pos>1.Line, $<pos>1.Col, "graph name may not be a language tagged literal")
+		return 1
+	}
+|	str daccent
+	{
+		yylex.(*lexer).error($<pos>1.Line, $<pos>1.Col, "graph name may not be a datatyped literal")
+		return 1
 	}
 
 Literal:
