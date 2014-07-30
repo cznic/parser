@@ -61,58 +61,60 @@ var yyExca = []int{
 	-2, 0,
 }
 
-const yyNprod = 29
+const yyNprod = 31
 const yyPrivate = 57344
 
 var yyTokenNames []string
 var yyStates []string
 
-const yyLast = 32
+const yyLast = 35
 
 var yyAct = []int{
 
-	21, 22, 4, 23, 14, 15, 31, 17, 26, 6,
-	7, 32, 30, 28, 27, 18, 29, 10, 12, 11,
-	8, 3, 2, 1, 5, 9, 13, 25, 24, 16,
-	19, 20,
+	28, 4, 35, 30, 31, 19, 32, 10, 21, 22,
+	34, 23, 14, 15, 18, 17, 33, 26, 6, 7,
+	12, 29, 11, 27, 8, 3, 2, 1, 5, 9,
+	13, 25, 24, 16, 20,
 }
 var yyPact = []int{
 
-	1, -1000, -1000, -1000, -1000, 9, -1000, -1000, 12, -4,
-	-1000, -1000, 1, -8, -1000, -1000, -1000, 4, -1000, 8,
-	-1000, -1000, -1000, 2, -1000, -1000, 3, -1000, -1000, -1000,
-	-1000, -1000, -1000,
+	10, -1000, -1000, -1000, -1000, -1, -1000, -1000, 14, 4,
+	-1000, -1000, 10, 0, -1000, -1000, -1000, 13, -1000, -1000,
+	-5, -1000, -1000, 6, -1000, -1000, -6, -1000, -1000, -1000,
+	-1000, -1000, -1000, -1000, -1000, -1000,
 }
 var yyPgo = []int{
 
-	0, 31, 30, 29, 28, 27, 26, 25, 24, 23,
-	22, 21, 20, 19, 2,
+	0, 34, 33, 32, 31, 30, 29, 28, 27, 26,
+	25, 24, 22, 1, 21,
 }
 var yyR1 = []int{
 
-	0, 1, 1, 1, 1, 1, 3, 4, 4, 5,
-	5, 6, 6, 6, 7, 10, 11, 11, 12, 12,
-	13, 13, 9, 14, 14, 2, 2, 8, 8,
+	0, 1, 1, 1, 1, 1, 2, 3, 3, 4,
+	4, 5, 5, 5, 6, 9, 10, 10, 11, 11,
+	12, 12, 8, 13, 13, 13, 14, 14, 14, 7,
+	7,
 }
 var yyR2 = []int{
 
 	0, 1, 1, 1, 2, 2, 2, 0, 1, 2,
 	1, 1, 1, 1, 1, 3, 0, 1, 0, 3,
-	0, 1, 1, 5, 5, 0, 1, 1, 1,
+	0, 1, 1, 4, 5, 5, 1, 1, 1, 1,
+	1,
 }
 var yyChk = []int{
 
-	-1000, -9, -10, -11, -14, -8, 8, 9, -12, -7,
-	8, -13, 6, -6, 8, 9, -3, 11, -14, -2,
-	-1, 8, 9, 11, -4, -5, 4, 10, 5, 8,
-	10, 4, 8,
+	-1000, -8, -9, -10, -13, -7, 8, 9, -11, -6,
+	8, -12, 6, -5, 8, 9, -2, 11, -13, 5,
+	-1, 8, 9, 11, -3, -4, 4, 10, 5, -14,
+	8, 9, 11, 10, 4, 8,
 }
 var yyDef = []int{
 
-	16, -2, 22, 18, 17, 0, 27, 28, 20, 0,
-	14, 15, 21, 25, 11, 12, 13, 7, 19, 0,
-	26, 1, 2, 3, 6, 8, 0, 10, 23, 24,
-	4, 5, 9,
+	16, -2, 22, 18, 17, 0, 29, 30, 20, 0,
+	14, 15, 21, 0, 11, 12, 13, 7, 19, 23,
+	0, 1, 2, 3, 6, 8, 0, 10, 24, 25,
+	26, 27, 28, 4, 5, 9,
 }
 var yyTok1 = []int{
 
@@ -462,23 +464,22 @@ yydefault:
 	case 23:
 
 		{
-			x := yylex.(*lexer)
-			x.ast = append(x.ast, &Statement{yyS[yypt-4].subject.Pos, yyS[yypt-4].subject, yyS[yypt-3].predicate, yyS[yypt-2].object, yyS[yypt-1].glabel})
+			lx := yylex.(*lexer)
+			lx.ast = append(lx.ast, &Statement{yyS[yypt-3].subject.Pos, yyS[yypt-3].subject, yyS[yypt-2].predicate, yyS[yypt-1].object, nil})
 		}
 	case 24:
+
+		{
+			lx := yylex.(*lexer)
+			lx.ast = append(lx.ast, &Statement{yyS[yypt-4].subject.Pos, yyS[yypt-4].subject, yyS[yypt-3].predicate, yyS[yypt-2].object, yyS[yypt-1].glabel})
+		}
+	case 25:
 
 		{
 			yylex.(*lexer).error(yyS[yypt-0].pos.Line, yyS[yypt-0].pos.Col, "n-quads does not have a fifth element")
 			return 1
 		}
-	case 25:
-
-		{
-			yyVAL.glabel = nil
-		}
-	case 26:
-		yyVAL.glabel = yyS[yypt-0].glabel
-	case 27:
+	case 29:
 
 		{
 			yyVAL.subject = &Subject{yyS[yypt-0].pos, IRIRef, yyS[yypt-0].val}
@@ -492,7 +493,7 @@ yydefault:
 				yylex.(*lexer).error(yyS[yypt-0].pos.Line, yyS[yypt-0].pos.Col, "bad IRI : relative IRI not allowed in subject")
 			}
 		}
-	case 28:
+	case 30:
 
 		{
 			yyVAL.subject = &Subject{yyS[yypt-0].pos, BlankNodeLabel, yyS[yypt-0].val}

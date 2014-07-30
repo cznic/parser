@@ -5,6 +5,7 @@
 package parser
 
 import (
+	"encoding/hex"
 	"fmt"
 	"path"
 	"runtime"
@@ -39,14 +40,22 @@ func TODO(...interface{}) string {
 
 func use(...interface{}) {}
 
+func hd(b []byte) string { return hex.Dump(b) }
+
 // ============================================================================
 
 // Tests from http://www.w3.org/2013/N-QuadsTests/
-func Test(t *testing.T) {
+func TestSuite(t *testing.T) {
 	for i, test := range testSuite {
-		_, err := Parse("", []byte(test.src))
+		b := []byte(test.src)
+		//dbg("==== %d\n%s", i, hd(b))
+		_, err := Parse("", b)
 		if g, e := err != nil, test.emsg != ""; g != e {
-			t.Errorf("%d: err != nil: %v, test.emsg != ``: %v", i, g, e)
+			s1 := ""
+			if err != nil {
+				s1 = err.Error()
+			}
+			t.Errorf("%d: err != nil: %v, test.emsg != ``: %v; %q %q", i, g, e, s1, test.emsg)
 			continue
 		}
 
@@ -534,7 +543,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 
 	{`# Bad IRI : space.
 <http://example/ space> <http://example/p> <http://example/o> .`,
-		":2:17 lexical grammar error"}, // 35
+		":2:17 syntax error"}, // 35
 
 	//
 	// <#nt-syntax-bad-uri-02> a rdft:TestNQuadsNegativeSyntax ;
@@ -546,7 +555,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 
 	{`# Bad IRI : bad escape
 <http://example/\u00ZZ11> <http://example/p> <http://example/o> .`,
-		":2:21 lexical grammar error"}, // 36
+		":2:21 syntax error"}, // 36
 
 	//
 	// <#nt-syntax-bad-uri-03> a rdft:TestNQuadsNegativeSyntax ;
@@ -558,7 +567,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 
 	{`# Bad IRI : bad escape
 <http://example/\U00ZZ1111> <http://example/p> <http://example/o> .`,
-		":2:21 lexical grammar error"}, // 37
+		":2:21 syntax error"}, // 37
 
 	//
 	// <#nt-syntax-bad-uri-04> a rdft:TestNQuadsNegativeSyntax ;
@@ -570,7 +579,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 
 	{`# Bad IRI : character escapes not allowed.
 <http://example/\n> <http://example/p> <http://example/o> .`,
-		":2:18 lexical grammar error"}, // 38
+		":2:18 syntax error"}, // 38
 
 	//
 	// <#nt-syntax-bad-uri-05> a rdft:TestNQuadsNegativeSyntax ;
@@ -582,7 +591,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 
 	{`# Bad IRI : character escapes not allowed.
 <http://example/\/> <http://example/p> <http://example/o> .`,
-		":2:18 lexical grammar error"}, // 39
+		":2:18 syntax error"}, // 39
 
 	//
 	// <#nt-syntax-bad-uri-06> a rdft:TestNQuadsNegativeSyntax ;
@@ -661,7 +670,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    .
 
 	{`<http://example/s> <http://example/p> <http://example/o>, <http://example/o2> .`,
-		":1:57 lexical grammar error"}, // 46
+		":1:57 syntax error"}, // 46
 
 	//
 	// <#nt-syntax-bad-struct-02> a rdft:TestNQuadsNegativeSyntax ;
@@ -672,7 +681,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    .
 
 	{`<http://example/s> <http://example/p> <http://example/o>; <http://example/p2>, <http://example/o2> .`,
-		":1:57 lexical grammar error"}, // 47
+		":1:57 syntax error"}, // 47
 
 	//
 	// <#nt-syntax-bad-lang-01> a rdft:TestNQuadsNegativeSyntax ;
@@ -684,7 +693,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 
 	{`# Bad lang tag
 <http://example/s> <http://example/p> "string"@1 .`,
-		":2:48 lexical grammar error"}, // 48
+		":2:48 syntax error"}, // 48
 	//
 	// <#nt-syntax-bad-esc-01> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-esc-01" ;
@@ -695,7 +704,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 
 	{`# Bad string escape
 <http://example/s> <http://example/p> "a\zb" .`,
-		":2:42 lexical grammar error"}, // 49
+		":2:42 syntax error"}, // 49
 	//
 	// <#nt-syntax-bad-esc-02> a rdft:TestNQuadsNegativeSyntax ;
 	//    mf:name    "nt-syntax-bad-esc-02" ;
@@ -706,7 +715,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 
 	{`# Bad string escape
 <http://example/s> <http://example/p> "\uWXYZ" .`,
-		":2:42 lexical grammar error"}, // 50
+		":2:42 syntax error"}, // 50
 
 	//
 	// <#nt-syntax-bad-esc-03> a rdft:TestNQuadsNegativeSyntax ;
@@ -718,7 +727,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 
 	{`# Bad string escape
 <http://example/s> <http://example/p> "\U0000WXYZ" .`,
-		":2:46 lexical grammar error"}, // 51
+		":2:46 syntax error"}, // 51
 
 	//
 	// <#nt-syntax-bad-string-01> a rdft:TestNQuadsNegativeSyntax ;
@@ -729,7 +738,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    .
 
 	{`<http://example/s> <http://example/p> "abc' .`,
-		":1:44 lexical grammar error"}, // 52
+		":1:44 syntax error"}, // 52
 
 	//
 	// <#nt-syntax-bad-string-02> a rdft:TestNQuadsNegativeSyntax ;
@@ -740,7 +749,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    .
 
 	{`<http://example/s> <http://example/p> 1.0 .`,
-		":1:39 lexical grammar error"}, // 53
+		":1:39 syntax error"}, // 53
 
 	//
 	// <#nt-syntax-bad-string-03> a rdft:TestNQuadsNegativeSyntax ;
@@ -751,7 +760,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    .
 
 	{`<http://example/s> <http://example/p> 1.0e1 .`,
-		":1:39 lexical grammar error"}, // 54
+		":1:39 syntax error"}, // 54
 
 	//
 	// <#nt-syntax-bad-string-04> a rdft:TestNQuadsNegativeSyntax ;
@@ -762,7 +771,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    .
 
 	{`<http://example/s> <http://example/p> '''abc''' .`,
-		":1:39 lexical grammar error"}, // 55
+		":1:39 syntax error"}, // 55
 
 	//
 	// <#nt-syntax-bad-string-05> a rdft:TestNQuadsNegativeSyntax ;
@@ -773,7 +782,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    .
 
 	{`<http://example/s> <http://example/p> """abc""" .`,
-		":1:40 lexical grammar error"}, // 56
+		":1:41 graph name may not be a simple literal"}, // 56
 
 	//
 	// <#nt-syntax-bad-string-06> a rdft:TestNQuadsNegativeSyntax ;
@@ -784,7 +793,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    .
 
 	{`<http://example/s> <http://example/p> "abc .`,
-		":1:43 lexical grammar error"}, // 57
+		":1:43 syntax error"}, // 57
 
 	//
 	// <#nt-syntax-bad-string-07> a rdft:TestNQuadsNegativeSyntax ;
@@ -795,7 +804,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    .
 
 	{`<http://example/s> <http://example/p> abc" .`,
-		":1:39 lexical grammar error"}, // 58
+		":1:39 syntax error"}, // 58
 
 	//
 	// <#nt-syntax-bad-num-01> a rdft:TestNQuadsNegativeSyntax ;
@@ -806,7 +815,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    .
 
 	{`<http://example/s> <http://example/p> 1 .`,
-		":1:39 lexical grammar error"}, // 59
+		":1:39 syntax error"}, // 59
 
 	//
 	// <#nt-syntax-bad-num-02> a rdft:TestNQuadsNegativeSyntax ;
@@ -817,7 +826,7 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    .
 
 	{`<http://example/s> <http://example/p> 1.0 .`,
-		":1:39 lexical grammar error"}, // 60
+		":1:39 syntax error"}, // 60
 
 	//
 	// <#nt-syntax-bad-num-03> a rdft:TestNQuadsNegativeSyntax ;
@@ -826,6 +835,10 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-bad-num-03.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> 1.0e0 .`,
+		":1:39 syntax error"}, // 61
+
 	//
 	// <#nt-syntax-subm-01> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "nt-syntax-subm-01" ;
@@ -833,6 +846,87 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <nt-syntax-subm-01.nq> ;
 	//    .
+
+	{`#
+# Copyright World Wide Web Consortium, (Massachusetts Institute of
+# Technology, Institut National de Recherche en Informatique et en
+# Automatique, Keio University).
+#
+# All Rights Reserved.
+#
+# Please see the full Copyright clause at
+# <http://www.w3.org/Consortium/Legal/copyright-software.html>
+#
+# Test file with a variety of legal N-Triples
+#
+# Dave Beckett - http://purl.org/net/dajobe/
+#
+# $Id: test.nt,v 1.7 2003/10/06 15:52:19 dbeckett2 Exp $
+#
+#####################################################################
+
+# comment lines
+  	  	   # comment line after whitespace
+# empty blank line, then one with spaces and tabs
+
+
+<http://example.org/resource1> <http://example.org/property> <http://example.org/resource2> .
+_:anon <http://example.org/property> <http://example.org/resource2> .
+<http://example.org/resource2> <http://example.org/property> _:anon .
+# spaces and tabs throughout:
+ 	 <http://example.org/resource3> 	 <http://example.org/property>	 <http://example.org/resource2> 	.
+
+# line ending with CR NL (ASCII 13, ASCII 10)
+<http://example.org/resource4> <http://example.org/property> <http://example.org/resource2> .
+
+# 2 statement lines separated by single CR (ASCII 10)
+<http://example.org/resource5> <http://example.org/property> <http://example.org/resource2> .
+<http://example.org/resource6> <http://example.org/property> <http://example.org/resource2> .
+
+
+# All literal escapes
+<http://example.org/resource7> <http://example.org/property> "simple literal" .
+<http://example.org/resource8> <http://example.org/property> "backslash:\\" .
+<http://example.org/resource9> <http://example.org/property> "dquote:\"" .
+<http://example.org/resource10> <http://example.org/property> "newline:\n" .
+<http://example.org/resource11> <http://example.org/property> "return\r" .
+<http://example.org/resource12> <http://example.org/property> "tab:\t" .
+
+# Space is optional before final .
+<http://example.org/resource13> <http://example.org/property> <http://example.org/resource2>.
+<http://example.org/resource14> <http://example.org/property> "x".
+<http://example.org/resource15> <http://example.org/property> _:anon.
+
+# \u and \U escapes
+# latin small letter e with acute symbol \u00E9 - 3 UTF-8 bytes #xC3 #A9
+<http://example.org/resource16> <http://example.org/property> "\u00E9" .
+# Euro symbol \u20ac  - 3 UTF-8 bytes #xE2 #x82 #xAC
+<http://example.org/resource17> <http://example.org/property> "\u20AC" .
+# resource18 test removed
+# resource19 test removed
+# resource20 test removed
+
+# XML Literals as Datatyped Literals
+<http://example.org/resource21> <http://example.org/property> ""^^<http://www.w3.org/2000/01/rdf-schema#XMLLiteral> .
+<http://example.org/resource22> <http://example.org/property> " "^^<http://www.w3.org/2000/01/rdf-schema#XMLLiteral> .
+<http://example.org/resource23> <http://example.org/property> "x"^^<http://www.w3.org/2000/01/rdf-schema#XMLLiteral> .
+<http://example.org/resource23> <http://example.org/property> "\""^^<http://www.w3.org/2000/01/rdf-schema#XMLLiteral> .
+<http://example.org/resource24> <http://example.org/property> "<a></a>"^^<http://www.w3.org/2000/01/rdf-schema#XMLLiteral> .
+<http://example.org/resource25> <http://example.org/property> "a <b></b>"^^<http://www.w3.org/2000/01/rdf-schema#XMLLiteral> .
+<http://example.org/resource26> <http://example.org/property> "a <b></b> c"^^<http://www.w3.org/2000/01/rdf-schema#XMLLiteral> .
+<http://example.org/resource26> <http://example.org/property> "a\n<b></b>\nc"^^<http://www.w3.org/2000/01/rdf-schema#XMLLiteral> .
+<http://example.org/resource27> <http://example.org/property> "chat"^^<http://www.w3.org/2000/01/rdf-schema#XMLLiteral> .
+# resource28 test removed 2003-08-03
+# resource29 test removed 2003-08-03
+
+# Plain literals with languages
+<http://example.org/resource30> <http://example.org/property> "chat"@fr .
+<http://example.org/resource31> <http://example.org/property> "chat"@en .
+
+# Typed Literals
+<http://example.org/resource32> <http://example.org/property> "abc"^^<http://example.org/datatype1> .
+# resource33 test removed 2003-08-03`, ""}, // 62
+
 	//
 	// <#comment_following_triple> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "comment_following_triple" ;
@@ -840,6 +934,13 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <comment_following_triple.nq> ;
 	//    .
+
+	{`<http://example/s> <http://example/p> <http://example/o> . # comment
+<http://example/s> <http://example/p> _:o . # comment
+<http://example/s> <http://example/p> "o" . # comment
+<http://example/s> <http://example/p> "o"^^<http://example/dt> . # comment
+<http://example/s> <http://example/p> "o"@en . # comment`, ""}, // 63
+
 	//
 	// <#literal_ascii_boundaries> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal_ascii_boundaries" ;
@@ -847,6 +948,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal_ascii_boundaries.nq> ;
 	//    .
+
+	{"<http://a.example/s> <http://a.example/p> \"\x00	&([]\" .\n", ""}, // 64
+
 	//
 	// <#literal_with_UTF8_boundaries> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal_with_UTF8_boundaries" ;
@@ -854,6 +958,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal_with_UTF8_boundaries.nq> ;
 	//    .
+
+	{`<http://a.example/s> <http://a.example/p> "߿ࠀ࿿က쿿퀀퟿�𐀀𿿽񀀀󿿽􀀀􏿽" .`, ""}, // 65
+
 	//
 	// <#literal_all_controls> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal_all_controls" ;
@@ -862,6 +969,8 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action   <literal_all_controls.nq> ;
 	//    .
+
+	{`<http://a.example/s> <http://a.example/p> "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\t\u000B\u000C\u000E\u000F\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001A\u001B\u001C\u001D\u001E\u001F" .`, ""}, // 66
 	//
 	// <#literal_all_punctuation> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal_all_punctuation" ;
@@ -870,6 +979,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal_all_punctuation.nq> ;
 	//    .
+
+	{"<http://a.example/s> <http://a.example/p> \" !\\\"#$%&():;<=>?@[]^_`{|}~\" .", ""}, // 67
+
 	//
 	// <#literal_with_squote> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal_with_squote" ;
@@ -877,6 +989,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal_with_squote.nq> ;
 	//    .
+
+	{`<http://a.example/s> <http://a.example/p> "x'y" .`, ""}, // 68
+
 	//
 	// <#literal_with_2_squotes> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal_with_2_squotes" ;
@@ -884,6 +999,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal_with_2_squotes.nq> ;
 	//    .
+
+	{`<http://a.example/s> <http://a.example/p> "x''y" .`, ""}, // 69
+
 	//
 	// <#literal> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal" ;
@@ -891,6 +1009,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal.nq> ;
 	//    .
+
+	{`<http://a.example/s> <http://a.example/p> "x" .`, ""}, // 70
+
 	//
 	// <#literal_with_dquote> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal_with_dquote" ;
@@ -898,6 +1019,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal_with_dquote.nq> ;
 	//    .
+
+	{`<http://a.example/s> <http://a.example/p> "x\"y" .`, ""}, // 71
+
 	//
 	// <#literal_with_2_dquotes> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal_with_2_dquotes" ;
@@ -905,6 +1029,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal_with_2_dquotes.nq> ;
 	//    .
+
+	{`<http://a.example/s> <http://a.example/p> "x\"\"y" .`, ""}, // 72
+
 	//
 	// <#literal_with_REVERSE_SOLIDUS2> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name    "literal_with_REVERSE_SOLIDUS2" ;
@@ -912,6 +1039,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal_with_REVERSE_SOLIDUS2.nq> ;
 	//    .
+
+	{`<http://example.org/ns#s> <http://example.org/ns#p1> "test-\\" .`, ""}, // 73
+
 	//
 	// <#literal_with_CHARACTER_TABULATION> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal_with_CHARACTER_TABULATION" ;
@@ -919,6 +1049,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal_with_CHARACTER_TABULATION.nq> ;
 	//    .
+
+	{`<http://a.example/s> <http://a.example/p> "\t" .`, ""}, // 74
+
 	//
 	// <#literal_with_BACKSPACE> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal_with_BACKSPACE" ;
@@ -926,6 +1059,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal_with_BACKSPACE.nq> ;
 	//    .
+
+	{`<http://a.example/s> <http://a.example/p> "\b" .`, ""}, // 75
+
 	//
 	// <#literal_with_LINE_FEED> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal_with_LINE_FEED" ;
@@ -933,6 +1069,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal_with_LINE_FEED.nq> ;
 	//    .
+
+	{`<http://a.example/s> <http://a.example/p> "\n" .`, ""}, // 76
+
 	//
 	// <#literal_with_CARRIAGE_RETURN> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal_with_CARRIAGE_RETURN" ;
@@ -940,6 +1079,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal_with_CARRIAGE_RETURN.nq> ;
 	//    .
+
+	{`<http://a.example/s> <http://a.example/p> "\r" .`, ""}, // 77
+
 	//
 	// <#literal_with_FORM_FEED> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal_with_FORM_FEED" ;
@@ -947,6 +1089,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal_with_FORM_FEED.nq> ;
 	//    .
+
+	{`<http://a.example/s> <http://a.example/p> "\f" .`, ""}, // 78
+
 	//
 	// <#literal_with_REVERSE_SOLIDUS> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal_with_REVERSE_SOLIDUS" ;
@@ -954,6 +1099,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal_with_REVERSE_SOLIDUS.nq> ;
 	//    .
+
+	{`<http://a.example/s> <http://a.example/p> "\\" .`, ""}, // 79
+
 	//
 	// <#literal_with_numeric_escape4> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal_with_numeric_escape4" ;
@@ -961,6 +1109,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal_with_numeric_escape4.nq> ;
 	//    .
+
+	{`<http://a.example/s> <http://a.example/p> "\u006F" .`, ""}, // 80
+
 	//
 	// <#literal_with_numeric_escape8> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "literal_with_numeric_escape8" ;
@@ -968,6 +1119,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <literal_with_numeric_escape8.nq> ;
 	//    .
+
+	{`<http://a.example/s> <http://a.example/p> "\U0000006F" .`, ""}, // 81
+
 	//
 	// <#langtagged_string> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "langtagged_string" ;
@@ -975,6 +1129,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <langtagged_string.nq> ;
 	//    .
+
+	{`<http://a.example/s> <http://a.example/p> "chat"@en .`, ""}, // 82
+
 	//
 	// <#lantag_with_subtag> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "lantag_with_subtag" ;
@@ -982,6 +1139,9 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <lantag_with_subtag.nq> ;
 	//    .
+
+	{`<http://example.org/ex#a> <http://example.org/ex#b> "Cheers"@en-UK .`, ""}, // 83
+
 	//
 	// <#minimal_whitespace> a rdft:TestNQuadsPositiveSyntax ;
 	//    mf:name      "minimal_whitespace" ;
@@ -989,4 +1149,11 @@ _:1a  <http://example/p> <http://example/o> .`, ""}, // 32
 	//    rdft:approval rdft:Approved ;
 	//    mf:action    <minimal_whitespace.nq> ;
 	//    .
+
+	{`<http://example/s><http://example/p><http://example/o>.
+<http://example/s><http://example/p>"Alice".
+<http://example/s><http://example/p>_:o.
+_:s<http://example/p><http://example/o>.
+_:s<http://example/p>"Alice".
+_:s<http://example/p>_:bnode1.`, ""}, // 84
 }

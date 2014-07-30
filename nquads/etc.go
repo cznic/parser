@@ -45,7 +45,11 @@ again:
 	}
 	l.prev = tok
 
-	lval.pos, lval.val = Pos{l.Line, l.Col}, val
+	col := l.Col
+	if col < 1 {
+		col = 1
+	}
+	lval.pos, lval.val = Pos{l.Line, col}, val
 	//dbg("%s:%d:%d %v %q", l.Fname, l.Line, l.Col, tok, val)
 	switch tok {
 	case scanner.EOF:
@@ -65,7 +69,11 @@ again:
 	case scanner.STRING:
 		return str
 	case scanner.ILLEGAL:
-		l.error(l.NLine, l.NCol-1, "lexical grammar error")
+		c := l.NCol
+		if c > 1 {
+			c--
+		}
+		l.error(l.NLine, c, "syntax error")
 		panic(nil)
 	default:
 		panic("internal error")
