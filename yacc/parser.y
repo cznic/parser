@@ -6,7 +6,7 @@ Copyright © 2001-2004 The IEEE and The Open Group, All Rights reserved.
 
 Original source text: http://pubs.opengroup.org/onlinepubs/009695399/utilities/yacc.html
 
-Modifications: Copyright 2013 The Go Authors. All rights reserved.
+Modifications: Copyright 2014 The Go Authors. All rights reserved.
 Use of this source code is governed by a BSD-style
 license that can be found in the LICENSE file.
 
@@ -30,16 +30,15 @@ import (
 
 %union {
 	act    []*Act
-	col    int
 	def    *Def
 	defs   []*Def
 	item   interface{}
-	line   int
 	list   []interface{}
 	nlist  []*Nmno
 	nmno   *Nmno
 	num    int
 	number int
+	pos    Pos
 	prec   *Prec
 	rule   *Rule
 	rules  []*Rule
@@ -90,7 +89,7 @@ import (
 spec:
 	defs _MARK rules tail
 	{
-		lx(yylex).spec = &Spec{Defs: $1, Rules: $3, Tail: $4}
+		lx(yylex).ast = &AST{Defs: $1, Rules: $3, Tail: $4}
 	}
 
 tail:
@@ -122,9 +121,9 @@ def:
 		s, ok := $2.(string)
 		if !ok {
 			lx := lx(yylex)
-			lx.Error(fmt.Sprintf("%s:%d:%d expected name", lx.fname, $<line>2, $<col>2))
+			lx.Error(fmt.Sprintf("%s:%d:%d expected name", lx.FName, $<pos>2.Line, $<pos>2.Col))
 		}
-		$$ = &Def{Rword: Start, Tag: s}
+		$$ = &Def{Pos: $<pos>1, Rword: Start, Tag: s}
 	}
 |	_UNION
 	{
@@ -148,7 +147,7 @@ def:
 			}
 		}
 		s := string(lx.src[off0:lx.Pos()])
-		$$ = &Def{Rword: Union, Tag: s}
+		$$ = &Def{Pos: $<pos>1, Rword: Union, Tag: s}
 	}
 |	_LCURL
 	{
@@ -164,7 +163,7 @@ def:
 				lx.Mode(true)
 				s := string(lx.src[off0+1:lpos-1])
 				//dbg("----\n%q\n----\n", s)
-				$$ = &Def{Rword: Copy, Tag: s}
+				$$ = &Def{Pos: $<pos>1, Rword: Copy, Tag: s}
 				break lcurl_loop
 			}
 
@@ -173,7 +172,7 @@ def:
 	}
 |	_ERR_VERBOSE
 	{
-		$$ = &Def{Rword: ErrVerbose}
+		$$ = &Def{Pos: $<pos>1, Rword: ErrVerbose}
 	}
 |	rword tag nlist
 	{
@@ -181,39 +180,44 @@ def:
 			for _, v := range $3 {
 				switch v.Identifier.(type) {
 				case int:
-					yylex.Error("literal invalid with %% type.")
+					yylex.Error("literal invalid with %type.") // % is ok
 					goto ret1
 				}
 
 				if v.Number > 0 {
-					yylex.Error("number invalid with %% type.")
+					yylex.Error("number invalid with %type.") // % is ok
 					goto ret1
 				}
 			}
 		}
 
-		$$ = &Def{Rword: $1, Tag: $2, Nlist: $3}
+		$$ = &Def{Pos: $<pos>1, Rword: $1, Tag: $2, Nlist: $3}
 	}
 
 rword:
 	_TOKEN
 	{
+		$<pos>$ = $<pos>1
 		$$ = Token
 	}
 |	_LEFT
 	{
+		$<pos>$ = $<pos>1
 		$$ = Left
 	}
 |	_RIGHT
 	{
+		$<pos>$ = $<pos>1
 		$$ = Right
 	}
 |	_NONASSOC
 	{
+		$<pos>$ = $<pos>1
 		$$ = Nonassoc
 	}
 |	_TYPE
 	{
+		$<pos>$ = $<pos>1
 		$$ = Type
 	}
 
@@ -227,8 +231,9 @@ tag:
 		lx := lx(yylex)
 		s, ok := $2.(string)
 		if ! ok {
-			lx.Error(fmt.Sprintf("%s:%d:%d expected name", lx.fname, $<line>2, $<col>2))
+			lx.Error(fmt.Sprintf("%s:%d:%d expected name", lx.FName, $<pos>2.Line, $<pos>2.Col))
 		}
+		$<pos>$ = $<pos>2
 		$$ = s
 	}
 
@@ -245,11 +250,11 @@ nlist:
 nmno:
 	_IDENTIFIER
 	{
-		$$ = &Nmno{$1, -1}
+		$$ = &Nmno{$<pos>1, $1, -1}
 	}
 |	_IDENTIFIER _NUMBER
 	{
-		$$ = &Nmno{$1, $2}
+		$$ = &Nmno{$<pos>1, $1, $2}
 	}
 
 /* Rule section */
@@ -258,7 +263,7 @@ rules:
 	_C_IDENTIFIER rbody prec
 	{
 		lx(yylex).rname = $1
-		$$ = []*Rule{&Rule{Name: $1, Body: $2, Prec: $3}}
+		$$ = []*Rule{&Rule{Pos: $<pos>1, Name: $1, Body: $2, Prec: $3}}
 	}
 |	rules rule
 	{
@@ -269,11 +274,11 @@ rule:
 	_C_IDENTIFIER rbody prec
 	{
 		lx(yylex).rname = $1
-		$$ = &Rule{Name: $1, Body: $2, Prec: $3}
+		$$ = &Rule{Pos: $<pos>1, Name: $1, Body: $2, Prec: $3}
 	}
 |	'|' rbody prec
 	{
-		$$ = &Rule{Name: lx(yylex).rname, Body: $2, Prec: $3}
+		$$ = &Rule{Pos: $<pos>1, Name: lx(yylex).rname, Body: $2, Prec: $3}
 	}
 
 rbody:
@@ -299,9 +304,13 @@ act:
 		a := []*Act{}
 		start := lx.Pos()
 		n := 0
+		line, col := -1, -1
 	act_loop:
 		for {
 			tok, tag, num := lx.Scan()
+			if line < 0 {
+				line, col = lx.Line, lx.Col
+			}
 			tokStart := lx.Pos()-1
 			switch tok {
 			case scanner.DLR_DLR, scanner.DLR_NUM, scanner.DLR_TAG_DLR, scanner.DLR_TAG_NUM:
@@ -315,7 +324,7 @@ act:
 					src = string(lx.src[start:tokStart])
 				}
 				
-				a = append(a, &Act{Src: src, Tok: tok, Tag: s, Num: num})
+				a = append(a, &Act{Pos: Pos{lx.Line, lx.Col}, Src: src, Tok: tok, Tag: s, Num: num})
 				start = -1
 			case scanner.LBRACE:
 				n++
@@ -323,10 +332,11 @@ act:
 				if n == 0 {
 					if start < 0 {
 						start = tokStart
+						line, col = lx.Line, lx.Col
 					}
 					src := lx.src[start:tokStart]
 					if len(src) != 0 {
-						a = append(a, &Act{Src: string(src)})
+						a = append(a, &Act{Pos: Pos{line, col}, Src: string(src)})
 					}
 					lx.Mode(true)
 					break act_loop
@@ -339,6 +349,7 @@ act:
 			default:
 				if start < 0 {
 					start = tokStart
+					line, col = lx.Line, lx.Col
 				}
 			}
 		}
@@ -352,11 +363,11 @@ prec:
 	}
 |	_PREC _IDENTIFIER
 	{
-		$$ = &Prec{Identifier: $2}
+		$$ = &Prec{Pos: $<pos>1, Identifier: $2}
 	}
 |	_PREC _IDENTIFIER act
 	{
-		$$ = &Prec{Identifier: $2, Act: $3}
+		$$ = &Prec{Pos: $<pos>1, Identifier: $2, Act: $3}
 	}
 |	prec ';'
 	{
@@ -365,20 +376,27 @@ prec:
 
 %%
 
-// Spec is the AST root entity.
-type Spec struct {
+// AST holds the parsed .y source.
+type AST struct {
 	Defs  []*Def  // Definitions
 	Rules []*Rule // Rules
 	Tail  string  // Optional rest of the file
 }
 
 // String implements fmt.Stringer.
-func (s *Spec) String() string {
+func (s *AST) String() string {
 	return str(s)
+}
+
+// Pos descibes a source line and column.
+type Pos struct {
+	Line int
+	Col  int
 }
 
 // Def is the definition section definition entity
 type Def struct {
+	Pos
 	Rword Rword
 	Tag   string
 	Nlist []*Nmno
@@ -391,6 +409,7 @@ func (s *Def) String() string {
 
 // Rule is the rules section rule.
 type Rule struct{
+	Pos
 	Name string
 	Body []interface{}
 	Prec *Prec
@@ -405,6 +424,7 @@ func (s *Rule) String() string {
 // production name (type string), or a rune literal. Optional number associated
 // with the name is in number, if non-negative.
 type Nmno struct {
+	Pos
 	Identifier interface{}
 	Number int
 }
@@ -416,6 +436,7 @@ func (s *Nmno) String() string {
 
 // Prec defines the optional precedence of a rule.
 type Prec struct {
+	Pos
 	Identifier interface{}
 	Act []*Act
 }
@@ -427,6 +448,7 @@ func (s *Prec) String() string {
 
 // Act captures the action optionally associated with a rule.
 type Act struct{
+	Pos
 	Src string
 	Tok scanner.Token       // github.com/cznic/scanner/yacc.DLR_* or zero
 	Tag string              // DLR_TAG_*
@@ -479,11 +501,10 @@ func (r Rword) String() string {
 
 type lexer struct {
 	*scanner.Scanner
-	fname  string
-	rname  string // last rule name for '|' rules
-	spec   *Spec
-	src    []byte
+	ast    *AST
 	closed bool
+	rname  string // last rule name for '|' rules
+	src    []byte
 }
 
 var xlat = map[scanner.Token]int{
@@ -513,8 +534,7 @@ func (l *lexer) Lex(lval *yySymType) (y int) {
 
 	for {
 		tok, val, num := l.Scan()
-		lval.line, lval.col, lval.num = l.Line, l.Col, num
-		//dbg("%s %T(%#v) %s:%d:%d", tok, val, val, l.fname, l.Line, l.Col)
+		lval.pos, lval.num = Pos{l.Line, l.Col}, num
 		switch tok {
 		case scanner.COMMENT:
 			continue
@@ -565,15 +585,13 @@ func lx(yylex yyLexer) *lexer {
 
 
 // Parse parses src as a single yacc source file fname and returns the
-// corresponding Spec. If the source couldn't be read, the returned Spec is nil
+// corresponding AST. If the source couldn't be read, the returned AST is nil
 // and the error indicates all of the specific failures.
-func Parse(fname string, src []byte) (s *Spec, err error) {
+func Parse(fname string, src []byte) (s *AST, err error) {
 	l := lexer{
-		Scanner: scanner.New(src),
-		fname:   fname,
+		Scanner: scanner.New(fname, src),
 		src:     src,
 	}
-	l.Fname = fname
 	defer func() {
 		if e := recover(); e != nil {
 			l.Error(fmt.Sprintf("%v", e))
@@ -585,12 +603,12 @@ func Parse(fname string, src []byte) (s *Spec, err error) {
 		return nil, errList(l.Errors)
 	}
 
-	return l.spec, nil
+	return l.ast, nil
 }
 
 func str(v interface{}) string {
 	var buf bytes.Buffer
-	f := strutil.IndentFormatter(&buf, ". ")
+	f := strutil.IndentFormatter(&buf, "· ")
 	g := func(interface{}){}
 	g = func(v interface{}){
 		switch x := v.(type) {
@@ -607,14 +625,14 @@ func str(v interface{}) string {
 			}
 			f.Format("%u}\n")
 		case *Act:
-			f.Format("%T{%i\n", x)
+			f.Format("%T@%d:%d{%i\n", x, x.Line, x.Col)
 			f.Format("Src: %q\n", x.Src)
 			if x.Tok != 0 {
 				f.Format("Tok: %s, Tag: %q, Num: %d\n", x.Tok, x.Tag, x.Num)
 			}
 			f.Format("%u}\n")
 		case *Def:
-			f.Format("%T{%i\n", x)
+			f.Format("%T@%d:%d{%i\n", x, x.Line, x.Col)
 			f.Format("Rword: %s, ", x.Rword)
 			f.Format("Tag: %q, ", x.Tag)
 			f.Format("Nlist: %T{%i\n", x.Nlist)
@@ -631,7 +649,7 @@ func str(v interface{}) string {
 			case int:
 				s = fmt.Sprintf("'%c'", v)
 			}
-			f.Format("%T{Identifier: %s, Number: %d}\n", x, s, x.Number)
+			f.Format("%T@%d:%d{Identifier: %s, Number: %d}\n", x, x.Line, x.Col, s, x.Number)
 		case *Prec:
 			var s string
 			switch v := x.Identifier.(type) {
@@ -640,12 +658,12 @@ func str(v interface{}) string {
 			case int:
 				s = fmt.Sprintf("'%c'", v)
 			}
-			f.Format("%T{%i\n", x)
+			f.Format("%T@%d:%d{%i\n", x, x.Line, x.Col)
 			f.Format("Identifier: %s\n", s)
 			g(x.Act)
 			f.Format("%u}\n")
 		case *Rule:
-			f.Format("%T{%i\n", x)
+			f.Format("%T@%d:%d{%i\n", x, x.Line, x.Col)
 			f.Format("Name: %q, ", x.Name)
 			f.Format("Body: %T{%i\n", x.Body)
 			for _, v := range x.Body {
@@ -657,7 +675,7 @@ func str(v interface{}) string {
 				g(x.Prec)
 			}
 			f.Format("%u}\n")
-		case *Spec:
+		case *AST:
 			f.Format("%T{%i\n", x)
 			f.Format("Defs: %T{%i\n", x.Defs)
 			for _, v := range x.Defs {

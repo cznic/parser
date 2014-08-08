@@ -16,10 +16,10 @@ parser.go: parser.y
 	sed -i 's|//line .*:.*||' $@
 
 todo:
-	@grep -n ^[[:space:]]*_[[:space:]]*=[[:space:]][[:alpha:]][[:alnum:]]* *.go *.y || true
-	@grep -n TODO *.go *.y || true
-	@grep -n BUG *.go *.y || true
-	@grep -n println *.go *.y || true
+	@grep -nr ^[[:space:]]*_[[:space:]]*=[[:space:]][[:alpha:]][[:alnum:]]* *.go *.y || true
+	@grep -nr TODO *.go *.y || true
+	@grep -nr BUG *.go *.y || true
+	@grep -nr println *.go *.y || true
 
 clean:
 	@go clean
