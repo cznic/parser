@@ -6,7 +6,7 @@ Copyright © 2001-2004 The IEEE and The Open Group, All Rights reserved.
 
 Original source text: http://pubs.opengroup.org/onlinepubs/009695399/utilities/yacc.html
 
-Modifications: Copyright 2014 The Go Authors. All rights reserved.
+Modifications: Copyright 2014 The parser Authors. All rights reserved.
 Use of this source code is governed by a BSD-style
 license that can be found in the LICENSE file.
 
