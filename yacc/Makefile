@@ -5,7 +5,7 @@
 .PHONY: all clean
 
 all: editor
-	go vet || true
+	go tool vet -printfuncs "Log:0,Logf:0" *.go || true
 	golint .
 	go install
 	make todo
@@ -18,7 +18,7 @@ editor: parser.go
 
 parser.go: parser.y
 	go tool yacc -l -o $@ $<
-	sed -i 's|//line .*:.*||' $@
+	sed -i 's|//line .*:.*||g; s/yyEofCode/yyEOFCode/g' $@
 
 todo:
 	@grep -nr ^[[:space:]]*_[[:space:]]*=[[:space:]][[:alpha:]][[:alnum:]]* *.go *.y || true

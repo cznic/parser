@@ -6,6 +6,7 @@ package parser
 
 import (
 	"fmt"
+	"go/token"
 	"io/ioutil"
 	"os"
 	"path"
@@ -19,6 +20,21 @@ func dbg(s string, va ...interface{}) {
 	fmt.Printf("%s:%d: ", path.Base(fn), fl)
 	fmt.Printf(s, va...)
 	fmt.Println()
+}
+
+func caller(s string, va ...interface{}) {
+	_, fn, fl, _ := runtime.Caller(2)
+	fmt.Printf("caller: %s:%d: ", path.Base(fn), fl)
+	fmt.Printf(s, va...)
+	fmt.Println()
+	_, fn, fl, _ = runtime.Caller(1)
+	fmt.Printf("\tcallee: %s:%d: ", path.Base(fn), fl)
+	fmt.Println()
+}
+
+func TODO(...interface{}) string {
+	_, fn, fl, _ := runtime.Caller(1)
+	return fmt.Sprintf("TODO: %s:%d:\n", path.Base(fn), fl)
 }
 
 func test0(t *testing.T, root string) {
@@ -51,7 +67,7 @@ func test0(t *testing.T, root string) {
 			t.Fatal(err)
 		}
 
-		ast, err := Parse(pth, src)
+		ast, err := Parse(token.NewFileSet(), pth, src)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -74,7 +90,7 @@ func Test0(t *testing.T) {
 }
 
 func ExampleDef_start() {
-	ast, err := Parse("start.y", []byte(`
+	ast, err := Parse(token.NewFileSet(), "start.y", []byte(`
 
 %start Foo
 
@@ -91,13 +107,13 @@ Foo:
 	// Output:
 	// *parser.AST{
 	// · Defs: []*parser.Def{
-	// · · *parser.Def@3:1{
+	// · · *parser.Def@start.y:3:1{
 	// · · · Rword: Start, Tag: "Foo", Nlist: []*parser.Nmno{
 	// · · · }
 	// · · }
 	// · }
 	// · Rules: []*parser.Rule{
-	// · · *parser.Rule@7:1{
+	// · · *parser.Rule@start.y:7:1{
 	// · · · Name: "Foo", Body: []interface {}{
 	// · · · }
 	// · · }
@@ -107,7 +123,7 @@ Foo:
 }
 
 func ExampleDef_union() {
-	ast, err := Parse("union.y", []byte(`
+	ast, err := Parse(token.NewFileSet(), "union.y", []byte(`
 
 %union{
         bar int
@@ -127,13 +143,13 @@ Foo:
 	// Output:
 	// *parser.AST{
 	// · Defs: []*parser.Def{
-	// · · *parser.Def@3:1{
+	// · · *parser.Def@union.y:3:1{
 	// · · · Rword: Union, Tag: "{\n        bar int\n        baz struct{a, b int}\n}", Nlist: []*parser.Nmno{
 	// · · · }
 	// · · }
 	// · }
 	// · Rules: []*parser.Rule{
-	// · · *parser.Rule@10:1{
+	// · · *parser.Rule@union.y:10:1{
 	// · · · Name: "Foo", Body: []interface {}{
 	// · · · }
 	// · · }
@@ -143,7 +159,7 @@ Foo:
 }
 
 func ExampleDef_copy() {
-	ast, err := Parse("copy.y", []byte(`
+	ast, err := Parse(token.NewFileSet(), "copy.y", []byte(`
 
 %{
 
@@ -164,13 +180,13 @@ Foo:
 	// Output:
 	// *parser.AST{
 	// · Defs: []*parser.Def{
-	// · · *parser.Def@3:1{
+	// · · *parser.Def@copy.y:3:1{
 	// · · · Rword: Copy, Tag: "\n\npackage main\n\n", Nlist: []*parser.Nmno{
 	// · · · }
 	// · · }
 	// · }
 	// · Rules: []*parser.Rule{
-	// · · *parser.Rule@11:1{
+	// · · *parser.Rule@copy.y:11:1{
 	// · · · Name: "Foo", Body: []interface {}{
 	// · · · }
 	// · · }
@@ -180,7 +196,7 @@ Foo:
 }
 
 func ExampleDef_token() {
-	ast, err := Parse("token.y", []byte(`
+	ast, err := Parse(token.NewFileSet(), "token.y", []byte(`
 
 %token foo
 %token bar 1234
@@ -199,24 +215,24 @@ Foo:
 	// Output:
 	// *parser.AST{
 	// · Defs: []*parser.Def{
-	// · · *parser.Def@3:1{
+	// · · *parser.Def@token.y:3:1{
 	// · · · Rword: Token, Tag: "", Nlist: []*parser.Nmno{
-	// · · · · *parser.Nmno@3:8{Identifier: "foo", Number: -1}
+	// · · · · *parser.Nmno@token.y:3:8{Identifier: "foo", Number: -1}
 	// · · · }
 	// · · }
-	// · · *parser.Def@4:1{
+	// · · *parser.Def@token.y:4:1{
 	// · · · Rword: Token, Tag: "", Nlist: []*parser.Nmno{
-	// · · · · *parser.Nmno@4:8{Identifier: "bar", Number: 1234}
+	// · · · · *parser.Nmno@token.y:4:8{Identifier: "bar", Number: 1234}
 	// · · · }
 	// · · }
-	// · · *parser.Def@5:1{
+	// · · *parser.Def@token.y:5:1{
 	// · · · Rword: Token, Tag: "typ", Nlist: []*parser.Nmno{
-	// · · · · *parser.Nmno@5:14{Identifier: "qux", Number: -1}
+	// · · · · *parser.Nmno@token.y:5:14{Identifier: "qux", Number: -1}
 	// · · · }
 	// · · }
 	// · }
 	// · Rules: []*parser.Rule{
-	// · · *parser.Rule@9:1{
+	// · · *parser.Rule@token.y:9:1{
 	// · · · Name: "Foo", Body: []interface {}{
 	// · · · }
 	// · · }
@@ -226,7 +242,7 @@ Foo:
 }
 
 func ExampleDef_left() {
-	ast, err := Parse("left.y", []byte(`
+	ast, err := Parse(token.NewFileSet(), "left.y", []byte(`
 
 %left foo '+' '-' 1234 'L'
 %left <typ> '?'
@@ -244,22 +260,22 @@ Foo:
 	// Output:
 	// *parser.AST{
 	// · Defs: []*parser.Def{
-	// · · *parser.Def@3:1{
+	// · · *parser.Def@left.y:3:1{
 	// · · · Rword: Left, Tag: "", Nlist: []*parser.Nmno{
-	// · · · · *parser.Nmno@3:7{Identifier: "foo", Number: -1}
-	// · · · · *parser.Nmno@3:11{Identifier: '+', Number: -1}
-	// · · · · *parser.Nmno@3:15{Identifier: '-', Number: 1234}
-	// · · · · *parser.Nmno@3:24{Identifier: 'L', Number: -1}
+	// · · · · *parser.Nmno@left.y:3:7{Identifier: "foo", Number: -1}
+	// · · · · *parser.Nmno@left.y:3:11{Identifier: '+', Number: -1}
+	// · · · · *parser.Nmno@left.y:3:15{Identifier: '-', Number: 1234}
+	// · · · · *parser.Nmno@left.y:3:24{Identifier: 'L', Number: -1}
 	// · · · }
 	// · · }
-	// · · *parser.Def@4:1{
+	// · · *parser.Def@left.y:4:1{
 	// · · · Rword: Left, Tag: "typ", Nlist: []*parser.Nmno{
-	// · · · · *parser.Nmno@4:13{Identifier: '?', Number: -1}
+	// · · · · *parser.Nmno@left.y:4:13{Identifier: '?', Number: -1}
 	// · · · }
 	// · · }
 	// · }
 	// · Rules: []*parser.Rule{
-	// · · *parser.Rule@8:1{
+	// · · *parser.Rule@left.y:8:1{
 	// · · · Name: "Foo", Body: []interface {}{
 	// · · · }
 	// · · }
@@ -269,7 +285,7 @@ Foo:
 }
 
 func ExampleDef_right() {
-	ast, err := Parse("right.y", []byte(`
+	ast, err := Parse(token.NewFileSet(), "right.y", []byte(`
 
 %right foo '+' '-' 1234 'L'
 %right <typ> '?'
@@ -287,22 +303,22 @@ Foo:
 	// Output:
 	// *parser.AST{
 	// · Defs: []*parser.Def{
-	// · · *parser.Def@3:1{
+	// · · *parser.Def@right.y:3:1{
 	// · · · Rword: Right, Tag: "", Nlist: []*parser.Nmno{
-	// · · · · *parser.Nmno@3:8{Identifier: "foo", Number: -1}
-	// · · · · *parser.Nmno@3:12{Identifier: '+', Number: -1}
-	// · · · · *parser.Nmno@3:16{Identifier: '-', Number: 1234}
-	// · · · · *parser.Nmno@3:25{Identifier: 'L', Number: -1}
+	// · · · · *parser.Nmno@right.y:3:8{Identifier: "foo", Number: -1}
+	// · · · · *parser.Nmno@right.y:3:12{Identifier: '+', Number: -1}
+	// · · · · *parser.Nmno@right.y:3:16{Identifier: '-', Number: 1234}
+	// · · · · *parser.Nmno@right.y:3:25{Identifier: 'L', Number: -1}
 	// · · · }
 	// · · }
-	// · · *parser.Def@4:1{
+	// · · *parser.Def@right.y:4:1{
 	// · · · Rword: Right, Tag: "typ", Nlist: []*parser.Nmno{
-	// · · · · *parser.Nmno@4:14{Identifier: '?', Number: -1}
+	// · · · · *parser.Nmno@right.y:4:14{Identifier: '?', Number: -1}
 	// · · · }
 	// · · }
 	// · }
 	// · Rules: []*parser.Rule{
-	// · · *parser.Rule@8:1{
+	// · · *parser.Rule@right.y:8:1{
 	// · · · Name: "Foo", Body: []interface {}{
 	// · · · }
 	// · · }
@@ -312,7 +328,7 @@ Foo:
 }
 
 func ExampleDef_nonassoc() {
-	ast, err := Parse("nonassoc.y", []byte(`
+	ast, err := Parse(token.NewFileSet(), "nonassoc.y", []byte(`
 
 %nonassoc foo '+' '-' 1234 'L'
 %nonassoc <typ> '?'
@@ -330,22 +346,22 @@ Foo:
 	// Output:
 	// *parser.AST{
 	// · Defs: []*parser.Def{
-	// · · *parser.Def@3:1{
+	// · · *parser.Def@nonassoc.y:3:1{
 	// · · · Rword: Nonassoc, Tag: "", Nlist: []*parser.Nmno{
-	// · · · · *parser.Nmno@3:11{Identifier: "foo", Number: -1}
-	// · · · · *parser.Nmno@3:15{Identifier: '+', Number: -1}
-	// · · · · *parser.Nmno@3:19{Identifier: '-', Number: 1234}
-	// · · · · *parser.Nmno@3:28{Identifier: 'L', Number: -1}
+	// · · · · *parser.Nmno@nonassoc.y:3:11{Identifier: "foo", Number: -1}
+	// · · · · *parser.Nmno@nonassoc.y:3:15{Identifier: '+', Number: -1}
+	// · · · · *parser.Nmno@nonassoc.y:3:19{Identifier: '-', Number: 1234}
+	// · · · · *parser.Nmno@nonassoc.y:3:28{Identifier: 'L', Number: -1}
 	// · · · }
 	// · · }
-	// · · *parser.Def@4:1{
+	// · · *parser.Def@nonassoc.y:4:1{
 	// · · · Rword: Nonassoc, Tag: "typ", Nlist: []*parser.Nmno{
-	// · · · · *parser.Nmno@4:17{Identifier: '?', Number: -1}
+	// · · · · *parser.Nmno@nonassoc.y:4:17{Identifier: '?', Number: -1}
 	// · · · }
 	// · · }
 	// · }
 	// · Rules: []*parser.Rule{
-	// · · *parser.Rule@8:1{
+	// · · *parser.Rule@nonassoc.y:8:1{
 	// · · · Name: "Foo", Body: []interface {}{
 	// · · · }
 	// · · }
@@ -355,7 +371,7 @@ Foo:
 }
 
 func ExampleDef_errVerbose() {
-	ast, err := Parse("errVerbose.y", []byte(`
+	ast, err := Parse(token.NewFileSet(), "errVerbose.y", []byte(`
 
 %error-verbose
 
@@ -372,13 +388,13 @@ Foo:
 	// Output:
 	// *parser.AST{
 	// · Defs: []*parser.Def{
-	// · · *parser.Def@3:1{
+	// · · *parser.Def@errVerbose.y:3:1{
 	// · · · Rword: ErrorVerbose, Tag: "", Nlist: []*parser.Nmno{
 	// · · · }
 	// · · }
 	// · }
 	// · Rules: []*parser.Rule{
-	// · · *parser.Rule@7:1{
+	// · · *parser.Rule@errVerbose.y:7:1{
 	// · · · Name: "Foo", Body: []interface {}{
 	// · · · }
 	// · · }
@@ -388,7 +404,7 @@ Foo:
 }
 
 func ExampleDef_type() {
-	ast, err := Parse("type.y", []byte(`
+	ast, err := Parse(token.NewFileSet(), "type.y", []byte(`
 
 %type	<typ>	foo bar
 %type	<list>	baz
@@ -406,20 +422,20 @@ Foo:
 	// Output:
 	// *parser.AST{
 	// · Defs: []*parser.Def{
-	// · · *parser.Def@3:1{
+	// · · *parser.Def@type.y:3:1{
 	// · · · Rword: Type, Tag: "typ", Nlist: []*parser.Nmno{
-	// · · · · *parser.Nmno@3:13{Identifier: "foo", Number: -1}
-	// · · · · *parser.Nmno@3:17{Identifier: "bar", Number: -1}
+	// · · · · *parser.Nmno@type.y:3:13{Identifier: "foo", Number: -1}
+	// · · · · *parser.Nmno@type.y:3:17{Identifier: "bar", Number: -1}
 	// · · · }
 	// · · }
-	// · · *parser.Def@4:1{
+	// · · *parser.Def@type.y:4:1{
 	// · · · Rword: Type, Tag: "list", Nlist: []*parser.Nmno{
-	// · · · · *parser.Nmno@4:14{Identifier: "baz", Number: -1}
+	// · · · · *parser.Nmno@type.y:4:14{Identifier: "baz", Number: -1}
 	// · · · }
 	// · · }
 	// · }
 	// · Rules: []*parser.Rule{
-	// · · *parser.Rule@8:1{
+	// · · *parser.Rule@type.y:8:1{
 	// · · · Name: "Foo", Body: []interface {}{
 	// · · · }
 	// · · }
@@ -429,7 +445,7 @@ Foo:
 }
 
 func ExampleSpec_tail() {
-	ast, err := Parse("tail.y", []byte(`
+	ast, err := Parse(token.NewFileSet(), "tail.y", []byte(`
 
 %%
 
@@ -450,7 +466,7 @@ Foo:
 	// · Defs: []*parser.Def{
 	// · }
 	// · Rules: []*parser.Rule{
-	// · · *parser.Rule@5:1{
+	// · · *parser.Rule@tail.y:5:1{
 	// · · · Name: "Foo", Body: []interface {}{
 	// · · · }
 	// · · }
@@ -460,7 +476,7 @@ Foo:
 }
 
 func ExampleRule() {
-	ast, err := Parse("rule.y", []byte(`
+	ast, err := Parse(token.NewFileSet(), "rule.y", []byte(`
 
 %%
 
@@ -494,54 +510,54 @@ Bar:
 	// · Defs: []*parser.Def{
 	// · }
 	// · Rules: []*parser.Rule{
-	// · · *parser.Rule@5:1{
+	// · · *parser.Rule@rule.y:5:1{
 	// · · · Name: "Foo", Body: []interface {}{
 	// · · · · "Bar"
 	// · · · }
 	// · · }
-	// · · *parser.Rule@7:1{
+	// · · *parser.Rule@rule.y:7:1{
 	// · · · Name: "Foo", Body: []interface {}{
 	// · · · · '1'
 	// · · · · "Baz"
 	// · · · · "foo"
 	// · · · · []*parser.Act{
-	// · · · · · *parser.Act@9:13{
+	// · · · · · *parser.Act@rule.y:9:13{
 	// · · · · · · Src: "\n            "
 	// · · · · · · Tok: DLR_DLR, Tag: "", Num: 0
 	// · · · · · }
-	// · · · · · *parser.Act@9:16{
+	// · · · · · *parser.Act@rule.y:9:16{
 	// · · · · · · Src: "= \"abc\"\n        "
 	// · · · · · }
 	// · · · · }
 	// · · · }
 	// · · }
-	// · · *parser.Rule@11:1{
+	// · · *parser.Rule@rule.y:11:1{
 	// · · · Name: "Foo", Body: []interface {}{
 	// · · · · '2'
 	// · · · · "Qux"
 	// · · · · "lol"
 	// · · · · []*parser.Act{
-	// · · · · · *parser.Act@13:13{
+	// · · · · · *parser.Act@rule.y:13:13{
 	// · · · · · · Src: "\n            "
 	// · · · · · · Tok: DLR_DLR, Tag: "", Num: 0
 	// · · · · · }
-	// · · · · · *parser.Act@13:16{
+	// · · · · · *parser.Act@rule.y:13:16{
 	// · · · · · · Src: "= \"def\"\n        "
 	// · · · · · }
 	// · · · · }
 	// · · · · '2'
 	// · · · · []*parser.Act{
-	// · · · · · *parser.Act@17:13{
+	// · · · · · *parser.Act@rule.y:17:13{
 	// · · · · · · Src: "\n            fmt.Println([]t{2})\n        "
 	// · · · · · }
 	// · · · · }
 	// · · · }
 	// · · }
-	// · · *parser.Rule@20:1{
+	// · · *parser.Rule@rule.y:20:1{
 	// · · · Name: "Bar", Body: []interface {}{
 	// · · · }
 	// · · }
-	// · · *parser.Rule@22:1{
+	// · · *parser.Rule@rule.y:22:1{
 	// · · · Name: "Bar", Body: []interface {}{
 	// · · · · "Bar"
 	// · · · · "IDENT"
@@ -553,7 +569,7 @@ Bar:
 }
 
 func ExampleAct() {
-	ast, err := Parse("act.y", []byte(`
+	ast, err := Parse(token.NewFileSet(), "act.y", []byte(`
 
 %%
 
@@ -580,37 +596,37 @@ StatementList:
 	// · Defs: []*parser.Def{
 	// · }
 	// · Rules: []*parser.Rule{
-	// · · *parser.Rule@5:1{
+	// · · *parser.Rule@act.y:5:1{
 	// · · · Name: "StatementList", Body: []interface {}{
 	// · · · · []*parser.Act{
-	// · · · · · *parser.Act@8:13{
+	// · · · · · *parser.Act@act.y:8:13{
 	// · · · · · · Src: "\n            "
 	// · · · · · · Tok: DLR_DLR, Tag: "", Num: 0
 	// · · · · · }
-	// · · · · · *parser.Act@8:16{
+	// · · · · · *parser.Act@act.y:8:16{
 	// · · · · · · Src: "= nil\n        "
 	// · · · · · }
 	// · · · · }
 	// · · · }
 	// · · }
-	// · · *parser.Rule@10:1{
+	// · · *parser.Rule@act.y:10:1{
 	// · · · Name: "StatementList", Body: []interface {}{
 	// · · · · "StatementList"
 	// · · · · "Statement"
 	// · · · · []*parser.Act{
-	// · · · · · *parser.Act@12:13{
+	// · · · · · *parser.Act@act.y:12:13{
 	// · · · · · · Src: "\n            "
 	// · · · · · · Tok: DLR_DLR, Tag: "", Num: 0
 	// · · · · · }
-	// · · · · · *parser.Act@12:25{
+	// · · · · · *parser.Act@act.y:12:25{
 	// · · · · · · Src: "= append("
 	// · · · · · · Tok: DLR_NUM, Tag: "", Num: 1
 	// · · · · · }
-	// · · · · · *parser.Act@12:29{
+	// · · · · · *parser.Act@act.y:12:29{
 	// · · · · · · Src: ", "
 	// · · · · · · Tok: DLR_NUM, Tag: "", Num: 2
 	// · · · · · }
-	// · · · · · *parser.Act@12:31{
+	// · · · · · *parser.Act@act.y:12:31{
 	// · · · · · · Src: ")\n        "
 	// · · · · · }
 	// · · · · }
@@ -622,7 +638,7 @@ StatementList:
 }
 
 func ExampleNmno() {
-	ast, err := Parse("nmno.y", []byte(`
+	ast, err := Parse(token.NewFileSet(), "nmno.y", []byte(`
 
 %token abc '+' def 123 ghi
 
@@ -639,17 +655,17 @@ Foo:
 	// Output:
 	// *parser.AST{
 	// · Defs: []*parser.Def{
-	// · · *parser.Def@3:1{
+	// · · *parser.Def@nmno.y:3:1{
 	// · · · Rword: Token, Tag: "", Nlist: []*parser.Nmno{
-	// · · · · *parser.Nmno@3:8{Identifier: "abc", Number: -1}
-	// · · · · *parser.Nmno@3:12{Identifier: '+', Number: -1}
-	// · · · · *parser.Nmno@3:16{Identifier: "def", Number: 123}
-	// · · · · *parser.Nmno@3:24{Identifier: "ghi", Number: -1}
+	// · · · · *parser.Nmno@nmno.y:3:8{Identifier: "abc", Number: -1}
+	// · · · · *parser.Nmno@nmno.y:3:12{Identifier: '+', Number: -1}
+	// · · · · *parser.Nmno@nmno.y:3:16{Identifier: "def", Number: 123}
+	// · · · · *parser.Nmno@nmno.y:3:24{Identifier: "ghi", Number: -1}
 	// · · · }
 	// · · }
 	// · }
 	// · Rules: []*parser.Rule{
-	// · · *parser.Rule@7:1{
+	// · · *parser.Rule@nmno.y:7:1{
 	// · · · Name: "Foo", Body: []interface {}{
 	// · · · }
 	// · · }
@@ -659,7 +675,7 @@ Foo:
 }
 
 func ExamplePrec() {
-	ast, err := Parse("prec.y", []byte(`
+	ast, err := Parse(token.NewFileSet(), "prec.y", []byte(`
 
 %%
 
@@ -681,28 +697,28 @@ Foo:
 	// · Defs: []*parser.Def{
 	// · }
 	// · Rules: []*parser.Rule{
-	// · · *parser.Rule@5:1{
+	// · · *parser.Rule@prec.y:5:1{
 	// · · · Name: "Foo", Body: []interface {}{
 	// · · · · "bar"
 	// · · · }
-	// · · · Prec: *parser.Prec@6:13{
+	// · · · Prec: *parser.Prec@prec.y:6:13{
 	// · · · · Identifier: "A"
 	// · · · · []*parser.Act{
 	// · · · · }
 	// · · · }
 	// · · }
-	// · · *parser.Rule@7:1{
+	// · · *parser.Rule@prec.y:7:1{
 	// · · · Name: "Foo", Body: []interface {}{
 	// · · · · "foo"
 	// · · · }
-	// · · · Prec: *parser.Prec@7:9{
+	// · · · Prec: *parser.Prec@prec.y:7:9{
 	// · · · · Identifier: "B"
 	// · · · · []*parser.Act{
-	// · · · · · *parser.Act@9:17{
+	// · · · · · *parser.Act@prec.y:9:17{
 	// · · · · · · Src: "\n            qux("
 	// · · · · · · Tok: DLR_NUM, Tag: "", Num: 1
 	// · · · · · }
-	// · · · · · *parser.Act@9:19{
+	// · · · · · *parser.Act@prec.y:9:19{
 	// · · · · · · Src: ")\n        "
 	// · · · · · }
 	// · · · · }
