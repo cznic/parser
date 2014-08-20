@@ -37,7 +37,6 @@ import (
 	list   []interface{}
 	nlist  []*Nmno
 	nmno   *Nmno
-	num    int
 	number int
 	pos    token.Pos
 	prec   *Prec
@@ -51,10 +50,9 @@ import (
 
 /* Basic entries. The following are recognized by the lexical analyzer. */
 
-%token	tkIdent      /* Includes identifiers and literals */
-%token	tkCIdent     /* identifier (but not literal)
-                             followed by a :. */
-%token	number          /* [0-9][0-9]* */
+%token	<item>   tkIdent  /* Includes identifiers and literals */
+%token	<s>      tkCIdent /* identifier (but not literal) followed by a :. */
+%token	<number> tkNumber /* [0-9][0-9]* */
 
 /* Reserved words : %type=>tkType %left=>tkLeft, and so on */
 
@@ -63,10 +61,6 @@ import (
 %token	tkMark            /* The %% mark. */
 %token	tkLCurl           /* The %{ mark. */
 %token	tkRCurl           /* The %} mark. */
-
-%type	<item>	tkIdent
-%type	<number> number
-%type	<s>	tkCIdent 
 
 %type	<act>	act
 %type	<def>	def
@@ -253,7 +247,7 @@ nmno:
 	{
 		$$ = &Nmno{$<pos>1, $1, -1}
 	}
-|	tkIdent number
+|	tkIdent tkNumber
 	{
 		$$ = &Nmno{$<pos>1, $1, $2}
 	}
@@ -505,8 +499,8 @@ func (l *lexer) Lex(lval *yySymType) (y int) {
 	}
 
 	for {
-		tok, val, num := l.Scan()
-		lval.pos, lval.num = token.Pos(l.Pos()), num
+		tok, val, _ := l.Scan()
+		lval.pos = token.Pos(l.Pos())
 		switch tok {
 		case scanner.COMMENT:
 			continue
@@ -524,7 +518,7 @@ func (l *lexer) Lex(lval *yySymType) (y int) {
 			if n, ok := val.(uint64); ok {
 				lval.number = int(n)
 			}
-			return number
+			return tkNumber
 		case scanner.CHAR:
 			if n, ok := val.(int32); ok {
 				lval.item = int(n)

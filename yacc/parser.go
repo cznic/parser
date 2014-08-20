@@ -36,7 +36,6 @@ type yySymType struct {
 	list   []interface{}
 	nlist  []*Nmno
 	nmno   *Nmno
-	num    int
 	number int
 	pos    token.Pos
 	prec   *Prec
@@ -49,7 +48,7 @@ type yySymType struct {
 const illegal = 57346
 const tkIdent = 57347
 const tkCIdent = 57348
-const number = 57349
+const tkNumber = 57349
 const tkLeft = 57350
 const tkRight = 57351
 const tkNonAssoc = 57352
@@ -67,7 +66,7 @@ var yyToknames = []string{
 	"illegal",
 	"tkIdent",
 	"tkCIdent",
-	"number",
+	"tkNumber",
 	"tkLeft",
 	"tkRight",
 	"tkNonAssoc",
@@ -215,8 +214,8 @@ func (l *lexer) Lex(lval *yySymType) (y int) {
 	}
 
 	for {
-		tok, val, num := l.Scan()
-		lval.pos, lval.num = token.Pos(l.Pos()), num
+		tok, val, _ := l.Scan()
+		lval.pos = token.Pos(l.Pos())
 		switch tok {
 		case scanner.COMMENT:
 			continue
@@ -234,7 +233,7 @@ func (l *lexer) Lex(lval *yySymType) (y int) {
 			if n, ok := val.(uint64); ok {
 				lval.number = int(n)
 			}
-			return number
+			return tkNumber
 		case scanner.CHAR:
 			if n, ok := val.(int32); ok {
 				lval.item = int(n)
