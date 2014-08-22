@@ -728,3 +728,54 @@ Foo:
 	// · Tail: ""
 	// }
 }
+
+func Example_yacc() {
+	ast, err := Parse(token.NewFileSet(), "prec.y", []byte(`
+// http://dinosaur.compilertools.net/yacc/
+%token  DING  DONG  DELL
+%%
+rhyme   :       sound  place
+        ;
+sound   :       DING  DONG
+        ;
+place   :       DELL
+        ;
+`))
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(ast)
+	// Output:
+	// *parser.AST{
+	// · Defs: []*parser.Def{
+	// · · *parser.Def@prec.y:3:1{
+	// · · · Rword: Token, Tag: "", Nlist: []*parser.Nmno{
+	// · · · · *parser.Nmno@prec.y:3:9{Identifier: "DING", Number: -1}
+	// · · · · *parser.Nmno@prec.y:3:15{Identifier: "DONG", Number: -1}
+	// · · · · *parser.Nmno@prec.y:3:21{Identifier: "DELL", Number: -1}
+	// · · · }
+	// · · }
+	// · }
+	// · Rules: []*parser.Rule{
+	// · · *parser.Rule@prec.y:5:1{
+	// · · · Name: "rhyme", Body: []interface {}{
+	// · · · · "sound"
+	// · · · · "place"
+	// · · · }
+	// · · }
+	// · · *parser.Rule@prec.y:7:1{
+	// · · · Name: "sound", Body: []interface {}{
+	// · · · · "DING"
+	// · · · · "DONG"
+	// · · · }
+	// · · }
+	// · · *parser.Rule@prec.y:9:1{
+	// · · · Name: "place", Body: []interface {}{
+	// · · · · "DELL"
+	// · · · }
+	// · · }
+	// · }
+	// · Tail: ""
+	// }
+}

@@ -949,9 +949,7 @@ yydefault:
 			yyVAL.prec = &Prec{Pos: yyS[yypt-2].pos, Identifier: yyS[yypt-1].item, Act: yyS[yypt-0].act}
 		}
 	case 33:
-		{
-			yyVAL.prec = &Prec{}
-		}
+		yyVAL.prec = yyS[yypt-0].prec
 	}
 	goto yystack /* stack new state and value */
 }

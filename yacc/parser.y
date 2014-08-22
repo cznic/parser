@@ -365,9 +365,6 @@ prec:
 		$$ = &Prec{Pos: $<pos>1, Identifier: $2, Act: $3}
 	}
 |	prec ';'
-	{
-		$$ = &Prec{}
-	}
 
 %%
 
