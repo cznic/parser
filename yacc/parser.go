@@ -202,8 +202,9 @@ var xlat = map[scanner.Token]int{
 	scanner.UNION:       tkUnion,
 	scanner.ERR_VERBOSE: tkErrorVerbose,
 
-	scanner.EOF: 0,
-	scanner.OR:  '|',
+	scanner.COMMA: ',',
+	scanner.EOF:   0,
+	scanner.OR:    '|',
 }
 
 var todo = strings.ToUpper("todo")
@@ -385,64 +386,64 @@ var yyExca = []int{
 	-2, 0,
 }
 
-const yyNprod = 34
+const yyNprod = 35
 const yyPrivate = 57344
 
 var yyTokenNames []string
 var yyStates []string
 
-const yyLast = 45
+const yyLast = 48
 
 var yyAct = []int{
 
-	34, 32, 11, 12, 13, 10, 25, 14, 5, 6,
-	8, 3, 7, 27, 42, 36, 33, 39, 19, 38,
-	16, 43, 28, 35, 1, 23, 29, 17, 20, 18,
-	30, 31, 40, 41, 36, 9, 22, 15, 21, 26,
-	37, 24, 2, 4, 44,
+	34, 27, 32, 11, 12, 13, 10, 33, 14, 5,
+	6, 8, 3, 7, 35, 43, 36, 25, 23, 28,
+	40, 19, 39, 16, 28, 44, 36, 29, 37, 22,
+	17, 1, 20, 41, 42, 24, 38, 18, 9, 15,
+	45, 30, 31, 21, 26, 46, 2, 4,
 }
 var yyPact = []int{
 
-	-1000, -1000, -6, 14, -1000, 22, -1000, -1000, -1000, -2,
-	-1000, -1000, -1000, -1000, -1000, 19, -1000, -1000, 17, 21,
-	-1000, -1000, -1000, -1000, -1000, 11, 17, -1000, 12, -4,
-	11, 11, -10, -1000, -1000, 16, -1000, -1000, -1000, -1000,
-	-10, -10, -1000, -8, -1000,
+	-1000, -1000, -5, 17, -1000, 25, -1000, -1000, -1000, 1,
+	-1000, -1000, -1000, -1000, -1000, 12, -1000, -1000, 19, 22,
+	-1000, -1000, -1000, -1000, -1000, 2, 14, -1000, 15, -1,
+	2, 2, -10, -1000, -1000, 20, -1000, -1000, 19, -1000,
+	-1000, -10, -10, -1000, -8, -1000, -1000,
 }
 var yyPgo = []int{
 
-	0, 0, 43, 42, 6, 39, 13, 1, 38, 37,
-	35, 29, 28, 24,
+	0, 0, 47, 46, 17, 44, 1, 2, 43, 39,
+	38, 37, 32, 31,
 }
 var yyR1 = []int{
 
 	0, 13, 12, 12, 3, 3, 2, 2, 2, 2,
 	2, 10, 10, 10, 10, 10, 11, 11, 5, 5,
-	6, 6, 9, 9, 8, 8, 4, 4, 4, 1,
-	7, 7, 7, 7,
+	5, 6, 6, 9, 9, 8, 8, 4, 4, 4,
+	1, 7, 7, 7, 7,
 }
 var yyR2 = []int{
 
 	0, 4, 0, 1, 0, 2, 2, 1, 1, 1,
 	3, 1, 1, 1, 1, 1, 0, 3, 1, 2,
-	1, 2, 3, 2, 3, 3, 0, 2, 2, 1,
-	0, 2, 3, 2,
+	3, 1, 2, 3, 2, 3, 3, 0, 2, 2,
+	1, 0, 2, 3, 2,
 }
 var yyChk = []int{
 
 	-1000, -13, -3, 17, -2, 14, 15, 18, 16, -10,
 	11, 8, 9, 10, 13, -9, 6, 5, -11, 20,
-	-12, -8, 17, 6, 22, -4, -5, -6, 5, 5,
-	-4, -4, -7, 5, -1, 12, 23, -6, 7, 21,
-	-7, -7, 24, 5, -1,
+	-12, -8, 17, 6, 23, -4, -5, -6, 5, 5,
+	-4, -4, -7, 5, -1, 12, 24, -6, 22, 7,
+	21, -7, -7, 25, 5, -6, -1,
 }
 var yyDef = []int{
 
 	4, -2, 0, 0, 5, 0, 7, 8, 9, 16,
-	11, 12, 13, 14, 15, 2, 26, 6, 0, 0,
-	1, 23, 3, 26, 26, 30, 10, 18, 20, 0,
-	30, 30, 22, 27, 28, 0, 29, 19, 21, 17,
-	24, 25, 33, 31, 32,
+	11, 12, 13, 14, 15, 2, 27, 6, 0, 0,
+	1, 24, 3, 27, 27, 31, 10, 18, 21, 0,
+	31, 31, 23, 28, 29, 0, 30, 19, 0, 22,
+	17, 25, 26, 34, 32, 20, 33,
 }
 var yyTok1 = []int{
 
@@ -450,15 +451,15 @@ var yyTok1 = []int{
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 24,
+	3, 3, 3, 3, 22, 3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 25,
 	20, 3, 21, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 23, 22,
+	3, 3, 3, 24, 23,
 }
 var yyTok2 = []int{
 
@@ -841,43 +842,47 @@ yydefault:
 		}
 	case 20:
 		{
-			yyVAL.nmno = &Nmno{yyS[yypt-0].pos, yyS[yypt-0].item, -1}
+			yyVAL.nlist = append(yyS[yypt-2].nlist, yyS[yypt-0].nmno)
 		}
 	case 21:
 		{
-			yyVAL.nmno = &Nmno{yyS[yypt-1].pos, yyS[yypt-1].item, yyS[yypt-0].number}
+			yyVAL.nmno = &Nmno{yyS[yypt-0].pos, yyS[yypt-0].item, -1}
 		}
 	case 22:
+		{
+			yyVAL.nmno = &Nmno{yyS[yypt-1].pos, yyS[yypt-1].item, yyS[yypt-0].number}
+		}
+	case 23:
 		{
 			lx(yylex).rname = yyS[yypt-2].s
 			yyVAL.rules = []*Rule{&Rule{Pos: yyS[yypt-2].pos, Name: yyS[yypt-2].s, Body: yyS[yypt-1].list, Prec: yyS[yypt-0].prec}}
 		}
-	case 23:
+	case 24:
 		{
 			yyVAL.rules = append(yyS[yypt-1].rules, yyS[yypt-0].rule)
 		}
-	case 24:
+	case 25:
 		{
 			lx(yylex).rname = yyS[yypt-2].s
 			yyVAL.rule = &Rule{Pos: yyS[yypt-2].pos, Name: yyS[yypt-2].s, Body: yyS[yypt-1].list, Prec: yyS[yypt-0].prec}
 		}
-	case 25:
+	case 26:
 		{
 			yyVAL.rule = &Rule{Pos: yyS[yypt-2].pos, Name: lx(yylex).rname, Body: yyS[yypt-1].list, Prec: yyS[yypt-0].prec}
 		}
-	case 26:
+	case 27:
 		{
 			yyVAL.list = []interface{}(nil)
 		}
-	case 27:
+	case 28:
 		{
 			yyVAL.list = append(yyS[yypt-1].list, yyS[yypt-0].item)
 		}
-	case 28:
+	case 29:
 		{
 			yyVAL.list = append(yyS[yypt-1].list, yyS[yypt-0].act)
 		}
-	case 29:
+	case 30:
 		{
 			/* Copy action, translate $$, and so on. */
 			lx := lx(yylex)
@@ -936,19 +941,19 @@ yydefault:
 			}
 			yyVAL.act = a
 		}
-	case 30:
+	case 31:
 		{
 			yyVAL.prec = nil
 		}
-	case 31:
+	case 32:
 		{
 			yyVAL.prec = &Prec{Pos: yyS[yypt-1].pos, Identifier: yyS[yypt-0].item}
 		}
-	case 32:
+	case 33:
 		{
 			yyVAL.prec = &Prec{Pos: yyS[yypt-2].pos, Identifier: yyS[yypt-1].item, Act: yyS[yypt-0].act}
 		}
-	case 33:
+	case 34:
 		yyVAL.prec = yyS[yypt-0].prec
 	}
 	goto yystack /* stack new state and value */

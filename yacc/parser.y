@@ -241,6 +241,10 @@ nlist:
 	{
 		$$ = append($1, $2)
 	}
+|	nlist ',' nmno
+	{
+		$$ = append($1, $3)
+	}
 
 nmno:
 	tkIdent
@@ -484,6 +488,7 @@ var xlat = map[scanner.Token]int{
 	scanner.UNION:        tkUnion,
 	scanner.ERR_VERBOSE:  tkErrorVerbose,
 
+	scanner.COMMA:        ',',
 	scanner.EOF:          0,
 	scanner.OR:           '|',
 }
