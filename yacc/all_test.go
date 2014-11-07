@@ -580,7 +580,7 @@ StatementList:
         }
 |   StatementList Statement
         {
-            $$ = append($1, $2)
+            $$ = append($<list>1, $2)
         }
 
 %%
@@ -620,13 +620,13 @@ StatementList:
 	// · · · · · }
 	// · · · · · *parser.Act@act.y:12:25{
 	// · · · · · · Src: "= append("
-	// · · · · · · Tok: DLR_NUM, Tag: "", Num: 1
+	// · · · · · · Tok: DLR_TAG_NUM, Tag: "list", Num: 1
 	// · · · · · }
-	// · · · · · *parser.Act@act.y:12:29{
+	// · · · · · *parser.Act@act.y:12:35{
 	// · · · · · · Src: ", "
 	// · · · · · · Tok: DLR_NUM, Tag: "", Num: 2
 	// · · · · · }
-	// · · · · · *parser.Act@act.y:12:31{
+	// · · · · · *parser.Act@act.y:12:37{
 	// · · · · · · Src: ")\n        "
 	// · · · · · }
 	// · · · · }

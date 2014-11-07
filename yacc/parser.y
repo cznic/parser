@@ -417,7 +417,8 @@ type Prec struct {
 	Act []*Act
 }
 
-// Act captures the action optionally associated with a rule.
+// Act captures the action optionally associated with a rule.  The action parts
+// are split at the yacc tokens $$, $num, $<tag>num, if present.
 type Act struct{
 	token.Pos
 	Src string
