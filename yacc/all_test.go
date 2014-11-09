@@ -492,7 +492,7 @@ Foo:
         }
         '2'
         {
-            fmt.Println([]t{2})
+            fmt.Println([]t{$2})
         }
 
 Bar:
@@ -547,8 +547,12 @@ Bar:
 	// · · · · }
 	// · · · · '2'
 	// · · · · []*parser.Act{
-	// · · · · · *parser.Act@rule.y:17:13{
-	// · · · · · · Src: "\n            fmt.Println([]t{2})\n        "
+	// · · · · · *parser.Act@rule.y:17:29{
+	// · · · · · · Src: "\n            fmt.Println([]t{"
+	// · · · · · · Tok: DLR_NUM, Tag: "", Num: 2
+	// · · · · · }
+	// · · · · · *parser.Act@rule.y:17:31{
+	// · · · · · · Src: "})\n        "
 	// · · · · · }
 	// · · · · }
 	// · · · }

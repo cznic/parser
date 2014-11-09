@@ -311,6 +311,10 @@ act:
 				pos = token.Pos(lx.Pos())
 			}
 			tokStart := lx.Pos()-1
+			if start < 0 {
+				start = tokStart
+				pos = token.Pos(lx.Pos())
+			}
 			switch tok {
 			case scanner.DLR_DLR, scanner.DLR_NUM, scanner.DLR_TAG_DLR, scanner.DLR_TAG_NUM:
 				s, ok := tag.(string)
@@ -329,10 +333,6 @@ act:
 				n++
 			case scanner.RBRACE:
 				if n == 0 {
-					if start < 0 {
-						start = tokStart
-						pos = token.Pos(lx.Pos())
-					}
 					src := lx.src[start:tokStart]
 					if len(src) != 0 {
 						a = append(a, &Act{Pos: pos, Src: string(src)})
@@ -345,11 +345,6 @@ act:
 			case scanner.EOF:
 				lx.Error("unexpected EOF")
 				goto ret1
-			default:
-				if start < 0 {
-					start = tokStart
-					pos = token.Pos(lx.Pos())
-				}
 			}
 		}
 		$$ = a
