@@ -521,12 +521,12 @@ Bar:
 	// · · · · "Baz"
 	// · · · · "foo"
 	// · · · · []*parser.Act{
-	// · · · · · *parser.Act@rule.y:9:13{
-	// · · · · · · Src: "\n            "
+	// · · · · · *parser.Act@rule.y:8:9{
+	// · · · · · · Src: "{\n            "
 	// · · · · · · Tok: DLR_DLR, Tag: "", Num: 0
 	// · · · · · }
-	// · · · · · *parser.Act@rule.y:9:16{
-	// · · · · · · Src: "= \"abc\"\n        "
+	// · · · · · *parser.Act@rule.y:9:15{
+	// · · · · · · Src: " = \"abc\"\n        }"
 	// · · · · · }
 	// · · · · }
 	// · · · }
@@ -537,22 +537,22 @@ Bar:
 	// · · · · "Qux"
 	// · · · · "lol"
 	// · · · · []*parser.Act{
-	// · · · · · *parser.Act@rule.y:13:13{
-	// · · · · · · Src: "\n            "
+	// · · · · · *parser.Act@rule.y:12:9{
+	// · · · · · · Src: "{\n            "
 	// · · · · · · Tok: DLR_DLR, Tag: "", Num: 0
 	// · · · · · }
-	// · · · · · *parser.Act@rule.y:13:16{
-	// · · · · · · Src: "= \"def\"\n        "
+	// · · · · · *parser.Act@rule.y:13:15{
+	// · · · · · · Src: " = \"def\"\n        }"
 	// · · · · · }
 	// · · · · }
 	// · · · · '2'
 	// · · · · []*parser.Act{
-	// · · · · · *parser.Act@rule.y:17:29{
-	// · · · · · · Src: "\n            fmt.Println([]t{"
+	// · · · · · *parser.Act@rule.y:16:9{
+	// · · · · · · Src: "{\n            fmt.Println([]t{"
 	// · · · · · · Tok: DLR_NUM, Tag: "", Num: 2
 	// · · · · · }
 	// · · · · · *parser.Act@rule.y:17:31{
-	// · · · · · · Src: "})\n        "
+	// · · · · · · Src: "})\n        }"
 	// · · · · · }
 	// · · · · }
 	// · · · }
@@ -584,6 +584,7 @@ StatementList:
         }
 |   StatementList Statement
         {
+            foo := $1
             $$ = append($<list>1, $2)
         }
 
@@ -603,12 +604,12 @@ StatementList:
 	// · · *parser.Rule@act.y:5:1{
 	// · · · Name: "StatementList", Body: []interface {}{
 	// · · · · []*parser.Act{
-	// · · · · · *parser.Act@act.y:8:13{
-	// · · · · · · Src: "\n            "
+	// · · · · · *parser.Act@act.y:7:9{
+	// · · · · · · Src: "{\n            "
 	// · · · · · · Tok: DLR_DLR, Tag: "", Num: 0
 	// · · · · · }
-	// · · · · · *parser.Act@act.y:8:16{
-	// · · · · · · Src: "= nil\n        "
+	// · · · · · *parser.Act@act.y:8:15{
+	// · · · · · · Src: " = nil\n        }"
 	// · · · · · }
 	// · · · · }
 	// · · · }
@@ -618,20 +619,24 @@ StatementList:
 	// · · · · "StatementList"
 	// · · · · "Statement"
 	// · · · · []*parser.Act{
-	// · · · · · *parser.Act@act.y:12:13{
+	// · · · · · *parser.Act@act.y:11:9{
+	// · · · · · · Src: "{\n            foo := "
+	// · · · · · · Tok: DLR_NUM, Tag: "", Num: 1
+	// · · · · · }
+	// · · · · · *parser.Act@act.y:12:22{
 	// · · · · · · Src: "\n            "
 	// · · · · · · Tok: DLR_DLR, Tag: "", Num: 0
 	// · · · · · }
-	// · · · · · *parser.Act@act.y:12:25{
-	// · · · · · · Src: "= append("
+	// · · · · · *parser.Act@act.y:13:15{
+	// · · · · · · Src: " = append("
 	// · · · · · · Tok: DLR_TAG_NUM, Tag: "list", Num: 1
 	// · · · · · }
-	// · · · · · *parser.Act@act.y:12:35{
+	// · · · · · *parser.Act@act.y:13:33{
 	// · · · · · · Src: ", "
 	// · · · · · · Tok: DLR_NUM, Tag: "", Num: 2
 	// · · · · · }
-	// · · · · · *parser.Act@act.y:12:37{
-	// · · · · · · Src: ")\n        "
+	// · · · · · *parser.Act@act.y:13:37{
+	// · · · · · · Src: ")\n        }"
 	// · · · · · }
 	// · · · · }
 	// · · · }
@@ -718,12 +723,12 @@ Foo:
 	// · · · Prec: *parser.Prec@prec.y:7:9{
 	// · · · · Identifier: "B"
 	// · · · · []*parser.Act{
-	// · · · · · *parser.Act@prec.y:9:17{
-	// · · · · · · Src: "\n            qux("
+	// · · · · · *parser.Act@prec.y:8:9{
+	// · · · · · · Src: "{\n            qux("
 	// · · · · · · Tok: DLR_NUM, Tag: "", Num: 1
 	// · · · · · }
 	// · · · · · *parser.Act@prec.y:9:19{
-	// · · · · · · Src: ")\n        "
+	// · · · · · · Src: ")\n        }"
 	// · · · · · }
 	// · · · · }
 	// · · · }
