@@ -26,6 +26,7 @@ import (
 	"bytes"
 	"fmt"
 	"go/token"
+	"strconv"
 	"strings"
 
 	"github.com/cznic/scanner/yacc"
@@ -302,75 +303,29 @@ rbody:
 act:
 	'{'
 	{
-	//	/* Copy action, translate $$, and so on. */
-	//		lx := lx(yylex)
-	//		lx.Mode(false)
-	//		a := []*Act{}
-	//		start := lx.Pos()
-	//		fmt.Printf("start %d(%#x)\n", start, start)
-	//		n := 0
-	//		pos := token.Pos(-1)
-	//	act_loop:
-	//		for {
-	//			tok, tag, num := lx.Scan()
-	//			if pos < 0 {
-	//				pos = token.Pos(lx.Pos())
-	//			}
-	//			tokStart := lx.Pos()-1
-	//			if start < 0 {
-	//				start = tokStart
-	//				pos = token.Pos(lx.Pos())
-	//			}
-	//			switch tok {
-	//			case scanner.DLR_DLR, scanner.DLR_NUM, scanner.DLR_TAG_DLR, scanner.DLR_TAG_NUM:
-	//				s, ok := tag.(string)
-	//				if !ok {
-	//					s = ""
-	//				}
-	//
-	//				src := ""
-	//				if start > 0 {
-	//					src = string(lx.src[start:tokStart])
-	//				}
-	//				
-	//				a = append(a, &Act{Pos: token.Pos(lx.Pos()), Src: src, Tok: tok, Tag: s, Num: num})
-	//				start = -1
-	//			case scanner.LBRACE:
-	//				n++
-	//			case scanner.RBRACE:
-	//				if n == 0 {
-	//					src := lx.src[start:tokStart]
-	//					if len(src) != 0 {
-	//						a = append(a, &Act{Pos: pos, Src: string(src)})
-	//					}
-	//					lx.Mode(true)
-	//					break act_loop
-	//				}
-	//
-	//				n--
-	//			case scanner.EOF:
-	//				lx.Error("unexpected EOF")
-	//				goto ret1
-	//			}
-	//		}
-	//	$$ = a
-
 		/* Copy action, translate $$, and so on. */
 		lx := lx(yylex)
 		lx.Mode(false)
 		a := []*Act{}
 		start := lx.Pos()-1 // First '{' inclusive.
+		var d int
 		for lvl := 1; lvl > 0; {
 			tok, tag, num := lx.Scan()
 			s, _ := tag.(string)
-			d := 1
-			if n := len(s); n != 0 {
-				d = n+3
+			switch tok {
+			case scanner.DLR_DLR:
+				d = 1
+			case scanner.DLR_NUM:
+				d = len(strconv.Itoa(num))
+			case scanner.DLR_TAG_DLR:
+				d = len(s)+3
+			case scanner.DLR_TAG_NUM:
+				d = len(s)+2+len(strconv.Itoa(num))
 			}
 			switch tok {
 			case scanner.DLR_DLR, scanner.DLR_NUM, scanner.DLR_TAG_DLR, scanner.DLR_TAG_NUM:
 				a = append(a, &Act{Pos: token.Pos(start+1), Src: string(lx.src[start:lx.Pos()-1]), Tok: tok, Tag: s, Num: num})
-				start = lx.Pos()+d
+				start = lx.Pos() + d 
 			case scanner.LBRACE:
 				lvl++
 			case scanner.RBRACE:
@@ -384,7 +339,6 @@ act:
 				goto ret1
 			}
 		}
-
 		$$ = a
 	}
 
