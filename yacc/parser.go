@@ -951,19 +951,14 @@ yydefault:
 			for lvl := 1; lvl > 0; {
 				tok, tag, num := lx.Scan()
 				s, _ := tag.(string)
+				d := 1
+				if n := len(s); n != 0 {
+					d = n + 3
+				}
 				switch tok {
-				case scanner.DLR_DLR:
+				case scanner.DLR_DLR, scanner.DLR_NUM, scanner.DLR_TAG_DLR, scanner.DLR_TAG_NUM:
 					a = append(a, &Act{Pos: token.Pos(start + 1), Src: string(lx.src[start : lx.Pos()-1]), Tok: tok, Tag: s, Num: num})
-					start = lx.Pos() + 1
-				case scanner.DLR_NUM:
-					a = append(a, &Act{Pos: token.Pos(start + 1), Src: string(lx.src[start : lx.Pos()-1]), Tok: tok, Tag: s, Num: num})
-					start = lx.Pos() + 1
-				case scanner.DLR_TAG_DLR:
-					a = append(a, &Act{Pos: token.Pos(start + 1), Src: string(lx.src[start : lx.Pos()-1]), Tok: tok, Tag: s, Num: num})
-					start = lx.Pos() + len(s) + 3
-				case scanner.DLR_TAG_NUM:
-					a = append(a, &Act{Pos: token.Pos(start + 1), Src: string(lx.src[start : lx.Pos()-1]), Tok: tok, Tag: s, Num: num})
-					start = lx.Pos() + len(s) + 3
+					start = lx.Pos() + d
 				case scanner.LBRACE:
 					lvl++
 				case scanner.RBRACE:
