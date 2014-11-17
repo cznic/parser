@@ -356,6 +356,9 @@ prec:
 		$$ = &Prec{Pos: $<pos>1, Identifier: $2, Act: $3}
 	}
 |	prec ';'
+	{
+		$$ = $1 // Temporary workaround for issue #2
+	}
 
 %%
 
