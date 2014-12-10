@@ -523,7 +523,11 @@ func (l *lexer) Lex(lval *yySymType) (y int) {
 			}
 			return illegal
 		default:
-			return xlat[tok]
+			if x, ok := xlat[tok]; ok {
+				return x
+			}
+
+			return illegal
 		}
 	}
 }
@@ -536,6 +540,14 @@ func (e errList) Error() string {
 		a = append(a, v.Error())
 	}
 	return strings.Join(a, "\n")
+}
+
+func (e errList) error() error {
+	if len(e) == 0 {
+		return nil
+	}
+
+	return e
 }
 
 func lx(yylex yyLexer) *lexer {
@@ -555,12 +567,11 @@ func Parse(fset *token.FileSet, fname string, src []byte) (s *AST, err error) {
 	defer func() {
 		if e := recover(); e != nil {
 			l.Error(fmt.Sprintf("%v", e))
-			err = errList(l.Errors)
-			return
+			err = errList(l.Errors).error()
 		}
 	}()
 	if yyParse(&l) != 0 {
-		return nil, errList(l.Errors)
+		return nil, errList(l.Errors).error()
 	}
 
 	l.ast.fset = fset
