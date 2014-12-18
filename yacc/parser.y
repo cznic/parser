@@ -62,7 +62,7 @@ import (
 
 /* Reserved words : %type=>tkType %left=>tkLeft, and so on */
 
-%token	tkLeft tkRight tkNonAssoc tkToken tkPrec tkType tkStart tkUnion tkErrorVerbose
+%token	tkLeft tkRight tkNonAssoc tkToken tkPrec tkPrecedence tkType tkStart tkUnion tkErrorVerbose
 
 %token	tkMark            /* The %% mark. */
 %token	tkLCurl           /* The %{ mark. */
@@ -205,6 +205,11 @@ rword:
 	{
 		$<pos>$ = $<pos>1
 		$$ = Left
+	}
+|	tkPrecedence
+	{
+		$<pos>$ = $<pos>1
+		$$ = Precedence
 	}
 |	tkRight
 	{
@@ -433,12 +438,14 @@ const (
 	Token      // %token
 	Type       // %type
 	Union      // %union
+	Precedence // %precedence
 )
 
 var rwords = map[Rword]string{
 	Copy:       "Copy",
 	ErrVerbose: "ErrorVerbose",
 	Left:       "Left",
+	Precedence: "Precedence",
 	Nonassoc:   "Nonassoc",
 	Right:      "Right",
 	Start:      "Start",
@@ -471,6 +478,7 @@ var xlat = map[scanner.Token]int{
 	scanner.MARK:         tkMark,
 	scanner.NONASSOC:     tkNonAssoc,
 	scanner.PREC:         tkPrec,
+	scanner.PRECEDENCE:   tkPrecedence,
 	scanner.RCURL:        tkRCurl,
 	scanner.RIGHT:        tkRight,
 	scanner.START:        tkStart,

@@ -796,3 +796,43 @@ place   :       DELL
 	// · Tail: ""
 	// }
 }
+
+func ExampleDef_precedence() {
+	ast, err := Parse(token.NewFileSet(), "precedence.y", []byte(`
+
+%precedence THEN
+%precedence ELSE
+
+%%
+
+Foo:
+
+`))
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(ast)
+	// Output:
+	// *parser.AST{
+	// · Defs: []*parser.Def{
+	// · · *parser.Def@precedence.y:3:1{
+	// · · · Rword: Precedence, Tag: "", Nlist: []*parser.Nmno{
+	// · · · · *parser.Nmno@precedence.y:3:13{Identifier: "THEN", Number: -1}
+	// · · · }
+	// · · }
+	// · · *parser.Def@precedence.y:4:1{
+	// · · · Rword: Precedence, Tag: "", Nlist: []*parser.Nmno{
+	// · · · · *parser.Nmno@precedence.y:4:13{Identifier: "ELSE", Number: -1}
+	// · · · }
+	// · · }
+	// · }
+	// · Rules: []*parser.Rule{
+	// · · *parser.Rule@precedence.y:8:1{
+	// · · · Name: "Foo", Body: []interface {}{
+	// · · · }
+	// · · }
+	// · }
+	// · Tail: ""
+	// }
+}
