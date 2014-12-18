@@ -16,6 +16,8 @@ Grammar for the input to yacc.
 //
 // Changelog
 //
+// 2014-12-18: Support bison's %precedence.
+//
 // 2014-11-11: Include the opening and closing braces of semantic actions in
 // Act.Src.
 package parser
