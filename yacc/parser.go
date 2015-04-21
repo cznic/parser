@@ -1,501 +1,307 @@
-/*
+// CAUTION: Generated file, DO NOT EDIT!
 
-Copyright © 2001-2004 The IEEE and The Open Group, All Rights reserved.
-
-Original source text: http://pubs.opengroup.org/onlinepubs/009695399/utilities/yacc.html
-
-Modifications: Copyright 2014 The parser Authors. All rights reserved.
-Use of this source code is governed by a BSD-style
-license that can be found in the LICENSE file.
-
-Grammar for the input to yacc.
-
-*/
-
-// Package parser implements a parser for yacc source files.
+// Copyright © 2001-2004 The IEEE and The Open Group, All Rights reserved.
 //
-// Changelog
+// Original source text:
+// http://pubs.opengroup.org/onlinepubs/009695399/utilities/yacc.html
 //
-// 2014-12-18: Support bison's %precedence.
+// Modifications: Copyright 2015 The parser Authors. All rights reserved.  Use
+// of this source code is governed by a BSD-style license that can be found in
+// the LICENSE file.
 //
-// 2014-11-11: Include the opening and closing braces of semantic actions in
-// Act.Src.
+// Grammar for the input to yacc.
+//
+// CAUTION: Generated file (unless this is parser.y) - DO NOT EDIT!
+
 package parser
 
 import __yyfmt__ "fmt"
 
-import (
-	"bytes"
-	"fmt"
-	"go/token"
-	"strconv"
-	"strings"
-
-	"github.com/cznic/scanner/yacc"
-	"github.com/cznic/strutil"
-)
-
 type yySymType struct {
-	yys    int
-	act    []*Act
-	def    *Def
-	defs   []*Def
-	item   interface{}
-	list   []interface{}
-	nlist  []*Nmno
-	nmno   *Nmno
-	number int
-	pos    token.Pos
-	prec   *Prec
-	rule   *Rule
-	rules  []*Rule
-	rword  Rword
-	s      string
+	yys   int
+	token *Token
+	item  interface{}
 }
 
-const illegal = 57346
-const tkIdent = 57347
-const tkCIdent = 57348
-const tkNumber = 57349
-const tkLeft = 57350
-const tkRight = 57351
-const tkNonAssoc = 57352
-const tkToken = 57353
-const tkPrec = 57354
-const tkPrecedence = 57355
-const tkType = 57356
-const tkStart = 57357
-const tkUnion = 57358
-const tkErrorVerbose = 57359
-const tkMark = 57360
-const tkLCurl = 57361
-const tkRCurl = 57362
-
-var yyToknames = []string{
-	"illegal",
-	"tkIdent",
-	"tkCIdent",
-	"tkNumber",
-	"tkLeft",
-	"tkRight",
-	"tkNonAssoc",
-	"tkToken",
-	"tkPrec",
-	"tkPrecedence",
-	"tkType",
-	"tkStart",
-	"tkUnion",
-	"tkErrorVerbose",
-	"tkMark",
-	"tkLCurl",
-	"tkRCurl",
-}
-var yyStatenames = []string{}
-
-const yyEOFCode = 1
-const yyErrCode = 2
-const yyMaxDepth = 200
-
-// AST holds the parsed .y source.
-type AST struct {
-	Defs  []*Def  // Definitions
-	Rules []*Rule // Rules
-	Tail  string  // Optional rest of the file
-	fset  *token.FileSet
+type yyXError struct {
+	state, xsym int
 }
 
-// String implements fmt.Stringer.
-func (s *AST) String() string {
-	return str(s.fset, s)
-}
-
-// Def is the definition section definition entity
-type Def struct {
-	token.Pos
-	Rword Rword
-	Tag   string
-	Nlist []*Nmno
-}
-
-// Rule is the rules section rule.
-type Rule struct {
-	token.Pos
-	Name string
-	Body []interface{}
-	Prec *Prec
-}
-
-// Nmno (Name-or-number) is a definition section name list item. It's either a
-// production name (type string), or a rune literal. Optional number associated
-// with the name is in number, if non-negative.
-type Nmno struct {
-	token.Pos
-	Identifier interface{}
-	Number     int
-}
-
-// Prec defines the optional precedence of a rule.
-type Prec struct {
-	token.Pos
-	Identifier interface{}
-	Act        []*Act
-}
-
-// Act captures the action optionally associated with a rule.  The action parts
-// are split at the yacc tokens $$, $num, $<tag>num, if present.
-type Act struct {
-	token.Pos
-	Src string
-	Tok scanner.Token // github.com/cznic/scanner/yacc.DLR_* or zero
-	Tag string        // DLR_TAG_*
-	Num int           // DLR_NUM, DLR_TAG_NUM
-}
-
-// Rword is a definition tag (Def.Rword).
-type Rword int
-
-// Values of Def.Rword
 const (
-	_ Rword = iota
+	yyDefault     = 57364
+	yyEofCode     = 57344
+	COMMENT       = 57346
+	C_IDENTIFIER  = 57347
+	ERROR_VERBOSE = 57348
+	IDENTIFIER    = 57349
+	LCURL         = 57350
+	LEFT          = 57351
+	MARK          = 57352
+	NONASSOC      = 57353
+	NUMBER        = 57354
+	PREC          = 57355
+	PRECEDENCE    = 57356
+	RCURL         = 57357
+	RIGHT         = 57358
+	START         = 57359
+	TOKEN         = 57360
+	TYPE          = 57361
+	UNION         = 57362
+	yyErrCode     = 57345
 
-	Copy       // %{ ... %}
-	ErrVerbose // %error-verbose
-	Left       // %left
-	Nonassoc   // %nonassoc
-	Right      // %right
-	Start      // %start
-	Token      // %token
-	Type       // %type
-	Union      // %union
-	Precedence // %precedence
+	yyMaxDepth = 200
+	yyTabOfs   = -37
 )
 
-var rwords = map[Rword]string{
-	Copy:       "Copy",
-	ErrVerbose: "ErrorVerbose",
-	Left:       "Left",
-	Precedence: "Precedence",
-	Nonassoc:   "Nonassoc",
-	Right:      "Right",
-	Start:      "Start",
-	Token:      "Token",
-	Type:       "Type",
-	Union:      "Union",
-}
-
-// String implements fmt.Stringer.
-func (r Rword) String() string {
-	if s := rwords[r]; s != "" {
-		return s
+var (
+	yyXLAT = map[int]int{
+		57352: 0,  // MARK (30x)
+		57349: 1,  // IDENTIFIER (28x)
+		57344: 2,  // $end (20x)
+		57347: 3,  // C_IDENTIFIER (18x)
+		124:   4,  // '|' (17x)
+		59:    5,  // ';' (15x)
+		57348: 6,  // ERROR_VERBOSE (13x)
+		57350: 7,  // LCURL (13x)
+		57351: 8,  // LEFT (13x)
+		57353: 9,  // NONASSOC (13x)
+		57356: 10, // PRECEDENCE (13x)
+		57358: 11, // RIGHT (13x)
+		57359: 12, // START (13x)
+		57360: 13, // TOKEN (13x)
+		57361: 14, // TYPE (13x)
+		57362: 15, // UNION (13x)
+		123:   16, // '{' (10x)
+		57355: 17, // PREC (9x)
+		60:    18, // '<' (7x)
+		44:    19, // ',' (6x)
+		57365: 20, // Action (4x)
+		57368: 21, // Name (3x)
+		57370: 22, // Precedence (3x)
+		57373: 23, // RuleItemList (3x)
+		57357: 24, // RCURL (2x)
+		57363: 25, // $@1 (1x)
+		62:    26, // '>' (1x)
+		125:   27, // '}' (1x)
+		57366: 28, // Definition (1x)
+		57367: 29, // DefinitionList (1x)
+		57369: 30, // NameList (1x)
+		57354: 31, // NUMBER (1x)
+		57371: 32, // ReservedWord (1x)
+		57372: 33, // Rule (1x)
+		57374: 34, // RuleList (1x)
+		57375: 35, // Specification (1x)
+		57376: 36, // Tag (1x)
+		57377: 37, // Tail (1x)
+		57364: 38, // $default (0x)
+		57346: 39, // COMMENT (0x)
+		57345: 40, // error (0x)
 	}
 
-	return fmt.Sprintf("Rword(%d)", r)
-}
-
-type lexer struct {
-	*scanner.Scanner
-	ast    *AST
-	closed bool
-	fset   *token.FileSet
-	rname  string // last rule name for '|' rules
-	src    []byte
-}
-
-var xlat = map[scanner.Token]int{
-	scanner.LCURL:       tkLCurl,
-	scanner.LEFT:        tkLeft,
-	scanner.MARK:        tkMark,
-	scanner.NONASSOC:    tkNonAssoc,
-	scanner.PREC:        tkPrec,
-	scanner.PRECEDENCE:  tkPrecedence,
-	scanner.RCURL:       tkRCurl,
-	scanner.RIGHT:       tkRight,
-	scanner.START:       tkStart,
-	scanner.TOKEN:       tkToken,
-	scanner.TYPE:        tkType,
-	scanner.UNION:       tkUnion,
-	scanner.ERR_VERBOSE: tkErrorVerbose,
-
-	scanner.COMMA: ',',
-	scanner.EOF:   0,
-	scanner.OR:    '|',
-}
-
-var todo = strings.ToUpper("todo")
-
-func (l *lexer) Lex(lval *yySymType) (y int) {
-	if l.closed {
-		return 0
+	yySymNames = []string{
+		"MARK",
+		"IDENTIFIER",
+		"$end",
+		"C_IDENTIFIER",
+		"'|'",
+		"';'",
+		"ERROR_VERBOSE",
+		"LCURL",
+		"LEFT",
+		"NONASSOC",
+		"PRECEDENCE",
+		"RIGHT",
+		"START",
+		"TOKEN",
+		"TYPE",
+		"UNION",
+		"'{'",
+		"PREC",
+		"'<'",
+		"','",
+		"Action",
+		"Name",
+		"Precedence",
+		"RuleItemList",
+		"RCURL",
+		"$@1",
+		"'>'",
+		"'}'",
+		"Definition",
+		"DefinitionList",
+		"NameList",
+		"NUMBER",
+		"ReservedWord",
+		"Rule",
+		"RuleList",
+		"Specification",
+		"Tag",
+		"Tail",
+		"$default",
+		"COMMENT",
+		"error",
 	}
 
-	for {
-		tok, val, _ := l.Scan()
-		lval.pos = token.Pos(l.Pos())
-		switch tok {
-		case scanner.COMMENT:
-			continue
-		case scanner.C_IDENTIFIER:
-			if s, ok := val.(string); ok {
-				lval.s = s
-			}
-			return tkCIdent
-		case scanner.IDENTIFIER:
-			if s, ok := val.(string); ok {
-				lval.item = s
-			}
-			return tkIdent
-		case scanner.INT:
-			if n, ok := val.(uint64); ok {
-				lval.number = int(n)
-			}
-			return tkNumber
-		case scanner.CHAR:
-			if n, ok := val.(int32); ok {
-				lval.item = int(n)
-			}
-			return tkIdent
-		case scanner.ILLEGAL:
-			if s, ok := val.(string); ok && s != "" {
-				return int([]rune(s)[0])
-			}
-			return illegal
-		default:
-			if x, ok := xlat[tok]; ok {
-				return x
-			}
-
-			return illegal
-		}
-	}
-}
-
-type errList []error
-
-func (e errList) Error() string {
-	a := []string{}
-	for _, v := range e {
-		a = append(a, v.Error())
-	}
-	return strings.Join(a, "\n")
-}
-
-func (e errList) error() error {
-	if len(e) == 0 {
-		return nil
+	yyReductions = map[int]struct{ xsym, components int }{
+		0:  {0, 1},
+		1:  {20, 2},
+		2:  {28, 2},
+		3:  {28, 1},
+		4:  {25, 0},
+		5:  {28, 3},
+		6:  {28, 3},
+		7:  {28, 1},
+		8:  {29, 0},
+		9:  {29, 2},
+		10: {21, 1},
+		11: {21, 2},
+		12: {30, 1},
+		13: {30, 2},
+		14: {30, 3},
+		15: {22, 0},
+		16: {22, 2},
+		17: {22, 3},
+		18: {22, 2},
+		19: {32, 1},
+		20: {32, 1},
+		21: {32, 1},
+		22: {32, 1},
+		23: {32, 1},
+		24: {32, 1},
+		25: {33, 3},
+		26: {33, 3},
+		27: {23, 0},
+		28: {23, 2},
+		29: {23, 2},
+		30: {34, 3},
+		31: {34, 2},
+		32: {35, 4},
+		33: {36, 0},
+		34: {36, 3},
+		35: {37, 1},
+		36: {37, 0},
 	}
 
-	return e
-}
-
-func lx(yylex yyLexer) *lexer {
-	return yylex.(*lexer)
-}
-
-// Parse parses src as a single yacc source file fname and returns the
-// corresponding AST. If the source couldn't be read, the returned AST is nil
-// and the error indicates all of the specific failures.
-func Parse(fset *token.FileSet, fname string, src []byte) (s *AST, err error) {
-	l := lexer{
-		fset:    fset,
-		Scanner: scanner.New(fset, fname, src),
-		src:     src,
+	yyXErrors = map[yyXError]string{
+		yyXError{0, 2}:   "invalid empty input",
+		yyXError{1, -1}:  "expected $end",
+		yyXError{21, -1}: "expected $end",
+		yyXError{22, -1}: "expected $end",
+		yyXError{39, -1}: "expected '>'",
+		yyXError{24, -1}: "expected '}'",
+		yyXError{23, -1}: "expected Action or Precedence or one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
+		yyXError{33, -1}: "expected Action or Precedence or one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
+		yyXError{35, -1}: "expected Action or Precedence or one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
+		yyXError{30, -1}: "expected Action or one of [$end ';' '{' '|' C_IDENTIFIER MARK]",
+		yyXError{2, -1}:  "expected Definition or one of [ERROR_VERBOSE LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{3, -1}:  "expected IDENTIFIER",
+		yyXError{25, -1}: "expected IDENTIFIER",
+		yyXError{38, -1}: "expected IDENTIFIER",
+		yyXError{40, -1}: "expected IDENTIFIER",
+		yyXError{46, -1}: "expected Name or IDENTIFIER",
+		yyXError{41, -1}: "expected Name or one of [',' ERROR_VERBOSE IDENTIFIER LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{37, -1}: "expected NameList or IDENTIFIER",
+		yyXError{6, -1}:  "expected NameList or Tag or one of ['<' IDENTIFIER]",
+		yyXError{16, -1}: "expected Precedence or RuleItemList or one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
+		yyXError{18, -1}: "expected Precedence or RuleItemList or one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
+		yyXError{19, -1}: "expected Precedence or RuleItemList or one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
+		yyXError{5, -1}:  "expected RCURL",
+		yyXError{48, -1}: "expected RCURL",
+		yyXError{17, -1}: "expected Rule or Tail or one of [$end '|' C_IDENTIFIER MARK]",
+		yyXError{15, -1}: "expected RuleList or C_IDENTIFIER",
+		yyXError{0, -1}:  "expected Specification or one of [ERROR_VERBOSE LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{27, -1}: "expected one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
+		yyXError{28, -1}: "expected one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
+		yyXError{32, -1}: "expected one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
+		yyXError{26, -1}: "expected one of [$end ';' '|' C_IDENTIFIER MARK]",
+		yyXError{29, -1}: "expected one of [$end ';' '|' C_IDENTIFIER MARK]",
+		yyXError{31, -1}: "expected one of [$end ';' '|' C_IDENTIFIER MARK]",
+		yyXError{34, -1}: "expected one of [$end ';' '|' C_IDENTIFIER MARK]",
+		yyXError{36, -1}: "expected one of [$end ';' '|' C_IDENTIFIER MARK]",
+		yyXError{20, -1}: "expected one of [$end '|' C_IDENTIFIER MARK]",
+		yyXError{42, -1}: "expected one of [',' ERROR_VERBOSE IDENTIFIER LCURL LEFT MARK NONASSOC NUMBER PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{43, -1}: "expected one of [',' ERROR_VERBOSE IDENTIFIER LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{44, -1}: "expected one of [',' ERROR_VERBOSE IDENTIFIER LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{45, -1}: "expected one of [',' ERROR_VERBOSE IDENTIFIER LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{47, -1}: "expected one of [',' ERROR_VERBOSE IDENTIFIER LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{9, -1}:  "expected one of ['<' IDENTIFIER]",
+		yyXError{10, -1}: "expected one of ['<' IDENTIFIER]",
+		yyXError{11, -1}: "expected one of ['<' IDENTIFIER]",
+		yyXError{12, -1}: "expected one of ['<' IDENTIFIER]",
+		yyXError{13, -1}: "expected one of ['<' IDENTIFIER]",
+		yyXError{14, -1}: "expected one of ['<' IDENTIFIER]",
+		yyXError{4, -1}:  "expected one of [ERROR_VERBOSE LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{7, -1}:  "expected one of [ERROR_VERBOSE LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{8, -1}:  "expected one of [ERROR_VERBOSE LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{49, -1}: "expected one of [ERROR_VERBOSE LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{50, -1}: "expected one of [ERROR_VERBOSE LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
 	}
-	defer func() {
-		if e := recover(); e != nil {
-			l.Error(fmt.Sprintf("%v", e))
-			err = errList(l.Errors).error()
-		}
-	}()
-	if yyParse(&l) != 0 {
-		return nil, errList(l.Errors).error()
+
+	yyParseTab = [51][]uint8{
+		// 0
+		{29, 6: 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29: 39, 35: 38},
+		{2: 37},
+		{52, 6: 44, 42, 47, 49, 51, 48, 40, 46, 50, 41, 28: 45, 32: 43},
+		{1: 87},
+		{34, 6: 34, 34, 34, 34, 34, 34, 34, 34, 34, 34},
+		// 5
+		{24: 33, 85},
+		{1: 4, 18: 75, 36: 74},
+		{30, 6: 30, 30, 30, 30, 30, 30, 30, 30, 30, 30},
+		{28, 6: 28, 28, 28, 28, 28, 28, 28, 28, 28, 28},
+		{1: 18, 18: 18},
+		// 10
+		{1: 17, 18: 17},
+		{1: 16, 18: 16},
+		{1: 15, 18: 15},
+		{1: 14, 18: 14},
+		{1: 13, 18: 13},
+		// 15
+		{3: 53, 34: 54},
+		{10, 10, 10, 10, 10, 10, 16: 10, 10, 23: 72},
+		{59, 2: 1, 55, 56, 33: 57, 37: 58},
+		{10, 10, 10, 10, 10, 10, 16: 10, 10, 23: 70},
+		{10, 10, 10, 10, 10, 10, 16: 10, 10, 23: 60},
+		// 20
+		{6, 2: 6, 6, 6},
+		{2: 5},
+		{2: 2},
+		{22, 64, 22, 22, 22, 22, 16: 61, 62, 20: 65, 22: 63},
+		{27: 69},
+		// 25
+		{1: 67},
+		{11, 2: 11, 11, 11, 66},
+		{9, 9, 9, 9, 9, 9, 16: 9, 9},
+		{8, 8, 8, 8, 8, 8, 16: 8, 8},
+		{19, 2: 19, 19, 19, 19},
+		// 30
+		{21, 2: 21, 21, 21, 21, 16: 61, 20: 68},
+		{20, 2: 20, 20, 20, 20},
+		{36, 36, 36, 36, 36, 36, 16: 36, 36},
+		{22, 64, 22, 22, 22, 22, 16: 61, 62, 20: 65, 22: 71},
+		{12, 2: 12, 12, 12, 66},
+		// 35
+		{22, 64, 22, 22, 22, 22, 16: 61, 62, 20: 65, 22: 73},
+		{7, 2: 7, 7, 7, 66},
+		{1: 79, 21: 80, 30: 78},
+		{1: 76},
+		{26: 77},
+		// 40
+		{1: 3},
+		{31, 79, 6: 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 19: 83, 21: 82},
+		{27, 27, 6: 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19: 27, 31: 81},
+		{25, 25, 6: 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 19: 25},
+		{26, 26, 6: 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 19: 26},
+		// 45
+		{24, 24, 6: 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 19: 24},
+		{1: 79, 21: 84},
+		{23, 23, 6: 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 19: 23},
+		{24: 86},
+		{32, 6: 32, 32, 32, 32, 32, 32, 32, 32, 32, 32},
+		// 50
+		{35, 6: 35, 35, 35, 35, 35, 35, 35, 35, 35, 35},
 	}
-
-	l.ast.fset = fset
-	return l.ast, nil
-}
-
-func str(fset *token.FileSet, v interface{}) string {
-	var buf bytes.Buffer
-	f := strutil.IndentFormatter(&buf, "· ")
-	g := func(interface{}) {}
-	g = func(v interface{}) {
-		switch x := v.(type) {
-		case nil:
-			f.Format("<nil>")
-		case int:
-			f.Format("'%c'\n", x)
-		case string:
-			f.Format("%q\n", x)
-		case []*Act:
-			f.Format("%T{%i\n", x)
-			for _, v := range x {
-				g(v)
-			}
-			f.Format("%u}\n")
-		case *Act:
-			f.Format("%T@%v{%i\n", x, fset.Position(x.Pos))
-			f.Format("Src: %q\n", x.Src)
-			if x.Tok != 0 {
-				f.Format("Tok: %s, Tag: %q, Num: %d\n", x.Tok, x.Tag, x.Num)
-			}
-			f.Format("%u}\n")
-		case *Def:
-			f.Format("%T@%v{%i\n", x, fset.Position(x.Pos))
-			f.Format("Rword: %s, ", x.Rword)
-			f.Format("Tag: %q, ", x.Tag)
-			f.Format("Nlist: %T{%i\n", x.Nlist)
-			for _, v := range x.Nlist {
-				g(v)
-			}
-			f.Format("%u}\n")
-			f.Format("%u}\n")
-		case *Nmno:
-			var s string
-			switch v := x.Identifier.(type) {
-			case string:
-				s = fmt.Sprintf("%q", v)
-			case int:
-				s = fmt.Sprintf("'%c'", v)
-			}
-			f.Format("%T@%v{Identifier: %s, Number: %d}\n", x, fset.Position(x.Pos), s, x.Number)
-		case *Prec:
-			var s string
-			switch v := x.Identifier.(type) {
-			case string:
-				s = fmt.Sprintf("%q", v)
-			case int:
-				s = fmt.Sprintf("'%c'", v)
-			}
-			f.Format("%T@%v{%i\n", x, fset.Position(x.Pos))
-			f.Format("Identifier: %s\n", s)
-			g(x.Act)
-			f.Format("%u}\n")
-		case *Rule:
-			f.Format("%T@%v{%i\n", x, fset.Position(x.Pos))
-			f.Format("Name: %q, ", x.Name)
-			f.Format("Body: %T{%i\n", x.Body)
-			for _, v := range x.Body {
-				g(v)
-			}
-			f.Format("%u}\n")
-			if x.Prec != nil {
-				f.Format("Prec: ")
-				g(x.Prec)
-			}
-			f.Format("%u}\n")
-		case *AST:
-			f.Format("%T{%i\n", x)
-			f.Format("Defs: %T{%i\n", x.Defs)
-			for _, v := range x.Defs {
-				g(v)
-			}
-			f.Format("%u}\n")
-			f.Format("Rules: %T{%i\n", x.Rules)
-			for _, v := range x.Rules {
-				g(v)
-			}
-			f.Format("%u}\n")
-			f.Format("Tail: %q\n", x.Tail)
-			f.Format("%u}\n")
-		default:
-			f.Format("%s(str): %T(%#v)\n", todo, x, x)
-		}
-	}
-	g(v)
-	return buf.String()
-}
-
-var yyExca = []int{
-	-1, 1,
-	1, -1,
-	-2, 0,
-}
-
-const yyNprod = 36
-const yyPrivate = 57344
-
-var yyTokenNames []string
-var yyStates []string
-
-const yyLast = 49
-
-var yyAct = []int{
-
-	35, 28, 33, 11, 13, 14, 10, 26, 12, 15,
-	5, 6, 8, 3, 7, 44, 34, 37, 41, 24,
-	29, 20, 17, 36, 40, 29, 45, 30, 18, 38,
-	1, 23, 31, 32, 42, 43, 37, 25, 39, 21,
-	19, 46, 9, 16, 22, 27, 47, 2, 4,
-}
-var yyPact = []int{
-
-	-1000, -1000, -5, 16, -1000, 23, -1000, -1000, -1000, 0,
-	-1000, -1000, -1000, -1000, -1000, -1000, 13, -1000, -1000, 20,
-	22, -1000, -1000, -1000, -1000, -1000, 11, 15, -1000, 17,
-	-4, 11, 11, -11, -1000, -1000, 21, -1000, -1000, 20,
-	-1000, -1000, -11, -11, -1000, -8, -1000, -1000,
-}
-var yyPgo = []int{
-
-	0, 0, 48, 47, 7, 45, 1, 2, 44, 43,
-	42, 40, 39, 30,
-}
-var yyR1 = []int{
-
-	0, 13, 12, 12, 3, 3, 2, 2, 2, 2,
-	2, 10, 10, 10, 10, 10, 10, 11, 11, 5,
-	5, 5, 6, 6, 9, 9, 8, 8, 4, 4,
-	4, 1, 7, 7, 7, 7,
-}
-var yyR2 = []int{
-
-	0, 4, 0, 1, 0, 2, 2, 1, 1, 1,
-	3, 1, 1, 1, 1, 1, 1, 0, 3, 1,
-	2, 3, 1, 2, 3, 2, 3, 3, 0, 2,
-	2, 1, 0, 2, 3, 2,
-}
-var yyChk = []int{
-
-	-1000, -13, -3, 18, -2, 15, 16, 19, 17, -10,
-	11, 8, 13, 9, 10, 14, -9, 6, 5, -11,
-	21, -12, -8, 18, 6, 24, -4, -5, -6, 5,
-	5, -4, -4, -7, 5, -1, 12, 25, -6, 23,
-	7, 22, -7, -7, 26, 5, -6, -1,
-}
-var yyDef = []int{
-
-	4, -2, 0, 0, 5, 0, 7, 8, 9, 17,
-	11, 12, 13, 14, 15, 16, 2, 28, 6, 0,
-	0, 1, 25, 3, 28, 28, 32, 10, 19, 22,
-	0, 32, 32, 24, 29, 30, 0, 31, 20, 0,
-	23, 18, 26, 27, 35, 33, 21, 34,
-}
-var yyTok1 = []int{
-
-	1, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 23, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 26,
-	21, 3, 22, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 25, 24,
-}
-var yyTok2 = []int{
-
-	2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-	12, 13, 14, 15, 16, 17, 18, 19, 20,
-}
-var yyTok3 = []int{
-	0,
-}
-
-/*	parser for yacc output	*/
+)
 
 var yyDebug = 0
 
@@ -504,72 +310,53 @@ type yyLexer interface {
 	Error(s string)
 }
 
-const yyFlag = -1000
-
-func yyTokname(c int) string {
-	// 4 is TOKSTART above
-	if c >= 4 && c-4 < len(yyToknames) {
-		if yyToknames[c-4] != "" {
-			return yyToknames[c-4]
-		}
-	}
-	return __yyfmt__.Sprintf("tok-%v", c)
+type yyLexerEx interface {
+	yyLexer
+	Reduced(rule, state int, lval *yySymType) bool
 }
 
-func yyStatname(s int) string {
-	if s >= 0 && s < len(yyStatenames) {
-		if yyStatenames[s] != "" {
-			return yyStatenames[s]
-		}
+func yySymName(c int) (s string) {
+	x, ok := yyXLAT[c]
+	if ok {
+		return yySymNames[x]
 	}
-	return __yyfmt__.Sprintf("state-%v", s)
+
+	return __yyfmt__.Sprintf("%d", c)
 }
 
-func yylex1(lex yyLexer, lval *yySymType) int {
-	c := 0
-	char := lex.Lex(lval)
-	if char <= 0 {
-		c = yyTok1[0]
-		goto out
-	}
-	if char < len(yyTok1) {
-		c = yyTok1[char]
-		goto out
-	}
-	if char >= yyPrivate {
-		if char < yyPrivate+len(yyTok2) {
-			c = yyTok2[char-yyPrivate]
-			goto out
-		}
-	}
-	for i := 0; i < len(yyTok3); i += 2 {
-		c = yyTok3[i+0]
-		if c == char {
-			c = yyTok3[i+1]
-			goto out
-		}
-	}
-
-out:
-	if c == 0 {
-		c = yyTok2[1] /* unknown char */
+func yylex1(yylex yyLexer, lval *yySymType) (n int) {
+	n = yylex.Lex(lval)
+	if n <= 0 {
+		n = yyEofCode
 	}
 	if yyDebug >= 3 {
-		__yyfmt__.Printf("lex %s(%d)\n", yyTokname(c), uint(char))
+		__yyfmt__.Printf("\nlex %s(%#x %d), lval.token: %v\n", yySymName(n), n, n, lval.token)
 	}
-	return c
+	return n
 }
 
 func yyParse(yylex yyLexer) int {
+	const yyError = 40
+
+	yyEx, _ := yylex.(yyLexerEx)
 	var yyn int
 	var yylval yySymType
 	var yyVAL yySymType
-	yyS := make([]yySymType, yyMaxDepth)
+	yyS := make([]yySymType, 200)
 
 	Nerrs := 0   /* number of errors */
 	Errflag := 0 /* error recovery flag */
+	yyerrok := func() {
+		if yyDebug >= 2 {
+			__yyfmt__.Printf("yyerrok()\n")
+		}
+		Errflag = 0
+	}
+	_ = yyerrok
 	yystate := 0
 	yychar := -1
+	var yyxchar int
+	var yyshift int
 	yyp := -1
 	goto yystack
 
@@ -581,10 +368,6 @@ ret1:
 
 yystack:
 	/* put a state and value onto the stack */
-	if yyDebug >= 4 {
-		__yyfmt__.Printf("char %v in %v\n", yyTokname(yychar), yyStatname(yystate))
-	}
-
 	yyp++
 	if yyp >= len(yyS) {
 		nyys := make([]yySymType, len(yyS)*2)
@@ -595,65 +378,72 @@ yystack:
 	yyS[yyp].yys = yystate
 
 yynewstate:
-	yyn = yyPact[yystate]
-	if yyn <= yyFlag {
-		goto yydefault /* simple state */
-	}
 	if yychar < 0 {
 		yychar = yylex1(yylex, &yylval)
+		var ok bool
+		if yyxchar, ok = yyXLAT[yychar]; !ok {
+			yyxchar = len(yySymNames) // > tab width
+		}
 	}
-	yyn += yychar
-	if yyn < 0 || yyn >= yyLast {
-		goto yydefault
+	if yyDebug >= 4 {
+		var a []int
+		for _, v := range yyS[:yyp+1] {
+			a = append(a, v.yys)
+		}
+		__yyfmt__.Printf("state stack %v\n", a)
 	}
-	yyn = yyAct[yyn]
-	if yyChk[yyn] == yychar { /* valid shift */
+	row := yyParseTab[yystate]
+	yyn = 0
+	if yyxchar < len(row) {
+		if yyn = int(row[yyxchar]); yyn != 0 {
+			yyn += yyTabOfs
+		}
+	}
+	switch {
+	case yyn > 0: // shift
 		yychar = -1
 		yyVAL = yylval
 		yystate = yyn
+		yyshift = yyn
+		if yyDebug >= 2 {
+			__yyfmt__.Printf("shift, and goto state %d\n", yystate)
+		}
 		if Errflag > 0 {
 			Errflag--
 		}
 		goto yystack
+	case yyn < 0: // reduce
+	case yystate == 1: // accept
+		if yyDebug >= 2 {
+			__yyfmt__.Println("accept")
+		}
+		goto ret0
 	}
 
-yydefault:
-	/* default state action */
-	yyn = yyDef[yystate]
-	if yyn == -2 {
-		if yychar < 0 {
-			yychar = yylex1(yylex, &yylval)
-		}
-
-		/* look through exception table */
-		xi := 0
-		for {
-			if yyExca[xi+0] == -1 && yyExca[xi+1] == yystate {
-				break
-			}
-			xi += 2
-		}
-		for xi += 2; ; xi += 2 {
-			yyn = yyExca[xi+0]
-			if yyn < 0 || yyn == yychar {
-				break
-			}
-		}
-		yyn = yyExca[xi+1]
-		if yyn < 0 {
-			goto ret0
-		}
-	}
 	if yyn == 0 {
 		/* error ... attempt to resume parsing */
 		switch Errflag {
 		case 0: /* brand new error */
-			yylex.Error("syntax error")
-			Nerrs++
 			if yyDebug >= 1 {
-				__yyfmt__.Printf("%s", yyStatname(yystate))
-				__yyfmt__.Printf(" saw %s\n", yyTokname(yychar))
+				__yyfmt__.Printf("no action for %s in state %d\n", yySymName(yychar), yystate)
 			}
+			msg, ok := yyXErrors[yyXError{yystate, yyxchar}]
+			if !ok {
+				msg, ok = yyXErrors[yyXError{yystate, -1}]
+			}
+			if !ok && yyshift != 0 {
+				msg, ok = yyXErrors[yyXError{yyshift, yyxchar}]
+			}
+			if !ok {
+				msg, ok = yyXErrors[yyXError{yyshift, -1}]
+			}
+			if !ok {
+				msg = "syntax error"
+			}
+			if msg != "" {
+				yylex.Error(msg)
+			}
+			Nerrs++
 			fallthrough
 
 		case 1, 2: /* incompletely recovered error ... try again */
@@ -661,10 +451,14 @@ yydefault:
 
 			/* find a state where "error" is a legal shift action */
 			for yyp >= 0 {
-				yyn = yyPact[yyS[yyp].yys] + yyErrCode
-				if yyn >= 0 && yyn < yyLast {
-					yystate = yyAct[yyn] /* simulate a shift of "error" */
-					if yyChk[yystate] == yyErrCode {
+				row := yyParseTab[yyS[yyp].yys]
+				if yyError < len(row) {
+					yyn = int(row[yyError]) + yyTabOfs
+					if yyn > 0 { // hit
+						if yyDebug >= 2 {
+							__yyfmt__.Printf("error recovery found error shift in state %d\n", yyS[yyp].yys)
+						}
+						yystate = yyn /* simulate a shift of "error" */
 						goto yystack
 					}
 				}
@@ -676,298 +470,408 @@ yydefault:
 				yyp--
 			}
 			/* there is no state on the stack with an error shift ... abort */
+			if yyDebug >= 2 {
+				__yyfmt__.Printf("error recovery failed\n")
+			}
 			goto ret1
 
 		case 3: /* no shift yet; clobber input char */
 			if yyDebug >= 2 {
-				__yyfmt__.Printf("error recovery discards %s\n", yyTokname(yychar))
+				__yyfmt__.Printf("error recovery discards %s\n", yySymName(yychar))
 			}
-			if yychar == yyEOFCode {
+			if yychar == yyEofCode {
 				goto ret1
 			}
+
 			yychar = -1
 			goto yynewstate /* try again in the same state */
 		}
 	}
 
-	/* reduction by production yyn */
-	if yyDebug >= 2 {
-		__yyfmt__.Printf("reduce %v in:\n\t%v\n", yyn, yyStatname(yystate))
-	}
-
-	yynt := yyn
+	r := -yyn
+	x0 := yyReductions[r]
+	x, n := x0.xsym, x0.components
 	yypt := yyp
 	_ = yypt // guard against "declared and not used"
 
-	yyp -= yyR2[yyn]
+	yyp -= n
+	if yyp+1 >= len(yyS) {
+		nyys := make([]yySymType, len(yyS)*2)
+		copy(nyys, yyS)
+		yyS = nyys
+	}
 	yyVAL = yyS[yyp+1]
 
 	/* consult goto table to find next state */
-	yyn = yyR1[yyn]
-	yyg := yyPgo[yyn]
-	yyj := yyg + yyS[yyp].yys + 1
-
-	if yyj >= yyLast {
-		yystate = yyAct[yyg]
-	} else {
-		yystate = yyAct[yyj]
-		if yyChk[yystate] != -yyn {
-			yystate = yyAct[yyg]
-		}
+	exState := yystate
+	yystate = int(yyParseTab[yyS[yyp].yys][x]) + yyTabOfs
+	/* reduction by production r */
+	if yyDebug >= 2 {
+		__yyfmt__.Printf("reduce using rule %v (%s), and goto state %d\n", r, yySymNames[x], yystate)
 	}
-	// dummy call; replaced with literal code
-	switch yynt {
 
+	switch r {
 	case 1:
 		{
-			lx(yylex).ast = &AST{Defs: yyS[yypt-3].defs, Rules: yyS[yypt-1].rules, Tail: yyS[yypt-0].s}
+			lx := yylex.(*lexer)
+			lhs := &Action{
+				Token:  yyS[yypt-1].token,
+				Token2: yyS[yypt-0].token,
+			}
+			yyVAL.item = lhs
+			//yy:field Pos token.Pos
+			//yy:field Values []*ActionValue // For backward compatibility.
+			lhs.Pos = lx.pos
+			for i, v := range lx.values {
+				a := lx.parseActionValue(lx.positions[i], v)
+				if a != nil {
+					lhs.Values = append(lhs.Values, a)
+				}
+			}
 		}
 	case 2:
 		{
-			yyVAL.s = ""
+			lhs := &Definition{
+				Token:  yyS[yypt-1].token,
+				Token2: yyS[yypt-0].token,
+			}
+			yyVAL.item = lhs
+			//yy:example "%start source\n\n%%"
+			//yy:field Pos token.Pos
+			//yy:field Value string
+			//yy:field Nlist []*Name // For backward compatibility.
 		}
 	case 3:
 		{
-			/* In this action, set up the rest of the file. */
-			lx := lx(yylex)
-			yyVAL.s = string(lx.src[lx.Pos()+1:])
-			lx.closed = true
+			lx := yylex.(*lexer)
+			lhs := &Definition{
+				Case:  1,
+				Token: yyS[yypt-0].token,
+			}
+			yyVAL.item = lhs
+			//yy:example "%union{\n        foo bar\n}\n\n%%"
+			lhs.Pos = lx.pos
+			lhs.Value = lx.value
 		}
 	case 4:
 		{
-			yyVAL.defs = []*Def(nil)
+			lx := yylex.(*lexer)
+			lx.pos2 = lx.pos
+			lx.value2 = lx.value
 		}
 	case 5:
 		{
-			yyVAL.defs = append(yyS[yypt-1].defs, yyS[yypt-0].def)
+			lx := yylex.(*lexer)
+			lhs := &Definition{
+				Case:   2,
+				Token:  yyS[yypt-2].token,
+				Token2: yyS[yypt-0].token,
+			}
+			yyVAL.item = lhs
+			lhs.Pos = lx.pos2
+			lhs.Value = lx.value2
 		}
 	case 6:
 		{
-			s, ok := yyS[yypt-0].item.(string)
-			if !ok {
-				lx := lx(yylex)
-				lx.Error(fmt.Sprintf("%v: expected name", yyS[yypt-0].pos))
+			lx := yylex.(*lexer)
+			lhs := &Definition{
+				Case:         3,
+				ReservedWord: yyS[yypt-2].item.(*ReservedWord),
+				Tag:          yyS[yypt-1].item.(*Tag),
+				NameList:     yyS[yypt-0].item.(*NameList).reverse(),
 			}
-			yyVAL.def = &Def{Pos: yyS[yypt-1].pos, Rword: Start, Tag: s}
-		}
-	case 7:
-		{
-			/* Copy union definition to output. */
-			lx := lx(yylex)
-			lx.Mode(false)
-			off0 := lx.Pos() + 5
-			n := 0
-		union_loop:
-			for {
-				tok, _, _ := lx.Scan()
-				switch tok {
-				case scanner.LBRACE:
-					n++
-				case scanner.RBRACE:
-					n--
-					if n == 0 {
-						lx.Mode(true)
-						break union_loop
-					}
-				}
+			yyVAL.item = lhs
+			for n := lhs.NameList; n != nil; n = n.NameList {
+				lhs.Nlist = append(lhs.Nlist, n.Name)
 			}
-			s := string(lx.src[off0:lx.Pos()])
-			yyVAL.def = &Def{Pos: yyS[yypt-0].pos, Rword: Union, Tag: s}
-		}
-	case 8:
-		{
-			/* Copy Go code to output file. */
-			lx := lx(yylex)
-			off0, lpos := lx.Pos(), lx.Pos()
-			lx.Mode(false)
-			var last scanner.Token
-		lcurl_loop:
-			for {
-				tok, _, _ := lx.ScanRaw()
-				if tok == scanner.RBRACE && last == scanner.REM && lx.Pos() == lpos+1 {
-					lx.Mode(true)
-					s := string(lx.src[off0+1 : lpos-1])
-					//dbg("----\n%q\n----\n", s)
-					yyVAL.def = &Def{Pos: yyS[yypt-0].pos, Rword: Copy, Tag: s}
-					break lcurl_loop
-				}
-
-				last, lpos = tok, lx.Pos()
-			}
-		}
-	case 9:
-		{
-			yyVAL.def = &Def{Pos: yyS[yypt-0].pos, Rword: ErrVerbose}
-		}
-	case 10:
-		{
-			if yyS[yypt-2].rword == Type {
-				for _, v := range yyS[yypt-0].nlist {
+			if lhs.ReservedWord.Token.Char.Rune == TYPE {
+				for _, v := range lhs.Nlist {
 					switch v.Identifier.(type) {
 					case int:
-						yylex.Error("literal invalid with %type.") // % is ok
-						goto ret1
+						lx.err(v.Token.Pos(), "literal invalid with %type.")
 					}
 
 					if v.Number > 0 {
-						yylex.Error("number invalid with %type.") // % is ok
-						goto ret1
+						lx.err(v.Token2.Pos(), "number invalid with %type.")
 					}
 				}
 			}
-
-			yyVAL.def = &Def{Pos: yyS[yypt-2].pos, Rword: yyS[yypt-2].rword, Tag: yyS[yypt-1].s, Nlist: yyS[yypt-0].nlist}
+		}
+	case 7:
+		{
+			yyVAL.item = &Definition{
+				Case:  4,
+				Token: yyS[yypt-0].token,
+			}
+		}
+	case 8:
+		{
+			yyVAL.item = (*DefinitionList)(nil)
+		}
+	case 9:
+		{
+			lx := yylex.(*lexer)
+			lhs := &DefinitionList{
+				Case:           1,
+				DefinitionList: yyS[yypt-1].item.(*DefinitionList),
+				Definition:     yyS[yypt-0].item.(*Definition),
+			}
+			yyVAL.item = lhs
+			//yy:example "%left '+' '-'\n%left '*' '/'\n%%"
+			lx.defs = append(lx.defs, lhs.Definition)
+		}
+	case 10:
+		{
+			lx := yylex.(*lexer)
+			lhs := &Name{
+				Token: yyS[yypt-0].token,
+			}
+			yyVAL.item = lhs
+			//yy:field Identifier interface{} // For backward compatibility.
+			//yy:field Number int             // For backward compatibility.
+			lhs.Identifier = lx.ident(lhs.Token)
+			lhs.Number = -1
 		}
 	case 11:
 		{
-			yyVAL.pos = yyS[yypt-0].pos
-			yyVAL.rword = Token
+			lx := yylex.(*lexer)
+			lhs := &Name{
+				Case:   1,
+				Token:  yyS[yypt-1].token,
+				Token2: yyS[yypt-0].token,
+			}
+			yyVAL.item = lhs
+			lhs.Identifier = lx.ident(lhs.Token)
+			lhs.Number = lx.number(lhs.Token2)
 		}
 	case 12:
 		{
-			yyVAL.pos = yyS[yypt-0].pos
-			yyVAL.rword = Left
+			yyVAL.item = &NameList{
+				Name: yyS[yypt-0].item.(*Name),
+			}
 		}
 	case 13:
 		{
-			yyVAL.pos = yyS[yypt-0].pos
-			yyVAL.rword = Precedence
+			yyVAL.item = &NameList{
+				Case:     1,
+				NameList: yyS[yypt-1].item.(*NameList),
+				Name:     yyS[yypt-0].item.(*Name),
+			}
 		}
 	case 14:
 		{
-			yyVAL.pos = yyS[yypt-0].pos
-			yyVAL.rword = Right
+			yyVAL.item = &NameList{
+				Case:     2,
+				NameList: yyS[yypt-2].item.(*NameList),
+				Token:    yyS[yypt-1].token,
+				Name:     yyS[yypt-0].item.(*Name),
+			}
 		}
 	case 15:
 		{
-			yyVAL.pos = yyS[yypt-0].pos
-			yyVAL.rword = Nonassoc
+			lhs := (*Precedence)(nil)
+			yyVAL.item = lhs
+			//yy:field Identifier interface{} // Name string or literal int.
 		}
 	case 16:
 		{
-			yyVAL.pos = yyS[yypt-0].pos
-			yyVAL.rword = Type
+			lx := yylex.(*lexer)
+			lhs := &Precedence{
+				Case:   1,
+				Token:  yyS[yypt-1].token,
+				Token2: yyS[yypt-0].token,
+			}
+			yyVAL.item = lhs
+			lhs.Identifier = lx.ident(lhs.Token2)
 		}
 	case 17:
 		{
-			yyVAL.s = ""
+			lx := yylex.(*lexer)
+			lhs := &Precedence{
+				Case:   2,
+				Token:  yyS[yypt-2].token,
+				Token2: yyS[yypt-1].token,
+				Action: yyS[yypt-0].item.(*Action),
+			}
+			yyVAL.item = lhs
+			lhs.Identifier = lx.ident(lhs.Token2)
 		}
 	case 18:
 		{
-			lx := lx(yylex)
-			s, ok := yyS[yypt-1].item.(string)
-			if !ok {
-				lx.Error(fmt.Sprintf("%v: expected name", yyS[yypt-1].pos))
+			yyVAL.item = &Precedence{
+				Case:       3,
+				Precedence: yyS[yypt-1].item.(*Precedence),
+				Token:      yyS[yypt-0].token,
 			}
-			yyVAL.pos = yyS[yypt-1].pos
-			yyVAL.s = s
 		}
 	case 19:
 		{
-			yyVAL.nlist = []*Nmno{yyS[yypt-0].nmno}
+			yyVAL.item = &ReservedWord{
+				Token: yyS[yypt-0].token,
+			}
 		}
 	case 20:
 		{
-			yyVAL.nlist = append(yyS[yypt-1].nlist, yyS[yypt-0].nmno)
+			yyVAL.item = &ReservedWord{
+				Case:  1,
+				Token: yyS[yypt-0].token,
+			}
 		}
 	case 21:
 		{
-			yyVAL.nlist = append(yyS[yypt-2].nlist, yyS[yypt-0].nmno)
+			yyVAL.item = &ReservedWord{
+				Case:  2,
+				Token: yyS[yypt-0].token,
+			}
 		}
 	case 22:
 		{
-			yyVAL.nmno = &Nmno{yyS[yypt-0].pos, yyS[yypt-0].item, -1}
+			yyVAL.item = &ReservedWord{
+				Case:  3,
+				Token: yyS[yypt-0].token,
+			}
 		}
 	case 23:
 		{
-			yyVAL.nmno = &Nmno{yyS[yypt-1].pos, yyS[yypt-1].item, yyS[yypt-0].number}
+			yyVAL.item = &ReservedWord{
+				Case:  4,
+				Token: yyS[yypt-0].token,
+			}
 		}
 	case 24:
 		{
-			lx(yylex).rname = yyS[yypt-2].s
-			yyVAL.rules = []*Rule{&Rule{Pos: yyS[yypt-2].pos, Name: yyS[yypt-2].s, Body: yyS[yypt-1].list, Prec: yyS[yypt-0].prec}}
+			yyVAL.item = &ReservedWord{
+				Case:  5,
+				Token: yyS[yypt-0].token,
+			}
 		}
 	case 25:
 		{
-			yyVAL.rules = append(yyS[yypt-1].rules, yyS[yypt-0].rule)
+			lx := yylex.(*lexer)
+			lhs := &Rule{
+				Token:        yyS[yypt-2].token,
+				RuleItemList: yyS[yypt-1].item.(*RuleItemList).reverse(),
+				Precedence:   yyS[yypt-0].item.(*Precedence),
+			}
+			yyVAL.item = lhs
+			//yy:field Name *Token
+			//yy:field Body []interface{} // For backward compatibility.
+			//yy:example "%%\na:\nb:\n\t{\n\t\t//\n\t\tc\n\t}\n%%"
+			lx.ruleName = lhs.Token
+			lhs.Name = lhs.Token
 		}
 	case 26:
 		{
-			lx(yylex).rname = yyS[yypt-2].s
-			yyVAL.rule = &Rule{Pos: yyS[yypt-2].pos, Name: yyS[yypt-2].s, Body: yyS[yypt-1].list, Prec: yyS[yypt-0].prec}
+			lx := yylex.(*lexer)
+			lhs := &Rule{
+				Case:         1,
+				Token:        yyS[yypt-2].token,
+				RuleItemList: yyS[yypt-1].item.(*RuleItemList).reverse(),
+				Precedence:   yyS[yypt-0].item.(*Precedence),
+			}
+			yyVAL.item = lhs
+			lhs.Name = lx.ruleName
 		}
 	case 27:
 		{
-			yyVAL.rule = &Rule{Pos: yyS[yypt-2].pos, Name: lx(yylex).rname, Body: yyS[yypt-1].list, Prec: yyS[yypt-0].prec}
+			yyVAL.item = (*RuleItemList)(nil)
 		}
 	case 28:
 		{
-			yyVAL.list = []interface{}(nil)
+			yyVAL.item = &RuleItemList{
+				Case:         1,
+				RuleItemList: yyS[yypt-1].item.(*RuleItemList),
+				Token:        yyS[yypt-0].token,
+			}
 		}
 	case 29:
 		{
-			yyVAL.list = append(yyS[yypt-1].list, yyS[yypt-0].item)
+			yyVAL.item = &RuleItemList{
+				Case:         2,
+				RuleItemList: yyS[yypt-1].item.(*RuleItemList),
+				Action:       yyS[yypt-0].item.(*Action),
+			}
 		}
 	case 30:
 		{
-			yyVAL.list = append(yyS[yypt-1].list, yyS[yypt-0].act)
+			lx := yylex.(*lexer)
+			lhs := &RuleList{
+				Token:        yyS[yypt-2].token,
+				RuleItemList: yyS[yypt-1].item.(*RuleItemList).reverse(),
+				Precedence:   yyS[yypt-0].item.(*Precedence),
+			}
+			yyVAL.item = lhs
+			lx.ruleName = lhs.Token
+			rule := &Rule{
+				Token:        yyS[yypt-2].token,
+				Name:         yyS[yypt-2].token,
+				RuleItemList: lhs.RuleItemList,
+				Precedence:   yyS[yypt-0].item.(*Precedence),
+			}
+			rule.collect()
+			lx.rules = append(lx.rules, rule)
 		}
 	case 31:
 		{
-			/* Copy action, translate $$, and so on. */
-			lx := lx(yylex)
-			lx.Mode(false)
-			a := []*Act{}
-			start := lx.Pos() - 1 // First '{' inclusive.
-			var d int
-			for lvl := 1; lvl > 0; {
-				tok, tag, num := lx.Scan()
-				s, _ := tag.(string)
-				switch tok {
-				case scanner.DLR_DLR:
-					d = 1
-				case scanner.DLR_NUM:
-					d = len(strconv.Itoa(num))
-				case scanner.DLR_TAG_DLR:
-					d = len(s) + 3
-				case scanner.DLR_TAG_NUM:
-					d = len(s) + 2 + len(strconv.Itoa(num))
-				}
-				switch tok {
-				case scanner.DLR_DLR, scanner.DLR_NUM, scanner.DLR_TAG_DLR, scanner.DLR_TAG_NUM:
-					a = append(a, &Act{Pos: token.Pos(start + 1), Src: string(lx.src[start : lx.Pos()-1]), Tok: tok, Tag: s, Num: num})
-					start = lx.Pos() + d
-				case scanner.LBRACE:
-					lvl++
-				case scanner.RBRACE:
-					lvl--
-					if lvl == 0 {
-						a = append(a, &Act{Pos: token.Pos(start + 1), Src: string(lx.src[start:lx.Pos()])})
-						lx.Mode(true)
-					}
-				case scanner.EOF:
-					lx.Error("unexpected EOF")
-					goto ret1
-				}
+			lx := yylex.(*lexer)
+			lhs := &RuleList{
+				Case:     1,
+				RuleList: yyS[yypt-1].item.(*RuleList),
+				Rule:     yyS[yypt-0].item.(*Rule),
 			}
-			yyVAL.act = a
+			yyVAL.item = lhs
+			rule := lhs.Rule
+			rule.collect()
+			lx.rules = append(lx.rules, rule)
 		}
 	case 32:
 		{
-			yyVAL.prec = nil
+			lx := yylex.(*lexer)
+			lhs := &Specification{
+				DefinitionList: yyS[yypt-3].item.(*DefinitionList).reverse(),
+				Token:          yyS[yypt-2].token,
+				RuleList:       yyS[yypt-1].item.(*RuleList).reverse(),
+				Tail:           yyS[yypt-0].item.(*Tail),
+			}
+			yyVAL.item = lhs
+			//yy:field Defs  []*Definition // For backward compatibility.
+			//yy:field Rules []*Rule       // For backward compatibility.
+			lhs.Defs = lx.defs
+			lhs.Rules = lx.rules
+			lx.spec = lhs
 		}
 	case 33:
 		{
-			yyVAL.prec = &Prec{Pos: yyS[yypt-1].pos, Identifier: yyS[yypt-0].item}
+			yyVAL.item = (*Tag)(nil)
 		}
 	case 34:
 		{
-			yyVAL.prec = &Prec{Pos: yyS[yypt-2].pos, Identifier: yyS[yypt-1].item, Act: yyS[yypt-0].act}
+			yyVAL.item = &Tag{
+				Case:   1,
+				Token:  yyS[yypt-2].token,
+				Token2: yyS[yypt-1].token,
+				Token3: yyS[yypt-0].token,
+			}
 		}
 	case 35:
 		{
-			yyVAL.prec = yyS[yypt-1].prec // Temporary workaround for issue #2
+			lx := yylex.(*lexer)
+			lhs := &Tail{
+				Token: yyS[yypt-0].token,
+			}
+			yyVAL.item = lhs
+			//yy:field Value string
+			lhs.Value = lx.value
 		}
+	case 36:
+		{
+			yyVAL.item = (*Tail)(nil)
+		}
+
+	}
+
+	if yyEx != nil && yyEx.Reduced(r, exState, &yyVAL) {
+		return -1
 	}
 	goto yystack /* stack new state and value */
 }

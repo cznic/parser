@@ -1,680 +1,216 @@
 %{
+// Copyright © 2001-2004 The IEEE and The Open Group, All Rights reserved.
+// 
+// Original source text:
+// http://pubs.opengroup.org/onlinepubs/009695399/utilities/yacc.html
+// 
+// Modifications: Copyright 2015 The parser Authors. All rights reserved.  Use
+// of this source code is governed by a BSD-style license that can be found in
+// the LICENSE file.
+// 
+// Grammar for the input to yacc.
+// 
+// CAUTION: Generated file (unless this is parser.y) - DO NOT EDIT!
 
-/*
-
-Copyright © 2001-2004 The IEEE and The Open Group, All Rights reserved.
-
-Original source text: http://pubs.opengroup.org/onlinepubs/009695399/utilities/yacc.html
-
-Modifications: Copyright 2014 The parser Authors. All rights reserved.
-Use of this source code is governed by a BSD-style
-license that can be found in the LICENSE file.
-
-Grammar for the input to yacc.
-
-*/
-
-// Package parser implements a parser for yacc source files.
-//
-// Changelog
-//
-// 2014-12-18: Support bison's %precedence.
-//
-// 2014-11-11: Include the opening and closing braces of semantic actions in
-// Act.Src.
 package parser
-
-import (
-	"bytes"
-	"fmt"
-	"go/token"
-	"strconv"
-	"strings"
-
-	"github.com/cznic/scanner/yacc"
-	"github.com/cznic/strutil"
-)
 
 %}
 
 %union {
-	act    []*Act
-	def    *Def
-	defs   []*Def
-	item   interface{}
-	list   []interface{}
-	nlist  []*Nmno
-	nmno   *Nmno
-	number int
-	pos    token.Pos
-	prec   *Prec
-	rule   *Rule
-	rules  []*Rule
-	rword  Rword
-	s      string
+	token	*Token
 }
 
-%token illegal
+%token	<token>
+	','
+	';'
+	'<'
+	'>'
+	'{'
+	'|'
+	'}'
+	COMMENT
+	C_IDENTIFIER
+	ERROR_VERBOSE
+	IDENTIFIER
+	LCURL
+	LEFT
+	MARK
+	NONASSOC
+	NUMBER
+	PREC
+	PRECEDENCE
+	RCURL
+	RIGHT
+	START
+	TOKEN
+	TYPE
+	UNION
 
-/* Basic entries. The following are recognized by the lexical analyzer. */
-
-%token	<item>   tkIdent  /* Includes identifiers and literals */
-%token	<s>      tkCIdent /* identifier (but not literal) followed by a :. */
-%token	<number> tkNumber /* [0-9][0-9]* */
-
-/* Reserved words : %type=>tkType %left=>tkLeft, and so on */
-
-%token	tkLeft tkRight tkNonAssoc tkToken tkPrec tkPrecedence tkType tkStart tkUnion tkErrorVerbose
-
-%token	tkMark            /* The %% mark. */
-%token	tkLCurl           /* The %{ mark. */
-%token	tkRCurl           /* The %} mark. */
-
-%type	<act>	act
-%type	<def>	def
-%type	<defs>	defs
-%type	<list>	rbody
-%type	<nlist>	nlist
-%type	<nmno>	nmno
-%type	<prec>	prec
-%type	<rule>	rule
-%type	<rules>	rules
-%type	<rword>	rword
-%type	<s>	tag tail
-
-/* 8-bit character literals stand for themselves; */
-/* tokens have to be defined for multi-byte characters. */
-
-%start	spec
+%start Specification
 
 %%
 
-spec:
-	defs tkMark rules tail
+Action:
+	'{' '}'
 	{
-		lx(yylex).ast = &AST{Defs: $1, Rules: $3, Tail: $4}
-	}
-
-tail:
-	/* Empty; the second _MARK is optional. */
-	{
-		$$ = ""
-	}
-|	tkMark
-	{
-        	/* In this action, set up the rest of the file. */
-		lx := lx(yylex)
-		$$ = string(lx.src[lx.Pos()+1:])
-		lx.closed = true
-	}
-
-defs:
-	/* Empty. */
-	{
-		$$ = []*Def(nil)
-	}
-|	defs def
-	{
-		$$ = append($1, $2)
-	}
-
-def:
-   	tkStart tkIdent
-	{
-		s, ok := $2.(string)
-		if !ok {
-			lx := lx(yylex)
-			lx.Error(fmt.Sprintf("%v: expected name", $<pos>2))
-		}
-		$$ = &Def{Pos: $<pos>1, Rword: Start, Tag: s}
-	}
-|	tkUnion
-	{
-        	/* Copy union definition to output. */
-		lx := lx(yylex)
-		lx.Mode(false)
-		off0 := lx.Pos()+5
-		n := 0
-	union_loop:
-		for {
-			tok, _, _ := lx.Scan()
-			switch tok {
-			case scanner.LBRACE:
-				n++
-			case scanner.RBRACE:
-				n--
-				if n == 0 {
-					lx.Mode(true)
-					break union_loop
-				}
+		//yy:field Pos token.Pos
+		//yy:field Values []*ActionValue // For backward compatibility.
+		lhs.Pos = lx.pos
+		for i, v := range lx.values {
+			a := lx.parseActionValue(lx.positions[i], v)
+			if a != nil {
+				lhs.Values = append(lhs.Values, a)
 			}
 		}
-		s := string(lx.src[off0:lx.Pos()])
-		$$ = &Def{Pos: $<pos>1, Rword: Union, Tag: s}
 	}
-|	tkLCurl
-	{
-		/* Copy Go code to output file. */
-		lx := lx(yylex)
-		off0, lpos := lx.Pos(), lx.Pos()
-		lx.Mode(false)
-		var last scanner.Token
-	lcurl_loop:
-		for {
-			tok, _, _ := lx.ScanRaw()
-			if tok == scanner.RBRACE && last == scanner.REM && lx.Pos() == lpos+1 {
-				lx.Mode(true)
-				s := string(lx.src[off0+1:lpos-1])
-				//dbg("----\n%q\n----\n", s)
-				$$ = &Def{Pos: $<pos>1, Rword: Copy, Tag: s}
-				break lcurl_loop
-			}
 
-			last, lpos = tok, lx.Pos()
+Definition:
+	START IDENTIFIER
+	{
+		//yy:example "%%start source\n\n%%%%"
+		//yy:field Pos token.Pos
+		//yy:field Value string
+		//yy:field Nlist []*Name // For backward compatibility.
+	}
+|	UNION
+	{
+		//yy:example "%%union{\n        foo bar\n}\n\n%%%%"
+		lhs.Pos = lx.pos
+		lhs.Value = lx.value
+	}
+|	LCURL
+	{
+		lx.pos2 = lx.pos
+		lx.value2 = lx.value
+      }
+	RCURL
+	{
+		lhs.Pos = lx.pos2
+		lhs.Value = lx.value2
+	}
+|	ReservedWord Tag NameList
+	{
+		for n := lhs.NameList; n != nil; n = n.NameList {
+			lhs.Nlist = append(lhs.Nlist, n.Name)
 		}
-	}
-|	tkErrorVerbose
-	{
-		$$ = &Def{Pos: $<pos>1, Rword: ErrVerbose}
-	}
-|	rword tag nlist
-	{
-		if $1 == Type {
-			for _, v := range $3 {
+		if lhs.ReservedWord.Token.Char.Rune == TYPE {
+			for _, v := range lhs.Nlist {
 				switch v.Identifier.(type) {
 				case int:
-					yylex.Error("literal invalid with %type.") // % is ok
-					goto ret1
+					lx.err(v.Token.Pos(), "literal invalid with %%type.")
 				}
 
 				if v.Number > 0 {
-					yylex.Error("number invalid with %type.") // % is ok
-					goto ret1
+					lx.err(v.Token2.Pos(), "number invalid with %%type.")
 				}
 			}
 		}
+	}
+|	ERROR_VERBOSE
 
-		$$ = &Def{Pos: $<pos>1, Rword: $1, Tag: $2, Nlist: $3}
-	}
-
-rword:
-	tkToken
+DefinitionList:
+|	DefinitionList Definition
 	{
-		$<pos>$ = $<pos>1
-		$$ = Token
-	}
-|	tkLeft
-	{
-		$<pos>$ = $<pos>1
-		$$ = Left
-	}
-|	tkPrecedence
-	{
-		$<pos>$ = $<pos>1
-		$$ = Precedence
-	}
-|	tkRight
-	{
-		$<pos>$ = $<pos>1
-		$$ = Right
-	}
-|	tkNonAssoc
-	{
-		$<pos>$ = $<pos>1
-		$$ = Nonassoc
-	}
-|	tkType
-	{
-		$<pos>$ = $<pos>1
-		$$ = Type
+		//yy:example "%%left '+' '-'\n%%left '*' '/'\n%%%%"
+		lx.defs = append(lx.defs, lhs.Definition)
 	}
 
-tag:
-	/* Empty: union tag ID optional. */
+Name:
+	IDENTIFIER
 	{
-		$$ = ""
+		//yy:field Identifier interface{} // For backward compatibility.
+		//yy:field Number int             // For backward compatibility.
+		lhs.Identifier = lx.ident(lhs.Token)
+		lhs.Number = -1
 	}
-|	'<' tkIdent '>'
+|	IDENTIFIER NUMBER
 	{
-		lx := lx(yylex)
-		s, ok := $2.(string)
-		if ! ok {
-			lx.Error(fmt.Sprintf("%v: expected name", $<pos>2))
+		lhs.Identifier = lx.ident(lhs.Token)
+		lhs.Number = lx.number(lhs.Token2)
+	}
+
+NameList:
+	Name
+|	NameList Name
+|	NameList ',' Name
+
+Precedence:
+	{
+		//yy:field Identifier interface{} // Name string or literal int.
+	}
+|	PREC IDENTIFIER
+	{
+		lhs.Identifier = lx.ident(lhs.Token2)
+	}
+|	PREC IDENTIFIER Action
+	{
+		lhs.Identifier = lx.ident(lhs.Token2)
+	}
+|	Precedence ';'
+
+ReservedWord:
+	TOKEN
+|	LEFT
+|	RIGHT
+|	NONASSOC
+|	TYPE
+|	PRECEDENCE
+
+Rule:
+	C_IDENTIFIER RuleItemList Precedence
+	{
+		//yy:field Name *Token
+		//yy:field Body []interface{} // For backward compatibility.
+		//yy:example "%%%%\na:\nb:\n\t{\n\t\t//\n\t\tc\n\t}\n%%%%"
+		lx.ruleName = lhs.Token
+		lhs.Name = lhs.Token
+	}
+|	'|' RuleItemList Precedence
+	{
+		lhs.Name = lx.ruleName
+	}
+
+RuleItemList:
+|	RuleItemList IDENTIFIER
+|	RuleItemList Action
+
+RuleList:
+	C_IDENTIFIER RuleItemList Precedence
+	{
+		lx.ruleName = lhs.Token
+		rule := &Rule{
+			Token: $1,
+			Name: $1,
+			RuleItemList: lhs.RuleItemList,
+			Precedence: $3.(*Precedence),
 		}
-		$<pos>$ = $<pos>2
-		$$ = s
+		rule.collect()
+		lx.rules = append(lx.rules, rule)
 	}
-
-nlist:
-	nmno
+|	RuleList Rule
 	{
-		$$ = []*Nmno{$1}
+		rule := lhs.Rule
+		rule.collect()
+		lx.rules = append(lx.rules, rule)
 	}
-|	nlist nmno
+
+Specification:
+	DefinitionList MARK RuleList Tail
 	{
-		$$ = append($1, $2)
+		//yy:field Defs  []*Definition // For backward compatibility.
+		//yy:field Rules []*Rule       // For backward compatibility.
+		lhs.Defs = lx.defs
+		lhs.Rules = lx.rules
+		lx.spec = lhs
 	}
-|	nlist ',' nmno
+
+Tag:
+|	'<' IDENTIFIER '>'
+
+Tail:
+	MARK
 	{
-		$$ = append($1, $3)
+		//yy:field Value string
+		lhs.Value = lx.value
 	}
-
-nmno:
-	tkIdent
-	{
-		$$ = &Nmno{$<pos>1, $1, -1}
-	}
-|	tkIdent tkNumber
-	{
-		$$ = &Nmno{$<pos>1, $1, $2}
-	}
-
-/* Rule section */
-
-rules:
-	tkCIdent  rbody prec
-	{
-		lx(yylex).rname = $1
-		$$ = []*Rule{&Rule{Pos: $<pos>1, Name: $1, Body: $2, Prec: $3}}
-	}
-|	rules rule
-	{
-		$$ = append($1, $2)
-	}
-
-rule:
-	tkCIdent  rbody prec
-	{
-		lx(yylex).rname = $1
-		$$ = &Rule{Pos: $<pos>1, Name: $1, Body: $2, Prec: $3}
-	}
-|	'|' rbody prec
-	{
-		$$ = &Rule{Pos: $<pos>1, Name: lx(yylex).rname, Body: $2, Prec: $3}
-	}
-
-rbody:
-	/* empty */
-	{
-		$$ = []interface{}(nil)
-	}
-|	rbody tkIdent
-	{
-		$$ = append($1, $2)
-	}
-|	rbody act
-	{
-		$$ = append($1, $2)
-	}
-
-act:
-	'{'
-	{
-		/* Copy action, translate $$, and so on. */
-		lx := lx(yylex)
-		lx.Mode(false)
-		a := []*Act{}
-		start := lx.Pos()-1 // First '{' inclusive.
-		var d int
-		for lvl := 1; lvl > 0; {
-			tok, tag, num := lx.Scan()
-			s, _ := tag.(string)
-			switch tok {
-			case scanner.DLR_DLR:
-				d = 1
-			case scanner.DLR_NUM:
-				d = len(strconv.Itoa(num))
-			case scanner.DLR_TAG_DLR:
-				d = len(s)+3
-			case scanner.DLR_TAG_NUM:
-				d = len(s)+2+len(strconv.Itoa(num))
-			}
-			switch tok {
-			case scanner.DLR_DLR, scanner.DLR_NUM, scanner.DLR_TAG_DLR, scanner.DLR_TAG_NUM:
-				a = append(a, &Act{Pos: token.Pos(start+1), Src: string(lx.src[start:lx.Pos()-1]), Tok: tok, Tag: s, Num: num})
-				start = lx.Pos() + d 
-			case scanner.LBRACE:
-				lvl++
-			case scanner.RBRACE:
-				lvl--
-				if lvl == 0 {
-					a = append(a, &Act{Pos: token.Pos(start+1), Src: string(lx.src[start:lx.Pos()])})
-					lx.Mode(true)
-				}
-			case scanner.EOF:
-				lx.Error("unexpected EOF")
-				goto ret1
-			}
-		}
-		$$ = a
-	}
-
-prec:
-	/* Empty */
-	{
-		$$ = nil
-	}
-|	tkPrec tkIdent
-	{
-		$$ = &Prec{Pos: $<pos>1, Identifier: $2}
-	}
-|	tkPrec tkIdent act
-	{
-		$$ = &Prec{Pos: $<pos>1, Identifier: $2, Act: $3}
-	}
-|	prec ';'
-	{
-		$$ = $1 // Temporary workaround for issue #2
-	}
-
-%%
-
-// AST holds the parsed .y source.
-type AST struct {
-	Defs  []*Def  // Definitions
-	Rules []*Rule // Rules
-	Tail  string  // Optional rest of the file
-	fset  *token.FileSet
-}
-
-// String implements fmt.Stringer.
-func (s *AST) String() string {
-	return str(s.fset, s)
-}
-
-// Def is the definition section definition entity
-type Def struct {
-	token.Pos
-	Rword Rword
-	Tag   string
-	Nlist []*Nmno
-}
-
-// Rule is the rules section rule.
-type Rule struct{
-	token.Pos
-	Name string
-	Body []interface{}
-	Prec *Prec
-}
-
-// Nmno (Name-or-number) is a definition section name list item. It's either a
-// production name (type string), or a rune literal. Optional number associated
-// with the name is in number, if non-negative.
-type Nmno struct {
-	token.Pos
-	Identifier interface{}
-	Number int
-}
-
-// Prec defines the optional precedence of a rule.
-type Prec struct {
-	token.Pos
-	Identifier interface{}
-	Act []*Act
-}
-
-// Act captures the action optionally associated with a rule.  The action parts
-// are split at the yacc tokens $$, $num, $<tag>num, if present.
-type Act struct{
-	token.Pos
-	Src string
-	Tok scanner.Token       // github.com/cznic/scanner/yacc.DLR_* or zero
-	Tag string              // DLR_TAG_*
-	Num int                 // DLR_NUM, DLR_TAG_NUM
-}
-
-// Rword is a definition tag (Def.Rword).
-type Rword int
-
-// Values of Def.Rword
-const (
-	_ Rword = iota
-
-	Copy       // %{ ... %}
-	ErrVerbose // %error-verbose
-	Left       // %left
-	Nonassoc   // %nonassoc
-	Right      // %right
-	Start      // %start
-	Token      // %token
-	Type       // %type
-	Union      // %union
-	Precedence // %precedence
-)
-
-var rwords = map[Rword]string{
-	Copy:       "Copy",
-	ErrVerbose: "ErrorVerbose",
-	Left:       "Left",
-	Precedence: "Precedence",
-	Nonassoc:   "Nonassoc",
-	Right:      "Right",
-	Start:      "Start",
-	Token:      "Token",
-	Type:       "Type",
-	Union:      "Union",
-}
-
-// String implements fmt.Stringer.
-func (r Rword) String() string {
-	if s := rwords[r]; s != "" {
-		return s
-	}
-
-	return fmt.Sprintf("Rword(%d)", r)
-}
-
-type lexer struct {
-	*scanner.Scanner
-	ast    *AST
-	closed bool
-	fset   *token.FileSet
-	rname  string // last rule name for '|' rules
-	src    []byte
-}
-
-var xlat = map[scanner.Token]int{
-	scanner.LCURL:        tkLCurl,
-	scanner.LEFT:         tkLeft,
-	scanner.MARK:         tkMark,
-	scanner.NONASSOC:     tkNonAssoc,
-	scanner.PREC:         tkPrec,
-	scanner.PRECEDENCE:   tkPrecedence,
-	scanner.RCURL:        tkRCurl,
-	scanner.RIGHT:        tkRight,
-	scanner.START:        tkStart,
-	scanner.TOKEN:        tkToken,
-	scanner.TYPE:         tkType,
-	scanner.UNION:        tkUnion,
-	scanner.ERR_VERBOSE:  tkErrorVerbose,
-
-	scanner.COMMA:        ',',
-	scanner.EOF:          0,
-	scanner.OR:           '|',
-}
-
-var todo = strings.ToUpper("todo")
-
-func (l *lexer) Lex(lval *yySymType) (y int) {
-	if l.closed {
-		return 0
-	}
-
-	for {
-		tok, val, _ := l.Scan()
-		lval.pos = token.Pos(l.Pos())
-		switch tok {
-		case scanner.COMMENT:
-			continue
-		case scanner.C_IDENTIFIER:
-			if s, ok := val.(string); ok {
-				lval.s = s
-			}
-			return tkCIdent 
-		case scanner.IDENTIFIER:
-			if s, ok := val.(string); ok {
-				lval.item = s
-			}
-			return tkIdent
-		case scanner.INT:
-			if n, ok := val.(uint64); ok {
-				lval.number = int(n)
-			}
-			return tkNumber
-		case scanner.CHAR:
-			if n, ok := val.(int32); ok {
-				lval.item = int(n)
-			}
-			return tkIdent
-		case scanner.ILLEGAL:
-			if s, ok := val.(string); ok && s != "" {
-				return int([]rune(s)[0])
-			}
-			return illegal
-		default:
-			if x, ok := xlat[tok]; ok {
-				return x
-			}
-
-			return illegal
-		}
-	}
-}
-
-type errList []error
-
-func (e errList) Error() string {
-	a := []string{}
-	for _, v := range e {
-		a = append(a, v.Error())
-	}
-	return strings.Join(a, "\n")
-}
-
-func (e errList) error() error {
-	if len(e) == 0 {
-		return nil
-	}
-
-	return e
-}
-
-func lx(yylex yyLexer) *lexer {
-	return yylex.(*lexer)
-}
-
-
-// Parse parses src as a single yacc source file fname and returns the
-// corresponding AST. If the source couldn't be read, the returned AST is nil
-// and the error indicates all of the specific failures.
-func Parse(fset *token.FileSet, fname string, src []byte) (s *AST, err error) {
-	l := lexer{
-		fset:    fset,
-		Scanner: scanner.New(fset, fname, src),
-		src:     src,
-	}
-	defer func() {
-		if e := recover(); e != nil {
-			l.Error(fmt.Sprintf("%v", e))
-			err = errList(l.Errors).error()
-		}
-	}()
-	if yyParse(&l) != 0 {
-		return nil, errList(l.Errors).error()
-	}
-
-	l.ast.fset = fset
-	return l.ast, nil
-}
-
-func str(fset *token.FileSet, v interface{}) string {
-	var buf bytes.Buffer
-	f := strutil.IndentFormatter(&buf, "· ")
-	g := func(interface{}){}
-	g = func(v interface{}){
-		switch x := v.(type) {
-		case nil:
-			f.Format("<nil>")
-		case int:
-			f.Format("'%c'\n", x)
-		case string:
-			f.Format("%q\n", x)
-		case []*Act:
-			f.Format("%T{%i\n", x)
-			for _, v := range x {
-				g(v)
-			}
-			f.Format("%u}\n")
-		case *Act:
-			f.Format("%T@%v{%i\n", x, fset.Position(x.Pos))
-			f.Format("Src: %q\n", x.Src)
-			if x.Tok != 0 {
-				f.Format("Tok: %s, Tag: %q, Num: %d\n", x.Tok, x.Tag, x.Num)
-			}
-			f.Format("%u}\n")
-		case *Def:
-			f.Format("%T@%v{%i\n", x, fset.Position(x.Pos))
-			f.Format("Rword: %s, ", x.Rword)
-			f.Format("Tag: %q, ", x.Tag)
-			f.Format("Nlist: %T{%i\n", x.Nlist)
-			for _, v := range x.Nlist {
-				g(v)
-			}
-			f.Format("%u}\n")
-			f.Format("%u}\n")
-		case *Nmno:
-			var s string
-			switch v := x.Identifier.(type) {
-			case string:
-				s = fmt.Sprintf("%q", v)
-			case int:
-				s = fmt.Sprintf("'%c'", v)
-			}
-			f.Format("%T@%v{Identifier: %s, Number: %d}\n", x, fset.Position(x.Pos), s, x.Number)
-		case *Prec:
-			var s string
-			switch v := x.Identifier.(type) {
-			case string:
-				s = fmt.Sprintf("%q", v)
-			case int:
-				s = fmt.Sprintf("'%c'", v)
-			}
-			f.Format("%T@%v{%i\n", x, fset.Position(x.Pos))
-			f.Format("Identifier: %s\n", s)
-			g(x.Act)
-			f.Format("%u}\n")
-		case *Rule:
-			f.Format("%T@%v{%i\n", x, fset.Position(x.Pos))
-			f.Format("Name: %q, ", x.Name)
-			f.Format("Body: %T{%i\n", x.Body)
-			for _, v := range x.Body {
-				g(v)
-			}
-			f.Format("%u}\n")
-			if x.Prec != nil {
-				f.Format("Prec: ")
-				g(x.Prec)
-			}
-			f.Format("%u}\n")
-		case *AST:
-			f.Format("%T{%i\n", x)
-			f.Format("Defs: %T{%i\n", x.Defs)
-			for _, v := range x.Defs {
-				g(v)
-			}
-			f.Format("%u}\n")
-			f.Format("Rules: %T{%i\n", x.Rules)
-			for _, v := range x.Rules {
-				g(v)
-			}
-			f.Format("%u}\n")
-			f.Format("Tail: %q\n", x.Tail)
-			f.Format("%u}\n")
-		default:
-			f.Format("%s(str): %T(%#v)\n", todo, x, x)
-		}
-	}
-	g(v)
-	return buf.String()
-}
+|	/* empty */
