@@ -28,7 +28,7 @@ type yyXError struct {
 }
 
 const (
-	yyDefault     = 57364
+	yyDefault     = 57365
 	yyEofCode     = 57344
 	COMMENT       = 57346
 	C_IDENTIFIER  = 57347
@@ -50,7 +50,7 @@ const (
 	yyErrCode     = 57345
 
 	yyMaxDepth = 200
-	yyTabOfs   = -37
+	yyTabOfs   = -38
 )
 
 var (
@@ -75,27 +75,28 @@ var (
 		57355: 17, // PREC (9x)
 		60:    18, // '<' (7x)
 		44:    19, // ',' (6x)
-		57365: 20, // Action (4x)
-		57368: 21, // Name (3x)
-		57370: 22, // Precedence (3x)
-		57373: 23, // RuleItemList (3x)
-		57357: 24, // RCURL (2x)
-		57363: 25, // $@1 (1x)
-		62:    26, // '>' (1x)
-		125:   27, // '}' (1x)
-		57366: 28, // Definition (1x)
-		57367: 29, // DefinitionList (1x)
-		57369: 30, // NameList (1x)
-		57354: 31, // NUMBER (1x)
-		57371: 32, // ReservedWord (1x)
-		57372: 33, // Rule (1x)
-		57374: 34, // RuleList (1x)
-		57375: 35, // Specification (1x)
-		57376: 36, // Tag (1x)
-		57377: 37, // Tail (1x)
-		57364: 38, // $default (0x)
-		57346: 39, // COMMENT (0x)
-		57345: 40, // error (0x)
+		57366: 20, // Action (4x)
+		57369: 21, // Name (3x)
+		57371: 22, // Precedence (3x)
+		57374: 23, // RuleItemList (3x)
+		125:   24, // '}' (2x)
+		57357: 25, // RCURL (2x)
+		57363: 26, // $@1 (1x)
+		57364: 27, // $@2 (1x)
+		62:    28, // '>' (1x)
+		57367: 29, // Definition (1x)
+		57368: 30, // DefinitionList (1x)
+		57370: 31, // NameList (1x)
+		57354: 32, // NUMBER (1x)
+		57372: 33, // ReservedWord (1x)
+		57373: 34, // Rule (1x)
+		57375: 35, // RuleList (1x)
+		57376: 36, // Specification (1x)
+		57377: 37, // Tag (1x)
+		57378: 38, // Tail (1x)
+		57365: 39, // $default (0x)
+		57346: 40, // COMMENT (0x)
+		57345: 41, // error (0x)
 	}
 
 	yySymNames = []string{
@@ -123,10 +124,11 @@ var (
 		"Name",
 		"Precedence",
 		"RuleItemList",
+		"'}'",
 		"RCURL",
 		"$@1",
+		"$@2",
 		"'>'",
-		"'}'",
 		"Definition",
 		"DefinitionList",
 		"NameList",
@@ -144,42 +146,43 @@ var (
 
 	yyReductions = map[int]struct{ xsym, components int }{
 		0:  {0, 1},
-		1:  {20, 2},
-		2:  {28, 2},
-		3:  {28, 1},
-		4:  {25, 0},
-		5:  {28, 3},
-		6:  {28, 3},
-		7:  {28, 1},
-		8:  {29, 0},
-		9:  {29, 2},
-		10: {21, 1},
-		11: {21, 2},
-		12: {30, 1},
-		13: {30, 2},
-		14: {30, 3},
-		15: {22, 0},
-		16: {22, 2},
-		17: {22, 3},
-		18: {22, 2},
-		19: {32, 1},
-		20: {32, 1},
-		21: {32, 1},
-		22: {32, 1},
-		23: {32, 1},
-		24: {32, 1},
-		25: {33, 3},
-		26: {33, 3},
-		27: {23, 0},
-		28: {23, 2},
+		1:  {26, 0},
+		2:  {20, 3},
+		3:  {29, 2},
+		4:  {29, 1},
+		5:  {27, 0},
+		6:  {29, 3},
+		7:  {29, 3},
+		8:  {29, 1},
+		9:  {30, 0},
+		10: {30, 2},
+		11: {21, 1},
+		12: {21, 2},
+		13: {31, 1},
+		14: {31, 2},
+		15: {31, 3},
+		16: {22, 0},
+		17: {22, 2},
+		18: {22, 3},
+		19: {22, 2},
+		20: {33, 1},
+		21: {33, 1},
+		22: {33, 1},
+		23: {33, 1},
+		24: {33, 1},
+		25: {33, 1},
+		26: {34, 3},
+		27: {34, 3},
+		28: {23, 0},
 		29: {23, 2},
-		30: {34, 3},
-		31: {34, 2},
-		32: {35, 4},
-		33: {36, 0},
-		34: {36, 3},
-		35: {37, 1},
-		36: {37, 0},
+		30: {23, 2},
+		31: {35, 3},
+		32: {35, 2},
+		33: {36, 4},
+		34: {37, 0},
+		35: {37, 3},
+		36: {38, 1},
+		37: {38, 0},
 	}
 
 	yyXErrors = map[yyXError]string{
@@ -187,43 +190,44 @@ var (
 		yyXError{1, -1}:  "expected $end",
 		yyXError{21, -1}: "expected $end",
 		yyXError{22, -1}: "expected $end",
-		yyXError{39, -1}: "expected '>'",
+		yyXError{40, -1}: "expected '>'",
 		yyXError{24, -1}: "expected '}'",
+		yyXError{32, -1}: "expected '}'",
 		yyXError{23, -1}: "expected Action or Precedence or one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
-		yyXError{33, -1}: "expected Action or Precedence or one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
-		yyXError{35, -1}: "expected Action or Precedence or one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
+		yyXError{34, -1}: "expected Action or Precedence or one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
+		yyXError{36, -1}: "expected Action or Precedence or one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
 		yyXError{30, -1}: "expected Action or one of [$end ';' '{' '|' C_IDENTIFIER MARK]",
 		yyXError{2, -1}:  "expected Definition or one of [ERROR_VERBOSE LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
 		yyXError{3, -1}:  "expected IDENTIFIER",
 		yyXError{25, -1}: "expected IDENTIFIER",
-		yyXError{38, -1}: "expected IDENTIFIER",
-		yyXError{40, -1}: "expected IDENTIFIER",
-		yyXError{46, -1}: "expected Name or IDENTIFIER",
-		yyXError{41, -1}: "expected Name or one of [',' ERROR_VERBOSE IDENTIFIER LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
-		yyXError{37, -1}: "expected NameList or IDENTIFIER",
+		yyXError{39, -1}: "expected IDENTIFIER",
+		yyXError{41, -1}: "expected IDENTIFIER",
+		yyXError{47, -1}: "expected Name or IDENTIFIER",
+		yyXError{42, -1}: "expected Name or one of [',' ERROR_VERBOSE IDENTIFIER LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{38, -1}: "expected NameList or IDENTIFIER",
 		yyXError{6, -1}:  "expected NameList or Tag or one of ['<' IDENTIFIER]",
 		yyXError{16, -1}: "expected Precedence or RuleItemList or one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
 		yyXError{18, -1}: "expected Precedence or RuleItemList or one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
 		yyXError{19, -1}: "expected Precedence or RuleItemList or one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
 		yyXError{5, -1}:  "expected RCURL",
-		yyXError{48, -1}: "expected RCURL",
+		yyXError{49, -1}: "expected RCURL",
 		yyXError{17, -1}: "expected Rule or Tail or one of [$end '|' C_IDENTIFIER MARK]",
 		yyXError{15, -1}: "expected RuleList or C_IDENTIFIER",
 		yyXError{0, -1}:  "expected Specification or one of [ERROR_VERBOSE LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
 		yyXError{27, -1}: "expected one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
 		yyXError{28, -1}: "expected one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
-		yyXError{32, -1}: "expected one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
+		yyXError{33, -1}: "expected one of [$end ';' '{' '|' C_IDENTIFIER IDENTIFIER MARK PREC]",
 		yyXError{26, -1}: "expected one of [$end ';' '|' C_IDENTIFIER MARK]",
 		yyXError{29, -1}: "expected one of [$end ';' '|' C_IDENTIFIER MARK]",
 		yyXError{31, -1}: "expected one of [$end ';' '|' C_IDENTIFIER MARK]",
-		yyXError{34, -1}: "expected one of [$end ';' '|' C_IDENTIFIER MARK]",
-		yyXError{36, -1}: "expected one of [$end ';' '|' C_IDENTIFIER MARK]",
+		yyXError{35, -1}: "expected one of [$end ';' '|' C_IDENTIFIER MARK]",
+		yyXError{37, -1}: "expected one of [$end ';' '|' C_IDENTIFIER MARK]",
 		yyXError{20, -1}: "expected one of [$end '|' C_IDENTIFIER MARK]",
-		yyXError{42, -1}: "expected one of [',' ERROR_VERBOSE IDENTIFIER LCURL LEFT MARK NONASSOC NUMBER PRECEDENCE RIGHT START TOKEN TYPE UNION]",
-		yyXError{43, -1}: "expected one of [',' ERROR_VERBOSE IDENTIFIER LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{43, -1}: "expected one of [',' ERROR_VERBOSE IDENTIFIER LCURL LEFT MARK NONASSOC NUMBER PRECEDENCE RIGHT START TOKEN TYPE UNION]",
 		yyXError{44, -1}: "expected one of [',' ERROR_VERBOSE IDENTIFIER LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
 		yyXError{45, -1}: "expected one of [',' ERROR_VERBOSE IDENTIFIER LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
-		yyXError{47, -1}: "expected one of [',' ERROR_VERBOSE IDENTIFIER LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{46, -1}: "expected one of [',' ERROR_VERBOSE IDENTIFIER LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{48, -1}: "expected one of [',' ERROR_VERBOSE IDENTIFIER LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
 		yyXError{9, -1}:  "expected one of ['<' IDENTIFIER]",
 		yyXError{10, -1}: "expected one of ['<' IDENTIFIER]",
 		yyXError{11, -1}: "expected one of ['<' IDENTIFIER]",
@@ -233,20 +237,20 @@ var (
 		yyXError{4, -1}:  "expected one of [ERROR_VERBOSE LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
 		yyXError{7, -1}:  "expected one of [ERROR_VERBOSE LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
 		yyXError{8, -1}:  "expected one of [ERROR_VERBOSE LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
-		yyXError{49, -1}: "expected one of [ERROR_VERBOSE LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
 		yyXError{50, -1}: "expected one of [ERROR_VERBOSE LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
+		yyXError{51, -1}: "expected one of [ERROR_VERBOSE LCURL LEFT MARK NONASSOC PRECEDENCE RIGHT START TOKEN TYPE UNION]",
 	}
 
-	yyParseTab = [51][]uint8{
+	yyParseTab = [52][]uint8{
 		// 0
-		{29, 6: 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29: 39, 35: 38},
-		{2: 37},
-		{52, 6: 44, 42, 47, 49, 51, 48, 40, 46, 50, 41, 28: 45, 32: 43},
-		{1: 87},
+		{29, 6: 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 30: 40, 36: 39},
+		{2: 38},
+		{53, 6: 45, 43, 48, 50, 52, 49, 41, 47, 51, 42, 29: 46, 33: 44},
+		{1: 89},
 		{34, 6: 34, 34, 34, 34, 34, 34, 34, 34, 34, 34},
 		// 5
-		{24: 33, 85},
-		{1: 4, 18: 75, 36: 74},
+		{25: 33, 27: 87},
+		{1: 4, 18: 77, 37: 76},
 		{30, 6: 30, 30, 30, 30, 30, 30, 30, 30, 30, 30},
 		{28, 6: 28, 28, 28, 28, 28, 28, 28, 28, 28, 28},
 		{1: 18, 18: 18},
@@ -257,48 +261,49 @@ var (
 		{1: 14, 18: 14},
 		{1: 13, 18: 13},
 		// 15
-		{3: 53, 34: 54},
+		{3: 54, 35: 55},
+		{10, 10, 10, 10, 10, 10, 16: 10, 10, 23: 74},
+		{60, 2: 1, 56, 57, 34: 58, 38: 59},
 		{10, 10, 10, 10, 10, 10, 16: 10, 10, 23: 72},
-		{59, 2: 1, 55, 56, 33: 57, 37: 58},
-		{10, 10, 10, 10, 10, 10, 16: 10, 10, 23: 70},
-		{10, 10, 10, 10, 10, 10, 16: 10, 10, 23: 60},
+		{10, 10, 10, 10, 10, 10, 16: 10, 10, 23: 61},
 		// 20
 		{6, 2: 6, 6, 6},
 		{2: 5},
 		{2: 2},
-		{22, 64, 22, 22, 22, 22, 16: 61, 62, 20: 65, 22: 63},
-		{27: 69},
+		{22, 65, 22, 22, 22, 22, 16: 62, 63, 20: 66, 22: 64},
+		{24: 37, 26: 70},
 		// 25
-		{1: 67},
-		{11, 2: 11, 11, 11, 66},
+		{1: 68},
+		{11, 2: 11, 11, 11, 67},
 		{9, 9, 9, 9, 9, 9, 16: 9, 9},
 		{8, 8, 8, 8, 8, 8, 16: 8, 8},
 		{19, 2: 19, 19, 19, 19},
 		// 30
-		{21, 2: 21, 21, 21, 21, 16: 61, 20: 68},
+		{21, 2: 21, 21, 21, 21, 16: 62, 20: 69},
 		{20, 2: 20, 20, 20, 20},
+		{24: 71},
 		{36, 36, 36, 36, 36, 36, 16: 36, 36},
-		{22, 64, 22, 22, 22, 22, 16: 61, 62, 20: 65, 22: 71},
-		{12, 2: 12, 12, 12, 66},
+		{22, 65, 22, 22, 22, 22, 16: 62, 63, 20: 66, 22: 73},
 		// 35
-		{22, 64, 22, 22, 22, 22, 16: 61, 62, 20: 65, 22: 73},
-		{7, 2: 7, 7, 7, 66},
-		{1: 79, 21: 80, 30: 78},
-		{1: 76},
-		{26: 77},
+		{12, 2: 12, 12, 12, 67},
+		{22, 65, 22, 22, 22, 22, 16: 62, 63, 20: 66, 22: 75},
+		{7, 2: 7, 7, 7, 67},
+		{1: 81, 21: 82, 31: 80},
+		{1: 78},
 		// 40
+		{28: 79},
 		{1: 3},
-		{31, 79, 6: 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 19: 83, 21: 82},
-		{27, 27, 6: 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19: 27, 31: 81},
+		{31, 81, 6: 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 19: 85, 21: 84},
+		{27, 27, 6: 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19: 27, 32: 83},
 		{25, 25, 6: 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 19: 25},
-		{26, 26, 6: 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 19: 26},
 		// 45
+		{26, 26, 6: 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 19: 26},
 		{24, 24, 6: 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 19: 24},
-		{1: 79, 21: 84},
+		{1: 81, 21: 86},
 		{23, 23, 6: 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 19: 23},
-		{24: 86},
-		{32, 6: 32, 32, 32, 32, 32, 32, 32, 32, 32, 32},
+		{25: 88},
 		// 50
+		{32, 6: 32, 32, 32, 32, 32, 32, 32, 32, 32, 32},
 		{35, 6: 35, 35, 35, 35, 35, 35, 35, 35, 35, 35},
 	}
 )
@@ -336,7 +341,7 @@ func yylex1(yylex yyLexer, lval *yySymType) (n int) {
 }
 
 func yyParse(yylex yyLexer) int {
-	const yyError = 40
+	const yyError = 41
 
 	yyEx, _ := yylex.(yyLexerEx)
 	var yyn int
@@ -514,22 +519,27 @@ yynewstate:
 	case 1:
 		{
 			lx := yylex.(*lexer)
+			lx.values2 = append([]string(nil), lx.values...)
+		}
+	case 2:
+		{
+			lx := yylex.(*lexer)
 			lhs := &Action{
-				Token:  yyS[yypt-1].token,
+				Token:  yyS[yypt-2].token,
 				Token2: yyS[yypt-0].token,
 			}
 			yyVAL.item = lhs
 			//yy:field Pos token.Pos
 			//yy:field Values []*ActionValue // For backward compatibility.
 			lhs.Pos = lx.pos
-			for i, v := range lx.values {
+			for i, v := range lx.values2 {
 				a := lx.parseActionValue(lx.positions[i], v)
 				if a != nil {
 					lhs.Values = append(lhs.Values, a)
 				}
 			}
 		}
-	case 2:
+	case 3:
 		{
 			lhs := &Definition{
 				Token:  yyS[yypt-1].token,
@@ -541,7 +551,7 @@ yynewstate:
 			//yy:field Value string
 			//yy:field Nlist []*Name // For backward compatibility.
 		}
-	case 3:
+	case 4:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Definition{
@@ -553,13 +563,13 @@ yynewstate:
 			lhs.Pos = lx.pos
 			lhs.Value = lx.value
 		}
-	case 4:
+	case 5:
 		{
 			lx := yylex.(*lexer)
 			lx.pos2 = lx.pos
 			lx.value2 = lx.value
 		}
-	case 5:
+	case 6:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Definition{
@@ -571,7 +581,7 @@ yynewstate:
 			lhs.Pos = lx.pos2
 			lhs.Value = lx.value2
 		}
-	case 6:
+	case 7:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Definition{
@@ -597,18 +607,18 @@ yynewstate:
 				}
 			}
 		}
-	case 7:
+	case 8:
 		{
 			yyVAL.item = &Definition{
 				Case:  4,
 				Token: yyS[yypt-0].token,
 			}
 		}
-	case 8:
+	case 9:
 		{
 			yyVAL.item = (*DefinitionList)(nil)
 		}
-	case 9:
+	case 10:
 		{
 			lx := yylex.(*lexer)
 			lhs := &DefinitionList{
@@ -620,7 +630,7 @@ yynewstate:
 			//yy:example "%left '+' '-'\n%left '*' '/'\n%%"
 			lx.defs = append(lx.defs, lhs.Definition)
 		}
-	case 10:
+	case 11:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Name{
@@ -632,7 +642,7 @@ yynewstate:
 			lhs.Identifier = lx.ident(lhs.Token)
 			lhs.Number = -1
 		}
-	case 11:
+	case 12:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Name{
@@ -644,13 +654,13 @@ yynewstate:
 			lhs.Identifier = lx.ident(lhs.Token)
 			lhs.Number = lx.number(lhs.Token2)
 		}
-	case 12:
+	case 13:
 		{
 			yyVAL.item = &NameList{
 				Name: yyS[yypt-0].item.(*Name),
 			}
 		}
-	case 13:
+	case 14:
 		{
 			yyVAL.item = &NameList{
 				Case:     1,
@@ -658,7 +668,7 @@ yynewstate:
 				Name:     yyS[yypt-0].item.(*Name),
 			}
 		}
-	case 14:
+	case 15:
 		{
 			yyVAL.item = &NameList{
 				Case:     2,
@@ -667,13 +677,13 @@ yynewstate:
 				Name:     yyS[yypt-0].item.(*Name),
 			}
 		}
-	case 15:
+	case 16:
 		{
 			lhs := (*Precedence)(nil)
 			yyVAL.item = lhs
 			//yy:field Identifier interface{} // Name string or literal int.
 		}
-	case 16:
+	case 17:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Precedence{
@@ -684,7 +694,7 @@ yynewstate:
 			yyVAL.item = lhs
 			lhs.Identifier = lx.ident(lhs.Token2)
 		}
-	case 17:
+	case 18:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Precedence{
@@ -696,7 +706,7 @@ yynewstate:
 			yyVAL.item = lhs
 			lhs.Identifier = lx.ident(lhs.Token2)
 		}
-	case 18:
+	case 19:
 		{
 			yyVAL.item = &Precedence{
 				Case:       3,
@@ -704,48 +714,48 @@ yynewstate:
 				Token:      yyS[yypt-0].token,
 			}
 		}
-	case 19:
-		{
-			yyVAL.item = &ReservedWord{
-				Token: yyS[yypt-0].token,
-			}
-		}
 	case 20:
 		{
 			yyVAL.item = &ReservedWord{
-				Case:  1,
 				Token: yyS[yypt-0].token,
 			}
 		}
 	case 21:
 		{
 			yyVAL.item = &ReservedWord{
-				Case:  2,
+				Case:  1,
 				Token: yyS[yypt-0].token,
 			}
 		}
 	case 22:
 		{
 			yyVAL.item = &ReservedWord{
-				Case:  3,
+				Case:  2,
 				Token: yyS[yypt-0].token,
 			}
 		}
 	case 23:
 		{
 			yyVAL.item = &ReservedWord{
-				Case:  4,
+				Case:  3,
 				Token: yyS[yypt-0].token,
 			}
 		}
 	case 24:
 		{
 			yyVAL.item = &ReservedWord{
-				Case:  5,
+				Case:  4,
 				Token: yyS[yypt-0].token,
 			}
 		}
 	case 25:
+		{
+			yyVAL.item = &ReservedWord{
+				Case:  5,
+				Token: yyS[yypt-0].token,
+			}
+		}
+	case 26:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Rule{
@@ -756,11 +766,11 @@ yynewstate:
 			yyVAL.item = lhs
 			//yy:field Name *Token
 			//yy:field Body []interface{} // For backward compatibility.
-			//yy:example "%%\na:\nb:\n\t{\n\t\t//\n\t\tc\n\t}\n%%"
+			//yy:example "%%a:b:{c}{d}%%"
 			lx.ruleName = lhs.Token
 			lhs.Name = lhs.Token
 		}
-	case 26:
+	case 27:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Rule{
@@ -772,11 +782,11 @@ yynewstate:
 			yyVAL.item = lhs
 			lhs.Name = lx.ruleName
 		}
-	case 27:
+	case 28:
 		{
 			yyVAL.item = (*RuleItemList)(nil)
 		}
-	case 28:
+	case 29:
 		{
 			yyVAL.item = &RuleItemList{
 				Case:         1,
@@ -784,7 +794,7 @@ yynewstate:
 				Token:        yyS[yypt-0].token,
 			}
 		}
-	case 29:
+	case 30:
 		{
 			yyVAL.item = &RuleItemList{
 				Case:         2,
@@ -792,7 +802,7 @@ yynewstate:
 				Action:       yyS[yypt-0].item.(*Action),
 			}
 		}
-	case 30:
+	case 31:
 		{
 			lx := yylex.(*lexer)
 			lhs := &RuleList{
@@ -801,6 +811,7 @@ yynewstate:
 				Precedence:   yyS[yypt-0].item.(*Precedence),
 			}
 			yyVAL.item = lhs
+			//yy:example "%%a:{b}{c}%%"
 			lx.ruleName = lhs.Token
 			rule := &Rule{
 				Token:        yyS[yypt-2].token,
@@ -811,7 +822,7 @@ yynewstate:
 			rule.collect()
 			lx.rules = append(lx.rules, rule)
 		}
-	case 31:
+	case 32:
 		{
 			lx := yylex.(*lexer)
 			lhs := &RuleList{
@@ -824,7 +835,7 @@ yynewstate:
 			rule.collect()
 			lx.rules = append(lx.rules, rule)
 		}
-	case 32:
+	case 33:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Specification{
@@ -840,11 +851,11 @@ yynewstate:
 			lhs.Rules = lx.rules
 			lx.spec = lhs
 		}
-	case 33:
+	case 34:
 		{
 			yyVAL.item = (*Tag)(nil)
 		}
-	case 34:
+	case 35:
 		{
 			yyVAL.item = &Tag{
 				Case:   1,
@@ -853,7 +864,7 @@ yynewstate:
 				Token3: yyS[yypt-0].token,
 			}
 		}
-	case 35:
+	case 36:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Tail{
@@ -863,7 +874,7 @@ yynewstate:
 			//yy:field Value string
 			lhs.Value = lx.value
 		}
-	case 36:
+	case 37:
 		{
 			yyVAL.item = (*Tail)(nil)
 		}

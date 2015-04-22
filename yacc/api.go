@@ -3,6 +3,14 @@
 // license that can be found in the LICENSE file.
 
 // Package parser implements a parser for yacc source files.
+//
+// Note: Rule.Body elements type
+//
+//	int		Eg. 65 represents literal 'A'
+//
+//	string		Eg. "Start" represents rule component Start
+//
+//	*Action		Mid rule action or rule semantic action
 package parser
 
 import (

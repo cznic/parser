@@ -51,12 +51,16 @@ package parser
 %%
 
 Action:
-	'{' '}'
+	'{'
+	{
+		lx.values2 = append([]string(nil), lx.values...)
+	}
+	'}'
 	{
 		//yy:field Pos token.Pos
 		//yy:field Values []*ActionValue // For backward compatibility.
 		lhs.Pos = lx.pos
-		for i, v := range lx.values {
+		for i, v := range lx.values2 {
 			a := lx.parseActionValue(lx.positions[i], v)
 			if a != nil {
 				lhs.Values = append(lhs.Values, a)
@@ -161,7 +165,7 @@ Rule:
 	{
 		//yy:field Name *Token
 		//yy:field Body []interface{} // For backward compatibility.
-		//yy:example "%%%%\na:\nb:\n\t{\n\t\t//\n\t\tc\n\t}\n%%%%"
+		//yy:example "%%%%a:b:{c}{d}%%%%"
 		lx.ruleName = lhs.Token
 		lhs.Name = lhs.Token
 	}
@@ -177,6 +181,7 @@ RuleItemList:
 RuleList:
 	C_IDENTIFIER RuleItemList Precedence
 	{
+		//yy:example "%%%%a:{b}{c}%%%%"
 		lx.ruleName = lhs.Token
 		rule := &Rule{
 			Token: $1,

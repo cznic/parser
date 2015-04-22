@@ -45,6 +45,7 @@ type lexer struct {
 	value           string
 	value2          string
 	values          []string
+	values2         []string
 }
 
 func newLexer(file *token.File, src io.RuneReader) (_ *lexer, err error) {
@@ -180,6 +181,7 @@ func (l *lexer) Lex(lval *yySymType) int {
 			case '}':
 				if prev.Rune == '%' {
 					l.Unget(c, prev)
+					l.Next()
 					break loop2
 				}
 			}
@@ -191,8 +193,9 @@ func (l *lexer) Lex(lval *yySymType) int {
 		l.pos = l.Prev.Pos()
 		l.values = []string{string(l.TokenBytes(nil))}
 		l.positions = []token.Pos{l.First.Pos()}
+		balance := 1
 	loop3:
-		for balance := 1; balance != 0; {
+		for {
 			l.Rule0()
 			c := l.scanGo()
 			r := c.Rune
@@ -214,7 +217,7 @@ func (l *lexer) Lex(lval *yySymType) int {
 					l.values[n] = s + part
 				}
 			}
-			switch r := c.Rune; r {
+			switch r {
 			case lex.RuneEOF:
 				break loop3
 			case '{':
@@ -222,7 +225,9 @@ func (l *lexer) Lex(lval *yySymType) int {
 			case '}':
 				balance--
 				if balance == 0 {
-					l.Unget(c)
+					l.Unget(l.Lookahead(), c)
+					l.Next()
+					break loop3
 				}
 			}
 		}
