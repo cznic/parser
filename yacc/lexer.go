@@ -38,6 +38,7 @@ type lexer struct {
 	pos             token.Pos
 	pos2            token.Pos
 	positions       []token.Pos
+	positions2      []token.Pos
 	ruleName        *Token
 	rules           []*Rule
 	spec            *Specification
@@ -372,12 +373,13 @@ func (l *lexer) byteValue(dst *bytes.Buffer, in []lex.Char, report rune) int {
 }
 
 func (l *lexer) parseActionValue(pos token.Pos, src string) *ActionValue {
+	src0 := src
 	if !strings.HasPrefix(src, "$") {
-		return &ActionValue{Type: ActionValueGo, Src: src}
+		return &ActionValue{Type: ActionValueGo, Src: src0, Pos: pos}
 	}
 
 	if src == "$$" {
-		return &ActionValue{Type: ActionValueDlrDlr}
+		return &ActionValue{Type: ActionValueDlrDlr, Src: src0, Pos: pos}
 	}
 
 	var tag string
@@ -394,7 +396,7 @@ func (l *lexer) parseActionValue(pos token.Pos, src string) *ActionValue {
 	}
 
 	if src == "$" {
-		return &ActionValue{Type: ActionValueDlrTagDlr, Tag: tag}
+		return &ActionValue{Type: ActionValueDlrTagDlr, Tag: tag, Src: src0, Pos: pos}
 	}
 
 	n, err := strconv.ParseInt(src, 10, 31)
@@ -404,10 +406,10 @@ func (l *lexer) parseActionValue(pos token.Pos, src string) *ActionValue {
 	}
 
 	if tag != "" {
-		return &ActionValue{Type: ActionValueDlrTagNum, Tag: tag, Num: int(n)}
+		return &ActionValue{Type: ActionValueDlrTagNum, Tag: tag, Num: int(n), Src: src0, Pos: pos}
 	}
 
-	return &ActionValue{Type: ActionValueDlrNum, Num: int(n)}
+	return &ActionValue{Type: ActionValueDlrNum, Num: int(n), Src: src0, Pos: pos}
 }
 
 func (l *lexer) tokenBuilder(buf *bytes.Buffer) {

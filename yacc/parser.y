@@ -14,6 +14,9 @@
 
 package parser
 
+import (
+	"go/token"
+)
 %}
 
 %union {
@@ -54,6 +57,7 @@ Action:
 	'{'
 	{
 		lx.values2 = append([]string(nil), lx.values...)
+		lx.positions2 = append([]token.Pos(nil), lx.positions...)
 	}
 	'}'
 	{
@@ -61,7 +65,7 @@ Action:
 		//yy:field Values []*ActionValue // For backward compatibility.
 		lhs.Pos = lx.pos
 		for i, v := range lx.values2 {
-			a := lx.parseActionValue(lx.positions[i], v)
+			a := lx.parseActionValue(lx.positions2[i], v)
 			if a != nil {
 				lhs.Values = append(lhs.Values, a)
 			}
@@ -165,7 +169,7 @@ Rule:
 	{
 		//yy:field Name *Token
 		//yy:field Body []interface{} // For backward compatibility.
-		//yy:example "%%%%a:b:{c}{d}%%%%"
+		//yy:example "%%%%a:b:{c=$1}{d}%%%%"
 		lx.ruleName = lhs.Token
 		lhs.Name = lhs.Token
 	}

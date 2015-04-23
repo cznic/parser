@@ -28,6 +28,7 @@ a:
 	// · Pos: 12,
 	// · Values: []*parser.ActionValue{ // len 1
 	// · · 0: &parser.ActionValue{
+	// · · · Pos: 12,
 	// · · · Src: "{\n\t}",
 	// · · },
 	// · },
@@ -324,6 +325,7 @@ a:
 	// · · Pos: 20,
 	// · · Values: []*parser.ActionValue{ // len 1
 	// · · · 0: &parser.ActionValue{
+	// · · · · Pos: 20,
 	// · · · · Src: "{\n\t}",
 	// · · · },
 	// · · },
@@ -430,29 +432,41 @@ func ExampleReservedWord_case5() {
 
 func ExampleRule() {
 	fmt.Println(exampleAST(26, `
-%%a:b:{c}{d}%%
+%%a:b:{c=$1}{d}%%
 `))
 	// Output:
 	// &parser.Rule{
 	// · RuleItemList: &parser.RuleItemList{
 	// · · Action: &parser.Action{
 	// · · · Token: example.y:2:7: '{' "{", Comments: [],
-	// · · · Token2: example.y:2:9: '}' "}", Comments: [],
-	// · · · Pos: 11,
-	// · · · Values: []*parser.ActionValue{ // len 1
+	// · · · Token2: example.y:2:12: '}' "}", Comments: [],
+	// · · · Pos: 14,
+	// · · · Values: []*parser.ActionValue{ // len 3
 	// · · · · 0: &parser.ActionValue{
-	// · · · · · Src: "{c}",
+	// · · · · · Pos: 8,
+	// · · · · · Src: "{c=",
+	// · · · · },
+	// · · · · 1: &parser.ActionValue{
+	// · · · · · Num: 1,
+	// · · · · · Pos: 11,
+	// · · · · · Src: "$1",
+	// · · · · · Type: 3,
+	// · · · · },
+	// · · · · 2: &parser.ActionValue{
+	// · · · · · Pos: 13,
+	// · · · · · Src: "}",
 	// · · · · },
 	// · · · },
 	// · · },
 	// · · Case: 2,
 	// · · RuleItemList: &parser.RuleItemList{
 	// · · · Action: &parser.Action{
-	// · · · · Token: example.y:2:10: '{' "{", Comments: [],
-	// · · · · Token2: example.y:2:12: '}' "}", Comments: [],
-	// · · · · Pos: 11,
+	// · · · · Token: example.y:2:13: '{' "{", Comments: [],
+	// · · · · Token2: example.y:2:15: '}' "}", Comments: [],
+	// · · · · Pos: 14,
 	// · · · · Values: []*parser.ActionValue{ // len 1
 	// · · · · · 0: &parser.ActionValue{
+	// · · · · · · Pos: 14,
 	// · · · · · · Src: "{d}",
 	// · · · · · },
 	// · · · · },
@@ -530,6 +544,7 @@ a:
 	// · · Pos: 12,
 	// · · Values: []*parser.ActionValue{ // len 1
 	// · · · 0: &parser.ActionValue{
+	// · · · · Pos: 12,
 	// · · · · Src: "{\n\t}",
 	// · · · },
 	// · · },
@@ -551,6 +566,7 @@ func ExampleRuleList() {
 	// · · · Pos: 9,
 	// · · · Values: []*parser.ActionValue{ // len 1
 	// · · · · 0: &parser.ActionValue{
+	// · · · · · Pos: 6,
 	// · · · · · Src: "{b}",
 	// · · · · },
 	// · · · },
@@ -563,6 +579,7 @@ func ExampleRuleList() {
 	// · · · · Pos: 9,
 	// · · · · Values: []*parser.ActionValue{ // len 1
 	// · · · · · 0: &parser.ActionValue{
+	// · · · · · · Pos: 9,
 	// · · · · · · Src: "{c}",
 	// · · · · · },
 	// · · · · },
