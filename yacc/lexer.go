@@ -634,6 +634,8 @@ func (r *Rule) collect() {
 			r.Body = append(r.Body, (*lexer)(nil).ident(n.Token))
 		case 2: // RuleItemList Action
 			r.Body = append(r.Body, n.Action)
+		case 3: // RuleItemList STRING_LITERAL
+			r.Body = append(r.Body, n.Token.Val)
 		}
 	}
 }

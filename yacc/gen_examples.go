@@ -111,6 +111,9 @@ import (
 					case "NUMBER":
 						s = fmt.Sprintf("%d", lit)
 						lit++
+					case "STRING_LITERAL":
+						s = fmt.Sprintf(`"@%c"`, lit+'a')
+						lit++
 					default:
 						if tok[0] == '\'' {
 							if s, err = strconv.Unquote(tok); err != nil {

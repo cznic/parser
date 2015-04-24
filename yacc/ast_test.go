@@ -85,27 +85,38 @@ func ExampleDefinition_case2() {
 
 func ExampleDefinition_case3() {
 	fmt.Println(exampleAST(7, `
-
-%left
-	a %error-verbose
-
+%token ARROW "->"
+	IDENT
+%%
 `))
 	// Output:
 	// &parser.Definition{
 	// · Case: 3,
 	// · NameList: &parser.NameList{
 	// · · Name: &parser.Name{
-	// · · · Token: example.y:4:2: IDENTIFIER "a", Comments: [],
-	// · · · Identifier: "a",
+	// · · · LiteralStringOpt: &parser.LiteralStringOpt{
+	// · · · · Case: 1,
+	// · · · · Token: example.y:2:14: STRING_LITERAL "\"->\"", Comments: [],
+	// · · · },
+	// · · · Token: example.y:2:8: IDENTIFIER "ARROW", Comments: [],
+	// · · · Identifier: "ARROW",
 	// · · · Number: -1,
+	// · · },
+	// · · NameList: &parser.NameList{
+	// · · · Case: 1,
+	// · · · Name: &parser.Name{
+	// · · · · Token: example.y:3:2: IDENTIFIER "IDENT", Comments: [],
+	// · · · · Identifier: "IDENT",
+	// · · · · Number: -1,
+	// · · · },
 	// · · },
 	// · },
 	// · ReservedWord: &parser.ReservedWord{
-	// · · Case: 1,
-	// · · Token: example.y:3:1: LEFT "%left", Comments: [],
+	// · · Token: example.y:2:1: TOKEN "%token", Comments: [],
 	// · },
-	// · Nlist: []*parser.Name{ // len 1
+	// · Nlist: []*parser.Name{ // len 2
 	// · · 0: &parser.Name{ /* recursive/repetitive pointee not shown */ },
+	// · · 1: &parser.Name{ /* recursive/repetitive pointee not shown */ },
 	// · },
 	// }
 }
@@ -171,8 +182,33 @@ func ExampleDefinitionList_case1() {
 	// }
 }
 
-func ExampleName() {
+func ExampleLiteralStringOpt() {
 	fmt.Println(exampleAST(11, `
+
+%left
+	a ,
+
+`) == (*LiteralStringOpt)(nil))
+	// Output:
+	// true
+}
+
+func ExampleLiteralStringOpt_case1() {
+	fmt.Println(exampleAST(12, `
+
+%left
+	a "@b" ,
+
+`))
+	// Output:
+	// &parser.LiteralStringOpt{
+	// · Case: 1,
+	// · Token: example.y:4:4: STRING_LITERAL "\"@b\"", Comments: [],
+	// }
+}
+
+func ExampleName() {
+	fmt.Println(exampleAST(13, `
 
 %left
 	a ,
@@ -187,7 +223,7 @@ func ExampleName() {
 }
 
 func ExampleName_case1() {
-	fmt.Println(exampleAST(12, `
+	fmt.Println(exampleAST(14, `
 
 %left
 	a 1 ,
@@ -204,7 +240,7 @@ func ExampleName_case1() {
 }
 
 func ExampleNameList() {
-	fmt.Println(exampleAST(13, `
+	fmt.Println(exampleAST(15, `
 
 %left
 	a ,
@@ -221,7 +257,7 @@ func ExampleNameList() {
 }
 
 func ExampleNameList_case1() {
-	fmt.Println(exampleAST(14, `
+	fmt.Println(exampleAST(16, `
 
 %left
 	a
@@ -247,7 +283,7 @@ func ExampleNameList_case1() {
 }
 
 func ExampleNameList_case2() {
-	fmt.Println(exampleAST(15, `
+	fmt.Println(exampleAST(17, `
 
 %left
 	a ,
@@ -274,7 +310,7 @@ func ExampleNameList_case2() {
 }
 
 func ExamplePrecedence() {
-	fmt.Println(exampleAST(16, `
+	fmt.Println(exampleAST(18, `
 
 %%
 
@@ -287,7 +323,7 @@ a:
 }
 
 func ExamplePrecedence_case1() {
-	fmt.Println(exampleAST(17, `
+	fmt.Println(exampleAST(19, `
 
 %%
 
@@ -306,7 +342,7 @@ a:
 }
 
 func ExamplePrecedence_case2() {
-	fmt.Println(exampleAST(18, `
+	fmt.Println(exampleAST(20, `
 
 %%
 
@@ -338,7 +374,7 @@ a:
 }
 
 func ExamplePrecedence_case3() {
-	fmt.Println(exampleAST(19, `
+	fmt.Println(exampleAST(21, `
 
 %%
 
@@ -354,7 +390,7 @@ a:
 }
 
 func ExampleReservedWord() {
-	fmt.Println(exampleAST(20, `
+	fmt.Println(exampleAST(22, `
 
 %token <
 
@@ -366,7 +402,7 @@ func ExampleReservedWord() {
 }
 
 func ExampleReservedWord_case1() {
-	fmt.Println(exampleAST(21, `
+	fmt.Println(exampleAST(23, `
 
 %left <
 
@@ -379,7 +415,7 @@ func ExampleReservedWord_case1() {
 }
 
 func ExampleReservedWord_case2() {
-	fmt.Println(exampleAST(22, `
+	fmt.Println(exampleAST(24, `
 
 %right <
 
@@ -392,7 +428,7 @@ func ExampleReservedWord_case2() {
 }
 
 func ExampleReservedWord_case3() {
-	fmt.Println(exampleAST(23, `
+	fmt.Println(exampleAST(25, `
 
 %nonassoc <
 
@@ -405,7 +441,7 @@ func ExampleReservedWord_case3() {
 }
 
 func ExampleReservedWord_case4() {
-	fmt.Println(exampleAST(24, `
+	fmt.Println(exampleAST(26, `
 
 %type <
 
@@ -418,7 +454,7 @@ func ExampleReservedWord_case4() {
 }
 
 func ExampleReservedWord_case5() {
-	fmt.Println(exampleAST(25, `
+	fmt.Println(exampleAST(27, `
 
 %precedence <
 
@@ -431,7 +467,7 @@ func ExampleReservedWord_case5() {
 }
 
 func ExampleRule() {
-	fmt.Println(exampleAST(26, `
+	fmt.Println(exampleAST(28, `
 %%a:b:{c=$1}{d}%%
 `))
 	// Output:
@@ -480,7 +516,7 @@ func ExampleRule() {
 }
 
 func ExampleRule_case1() {
-	fmt.Println(exampleAST(27, `
+	fmt.Println(exampleAST(29, `
 
 %%
 
@@ -497,7 +533,7 @@ a:
 }
 
 func ExampleRuleItemList() {
-	fmt.Println(exampleAST(28, `
+	fmt.Println(exampleAST(30, `
 
 %%
 
@@ -509,7 +545,7 @@ a:
 }
 
 func ExampleRuleItemList_case1() {
-	fmt.Println(exampleAST(29, `
+	fmt.Println(exampleAST(31, `
 
 %%
 
@@ -526,7 +562,7 @@ a:
 }
 
 func ExampleRuleItemList_case2() {
-	fmt.Println(exampleAST(30, `
+	fmt.Println(exampleAST(32, `
 
 %%
 
@@ -553,8 +589,24 @@ a:
 	// }
 }
 
+func ExampleRuleItemList_case3() {
+	fmt.Println(exampleAST(33, `
+
+%%
+
+a:
+"@b"
+
+`))
+	// Output:
+	// &parser.RuleItemList{
+	// · Case: 3,
+	// · Token: example.y:6:1: STRING_LITERAL "\"@b\"", Comments: [],
+	// }
+}
+
 func ExampleRuleList() {
-	fmt.Println(exampleAST(31, `
+	fmt.Println(exampleAST(34, `
 %%a:{b}{c}%%
 `))
 	// Output:
@@ -592,7 +644,7 @@ func ExampleRuleList() {
 }
 
 func ExampleRuleList_case1() {
-	fmt.Println(exampleAST(32, `
+	fmt.Println(exampleAST(35, `
 
 %%
 
@@ -615,7 +667,7 @@ a:
 }
 
 func ExampleSpecification() {
-	fmt.Println(exampleAST(33, `
+	fmt.Println(exampleAST(36, `
 
 %%
 
@@ -638,7 +690,7 @@ a:
 }
 
 func ExampleTag() {
-	fmt.Println(exampleAST(34, `
+	fmt.Println(exampleAST(37, `
 
 %left
 	a
@@ -649,7 +701,7 @@ func ExampleTag() {
 }
 
 func ExampleTag_case1() {
-	fmt.Println(exampleAST(35, `
+	fmt.Println(exampleAST(38, `
 
 %left <
 	a >
@@ -666,7 +718,7 @@ func ExampleTag_case1() {
 }
 
 func ExampleTail() {
-	fmt.Println(exampleAST(36, `
+	fmt.Println(exampleAST(39, `
 
 %%
 
@@ -684,7 +736,7 @@ a:
 }
 
 func ExampleTail_case1() {
-	fmt.Println(exampleAST(37, `
+	fmt.Println(exampleAST(40, `
 
 %%
 

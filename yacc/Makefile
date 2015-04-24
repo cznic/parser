@@ -54,7 +54,7 @@ nuke: clean
 # 	|| true ) ; \
 # 	rm -f $$a
 
-parser.go: parser.y
+parser.go: parser.y Makefile
 	a=$(shell tempfile) e=$(shell tempfile) ; ( \
 		y \
 			-import "\"go/token\"" \

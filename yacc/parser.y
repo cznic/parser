@@ -1,12 +1,15 @@
 %{
-// Copyright © 2001-2004 The IEEE and The Open Group, All Rights reserved.
-// 
-// Original source text:
-// http://pubs.opengroup.org/onlinepubs/009695399/utilities/yacc.html
-// 
-// Modifications: Copyright 2015 The parser Authors. All rights reserved.  Use
+// Copyright 2015 The parser Authors. All rights reserved.  Use
 // of this source code is governed by a BSD-style license that can be found in
 // the LICENSE file.
+//
+// This is a derived work base on the original at
+// 
+// http://pubs.opengroup.org/onlinepubs/009695399/utilities/yacc.html
+//
+// The original work is
+//
+// Copyright © 2001-2004 The IEEE and The Open Group, All Rights reserved.
 // 
 // Grammar for the input to yacc.
 // 
@@ -45,6 +48,7 @@ import (
 	RCURL
 	RIGHT
 	START
+	STRING_LITERAL
 	TOKEN
 	TYPE
 	UNION
@@ -98,6 +102,7 @@ Definition:
 	}
 |	ReservedWord Tag NameList
 	{
+		//yy:example "%%token ARROW \"->\"\n\tIDENT\n%%%%"
 		for n := lhs.NameList; n != nil; n = n.NameList {
 			lhs.Nlist = append(lhs.Nlist, n.Name)
 		}
@@ -123,15 +128,18 @@ DefinitionList:
 		lx.defs = append(lx.defs, lhs.Definition)
 	}
 
+LiteralStringOpt:
+|	STRING_LITERAL
+
 Name:
-	IDENTIFIER
+	IDENTIFIER LiteralStringOpt
 	{
 		//yy:field Identifier interface{} // For backward compatibility.
 		//yy:field Number int             // For backward compatibility.
 		lhs.Identifier = lx.ident(lhs.Token)
 		lhs.Number = -1
 	}
-|	IDENTIFIER NUMBER
+|	IDENTIFIER NUMBER LiteralStringOpt
 	{
 		lhs.Identifier = lx.ident(lhs.Token)
 		lhs.Number = lx.number(lhs.Token2)
@@ -181,6 +189,7 @@ Rule:
 RuleItemList:
 |	RuleItemList IDENTIFIER
 |	RuleItemList Action
+|	RuleItemList STRING_LITERAL
 
 RuleList:
 	C_IDENTIFIER RuleItemList Precedence

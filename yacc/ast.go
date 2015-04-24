@@ -1,13 +1,16 @@
 // CAUTION: Generated file, DO NOT EDIT!
 
-// Copyright © 2001-2004 The IEEE and The Open Group, All Rights reserved.
-//
-// Original source text:
-// http://pubs.opengroup.org/onlinepubs/009695399/utilities/yacc.html
-//
-// Modifications: Copyright 2015 The parser Authors. All rights reserved.  Use
+// Copyright 2015 The parser Authors. All rights reserved.  Use
 // of this source code is governed by a BSD-style license that can be found in
 // the LICENSE file.
+//
+// This is a derived work base on the original at
+//
+// http://pubs.opengroup.org/onlinepubs/009695399/utilities/yacc.html
+//
+// The original work is
+//
+// Copyright © 2001-2004 The IEEE and The Open Group, All Rights reserved.
 //
 // Grammar for the input to yacc.
 //
@@ -99,17 +102,35 @@ func (d *DefinitionList) String() string {
 	return prettyString(d)
 }
 
+// LiteralStringOpt represents data reduced by production(s):
+//
+//	LiteralStringOpt:
+//		/* empty */
+//	|	STRING_LITERAL  // Case 1
+type LiteralStringOpt struct {
+	Case  int // 0-1
+	Token *Token
+}
+
+func (l *LiteralStringOpt) fragment() interface{} { return l }
+
+// String implements fmt.Stringer.
+func (l *LiteralStringOpt) String() string {
+	return prettyString(l)
+}
+
 // Name represents data reduced by production(s):
 //
 //	Name:
-//		IDENTIFIER
-//	|	IDENTIFIER NUMBER  // Case 1
+//		IDENTIFIER LiteralStringOpt
+//	|	IDENTIFIER NUMBER LiteralStringOpt  // Case 1
 type Name struct {
-	Case       int // 0-1
-	Token      *Token
-	Token2     *Token
-	Identifier interface{} // For backward compatibility.
-	Number     int         // For backward compatibility.
+	Case             int // 0-1
+	LiteralStringOpt *LiteralStringOpt
+	Token            *Token
+	Token2           *Token
+	Identifier       interface{} // For backward compatibility.
+	Number           int         // For backward compatibility.
 }
 
 func (n *Name) fragment() interface{} { return n }
@@ -225,11 +246,12 @@ func (r *Rule) String() string {
 //
 //	RuleItemList:
 //		/* empty */
-//	|	RuleItemList IDENTIFIER  // Case 1
-//	|	RuleItemList Action      // Case 2
+//	|	RuleItemList IDENTIFIER      // Case 1
+//	|	RuleItemList Action          // Case 2
+//	|	RuleItemList STRING_LITERAL  // Case 3
 type RuleItemList struct {
 	Action       *Action
-	Case         int // 0-2
+	Case         int // 0-3
 	RuleItemList *RuleItemList
 	Token        *Token
 }
