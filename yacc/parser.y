@@ -197,10 +197,10 @@ RuleList:
 		//yy:example "%%%%a:{b}{c}%%%%"
 		lx.ruleName = lhs.Token
 		rule := &Rule{
-			Token: $1,
-			Name: $1,
+			Token: lhs.Token,
+			Name: lhs.Token,
 			RuleItemList: lhs.RuleItemList,
-			Precedence: $3.(*Precedence),
+			Precedence: lhs.Precedence,
 		}
 		rule.collect()
 		lx.rules = append(lx.rules, rule)

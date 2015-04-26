@@ -861,10 +861,10 @@ yynewstate:
 			//yy:example "%%a:{b}{c}%%"
 			lx.ruleName = lhs.Token
 			rule := &Rule{
-				Token:        yyS[yypt-2].token,
-				Name:         yyS[yypt-2].token,
+				Token:        lhs.Token,
+				Name:         lhs.Token,
 				RuleItemList: lhs.RuleItemList,
-				Precedence:   yyS[yypt-0].item.(*Precedence),
+				Precedence:   lhs.Precedence,
 			}
 			rule.collect()
 			lx.rules = append(lx.rules, rule)
