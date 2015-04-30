@@ -182,7 +182,6 @@ func (l *lexer) Lex(lval *yySymType) int {
 			case '}':
 				if prev.Rune == '%' {
 					l.Unget(c, prev)
-					l.Next()
 					break loop2
 				}
 			}
@@ -227,7 +226,6 @@ func (l *lexer) Lex(lval *yySymType) int {
 				balance--
 				if balance == 0 {
 					l.Unget(l.Lookahead(), c)
-					l.Next()
 					break loop3
 				}
 			}
