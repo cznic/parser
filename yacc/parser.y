@@ -106,18 +106,10 @@ Definition:
 		for n := lhs.NameList; n != nil; n = n.NameList {
 			lhs.Nlist = append(lhs.Nlist, n.Name)
 		}
-		if lhs.ReservedWord.Token.Char.Rune == TYPE {
-			for _, v := range lhs.Nlist {
-				switch v.Identifier.(type) {
-				case int:
-					lx.err(v.Token.Pos(), "literal invalid with %%type.")
-				}
-
-				if v.Number > 0 {
-					lx.err(v.Token2.Pos(), "number invalid with %%type.")
-				}
-			}
-		}
+	}
+|	ReservedWord Tag
+	{
+		//yy:example "%%token <abc>\n%%%%"
 	}
 |	ERROR_VERBOSE
 

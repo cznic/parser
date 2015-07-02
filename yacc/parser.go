@@ -1,3 +1,5 @@
+// CAUTION: Generated file - DO NOT EDIT.
+
 // CAUTION: Generated file, DO NOT EDIT!
 
 // Copyright 2015 The parser Authors. All rights reserved.  Use
@@ -58,27 +60,27 @@ const (
 	yyErrCode      = 57345
 
 	yyMaxDepth = 200
-	yyTabOfs   = -41
+	yyTabOfs   = -42
 )
 
 var (
 	yyXLAT = map[int]int{
-		57352: 0,  // MARK (34x)
+		57352: 0,  // MARK (43x)
 		57349: 1,  // IDENTIFIER (32x)
-		57344: 2,  // $end (21x)
-		57347: 3,  // C_IDENTIFIER (19x)
-		124:   4,  // '|' (18x)
-		59:    5,  // ';' (16x)
-		57348: 6,  // ERROR_VERBOSE (16x)
-		57350: 7,  // LCURL (16x)
-		57351: 8,  // LEFT (16x)
-		57353: 9,  // NONASSOC (16x)
-		57356: 10, // PRECEDENCE (16x)
-		57358: 11, // RIGHT (16x)
-		57359: 12, // START (16x)
-		57361: 13, // TOKEN (16x)
-		57362: 14, // TYPE (16x)
-		57363: 15, // UNION (16x)
+		57348: 2,  // ERROR_VERBOSE (25x)
+		57350: 3,  // LCURL (25x)
+		57351: 4,  // LEFT (25x)
+		57353: 5,  // NONASSOC (25x)
+		57356: 6,  // PRECEDENCE (25x)
+		57358: 7,  // RIGHT (25x)
+		57359: 8,  // START (25x)
+		57361: 9,  // TOKEN (25x)
+		57362: 10, // TYPE (25x)
+		57363: 11, // UNION (25x)
+		57344: 12, // $end (21x)
+		57347: 13, // C_IDENTIFIER (19x)
+		124:   14, // '|' (18x)
+		59:    15, // ';' (16x)
 		57360: 16, // STRING_LITERAL (12x)
 		123:   17, // '{' (11x)
 		57355: 18, // PREC (10x)
@@ -112,10 +114,6 @@ var (
 	yySymNames = []string{
 		"MARK",
 		"IDENTIFIER",
-		"$end",
-		"C_IDENTIFIER",
-		"'|'",
-		"';'",
 		"ERROR_VERBOSE",
 		"LCURL",
 		"LEFT",
@@ -126,6 +124,10 @@ var (
 		"TOKEN",
 		"TYPE",
 		"UNION",
+		"$end",
+		"C_IDENTIFIER",
+		"'|'",
+		"';'",
 		"STRING_LITERAL",
 		"'{'",
 		"PREC",
@@ -165,43 +167,44 @@ var (
 		5:  {29, 0},
 		6:  {31, 3},
 		7:  {31, 3},
-		8:  {31, 1},
-		9:  {32, 0},
-		10: {32, 2},
-		11: {26, 0},
-		12: {26, 1},
-		13: {22, 2},
-		14: {22, 3},
-		15: {33, 1},
-		16: {33, 2},
-		17: {33, 3},
-		18: {23, 0},
-		19: {23, 2},
-		20: {23, 3},
-		21: {23, 2},
-		22: {35, 1},
+		8:  {31, 2},
+		9:  {31, 1},
+		10: {32, 0},
+		11: {32, 2},
+		12: {26, 0},
+		13: {26, 1},
+		14: {22, 2},
+		15: {22, 3},
+		16: {33, 1},
+		17: {33, 2},
+		18: {33, 3},
+		19: {23, 0},
+		20: {23, 2},
+		21: {23, 3},
+		22: {23, 2},
 		23: {35, 1},
 		24: {35, 1},
 		25: {35, 1},
 		26: {35, 1},
 		27: {35, 1},
-		28: {36, 3},
+		28: {35, 1},
 		29: {36, 3},
-		30: {24, 0},
-		31: {24, 2},
+		30: {36, 3},
+		31: {24, 0},
 		32: {24, 2},
 		33: {24, 2},
-		34: {37, 3},
-		35: {37, 2},
-		36: {38, 4},
-		37: {39, 0},
-		38: {39, 3},
-		39: {40, 1},
-		40: {40, 0},
+		34: {24, 2},
+		35: {37, 3},
+		36: {37, 2},
+		37: {38, 4},
+		38: {39, 0},
+		39: {39, 3},
+		40: {40, 1},
+		41: {40, 0},
 	}
 
 	yyXErrors = map[yyXError]string{
-		yyXError{0, 2}:   "invalid empty input",
+		yyXError{0, 12}:  "invalid empty input",
 		yyXError{1, -1}:  "expected $end",
 		yyXError{21, -1}: "expected $end",
 		yyXError{22, -1}: "expected $end",
@@ -216,13 +219,12 @@ var (
 		yyXError{3, -1}:  "expected IDENTIFIER",
 		yyXError{25, -1}: "expected IDENTIFIER",
 		yyXError{40, -1}: "expected IDENTIFIER",
-		yyXError{42, -1}: "expected IDENTIFIER",
 		yyXError{44, -1}: "expected LiteralStringOpt or one of [',', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, NUMBER, PRECEDENCE, RIGHT, START, STRING_LITERAL, TOKEN, TYPE, UNION]",
 		yyXError{48, -1}: "expected LiteralStringOpt or one of [',', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, STRING_LITERAL, TOKEN, TYPE, UNION]",
 		yyXError{51, -1}: "expected Name or IDENTIFIER",
 		yyXError{43, -1}: "expected Name or one of [',', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{39, -1}: "expected NameList or IDENTIFIER",
-		yyXError{6, -1}:  "expected NameList or Tag or one of ['<', IDENTIFIER]",
+		yyXError{6, -1}:  "expected NameList or Tag or one of ['<', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
+		yyXError{39, -1}: "expected NameList or one of [ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
 		yyXError{16, -1}: "expected Precedence or RuleItemList or one of [$end, ';', '{', '|', C_IDENTIFIER, IDENTIFIER, MARK, PREC, STRING_LITERAL]",
 		yyXError{18, -1}: "expected Precedence or RuleItemList or one of [$end, ';', '{', '|', C_IDENTIFIER, IDENTIFIER, MARK, PREC, STRING_LITERAL]",
 		yyXError{19, -1}: "expected Precedence or RuleItemList or one of [$end, ';', '{', '|', C_IDENTIFIER, IDENTIFIER, MARK, PREC, STRING_LITERAL]",
@@ -247,12 +249,13 @@ var (
 		yyXError{49, -1}: "expected one of [',', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
 		yyXError{50, -1}: "expected one of [',', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
 		yyXError{52, -1}: "expected one of [',', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{9, -1}:  "expected one of ['<', IDENTIFIER]",
-		yyXError{10, -1}: "expected one of ['<', IDENTIFIER]",
-		yyXError{11, -1}: "expected one of ['<', IDENTIFIER]",
-		yyXError{12, -1}: "expected one of ['<', IDENTIFIER]",
-		yyXError{13, -1}: "expected one of ['<', IDENTIFIER]",
-		yyXError{14, -1}: "expected one of ['<', IDENTIFIER]",
+		yyXError{9, -1}:  "expected one of ['<', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
+		yyXError{10, -1}: "expected one of ['<', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
+		yyXError{11, -1}: "expected one of ['<', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
+		yyXError{12, -1}: "expected one of ['<', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
+		yyXError{13, -1}: "expected one of ['<', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
+		yyXError{14, -1}: "expected one of ['<', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
+		yyXError{42, -1}: "expected one of [ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
 		yyXError{4, -1}:  "expected one of [ERROR_VERBOSE, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
 		yyXError{7, -1}:  "expected one of [ERROR_VERBOSE, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
 		yyXError{8, -1}:  "expected one of [ERROR_VERBOSE, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
@@ -262,73 +265,73 @@ var (
 
 	yyParseTab = [56][]uint8{
 		// 0
-		{32, 6: 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32: 43, 38: 42},
-		{2: 41},
-		{56, 6: 48, 46, 51, 53, 55, 52, 44, 50, 54, 45, 31: 49, 35: 47},
-		{1: 96},
-		{37, 6: 37, 37, 37, 37, 37, 37, 37, 37, 37, 37},
+		{32, 2: 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32: 44, 38: 43},
+		{12: 42},
+		{57, 2: 49, 47, 52, 54, 56, 53, 45, 51, 55, 46, 31: 50, 35: 48},
+		{1: 97},
+		{38, 2: 38, 38, 38, 38, 38, 38, 38, 38, 38, 38},
 		// 5
-		{27: 36, 29: 94},
-		{1: 4, 20: 81, 39: 80},
-		{33, 6: 33, 33, 33, 33, 33, 33, 33, 33, 33, 33},
-		{31, 6: 31, 31, 31, 31, 31, 31, 31, 31, 31, 31},
-		{1: 19, 20: 19},
+		{27: 37, 29: 95},
+		{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 20: 82, 39: 81},
+		{33, 2: 33, 33, 33, 33, 33, 33, 33, 33, 33, 33},
+		{31, 2: 31, 31, 31, 31, 31, 31, 31, 31, 31, 31},
+		{19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 20: 19},
 		// 10
-		{1: 18, 20: 18},
-		{1: 17, 20: 17},
-		{1: 16, 20: 16},
-		{1: 15, 20: 15},
-		{1: 14, 20: 14},
+		{18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 20: 18},
+		{17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 20: 17},
+		{16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 20: 16},
+		{15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 20: 15},
+		{14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 20: 14},
 		// 15
-		{3: 57, 37: 58},
-		{11, 11, 11, 11, 11, 11, 16: 11, 11, 11, 24: 78},
-		{63, 2: 1, 59, 60, 36: 61, 40: 62},
-		{11, 11, 11, 11, 11, 11, 16: 11, 11, 11, 24: 76},
-		{11, 11, 11, 11, 11, 11, 16: 11, 11, 11, 24: 64},
+		{13: 58, 37: 59},
+		{11, 11, 12: 11, 11, 11, 11, 11, 11, 11, 24: 79},
+		{64, 12: 1, 60, 61, 36: 62, 40: 63},
+		{11, 11, 12: 11, 11, 11, 11, 11, 11, 11, 24: 77},
+		{11, 11, 12: 11, 11, 11, 11, 11, 11, 11, 24: 65},
 		// 20
-		{6, 2: 6, 6, 6},
-		{2: 5},
-		{2: 2},
-		{23, 68, 23, 23, 23, 23, 16: 70, 65, 66, 21: 69, 23: 67},
-		{25: 40, 28: 74},
+		{6, 12: 6, 6, 6},
+		{12: 5},
+		{12: 2},
+		{23, 69, 12: 23, 23, 23, 23, 71, 66, 67, 21: 70, 23: 68},
+		{25: 41, 28: 75},
 		// 25
-		{1: 72},
-		{12, 2: 12, 12, 12, 71},
-		{10, 10, 10, 10, 10, 10, 16: 10, 10, 10},
-		{9, 9, 9, 9, 9, 9, 16: 9, 9, 9},
-		{8, 8, 8, 8, 8, 8, 16: 8, 8, 8},
+		{1: 73},
+		{12, 12: 12, 12, 12, 72},
+		{10, 10, 12: 10, 10, 10, 10, 10, 10, 10},
+		{9, 9, 12: 9, 9, 9, 9, 9, 9, 9},
+		{8, 8, 12: 8, 8, 8, 8, 8, 8, 8},
 		// 30
-		{20, 2: 20, 20, 20, 20},
-		{22, 2: 22, 22, 22, 22, 17: 65, 21: 73},
-		{21, 2: 21, 21, 21, 21},
-		{25: 75},
-		{39, 39, 39, 39, 39, 39, 16: 39, 39, 39},
+		{20, 12: 20, 20, 20, 20},
+		{22, 12: 22, 22, 22, 22, 17: 66, 21: 74},
+		{21, 12: 21, 21, 21, 21},
+		{25: 76},
+		{40, 40, 12: 40, 40, 40, 40, 40, 40, 40},
 		// 35
-		{23, 68, 23, 23, 23, 23, 16: 70, 65, 66, 21: 69, 23: 77},
-		{13, 2: 13, 13, 13, 71},
-		{23, 68, 23, 23, 23, 23, 16: 70, 65, 66, 21: 69, 23: 79},
-		{7, 2: 7, 7, 7, 71},
-		{1: 85, 22: 86, 33: 84},
+		{23, 69, 12: 23, 23, 23, 23, 71, 66, 67, 21: 70, 23: 78},
+		{13, 12: 13, 13, 13, 72},
+		{23, 69, 12: 23, 23, 23, 23, 71, 66, 67, 21: 70, 23: 80},
+		{7, 12: 7, 7, 7, 72},
+		{34, 86, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 22: 87, 33: 85},
 		// 40
-		{1: 82},
-		{30: 83},
-		{1: 3},
-		{34, 85, 6: 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 19: 92, 22: 91},
-		{30, 30, 6: 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 87, 19: 30, 26: 88, 34: 89},
+		{1: 83},
+		{30: 84},
+		{3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
+		{35, 86, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 19: 93, 22: 92},
+		{30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 16: 88, 19: 30, 26: 89, 34: 90},
 		// 45
-		{26, 26, 6: 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 19: 26},
-		{29, 29, 6: 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 19: 29},
-		{28, 28, 6: 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 19: 28},
-		{30, 30, 6: 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 87, 19: 30, 26: 90},
-		{27, 27, 6: 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19: 27},
+		{26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 19: 26},
+		{29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 19: 29},
+		{28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 19: 28},
+		{30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 16: 88, 19: 30, 26: 91},
+		{27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 19: 27},
 		// 50
-		{25, 25, 6: 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 19: 25},
-		{1: 85, 22: 93},
-		{24, 24, 6: 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 19: 24},
-		{27: 95},
-		{35, 6: 35, 35, 35, 35, 35, 35, 35, 35, 35, 35},
+		{25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 19: 25},
+		{1: 86, 22: 94},
+		{24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 19: 24},
+		{27: 96},
+		{36, 2: 36, 36, 36, 36, 36, 36, 36, 36, 36, 36},
 		// 55
-		{38, 6: 38, 38, 38, 38, 38, 38, 38, 38, 38, 38},
+		{39, 2: 39, 39, 39, 39, 39, 39, 39, 39, 39, 39},
 	}
 )
 
@@ -606,7 +609,6 @@ yynewstate:
 		}
 	case 7:
 		{
-			lx := yylex.(*lexer)
 			lhs := &Definition{
 				Case:         3,
 				ReservedWord: yyS[yypt-2].item.(*ReservedWord),
@@ -618,31 +620,29 @@ yynewstate:
 			for n := lhs.NameList; n != nil; n = n.NameList {
 				lhs.Nlist = append(lhs.Nlist, n.Name)
 			}
-			if lhs.ReservedWord.Token.Char.Rune == TYPE {
-				for _, v := range lhs.Nlist {
-					switch v.Identifier.(type) {
-					case int:
-						lx.err(v.Token.Pos(), "literal invalid with %type.")
-					}
-
-					if v.Number > 0 {
-						lx.err(v.Token2.Pos(), "number invalid with %type.")
-					}
-				}
-			}
 		}
 	case 8:
 		{
-			yyVAL.item = &Definition{
-				Case:  4,
-				Token: yyS[yypt-0].token,
+			lhs := &Definition{
+				Case:         4,
+				ReservedWord: yyS[yypt-1].item.(*ReservedWord),
+				Tag:          yyS[yypt-0].item.(*Tag),
 			}
+			yyVAL.item = lhs
+			//yy:example "%token <abc>\n%%"
 		}
 	case 9:
 		{
-			yyVAL.item = (*DefinitionList)(nil)
+			yyVAL.item = &Definition{
+				Case:  5,
+				Token: yyS[yypt-0].token,
+			}
 		}
 	case 10:
+		{
+			yyVAL.item = (*DefinitionList)(nil)
+		}
+	case 11:
 		{
 			lx := yylex.(*lexer)
 			lhs := &DefinitionList{
@@ -654,18 +654,18 @@ yynewstate:
 			//yy:example "%left '+' '-'\n%left '*' '/'\n%%"
 			lx.defs = append(lx.defs, lhs.Definition)
 		}
-	case 11:
+	case 12:
 		{
 			yyVAL.item = (*LiteralStringOpt)(nil)
 		}
-	case 12:
+	case 13:
 		{
 			yyVAL.item = &LiteralStringOpt{
 				Case:  1,
 				Token: yyS[yypt-0].token,
 			}
 		}
-	case 13:
+	case 14:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Name{
@@ -678,7 +678,7 @@ yynewstate:
 			lhs.Identifier = lx.ident(lhs.Token)
 			lhs.Number = -1
 		}
-	case 14:
+	case 15:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Name{
@@ -691,13 +691,13 @@ yynewstate:
 			lhs.Identifier = lx.ident(lhs.Token)
 			lhs.Number = lx.number(lhs.Token2)
 		}
-	case 15:
+	case 16:
 		{
 			yyVAL.item = &NameList{
 				Name: yyS[yypt-0].item.(*Name),
 			}
 		}
-	case 16:
+	case 17:
 		{
 			yyVAL.item = &NameList{
 				Case:     1,
@@ -705,7 +705,7 @@ yynewstate:
 				Name:     yyS[yypt-0].item.(*Name),
 			}
 		}
-	case 17:
+	case 18:
 		{
 			yyVAL.item = &NameList{
 				Case:     2,
@@ -714,13 +714,13 @@ yynewstate:
 				Name:     yyS[yypt-0].item.(*Name),
 			}
 		}
-	case 18:
+	case 19:
 		{
 			lhs := (*Precedence)(nil)
 			yyVAL.item = lhs
 			//yy:field Identifier interface{} // Name string or literal int.
 		}
-	case 19:
+	case 20:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Precedence{
@@ -731,7 +731,7 @@ yynewstate:
 			yyVAL.item = lhs
 			lhs.Identifier = lx.ident(lhs.Token2)
 		}
-	case 20:
+	case 21:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Precedence{
@@ -743,7 +743,7 @@ yynewstate:
 			yyVAL.item = lhs
 			lhs.Identifier = lx.ident(lhs.Token2)
 		}
-	case 21:
+	case 22:
 		{
 			yyVAL.item = &Precedence{
 				Case:       3,
@@ -751,48 +751,48 @@ yynewstate:
 				Token:      yyS[yypt-0].token,
 			}
 		}
-	case 22:
-		{
-			yyVAL.item = &ReservedWord{
-				Token: yyS[yypt-0].token,
-			}
-		}
 	case 23:
 		{
 			yyVAL.item = &ReservedWord{
-				Case:  1,
 				Token: yyS[yypt-0].token,
 			}
 		}
 	case 24:
 		{
 			yyVAL.item = &ReservedWord{
-				Case:  2,
+				Case:  1,
 				Token: yyS[yypt-0].token,
 			}
 		}
 	case 25:
 		{
 			yyVAL.item = &ReservedWord{
-				Case:  3,
+				Case:  2,
 				Token: yyS[yypt-0].token,
 			}
 		}
 	case 26:
 		{
 			yyVAL.item = &ReservedWord{
-				Case:  4,
+				Case:  3,
 				Token: yyS[yypt-0].token,
 			}
 		}
 	case 27:
 		{
 			yyVAL.item = &ReservedWord{
-				Case:  5,
+				Case:  4,
 				Token: yyS[yypt-0].token,
 			}
 		}
 	case 28:
+		{
+			yyVAL.item = &ReservedWord{
+				Case:  5,
+				Token: yyS[yypt-0].token,
+			}
+		}
+	case 29:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Rule{
@@ -807,7 +807,7 @@ yynewstate:
 			lx.ruleName = lhs.Token
 			lhs.Name = lhs.Token
 		}
-	case 29:
+	case 30:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Rule{
@@ -819,11 +819,11 @@ yynewstate:
 			yyVAL.item = lhs
 			lhs.Name = lx.ruleName
 		}
-	case 30:
+	case 31:
 		{
 			yyVAL.item = (*RuleItemList)(nil)
 		}
-	case 31:
+	case 32:
 		{
 			yyVAL.item = &RuleItemList{
 				Case:         1,
@@ -831,7 +831,7 @@ yynewstate:
 				Token:        yyS[yypt-0].token,
 			}
 		}
-	case 32:
+	case 33:
 		{
 			yyVAL.item = &RuleItemList{
 				Case:         2,
@@ -839,7 +839,7 @@ yynewstate:
 				Action:       yyS[yypt-0].item.(*Action),
 			}
 		}
-	case 33:
+	case 34:
 		{
 			yyVAL.item = &RuleItemList{
 				Case:         3,
@@ -847,7 +847,7 @@ yynewstate:
 				Token:        yyS[yypt-0].token,
 			}
 		}
-	case 34:
+	case 35:
 		{
 			lx := yylex.(*lexer)
 			lhs := &RuleList{
@@ -867,7 +867,7 @@ yynewstate:
 			rule.collect()
 			lx.rules = append(lx.rules, rule)
 		}
-	case 35:
+	case 36:
 		{
 			lx := yylex.(*lexer)
 			lhs := &RuleList{
@@ -880,7 +880,7 @@ yynewstate:
 			rule.collect()
 			lx.rules = append(lx.rules, rule)
 		}
-	case 36:
+	case 37:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Specification{
@@ -896,11 +896,11 @@ yynewstate:
 			lhs.Rules = lx.rules
 			lx.spec = lhs
 		}
-	case 37:
+	case 38:
 		{
 			yyVAL.item = (*Tag)(nil)
 		}
-	case 38:
+	case 39:
 		{
 			yyVAL.item = &Tag{
 				Case:   1,
@@ -909,7 +909,7 @@ yynewstate:
 				Token3: yyS[yypt-0].token,
 			}
 		}
-	case 39:
+	case 40:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Tail{
@@ -919,7 +919,7 @@ yynewstate:
 			//yy:field Value string
 			lhs.Value = lx.value
 		}
-	case 40:
+	case 41:
 		{
 			yyVAL.item = (*Tail)(nil)
 		}

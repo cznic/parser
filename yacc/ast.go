@@ -47,9 +47,10 @@ func (a *Action) String() string {
 //	|	UNION                      // Case 1
 //	|	LCURL RCURL                // Case 2
 //	|	ReservedWord Tag NameList  // Case 3
-//	|	ERROR_VERBOSE              // Case 4
+//	|	ReservedWord Tag           // Case 4
+//	|	ERROR_VERBOSE              // Case 5
 type Definition struct {
-	Case         int // 0-4
+	Case         int // 0-5
 	NameList     *NameList
 	ReservedWord *ReservedWord
 	Tag          *Tag

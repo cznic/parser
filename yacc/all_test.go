@@ -88,7 +88,7 @@ func test0(t *testing.T, root string) {
 			t.Fatal(ast)
 		}
 
-		t.Logf("%s\n%s", pth, ast)
+		//t.Logf("%s\n%s", pth, ast)
 		return nil
 
 	}); err != nil {
