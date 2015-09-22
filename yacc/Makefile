@@ -46,14 +46,6 @@ mem:
 nuke: clean
 	go clean -i
 
-# parser.go: parser.y
-# 	a=$(shell tempfile) ; ( \
-# 		goyacc -o /dev/null -xegen $$a $< && \
-# 		cat xerrors >> $$a && \
-# 		goyacc -xe $$a -o $@ -dlvalf "%v" -dlval "lval.token" $< \
-# 	|| true ) ; \
-# 	rm -f $$a
-
 parser.go: parser.y Makefile
 	a=$(shell tempfile) e=$(shell tempfile) ; ( \
 		y \
@@ -64,7 +56,7 @@ parser.go: parser.y Makefile
 			yy $< log.y ast.go $$e && \
 		goyacc -o /dev/null -xegen $$a log.y && \
 		cat xerrors >> $$a && \
-		goyacc -xe $$a -o $@ -dlvalf "%v" -dlval "lval.token" log.y && \
+		goyacc -cr -xe $$a -o $@ -dlvalf "%v" -dlval "lval.token" log.y && \
 		go run gen_examples.go $$e ast_test.go && \
 		go test -run ^Example | fe || echo "package parser" > ast_test.go && \
 		egrep -nH "failed|panic|\/\/ <nil>|// false|// -1" *_test.go \
