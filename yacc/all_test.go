@@ -1,6 +1,7 @@
 // Copyright 2015 The parser Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
+
 package parser
 
 import (
@@ -68,6 +69,10 @@ func test0(t *testing.T, root string) {
 			return nil
 		}
 
+		if filepath.Base(pth) == "go.y" { // Uses non standard %error directive.
+			return nil
+		}
+
 		file, err := os.Open(pth)
 		if err != nil {
 			t.Fatal(err)
@@ -81,14 +86,15 @@ func test0(t *testing.T, root string) {
 
 		ast, err := Parse(token.NewFileSet(), pth, src)
 		if err != nil {
-			t.Fatal(err)
+			t.Error(err)
+			return nil
 		}
 
 		if ast == nil {
 			t.Fatal(ast)
 		}
 
-		//t.Logf("%s\n%s", pth, ast)
+		t.Log(pth, prettyString(ast))
 		return nil
 
 	}); err != nil {

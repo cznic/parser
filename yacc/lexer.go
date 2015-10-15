@@ -19,6 +19,11 @@ import (
 	"github.com/cznic/strutil"
 )
 
+// Node represents an AST node.
+type Node interface {
+	Pos() token.Pos
+}
+
 const (
 	ccEOF = iota + 0x80
 	ccOther
@@ -231,7 +236,7 @@ func (l *lexer) Lex(lval *yySymType) int {
 			}
 		}
 	}
-	lval.token = t
+	lval.Token = t
 	l.lastTok = t
 	return int(t.Rune)
 }
@@ -247,7 +252,7 @@ func (l *lexer) Reduced(rule, state int, lval *yySymType) (stop bool) {
 		return false
 	}
 
-	switch x := lval.item.(type) {
+	switch x := lval.node.(type) {
 	case interface {
 		fragment() interface{}
 	}:
@@ -635,5 +640,17 @@ func (r *Rule) collect() {
 		case 3: // RuleItemList STRING_LITERAL
 			r.Body = append(r.Body, n.Token.Val)
 		}
+	}
+	p := r.Precedence
+	if p == nil {
+		return
+	}
+
+	for p.Case == 3 { // Precedence ';'
+		p = p.Precedence
+	}
+
+	if p != nil && p.Action != nil {
+		r.Body = append(r.Body, p.Action)
 	}
 }

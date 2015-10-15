@@ -2,9 +2,14 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:generate go run generate.go
+//go:generate golex -o goscanner.go go.l
+//go:generate golex -o scanner.go y.l
+//go:generate go run generate.go -2
+
 // Package parser implements a parser for yacc source files.
 //
-// Note: Rule.Body elements type
+// Note: Rule.Body element's type
 //
 //	int		Eg. 65 represents literal 'A'
 //

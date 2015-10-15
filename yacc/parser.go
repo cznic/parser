@@ -1,7 +1,5 @@
 // CAUTION: Generated file - DO NOT EDIT.
 
-// CAUTION: Generated file, DO NOT EDIT!
-
 // Copyright 2015 The parser Authors. All rights reserved.  Use
 // of this source code is governed by a BSD-style license that can be found in
 // the LICENSE file.
@@ -15,8 +13,6 @@
 // Copyright © 2001-2004 The IEEE and The Open Group, All Rights reserved.
 //
 // Grammar for the input to yacc.
-//
-// CAUTION: Generated file (unless this is parser.y) - DO NOT EDIT!
 
 package parser
 
@@ -28,8 +24,8 @@ import (
 
 type yySymType struct {
 	yys   int
-	token *Token
-	item  interface{}
+	node  Node
+	Token *Token
 }
 
 type yyXError struct {
@@ -208,59 +204,59 @@ var (
 		yyXError{1, -1}:  "expected $end",
 		yyXError{21, -1}: "expected $end",
 		yyXError{22, -1}: "expected $end",
+		yyXError{5, -1}:  "expected %}",
+		yyXError{53, -1}: "expected %}",
 		yyXError{41, -1}: "expected '>'",
 		yyXError{24, -1}: "expected '}'",
 		yyXError{33, -1}: "expected '}'",
-		yyXError{23, -1}: "expected Action or Precedence or one of [$end, ';', '{', '|', C_IDENTIFIER, IDENTIFIER, MARK, PREC, STRING_LITERAL]",
-		yyXError{35, -1}: "expected Action or Precedence or one of [$end, ';', '{', '|', C_IDENTIFIER, IDENTIFIER, MARK, PREC, STRING_LITERAL]",
-		yyXError{37, -1}: "expected Action or Precedence or one of [$end, ';', '{', '|', C_IDENTIFIER, IDENTIFIER, MARK, PREC, STRING_LITERAL]",
-		yyXError{31, -1}: "expected Action or one of [$end, ';', '{', '|', C_IDENTIFIER, MARK]",
-		yyXError{2, -1}:  "expected Definition or one of [ERROR_VERBOSE, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{3, -1}:  "expected IDENTIFIER",
-		yyXError{25, -1}: "expected IDENTIFIER",
-		yyXError{40, -1}: "expected IDENTIFIER",
-		yyXError{44, -1}: "expected LiteralStringOpt or one of [',', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, NUMBER, PRECEDENCE, RIGHT, START, STRING_LITERAL, TOKEN, TYPE, UNION]",
-		yyXError{48, -1}: "expected LiteralStringOpt or one of [',', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, STRING_LITERAL, TOKEN, TYPE, UNION]",
-		yyXError{51, -1}: "expected Name or IDENTIFIER",
-		yyXError{43, -1}: "expected Name or one of [',', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{6, -1}:  "expected NameList or Tag or one of ['<', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{39, -1}: "expected NameList or one of [ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{16, -1}: "expected Precedence or RuleItemList or one of [$end, ';', '{', '|', C_IDENTIFIER, IDENTIFIER, MARK, PREC, STRING_LITERAL]",
-		yyXError{18, -1}: "expected Precedence or RuleItemList or one of [$end, ';', '{', '|', C_IDENTIFIER, IDENTIFIER, MARK, PREC, STRING_LITERAL]",
-		yyXError{19, -1}: "expected Precedence or RuleItemList or one of [$end, ';', '{', '|', C_IDENTIFIER, IDENTIFIER, MARK, PREC, STRING_LITERAL]",
-		yyXError{5, -1}:  "expected RCURL",
-		yyXError{53, -1}: "expected RCURL",
-		yyXError{17, -1}: "expected Rule or Tail or one of [$end, '|', C_IDENTIFIER, MARK]",
-		yyXError{15, -1}: "expected RuleList or C_IDENTIFIER",
-		yyXError{0, -1}:  "expected Specification or one of [ERROR_VERBOSE, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{27, -1}: "expected one of [$end, ';', '{', '|', C_IDENTIFIER, IDENTIFIER, MARK, PREC, STRING_LITERAL]",
-		yyXError{28, -1}: "expected one of [$end, ';', '{', '|', C_IDENTIFIER, IDENTIFIER, MARK, PREC, STRING_LITERAL]",
-		yyXError{29, -1}: "expected one of [$end, ';', '{', '|', C_IDENTIFIER, IDENTIFIER, MARK, PREC, STRING_LITERAL]",
-		yyXError{34, -1}: "expected one of [$end, ';', '{', '|', C_IDENTIFIER, IDENTIFIER, MARK, PREC, STRING_LITERAL]",
-		yyXError{26, -1}: "expected one of [$end, ';', '|', C_IDENTIFIER, MARK]",
-		yyXError{30, -1}: "expected one of [$end, ';', '|', C_IDENTIFIER, MARK]",
-		yyXError{32, -1}: "expected one of [$end, ';', '|', C_IDENTIFIER, MARK]",
-		yyXError{36, -1}: "expected one of [$end, ';', '|', C_IDENTIFIER, MARK]",
-		yyXError{38, -1}: "expected one of [$end, ';', '|', C_IDENTIFIER, MARK]",
-		yyXError{20, -1}: "expected one of [$end, '|', C_IDENTIFIER, MARK]",
-		yyXError{45, -1}: "expected one of [',', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{46, -1}: "expected one of [',', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{47, -1}: "expected one of [',', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{49, -1}: "expected one of [',', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{50, -1}: "expected one of [',', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{52, -1}: "expected one of [',', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{9, -1}:  "expected one of ['<', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{10, -1}: "expected one of ['<', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{11, -1}: "expected one of ['<', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{12, -1}: "expected one of ['<', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{13, -1}: "expected one of ['<', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{14, -1}: "expected one of ['<', ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{42, -1}: "expected one of [ERROR_VERBOSE, IDENTIFIER, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{4, -1}:  "expected one of [ERROR_VERBOSE, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{7, -1}:  "expected one of [ERROR_VERBOSE, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{8, -1}:  "expected one of [ERROR_VERBOSE, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{54, -1}: "expected one of [ERROR_VERBOSE, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
-		yyXError{55, -1}: "expected one of [ERROR_VERBOSE, LCURL, LEFT, MARK, NONASSOC, PRECEDENCE, RIGHT, START, TOKEN, TYPE, UNION]",
+		yyXError{23, -1}: "expected Action or Precedence or one of [$end, %%, %prec, ';', '{', '|', identifier, rule name, string literal]",
+		yyXError{35, -1}: "expected Action or Precedence or one of [$end, %%, %prec, ';', '{', '|', identifier, rule name, string literal]",
+		yyXError{37, -1}: "expected Action or Precedence or one of [$end, %%, %prec, ';', '{', '|', identifier, rule name, string literal]",
+		yyXError{31, -1}: "expected Action or one of [$end, %%, ';', '{', '|', rule name]",
+		yyXError{2, -1}:  "expected Definition or one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{]",
+		yyXError{44, -1}: "expected LiteralStringOpt or one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, ',', identifier, number, string literal]",
+		yyXError{48, -1}: "expected LiteralStringOpt or one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, ',', identifier, string literal]",
+		yyXError{51, -1}: "expected Name or identifier",
+		yyXError{43, -1}: "expected Name or one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, ',', identifier]",
+		yyXError{6, -1}:  "expected NameList or Tag or one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, '<', identifier]",
+		yyXError{39, -1}: "expected NameList or one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, identifier]",
+		yyXError{16, -1}: "expected Precedence or RuleItemList or one of [$end, %%, %prec, ';', '{', '|', identifier, rule name, string literal]",
+		yyXError{18, -1}: "expected Precedence or RuleItemList or one of [$end, %%, %prec, ';', '{', '|', identifier, rule name, string literal]",
+		yyXError{19, -1}: "expected Precedence or RuleItemList or one of [$end, %%, %prec, ';', '{', '|', identifier, rule name, string literal]",
+		yyXError{17, -1}: "expected Rule or Tail or one of [$end, %%, '|', rule name]",
+		yyXError{15, -1}: "expected RuleList or rule name",
+		yyXError{0, -1}:  "expected Specification or one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{]",
+		yyXError{3, -1}:  "expected identifier",
+		yyXError{25, -1}: "expected identifier",
+		yyXError{40, -1}: "expected identifier",
+		yyXError{27, -1}: "expected one of [$end, %%, %prec, ';', '{', '|', identifier, rule name, string literal]",
+		yyXError{28, -1}: "expected one of [$end, %%, %prec, ';', '{', '|', identifier, rule name, string literal]",
+		yyXError{29, -1}: "expected one of [$end, %%, %prec, ';', '{', '|', identifier, rule name, string literal]",
+		yyXError{34, -1}: "expected one of [$end, %%, %prec, ';', '{', '|', identifier, rule name, string literal]",
+		yyXError{26, -1}: "expected one of [$end, %%, ';', '|', rule name]",
+		yyXError{30, -1}: "expected one of [$end, %%, ';', '|', rule name]",
+		yyXError{32, -1}: "expected one of [$end, %%, ';', '|', rule name]",
+		yyXError{36, -1}: "expected one of [$end, %%, ';', '|', rule name]",
+		yyXError{38, -1}: "expected one of [$end, %%, ';', '|', rule name]",
+		yyXError{20, -1}: "expected one of [$end, %%, '|', rule name]",
+		yyXError{45, -1}: "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, ',', identifier]",
+		yyXError{46, -1}: "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, ',', identifier]",
+		yyXError{47, -1}: "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, ',', identifier]",
+		yyXError{49, -1}: "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, ',', identifier]",
+		yyXError{50, -1}: "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, ',', identifier]",
+		yyXError{52, -1}: "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, ',', identifier]",
+		yyXError{9, -1}:  "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, '<', identifier]",
+		yyXError{10, -1}: "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, '<', identifier]",
+		yyXError{11, -1}: "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, '<', identifier]",
+		yyXError{12, -1}: "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, '<', identifier]",
+		yyXError{13, -1}: "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, '<', identifier]",
+		yyXError{14, -1}: "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, '<', identifier]",
+		yyXError{42, -1}: "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{, identifier]",
+		yyXError{4, -1}:  "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{]",
+		yyXError{7, -1}:  "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{]",
+		yyXError{8, -1}:  "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{]",
+		yyXError{54, -1}: "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{]",
+		yyXError{55, -1}: "expected one of [%%, %error-verbose, %left, %nonassoc, %precedence, %right, %start, %token, %type, %union, %{]",
 	}
 
 	yyParseTab = [56][]uint8{
@@ -362,7 +358,7 @@ func yylex1(yylex yyLexer, lval *yySymType) (n int) {
 		n = yyEofCode
 	}
 	if yyDebug >= 3 {
-		__yyfmt__.Printf("\nlex %s(%#x %d), lval.token: %v\n", yySymName(n), n, n, lval.token)
+		__yyfmt__.Printf("\nlex %s(%#x %d), prettyString(lval.Token): %v\n", yySymName(n), n, n, prettyString(lval.Token))
 	}
 	return n
 }
@@ -551,13 +547,10 @@ yynewstate:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Action{
-				Token:  yyS[yypt-2].token,
-				Token2: yyS[yypt-0].token,
+				Token:  yyS[yypt-2].Token,
+				Token2: yyS[yypt-0].Token,
 			}
-			yyVAL.item = lhs
-			//yy:field Pos token.Pos
-			//yy:field Values []*ActionValue // For backward compatibility.
-			lhs.Pos = lx.pos
+			yyVAL.node = lhs
 			for i, v := range lx.values2 {
 				a := lx.parseActionValue(lx.positions2[i], v)
 				if a != nil {
@@ -567,26 +560,19 @@ yynewstate:
 		}
 	case 3:
 		{
-			lhs := &Definition{
-				Token:  yyS[yypt-1].token,
-				Token2: yyS[yypt-0].token,
+			yyVAL.node = &Definition{
+				Token:  yyS[yypt-1].Token,
+				Token2: yyS[yypt-0].Token,
 			}
-			yyVAL.item = lhs
-			//yy:example "%start source\n\n%%"
-			//yy:field Pos token.Pos
-			//yy:field Value string
-			//yy:field Nlist []*Name // For backward compatibility.
 		}
 	case 4:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Definition{
 				Case:  1,
-				Token: yyS[yypt-0].token,
+				Token: yyS[yypt-0].Token,
 			}
-			yyVAL.item = lhs
-			//yy:example "%union{\n        foo bar\n}\n\n%%"
-			lhs.Pos = lx.pos
+			yyVAL.node = lhs
 			lhs.Value = lx.value
 		}
 	case 5:
@@ -600,81 +586,72 @@ yynewstate:
 			lx := yylex.(*lexer)
 			lhs := &Definition{
 				Case:   2,
-				Token:  yyS[yypt-2].token,
-				Token2: yyS[yypt-0].token,
+				Token:  yyS[yypt-2].Token,
+				Token2: yyS[yypt-0].Token,
 			}
-			yyVAL.item = lhs
-			lhs.Pos = lx.pos2
+			yyVAL.node = lhs
 			lhs.Value = lx.value2
 		}
 	case 7:
 		{
 			lhs := &Definition{
 				Case:         3,
-				ReservedWord: yyS[yypt-2].item.(*ReservedWord),
-				Tag:          yyS[yypt-1].item.(*Tag),
-				NameList:     yyS[yypt-0].item.(*NameList).reverse(),
+				ReservedWord: yyS[yypt-2].node.(*ReservedWord),
+				Tag:          yyS[yypt-1].node.(*Tag),
+				NameList:     yyS[yypt-0].node.(*NameList).reverse(),
 			}
-			yyVAL.item = lhs
-			//yy:example "%token ARROW \"->\"\n\tIDENT\n%%"
+			yyVAL.node = lhs
 			for n := lhs.NameList; n != nil; n = n.NameList {
 				lhs.Nlist = append(lhs.Nlist, n.Name)
 			}
 		}
 	case 8:
 		{
-			lhs := &Definition{
+			yyVAL.node = &Definition{
 				Case:         4,
-				ReservedWord: yyS[yypt-1].item.(*ReservedWord),
-				Tag:          yyS[yypt-0].item.(*Tag),
+				ReservedWord: yyS[yypt-1].node.(*ReservedWord),
+				Tag:          yyS[yypt-0].node.(*Tag),
 			}
-			yyVAL.item = lhs
-			//yy:example "%token <abc>\n%%"
 		}
 	case 9:
 		{
-			yyVAL.item = &Definition{
+			yyVAL.node = &Definition{
 				Case:  5,
-				Token: yyS[yypt-0].token,
+				Token: yyS[yypt-0].Token,
 			}
 		}
 	case 10:
 		{
-			yyVAL.item = (*DefinitionList)(nil)
+			yyVAL.node = (*DefinitionList)(nil)
 		}
 	case 11:
 		{
 			lx := yylex.(*lexer)
 			lhs := &DefinitionList{
-				Case:           1,
-				DefinitionList: yyS[yypt-1].item.(*DefinitionList),
-				Definition:     yyS[yypt-0].item.(*Definition),
+				DefinitionList: yyS[yypt-1].node.(*DefinitionList),
+				Definition:     yyS[yypt-0].node.(*Definition),
 			}
-			yyVAL.item = lhs
-			//yy:example "%left '+' '-'\n%left '*' '/'\n%%"
+			yyVAL.node = lhs
 			lx.defs = append(lx.defs, lhs.Definition)
 		}
 	case 12:
 		{
-			yyVAL.item = (*LiteralStringOpt)(nil)
+			yyVAL.node = (*LiteralStringOpt)(nil)
 		}
 	case 13:
 		{
-			yyVAL.item = &LiteralStringOpt{
-				Case:  1,
-				Token: yyS[yypt-0].token,
+			yyVAL.node = &LiteralStringOpt{
+				Token: yyS[yypt-0].Token,
 			}
 		}
 	case 14:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Name{
-				Token:            yyS[yypt-1].token,
-				LiteralStringOpt: yyS[yypt-0].item.(*LiteralStringOpt),
+				Token:            yyS[yypt-1].Token,
+				LiteralStringOpt: yyS[yypt-0].node.(*LiteralStringOpt),
 			}
-			yyVAL.item = lhs
-			//yy:field Identifier interface{} // For backward compatibility.
-			//yy:field Number int             // For backward compatibility.
+			yyVAL.node = lhs
 			lhs.Identifier = lx.ident(lhs.Token)
 			lhs.Number = -1
 		}
@@ -683,52 +660,50 @@ yynewstate:
 			lx := yylex.(*lexer)
 			lhs := &Name{
 				Case:             1,
-				Token:            yyS[yypt-2].token,
-				Token2:           yyS[yypt-1].token,
-				LiteralStringOpt: yyS[yypt-0].item.(*LiteralStringOpt),
+				Token:            yyS[yypt-2].Token,
+				Token2:           yyS[yypt-1].Token,
+				LiteralStringOpt: yyS[yypt-0].node.(*LiteralStringOpt),
 			}
-			yyVAL.item = lhs
+			yyVAL.node = lhs
 			lhs.Identifier = lx.ident(lhs.Token)
 			lhs.Number = lx.number(lhs.Token2)
 		}
 	case 16:
 		{
-			yyVAL.item = &NameList{
-				Name: yyS[yypt-0].item.(*Name),
+			yyVAL.node = &NameList{
+				Name: yyS[yypt-0].node.(*Name),
 			}
 		}
 	case 17:
 		{
-			yyVAL.item = &NameList{
+			yyVAL.node = &NameList{
 				Case:     1,
-				NameList: yyS[yypt-1].item.(*NameList),
-				Name:     yyS[yypt-0].item.(*Name),
+				NameList: yyS[yypt-1].node.(*NameList),
+				Name:     yyS[yypt-0].node.(*Name),
 			}
 		}
 	case 18:
 		{
-			yyVAL.item = &NameList{
+			yyVAL.node = &NameList{
 				Case:     2,
-				NameList: yyS[yypt-2].item.(*NameList),
-				Token:    yyS[yypt-1].token,
-				Name:     yyS[yypt-0].item.(*Name),
+				NameList: yyS[yypt-2].node.(*NameList),
+				Token:    yyS[yypt-1].Token,
+				Name:     yyS[yypt-0].node.(*Name),
 			}
 		}
 	case 19:
 		{
-			lhs := (*Precedence)(nil)
-			yyVAL.item = lhs
-			//yy:field Identifier interface{} // Name string or literal int.
+			yyVAL.node = (*Precedence)(nil)
 		}
 	case 20:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Precedence{
 				Case:   1,
-				Token:  yyS[yypt-1].token,
-				Token2: yyS[yypt-0].token,
+				Token:  yyS[yypt-1].Token,
+				Token2: yyS[yypt-0].Token,
 			}
-			yyVAL.item = lhs
+			yyVAL.node = lhs
 			lhs.Identifier = lx.ident(lhs.Token2)
 		}
 	case 21:
@@ -736,74 +711,71 @@ yynewstate:
 			lx := yylex.(*lexer)
 			lhs := &Precedence{
 				Case:   2,
-				Token:  yyS[yypt-2].token,
-				Token2: yyS[yypt-1].token,
-				Action: yyS[yypt-0].item.(*Action),
+				Token:  yyS[yypt-2].Token,
+				Token2: yyS[yypt-1].Token,
+				Action: yyS[yypt-0].node.(*Action),
 			}
-			yyVAL.item = lhs
+			yyVAL.node = lhs
 			lhs.Identifier = lx.ident(lhs.Token2)
 		}
 	case 22:
 		{
-			yyVAL.item = &Precedence{
+			yyVAL.node = &Precedence{
 				Case:       3,
-				Precedence: yyS[yypt-1].item.(*Precedence),
-				Token:      yyS[yypt-0].token,
+				Precedence: yyS[yypt-1].node.(*Precedence),
+				Token:      yyS[yypt-0].Token,
 			}
 		}
 	case 23:
 		{
-			yyVAL.item = &ReservedWord{
-				Token: yyS[yypt-0].token,
+			yyVAL.node = &ReservedWord{
+				Token: yyS[yypt-0].Token,
 			}
 		}
 	case 24:
 		{
-			yyVAL.item = &ReservedWord{
+			yyVAL.node = &ReservedWord{
 				Case:  1,
-				Token: yyS[yypt-0].token,
+				Token: yyS[yypt-0].Token,
 			}
 		}
 	case 25:
 		{
-			yyVAL.item = &ReservedWord{
+			yyVAL.node = &ReservedWord{
 				Case:  2,
-				Token: yyS[yypt-0].token,
+				Token: yyS[yypt-0].Token,
 			}
 		}
 	case 26:
 		{
-			yyVAL.item = &ReservedWord{
+			yyVAL.node = &ReservedWord{
 				Case:  3,
-				Token: yyS[yypt-0].token,
+				Token: yyS[yypt-0].Token,
 			}
 		}
 	case 27:
 		{
-			yyVAL.item = &ReservedWord{
+			yyVAL.node = &ReservedWord{
 				Case:  4,
-				Token: yyS[yypt-0].token,
+				Token: yyS[yypt-0].Token,
 			}
 		}
 	case 28:
 		{
-			yyVAL.item = &ReservedWord{
+			yyVAL.node = &ReservedWord{
 				Case:  5,
-				Token: yyS[yypt-0].token,
+				Token: yyS[yypt-0].Token,
 			}
 		}
 	case 29:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Rule{
-				Token:        yyS[yypt-2].token,
-				RuleItemList: yyS[yypt-1].item.(*RuleItemList).reverse(),
-				Precedence:   yyS[yypt-0].item.(*Precedence),
+				Token:        yyS[yypt-2].Token,
+				RuleItemList: yyS[yypt-1].node.(*RuleItemList).reverse(),
+				Precedence:   yyS[yypt-0].node.(*Precedence),
 			}
-			yyVAL.item = lhs
-			//yy:field Name *Token
-			//yy:field Body []interface{} // For backward compatibility.
-			//yy:example "%%a:b:{c=$1}{d}%%"
+			yyVAL.node = lhs
 			lx.ruleName = lhs.Token
 			lhs.Name = lhs.Token
 		}
@@ -812,51 +784,50 @@ yynewstate:
 			lx := yylex.(*lexer)
 			lhs := &Rule{
 				Case:         1,
-				Token:        yyS[yypt-2].token,
-				RuleItemList: yyS[yypt-1].item.(*RuleItemList).reverse(),
-				Precedence:   yyS[yypt-0].item.(*Precedence),
+				Token:        yyS[yypt-2].Token,
+				RuleItemList: yyS[yypt-1].node.(*RuleItemList).reverse(),
+				Precedence:   yyS[yypt-0].node.(*Precedence),
 			}
-			yyVAL.item = lhs
+			yyVAL.node = lhs
 			lhs.Name = lx.ruleName
 		}
 	case 31:
 		{
-			yyVAL.item = (*RuleItemList)(nil)
+			yyVAL.node = (*RuleItemList)(nil)
 		}
 	case 32:
 		{
-			yyVAL.item = &RuleItemList{
+			yyVAL.node = &RuleItemList{
 				Case:         1,
-				RuleItemList: yyS[yypt-1].item.(*RuleItemList),
-				Token:        yyS[yypt-0].token,
+				RuleItemList: yyS[yypt-1].node.(*RuleItemList),
+				Token:        yyS[yypt-0].Token,
 			}
 		}
 	case 33:
 		{
-			yyVAL.item = &RuleItemList{
+			yyVAL.node = &RuleItemList{
 				Case:         2,
-				RuleItemList: yyS[yypt-1].item.(*RuleItemList),
-				Action:       yyS[yypt-0].item.(*Action),
+				RuleItemList: yyS[yypt-1].node.(*RuleItemList),
+				Action:       yyS[yypt-0].node.(*Action),
 			}
 		}
 	case 34:
 		{
-			yyVAL.item = &RuleItemList{
+			yyVAL.node = &RuleItemList{
 				Case:         3,
-				RuleItemList: yyS[yypt-1].item.(*RuleItemList),
-				Token:        yyS[yypt-0].token,
+				RuleItemList: yyS[yypt-1].node.(*RuleItemList),
+				Token:        yyS[yypt-0].Token,
 			}
 		}
 	case 35:
 		{
 			lx := yylex.(*lexer)
 			lhs := &RuleList{
-				Token:        yyS[yypt-2].token,
-				RuleItemList: yyS[yypt-1].item.(*RuleItemList).reverse(),
-				Precedence:   yyS[yypt-0].item.(*Precedence),
+				Token:        yyS[yypt-2].Token,
+				RuleItemList: yyS[yypt-1].node.(*RuleItemList).reverse(),
+				Precedence:   yyS[yypt-0].node.(*Precedence),
 			}
-			yyVAL.item = lhs
-			//yy:example "%%a:{b}{c}%%"
+			yyVAL.node = lhs
 			lx.ruleName = lhs.Token
 			rule := &Rule{
 				Token:        lhs.Token,
@@ -872,10 +843,10 @@ yynewstate:
 			lx := yylex.(*lexer)
 			lhs := &RuleList{
 				Case:     1,
-				RuleList: yyS[yypt-1].item.(*RuleList),
-				Rule:     yyS[yypt-0].item.(*Rule),
+				RuleList: yyS[yypt-1].node.(*RuleList),
+				Rule:     yyS[yypt-0].node.(*Rule),
 			}
-			yyVAL.item = lhs
+			yyVAL.node = lhs
 			rule := lhs.Rule
 			rule.collect()
 			lx.rules = append(lx.rules, rule)
@@ -884,44 +855,40 @@ yynewstate:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Specification{
-				DefinitionList: yyS[yypt-3].item.(*DefinitionList).reverse(),
-				Token:          yyS[yypt-2].token,
-				RuleList:       yyS[yypt-1].item.(*RuleList).reverse(),
-				Tail:           yyS[yypt-0].item.(*Tail),
+				DefinitionList: yyS[yypt-3].node.(*DefinitionList).reverse(),
+				Token:          yyS[yypt-2].Token,
+				RuleList:       yyS[yypt-1].node.(*RuleList).reverse(),
+				Tail:           yyS[yypt-0].node.(*Tail),
 			}
-			yyVAL.item = lhs
-			//yy:field Defs  []*Definition // For backward compatibility.
-			//yy:field Rules []*Rule       // For backward compatibility.
+			yyVAL.node = lhs
 			lhs.Defs = lx.defs
 			lhs.Rules = lx.rules
 			lx.spec = lhs
 		}
 	case 38:
 		{
-			yyVAL.item = (*Tag)(nil)
+			yyVAL.node = (*Tag)(nil)
 		}
 	case 39:
 		{
-			yyVAL.item = &Tag{
-				Case:   1,
-				Token:  yyS[yypt-2].token,
-				Token2: yyS[yypt-1].token,
-				Token3: yyS[yypt-0].token,
+			yyVAL.node = &Tag{
+				Token:  yyS[yypt-2].Token,
+				Token2: yyS[yypt-1].Token,
+				Token3: yyS[yypt-0].Token,
 			}
 		}
 	case 40:
 		{
 			lx := yylex.(*lexer)
 			lhs := &Tail{
-				Token: yyS[yypt-0].token,
+				Token: yyS[yypt-0].Token,
 			}
-			yyVAL.item = lhs
-			//yy:field Value string
+			yyVAL.node = lhs
 			lhs.Value = lx.value
 		}
 	case 41:
 		{
-			yyVAL.item = (*Tail)(nil)
+			yyVAL.node = (*Tail)(nil)
 		}
 
 	}

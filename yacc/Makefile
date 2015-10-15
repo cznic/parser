@@ -2,9 +2,9 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-.PHONY:	all clean cover cpu editor internalError later mem nuke todo
+.PHONY:	all clean cover cpu editor internalError later mem nuke todo edit
 
-grep=--include=*.go --include=*.l --include=*.y
+grep=--include=*.go --include=*.l --include=*.y --include=*.yy
 
 all: editor
 	go vet || true
@@ -23,13 +23,13 @@ cpu:
 	./cpu.test -noerr -test.cpuprofile cpu.out
 	go tool pprof --lines cpu.test cpu.out
 
+edit:
+	gvim -p Makefile *.l *.yy *.y *.output *.go
+
 editor: scanner.go goscanner.go parser.go
 	gofmt -l -s -w *.go
 	go test
 	go install
-
-goscanner.go: go.l parser.go
-	golex -o $@ $<
 
 internalError:
 	egrep -ho '"internal error.*"' *.go | sort | cat -n
@@ -46,25 +46,10 @@ mem:
 nuke: clean
 	go clean -i
 
-parser.go: parser.y Makefile
-	a=$(shell tempfile) e=$(shell tempfile) ; ( \
-		y \
-			-import "\"go/token\"" \
-			-keepCase \
-			-lxType "*lexer" \
-			-nodeString prettyString \
-			yy $< log.y ast.go $$e && \
-		goyacc -o /dev/null -xegen $$a log.y && \
-		cat xerrors >> $$a && \
-		goyacc -cr -xe $$a -o $@ -dlvalf "%v" -dlval "lval.token" log.y && \
-		go run gen_examples.go $$e ast_test.go && \
-		go test -run ^Example | fe || echo "package parser" > ast_test.go && \
-		egrep -nH "failed|panic|\/\/ <nil>|// false|// -1" *_test.go \
-	|| true ) ; \
-	rm -f $$a $$e
 
-scanner.go: y.l parser.go
-	golex -o $@ $<
+parser.go scanner.go goscanner.go: parser.yy go.l y.l
+	go test -i
+	go generate
 
 todo:
 	@grep -n $(grep) ^[[:space:]]*_[[:space:]]*=[[:space:]][[:alpha:]][[:alnum:]]* * || true
