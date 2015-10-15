@@ -646,7 +646,7 @@ func (r *Rule) collect() {
 		return
 	}
 
-	for p.Case == 3 { // Precedence ';'
+	for p != nil && p.Case == 3 { // Precedence ';'
 		p = p.Precedence
 	}
 

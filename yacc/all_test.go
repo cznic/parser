@@ -94,7 +94,7 @@ func test0(t *testing.T, root string) {
 			t.Fatal(ast)
 		}
 
-		t.Log(pth, prettyString(ast))
+		t.Log(pth)
 		return nil
 
 	}); err != nil {
