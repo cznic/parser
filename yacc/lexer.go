@@ -243,7 +243,7 @@ func (l *lexer) Lex(lval *yySymType) int {
 
 // yyLexer
 func (l *lexer) Error(msg string) {
-	l.err(l.lastTok.Char.Pos(), msg)
+	l.err(l.lastTok.Char.Pos(), "%v", msg)
 }
 
 // yyLexerEx
