@@ -25,7 +25,7 @@ identifier		{name}|{literal}
 literal			'(\\[^\n\r\x80]|[^\\'\n\r\x80])*'
 name			{name-first}{name-next}*
 name-first		[_a-zA-Z]
-name-next		{name-first}|[0-9]
+name-next		{name-first}|[0-9.]
 str-literal		\x22(\\[^\n\r\x80]|[^\\\x22\x80\n\r])*\x22
 
 %%
