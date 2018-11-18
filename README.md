@@ -1,7 +1,5 @@
-parser
-======
+`github.com/cznic/parser` has moved to [`modernc.org/parser`](https://godoc.org/modernc.org/parser) ([vcs](https://gitlab.com/cznic/parser)).
 
-Collection of Go parsers
+Please update your import paths to `modernc.org/parser`.
 
-- [N-Quads](http://www.w3.org/TR/n-quads/): [http://godoc.org/github.com/cznic/parser/nquads](http://godoc.org/github.com/cznic/parser/nquads)
-- [yacc](http://pubs.opengroup.org/onlinepubs/009695399/utilities/yacc.html): [http://godoc.org/github.com/cznic/parser/yacc](http://godoc.org/github.com/cznic/parser/yacc)
+This repo is now archived.
